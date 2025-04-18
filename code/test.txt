@@ -1,0 +1,6 @@
+
+
+So field type is identifier and the name main
+
+identifier -> main
+statement -> body

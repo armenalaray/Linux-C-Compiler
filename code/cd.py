@@ -1,8 +1,9 @@
 import os
 import sys
 import re
-import token
+from token import TokenType
 
+import parser
 
 """
 def lex(file):
@@ -36,6 +37,8 @@ if __name__ == "__main__":
 
 			buffer = file.read()
 
+			tokenList = []
+
 			while buffer != r'':
 				#breakpoint()
 
@@ -58,6 +61,9 @@ if __name__ == "__main__":
 				is_numeric = r"\d+"
 				numeric = re.match(is_numeric, buffer)
 				if numeric:
+					 
+					tokenList.append({numeric.group(), TokenType.CONSTANT})
+
 					buffer = numeric.string[numeric.span()[1]:]
 					print(buffer)
 				else:
@@ -67,12 +73,16 @@ if __name__ == "__main__":
 						
 						match alphanumeric.group():
 							case "int":
-								#Ta = token.Token(b.group(),TOKENTYPE_INT_KEYWORD) 
-								pass
+								tokenList.append({"int", TokenType.INT_KW})
+								
 							case "void":
-								pass
+								tokenList.append({"void", TokenType.VOID_KW})
+								
 							case "return":
-								pass
+								tokenList.append({"return", TokenType.RETURN_KW})
+
+							case _:
+								tokenList.append({alphanumeric.group(), TokenType.IDENTIFIER})
 
 						buffer = alphanumeric.string[alphanumeric.span()[1]:]
 						print(buffer)
@@ -83,15 +93,20 @@ if __name__ == "__main__":
 							print(char)
 							match char.group():
 								case "(":
-									pass
+									tokenList.append({"(", TokenType.OPEN_PAREN})
+									
 								case ")":
-									pass
+									tokenList.append({")", TokenType.CLOSE_PAREN})
+
 								case "{":
-									pass
+									tokenList.append({"{", TokenType.OPEN_BRACE})
+									
 								case "}":
-									pass
+									tokenList.append({"}", TokenType.CLOSE_BRACE})
+									
 								case ";":
-									pass
+									tokenList.append({";", TokenType.SEMICOLON})
+
 							#aqui tiene que ser keyword
 							buffer = char.string[char.span()[1]:]
 							print(buffer)
@@ -99,6 +114,12 @@ if __name__ == "__main__":
 							if buffer != '':
 								print("Error invalid token: {0}".format(buffer))
 								sys.exit(1)
+		
+		#aqui termina el while con la lista
+
+		print(tokenList)
+		parser.parseStatement(tokenList)
+
 		os.remove(iFile)
 	sys.exit(0)
 
