@@ -4,10 +4,12 @@ import re
 is_alphanumeric = r"[a-zA-Z_]\w+"
 is_numeric = r"\d+"
 
+is_not = r"\d+[a-zA-Z]"
+
 np = r"\s+"
 
-a = re.match(np, '  42dasa_AZ()') # Returns Match object
-b = re.match(np, '43 notanumber43') # Returns None
+a = re.match(is_not, '42dasa_AZ()') # Returns Match object
+b = re.match(is_not, '43notanumber43') # Returns None
 
 print(a)
 print(b)

@@ -20,112 +20,117 @@ if a[:2] == "--":
 			parse(sys.argv[2])
 """
 			
-		
+if __name__ == "__main__":	
 
-prepC = "gcc -E -P " + sys.argv[1] + " -o "
+	prepC = "gcc -E -P " + sys.argv[1] + " -o "
 
-iFile = os.path.dirname(sys.argv[1]) + "/" +  os.path.basename(sys.argv[1]).split('.')[0] + ".i"
+	iFile = os.path.dirname(sys.argv[1]) + "/" +  os.path.basename(sys.argv[1]).split('.')[0] + ".i"
 
-prepC = prepC + iFile
+	prepC = prepC + iFile
 
-if os.system(prepC) == 0:
-	#note here you already have a file in the same directory
-	#preprocessor file
+	if os.system(prepC) == 0:
+		#note here you already have a file in the same directory
+		#preprocessor file
 
-	with open(iFile, "r") as file:
+		with open(iFile, "r") as file:
 
-		buffer = file.read()
+			buffer = file.read()
 
-		while buffer != r'':
-			breakpoint()
+			while buffer != r'':
+				#breakpoint()
 
-			print(buffer)
-
-			is_wspace = r"\s+"
-			wspace = re.match(is_wspace, buffer)
-			if wspace:
-				buffer = wspace.string[wspace.span()[1]:]
-
-			print(buffer)
-
-			is_numeric = r"\d+"
-			numeric = re.match(is_numeric, buffer)
-			if numeric:
-				buffer = numeric.string[numeric.span()[1]:]
 				print(buffer)
-			else:
-				is_alphanumeric = r"[a-zA-Z_]\w+"
-				alphanumeric = re.match(is_alphanumeric, buffer)
-				if alphanumeric:
-					
-					match alphanumeric.group():
-						case "int":
-							#Ta = token.Token(b.group(),TOKENTYPE_INT_KEYWORD) 
-							pass
-						case "void":
-							pass
-						case "return":
-							pass
 
-					buffer = alphanumeric.string[alphanumeric.span()[1]:]
+				is_wspace = r"\s+"
+				wspace = re.match(is_wspace, buffer)
+				if wspace:
+					buffer = wspace.string[wspace.span()[1]:]
+
+				print(buffer)
+
+				is_not = r"\d+[a-zA-Z]"
+				is_not_valid = re.match(is_not, buffer)
+				if is_not_valid:
+					print("Error invalid token: {0}".format(buffer))
+					sys.exit(1)
+
+
+				is_numeric = r"\d+"
+				numeric = re.match(is_numeric, buffer)
+				if numeric:
+					buffer = numeric.string[numeric.span()[1]:]
 					print(buffer)
 				else:
-					is_char = r"[(){};]"
-					char = re.match(is_char, buffer)
-					if char:
-						print(char)
-						match char.group():
-							case "(":
+					is_alphanumeric = r"[a-zA-Z_]\w+"
+					alphanumeric = re.match(is_alphanumeric, buffer)
+					if alphanumeric:
+						
+						match alphanumeric.group():
+							case "int":
+								#Ta = token.Token(b.group(),TOKENTYPE_INT_KEYWORD) 
 								pass
-							case ")":
+							case "void":
 								pass
-							case "{":
+							case "return":
 								pass
-							case "}":
-								pass
-							case ";":
-								pass
-						#aqui tiene que ser keyword
-						buffer = char.string[char.span()[1]:]
+
+						buffer = alphanumeric.string[alphanumeric.span()[1]:]
 						print(buffer)
 					else:
-						if buffer != '':
-							print("Error invalid token")
+						is_char = r"[(){};]"
+						char = re.match(is_char, buffer)
+						if char:
+							print(char)
+							match char.group():
+								case "(":
+									pass
+								case ")":
+									pass
+								case "{":
+									pass
+								case "}":
+									pass
+								case ";":
+									pass
+							#aqui tiene que ser keyword
+							buffer = char.string[char.span()[1]:]
+							print(buffer)
+						else:
+							if buffer != '':
+								print("Error invalid token: {0}".format(buffer))
+								sys.exit(1)
+		os.remove(iFile)
+	sys.exit(0)
 
 
 
+				
 
 			
+			
+"""
 
-		
-		
-	"""
-
-	#NOTE Here I am looking at the beggining of a word
-	b = re.search(r"\bid", a)
+#NOTE Here I am looking at the beggining of a word
+b = re.search(r"\bid", a)
 
 
 
-	compC = "gcc -S -O -fno-asynchronous-unwind-tables -fcf-protection=none " + iFile + " -o " 
+compC = "gcc -S -O -fno-asynchronous-unwind-tables -fcf-protection=none " + iFile + " -o " 
+
+aFile = os.path.dirname(sys.argv[1]) + "/" + os.path.basename(sys.argv[1]).split('.')[0] + ".s"
+
+print(aFile)
+compC = compC + aFile
+print(compC)
+
+if os.system(compC) == 0:
+
+	#assembly file
+	assC = "gcc " + aFile + " -o " + os.path.dirname(sys.argv[1]) + "/" + os.path.basename(sys.argv[1]).split('.')[0]
 	
-	aFile = os.path.dirname(sys.argv[1]) + "/" + os.path.basename(sys.argv[1]).split('.')[0] + ".s"
+	print(assC)
 
-	print(aFile)
-	compC = compC + aFile
-	print(compC)
-	
-	if os.system(compC) == 0:
+	os.system(assC)
 
-		#assembly file
-		assC = "gcc " + aFile + " -o " + os.path.dirname(sys.argv[1]) + "/" + os.path.basename(sys.argv[1]).split('.')[0]
-		
-		print(assC)
-
-		os.system(assC)
-
-		os.remove(aFile)
-	"""
-
-	os.remove(iFile)
-
-
+	os.remove(aFile)
+"""

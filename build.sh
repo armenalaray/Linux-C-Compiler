@@ -1,7 +1,8 @@
 
-#python3 -m pdb "$(pwd)"/code/cd.py "$(pwd)"/test/test.c
-
 python3 "$(pwd)"/code/cd.py "$(pwd)"/test/test.c
+echo $?
+
+#python3 "$(pwd)"/code/cd.py "$(pwd)"/test/test.c
 
 #python3 "$(pwd)"/code/test.py
 
