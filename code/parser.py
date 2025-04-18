@@ -44,7 +44,11 @@ def expect(expected, tokenList):
 def parseInt(tokenList):
     actual = takeToken(tokenList)
     if actual != ():
-        return int(actual[0])
+        if actual[1] == TokenType.CONSTANT:
+            return int(actual[0])
+        
+        print("Syntax Error Expected TokenType.CONSTANT but got {0}.".format(actual[1]))
+        sys.exit(1)    
     
     print("Syntax Error Expected an int value but there are no more tokens.")
     sys.exit(1)
@@ -62,8 +66,14 @@ def parseStatement(tokenList):
 
 def parseIdentifier(tokenList):
     actual = takeToken(tokenList)
+    
     if actual != ():
-        return actual[0]
+        if actual[1] == TokenType.IDENTIFIER:
+            return actual[0]
+        
+        print("Syntax Error Expected TokenType.IDENTIFIER but got {0}.".format(actual[1]))
+        sys.exit(1)    
+    
     
     print("Syntax Error Expected an identifier but there are no more tokens.")
     sys.exit(1)

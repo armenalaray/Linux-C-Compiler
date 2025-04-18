@@ -54,7 +54,9 @@ if __name__ == "__main__":
 				is_not = r"\d+[a-zA-Z]"
 				is_not_valid = re.match(is_not, buffer)
 				if is_not_valid:
+					#raise Exception("Error invalid token: {0}".format(buffer))
 					print("Error invalid token: {0}".format(buffer))
+					os.remove(iFile)
 					sys.exit(1)
 
 
@@ -67,7 +69,7 @@ if __name__ == "__main__":
 					buffer = numeric.string[numeric.span()[1]:]
 					print(buffer)
 				else:
-					is_alphanumeric = r"[a-zA-Z_]\w+"
+					is_alphanumeric = r"[a-zA-Z_]\w*"
 					alphanumeric = re.match(is_alphanumeric, buffer)
 					if alphanumeric:
 						
@@ -112,13 +114,21 @@ if __name__ == "__main__":
 							print(buffer)
 						else:
 							if buffer != '':
+								#raise Exception("Error invalid token: {0}".format(buffer))
 								print("Error invalid token: {0}".format(buffer))
+								os.remove(iFile)
 								sys.exit(1)
 		
-		#aqui termina el while con la lista
+			#aqui termina el while con la lista
+			os.remove(iFile)
 
-		print(tokenList)
-		pro = parser.parseProgram(tokenList)
+			print(tokenList)
+			pro = parser.parseProgram(tokenList)
+
+			if tokenList != []:
+				#raise Exception("Syntax Error Extra code inside program. {0}".format(tokenList))
+				print("Syntax Error Extra code inside program. {0}".format(tokenList))
+				sys.exit(1)
 
 		"""
 		print(pro.function.iden)
@@ -126,7 +136,6 @@ if __name__ == "__main__":
 		print(pro.function.statement.expression.intValue)
 		"""
 
-		os.remove(iFile)
 	sys.exit(0)
 
 
