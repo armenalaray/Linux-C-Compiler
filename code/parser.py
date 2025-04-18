@@ -23,17 +23,32 @@ class Expression:
         
 
 def takeToken(tokenList):
-    return tokenList.pop(0)
+    if(tokenList != []):
+        return tokenList.pop(0)
+    return ()
 
 def expect(expected, tokenList):
-    actual = takeToken(tokenList)[1]
-    print(actual)
-    if actual != expected:
-        print("Syntax Error Expected: {0} got: {1}".format(expected, actual))
+    actual = takeToken(tokenList)
+    
+    print("actual: ", actual)
+    if actual != ():
+        if actual[1] != expected:
+            print("Syntax Error Expected: {0} got: {1}.".format(expected, actual))
+            sys.exit(1)
+    else:
+        print("Syntax Error Expected: {0} but there are no more tokens.".format(expected))
         sys.exit(1)
     
+    
+    
 def parseInt(tokenList):
-    return int(takeToken(tokenList)[0])
+    actual = takeToken(tokenList)
+    if actual != ():
+        return int(actual[0])
+    
+    print("Syntax Error Expected an int value but there are no more tokens.")
+    sys.exit(1)
+    
     
 def parseExp(tokenList):
     intValue = parseInt(tokenList)
@@ -46,7 +61,13 @@ def parseStatement(tokenList):
     return ReturnStmt(retVal) 
 
 def parseIdentifier(tokenList):
-    return takeToken(tokenList)[0]
+    actual = takeToken(tokenList)
+    if actual != ():
+        return actual[0]
+    
+    print("Syntax Error Expected an identifier but there are no more tokens.")
+    sys.exit(1)
+
 
 def parseFunction(tokenList):
     expect(TokenType.INT_KW, tokenList)

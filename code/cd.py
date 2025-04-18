@@ -120,9 +120,11 @@ if __name__ == "__main__":
 		print(tokenList)
 		pro = parser.parseProgram(tokenList)
 
+		"""
 		print(pro.function.iden)
 		print(pro.function.statement)
 		print(pro.function.statement.expression.intValue)
+		"""
 
 		os.remove(iFile)
 	sys.exit(0)
