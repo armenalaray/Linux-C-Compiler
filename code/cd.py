@@ -62,7 +62,7 @@ if __name__ == "__main__":
 				numeric = re.match(is_numeric, buffer)
 				if numeric:
 					 
-					tokenList.append({numeric.group(), TokenType.CONSTANT})
+					tokenList.append((numeric.group(), TokenType.CONSTANT))
 
 					buffer = numeric.string[numeric.span()[1]:]
 					print(buffer)
@@ -73,16 +73,16 @@ if __name__ == "__main__":
 						
 						match alphanumeric.group():
 							case "int":
-								tokenList.append({"int", TokenType.INT_KW})
+								tokenList.append(("int", TokenType.INT_KW))
 								
 							case "void":
-								tokenList.append({"void", TokenType.VOID_KW})
+								tokenList.append(("void", TokenType.VOID_KW))
 								
 							case "return":
-								tokenList.append({"return", TokenType.RETURN_KW})
+								tokenList.append(("return", TokenType.RETURN_KW))
 
 							case _:
-								tokenList.append({alphanumeric.group(), TokenType.IDENTIFIER})
+								tokenList.append((alphanumeric.group(), TokenType.IDENTIFIER))
 
 						buffer = alphanumeric.string[alphanumeric.span()[1]:]
 						print(buffer)
@@ -93,19 +93,19 @@ if __name__ == "__main__":
 							print(char)
 							match char.group():
 								case "(":
-									tokenList.append({"(", TokenType.OPEN_PAREN})
+									tokenList.append(("(", TokenType.OPEN_PAREN))
 									
 								case ")":
-									tokenList.append({")", TokenType.CLOSE_PAREN})
+									tokenList.append((")", TokenType.CLOSE_PAREN))
 
 								case "{":
-									tokenList.append({"{", TokenType.OPEN_BRACE})
+									tokenList.append(("{", TokenType.OPEN_BRACE))
 									
 								case "}":
-									tokenList.append({"}", TokenType.CLOSE_BRACE})
+									tokenList.append(("}", TokenType.CLOSE_BRACE))
 									
 								case ";":
-									tokenList.append({";", TokenType.SEMICOLON})
+									tokenList.append((";", TokenType.SEMICOLON))
 
 							#aqui tiene que ser keyword
 							buffer = char.string[char.span()[1]:]
@@ -118,7 +118,11 @@ if __name__ == "__main__":
 		#aqui termina el while con la lista
 
 		print(tokenList)
-		parser.parseStatement(tokenList)
+		pro = parser.parseProgram(tokenList)
+
+		print(pro.function.iden)
+		print(pro.function.statement)
+		print(pro.function.statement.expression.intValue)
 
 		os.remove(iFile)
 	sys.exit(0)
