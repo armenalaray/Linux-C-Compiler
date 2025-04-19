@@ -2,7 +2,7 @@
 #python3 -m pdb "$(pwd)"/code/cd.py "$(pwd)"/test/test.c
 
 #compile
-
+: '
 python3 "$(pwd)"/code/cd.py "$(pwd)"/test/test.c
 exit_status=$?
 echo $exit_status
@@ -13,6 +13,7 @@ if [ $exit_status -eq $number ]; then
     ./test/test
     echo $?
 fi
+'
 
 #python3 "$(pwd)"/code/test.py
 
@@ -23,7 +24,7 @@ fi
 #compiler
 
 #assembler
-#gcc "$(pwd)"/bin/return.s -o bin/return
+gcc "$(pwd)"/bin/return.s -o bin/return
 
-
-#echo $?
+./bin/return
+echo $?
