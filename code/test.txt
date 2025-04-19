@@ -19,3 +19,18 @@ main:
  movq %rbp, %rsp
  popq %rbp
  ret
+
+ 0xffffda60
+ 
+
+ 0x7fffffffd508
+
+previous stackframe
+ rbp - address
+
+ rsp - last_val
+
+ //stack frame
+ rbp - address ->rbp
+       val0
+ rsp - val1

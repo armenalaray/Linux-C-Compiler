@@ -1,0 +1,14 @@
+set pagination off
+file bin/return
+layout asm
+layout reg
+#set debuginfod enabled on
+break *main+0
+run
+
+#set $x=5
+#while $x > -1
+#   nexti
+#   x/3xw ($rbp - 8)
+#   set $x=$x-1
+#end

@@ -25,6 +25,8 @@ fi
 
 #assembler
 gcc "$(pwd)"/bin/return.s -o bin/return
+#./bin/return
+#echo $?
 
-./bin/return
-echo $?
+gdb -x gdbcommands.txt 
+#--args bin/return 
