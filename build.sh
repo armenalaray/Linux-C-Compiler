@@ -1,8 +1,16 @@
 
-python3 "$(pwd)"/code/cd.py "$(pwd)"/test/test.c
-echo $?
+#python3 -m pdb "$(pwd)"/code/cd.py "$(pwd)"/test/test.c
 
-#python3 "$(pwd)"/code/cd.py "$(pwd)"/test/test.c
+#compile
+python3 "$(pwd)"/code/cd.py "$(pwd)"/test/test.c
+
+#chmod 777 /home/alejandro/CComp/test/test
+ls -la /home/alejandro/CComp/test/test
+
+#run
+./test/test
+#check out code
+echo $?
 
 #python3 "$(pwd)"/code/test.py
 

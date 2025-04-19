@@ -1,9 +1,11 @@
 import os
 import sys
 import re
-from token import TokenType
+from ctoken import TokenType
 
 import parser
+import assemblyGenerator
+import codeEmission
 
 """
 def lex(file):
@@ -129,7 +131,29 @@ if __name__ == "__main__":
 				#raise Exception("Syntax Error Extra code inside program. {0}".format(tokenList))
 				print("Syntax Error Extra code inside program. {0}".format(tokenList))
 				sys.exit(1)
+			
+			ass = assemblyGenerator.parseAST(pro)
 
+			#print(ass)
+
+			output = codeEmission.outputAsmFile(ass)
+
+			asmFile = os.path.dirname(sys.argv[1]) + "/" + os.path.basename(sys.argv[1]).split('.')[0] + '.s'
+			#print(asmFile)
+			aFile = open(asmFile, 'w')
+			aFile.write(output)
+			aFile.close()
+
+			
+			#assembly file
+			assC = "gcc " + asmFile + " -o " + os.path.dirname(sys.argv[1]) + "/" + os.path.basename(sys.argv[1]).split('.')[0]
+			
+			#print(assC)
+
+			os.system(assC)
+			
+			
+			
 		"""
 		print(pro.function.iden)
 		print(pro.function.statement)

@@ -1,5 +1,17 @@
 import re
 
+class a:
+    pass
+
+class b(a):
+    pass
+
+c = b()
+
+print(issubclass(type(c), a) )
+
+
+"""
 # Validate number
 is_alphanumeric = r"[a-zA-Z_]\w+"
 is_numeric = r"\d+"
@@ -17,3 +29,4 @@ print(b)
 # Extract number from a string
 number_extract_pattern = "\\d+"
 re.findall(number_extract_pattern, 'Your message was viewed 203 times.') # returns ['203']
+"""

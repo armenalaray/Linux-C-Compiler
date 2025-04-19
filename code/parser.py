@@ -1,5 +1,5 @@
 import sys
-from token import TokenType
+from ctoken import TokenType
 
 class Program:
 
@@ -8,20 +8,27 @@ class Program:
 
 class Function:
     
-    def __init__(self, iden, stment):
+    def __init__(self, iden, statement):
         self.iden = iden
-        self.statement = stment
+        self.statement = statement
         
-class ReturnStmt:
+class Statement:
+    pass
+
+class ReturnStmt(Statement):
     def __init__(self, retVal):
         self.expression = retVal
 
 class Expression:
-    intValue = 0
+    pass
+
+class Null_Expression(Expression):
+    pass
+
+class Constant_Expression(Expression):
     def __init__(self, intValue):
         self.intValue = intValue
         
-
 def takeToken(tokenList):
     if(tokenList != []):
         return tokenList.pop(0)
@@ -45,7 +52,7 @@ def parseInt(tokenList):
     actual = takeToken(tokenList)
     if actual != ():
         if actual[1] == TokenType.CONSTANT:
-            return int(actual[0])
+            return actual[0]
         
         print("Syntax Error Expected TokenType.CONSTANT but got {0}.".format(actual[1]))
         sys.exit(1)    
@@ -56,7 +63,7 @@ def parseInt(tokenList):
     
 def parseExp(tokenList):
     intValue = parseInt(tokenList)
-    return Expression(intValue)
+    return Constant_Expression(intValue)
     
 def parseStatement(tokenList):
     expect(TokenType.RETURN_KW, tokenList)
@@ -86,9 +93,9 @@ def parseFunction(tokenList):
     expect(TokenType.VOID_KW, tokenList)
     expect(TokenType.CLOSE_PAREN, tokenList)
     expect(TokenType.OPEN_BRACE, tokenList)
-    stment = parseStatement(tokenList)
+    statement = parseStatement(tokenList)
     expect(TokenType.CLOSE_BRACE, tokenList)
-    return Function(iden, stment)
+    return Function(iden, statement)
 
 def parseProgram(tokenList):
     fun = parseFunction(tokenList)
