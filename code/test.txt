@@ -4,3 +4,18 @@ So field type is identifier and the name main
 
 identifier -> main
 statement -> body
+
+    .globl main
+main:
+ pushq %rbp
+ movq %rsp, %rbp
+ subq $8, %rsp
+ 1 movl $2, 2 -4(%rbp)
+ 3 negl -4(%rbp)
+ 4 movl -4(%rbp), %r10d
+ 5 movl %r10d, -8(%rbp)
+ 6 notl -8(%rbp)
+ 7 movl -8(%rbp), %eax
+ movq %rbp, %rsp
+ popq %rbp
+ ret
