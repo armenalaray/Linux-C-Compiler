@@ -49,13 +49,14 @@ if __name__ == "__main__":
 					print("Error Invalid command option.")
 					sys.exit(1)
 
-			
-			print(LastStage)
 		case _:
 			print("Error Invalid command option.")
 			sys.exit(1)
 
 	#lexonly
+	
+	print("File: ", file)
+	print("Last Stage: ", LastStage)
 
 	#NOTE: you have an archive
 	prepC = "gcc -E -P " + file + " -o "
@@ -71,11 +72,12 @@ if __name__ == "__main__":
 		with open(iFile, "r") as preprocessedfile:
 
 			buffer = preprocessedfile.read()
-
-			
+	
 			tokenList = Lex(buffer)
-			
+
 			os.remove(iFile)
+			if LastStage == 'lex':
+				sys.exit(0)
 
 			pro = parser.parseProgram(tokenList)
 

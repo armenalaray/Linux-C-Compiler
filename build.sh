@@ -3,18 +3,16 @@
 
 # My compiler
 
+lastStage="--lex"
 
-python3 "$(pwd)"/code/cd.py --lex "$(pwd)"/test/test.c
+python3 "$(pwd)"/code/cd.py $lastStage "$(pwd)"/test_/test.c
+echo $?
 
-exit_status=$?
-echo $exit_status
-
-number=0
-if [ $exit_status -eq $number ]; then
-    ls -la /home/alejandro/CComp/test/test
-    ./test/test
+if test -f test_/test; then
+    ./test_/test
     echo "from test: "$?
 fi
+
 
 
 #python3 "$(pwd)"/code/test.py
