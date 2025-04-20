@@ -6,12 +6,20 @@ class Program:
 
     def __init__(self, function):
         self.function = function
+    
+    def __str__(self):
+        return "AST Program:\n\t{self.function}".format(self=self)
 
 class Function:
     
     def __init__(self, iden, statement):
         self.iden = iden
         self.statement = statement
+    
+    def __str__(self):
+
+        return "Function: {self.iden}\n\t\tStatement: {self.statement}".format(self=self)
+        
         
 class Statement:
     pass
@@ -19,6 +27,10 @@ class Statement:
 class ReturnStmt(Statement):
     def __init__(self, retVal):
         self.expression = retVal
+
+    def __str__(self):
+        #super().__str__()
+        return "Return Statement:\n\t\t\tExpression: {self.expression}".format(self=self)
 
 class Expression:
     pass
@@ -29,11 +41,19 @@ class Null_Expression(Expression):
 class Constant_Expression(Expression):
     def __init__(self, intValue):
         self.intValue = intValue
+    
+    def __str__(self):
+        #super().__str__()
+        return "{self.intValue}".format(self=self)
 
 class Unary_Expression(Expression):
     def __init__(self, operator, expression):
         self.operator = operator
         self.expression = expression
+
+    def __str__(self):
+        #super().__str__()
+        return "Unary Expression:\n\t\t\t\tOperator: {self.operator}\n\t\t\t\tExpression: {self.expression}".format(self=self)
 
 class OperatorType(Enum):
     NEGATE = 1
@@ -46,6 +66,13 @@ class UnaryOperator(Operator):
     def __init__(self, operator):
         self.operator = operator
     
+    def __str__(self):
+        #super().__str__()
+        return "{self.operator}".format(self=self) 
+    
+#def prettyPrintAST(pro, level):
+#    pro.
+#    pass
 
 def takeToken(tokenList):
     if(tokenList != []):
@@ -61,7 +88,7 @@ def expect(expected, tokenList):
     print("actual: ", actual)
     if actual != ():
         if actual[1] != expected:
-            print("Syntax Error Expected: {0} got: {1}.".format(expected, actual))
+            print("Syntax Error Expected: {0} got: {1} at Line {2}.".format(expected, actual[0], actual[2]))
             sys.exit(1)
     else:
         print("Syntax Error Expected: {0} but there are no more tokens.".format(expected))
@@ -75,7 +102,7 @@ def parseInt(tokenList):
         if actual[1] == TokenType.CONSTANT:
             return actual[0]
         
-        print("Syntax Error Expected TokenType.CONSTANT but got {0}.".format(actual[1]))
+        print("Syntax Error Expected TokenType.CONSTANT but got {0} at Line {1}.".format(actual[1], actual[2]))
         sys.exit(1)    
     
     print("Syntax Error Expected an int value but there are no more tokens.")
@@ -92,7 +119,7 @@ def parseUnop(tokenList):
             case TokenType.TILDE:
                 return UnaryOperator(OperatorType.COMPLEMENT)
             case _:
-                print("Syntax Error Expected an Unary Operator but: {0}".format(actual))
+                print("Syntax Error Expected an Unary Operator but: {0} at Line {1}".format(actual[0], actual[2]))
                 sys.exit(1)            
         
     print("Syntax Error Expected an Unary Operator but there are no more tokens.")
@@ -119,7 +146,7 @@ def parseExp(tokenList):
         return inner_exp
         
     else:
-        print("Malformed expression.")
+        print("Malformed expression at Line {0}.".format(token[2]))
         sys.exit(1)
 
 def parseStatement(tokenList):
@@ -135,7 +162,7 @@ def parseIdentifier(tokenList):
         if actual[1] == TokenType.IDENTIFIER:
             return actual[0]
         
-        print("Syntax Error Expected TokenType.IDENTIFIER but got {0}.".format(actual[1]))
+        print("Syntax Error Expected TokenType.IDENTIFIER but got {0} at Line {1}.".format(actual[1], actual[2]))
         sys.exit(1)    
     
     

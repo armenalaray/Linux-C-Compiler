@@ -20,6 +20,7 @@ class TokenType(Enum):
 
 def Lex(buffer):
     tokenList = []
+    LineNumber = 1
 
     while buffer != r'':
         #breakpoint()
@@ -29,6 +30,12 @@ def Lex(buffer):
         is_wspace = r"\s+"
         wspace = re.match(is_wspace, buffer)
         if wspace:
+            
+            is_newline = re.match(r"[\s]*\n[\s]*",wspace.group())
+            if is_newline:
+                LineNumber += 1
+            
+            print(LineNumber)
             buffer = wspace.string[wspace.span()[1]:]
 
         #print(buffer)
@@ -37,7 +44,7 @@ def Lex(buffer):
         is_not_valid = re.match(is_not, buffer)
         if is_not_valid:
             #raise Exception("Error invalid token: {0}".format(buffer))
-            print("Error invalid token: {0}".format(buffer))
+            print("Error invalid token: {0} at Line: {1}".format(buffer, LineNumber))
             #aqui se remueve pero yo lo tengo abierto
             os.remove(iFile)
             sys.exit(1)
@@ -47,7 +54,7 @@ def Lex(buffer):
         numeric = re.match(is_numeric, buffer)
         if numeric:
             
-            tokenList.append((numeric.group(), TokenType.CONSTANT))
+            tokenList.append((numeric.group(), TokenType.CONSTANT, LineNumber))
 
             buffer = numeric.string[numeric.span()[1]:]
             #print(buffer)
@@ -55,7 +62,7 @@ def Lex(buffer):
             is_dd = r"--"
             dd = re.match(is_dd, buffer)
             if dd:
-                tokenList.append(("--", TokenType.TWOHYPHENS))
+                tokenList.append(("--", TokenType.TWOHYPHENS, LineNumber))
                 buffer = dd.string[dd.span()[1]:]
                 #print(buffer)
         
@@ -66,16 +73,16 @@ def Lex(buffer):
                     
                     match alphanumeric.group():
                         case "int":
-                            tokenList.append(("int", TokenType.INT_KW))
+                            tokenList.append(("int", TokenType.INT_KW, LineNumber))
                             
                         case "void":
-                            tokenList.append(("void", TokenType.VOID_KW))
+                            tokenList.append(("void", TokenType.VOID_KW, LineNumber))
                             
                         case "return":
-                            tokenList.append(("return", TokenType.RETURN_KW))
+                            tokenList.append(("return", TokenType.RETURN_KW, LineNumber))
 
                         case _:
-                            tokenList.append((alphanumeric.group(), TokenType.IDENTIFIER))
+                            tokenList.append((alphanumeric.group(), TokenType.IDENTIFIER, LineNumber))
 
                     buffer = alphanumeric.string[alphanumeric.span()[1]:]
                     #print(buffer)
@@ -86,23 +93,23 @@ def Lex(buffer):
                         #print(char)
                         match char.group():
                             case "(":
-                                tokenList.append(("(", TokenType.OPEN_PAREN))
+                                tokenList.append(("(", TokenType.OPEN_PAREN, LineNumber))
                                 
                             case ")":
-                                tokenList.append((")", TokenType.CLOSE_PAREN))
+                                tokenList.append((")", TokenType.CLOSE_PAREN, LineNumber))
 
                             case "{":
-                                tokenList.append(("{", TokenType.OPEN_BRACE))
+                                tokenList.append(("{", TokenType.OPEN_BRACE, LineNumber))
                                 
                             case "}":
-                                tokenList.append(("}", TokenType.CLOSE_BRACE))
+                                tokenList.append(("}", TokenType.CLOSE_BRACE, LineNumber))
                                 
                             case ";":
-                                tokenList.append((";", TokenType.SEMICOLON))
+                                tokenList.append((";", TokenType.SEMICOLON, LineNumber))
                             case "~":
-                                tokenList.append(("~", TokenType.TILDE))
+                                tokenList.append(("~", TokenType.TILDE, LineNumber))
                             case "-":
-                                tokenList.append(("-", TokenType.HYPHEN))
+                                tokenList.append(("-", TokenType.HYPHEN, LineNumber))
                                 
 
                         #aqui tiene que ser keyword
@@ -111,7 +118,7 @@ def Lex(buffer):
                     else:
                         if buffer != '':
                             #raise Exception("Error invalid token: {0}".format(buffer))
-                            print("Error invalid token: {0}".format(buffer))
+                            print("Error invalid token: {0} at Line: {1}".format(buffer, LineNumber))
                             os.remove(iFile)
                             sys.exit(1)
 
