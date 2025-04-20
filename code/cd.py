@@ -1,7 +1,6 @@
 import os
 import sys
-import re
-from ctoken import TokenType
+from ctoken import *
 
 import parser
 import assemblyGenerator
@@ -25,9 +24,43 @@ if a[:2] == "--":
 			
 if __name__ == "__main__":	
 
-	prepC = "gcc -E -P " + sys.argv[1] + " -o "
+	file = ''
+	LastStage = "codeEmission"
 
-	iFile = os.path.dirname(sys.argv[1]) + "/" +  os.path.basename(sys.argv[1]).split('.')[0] + ".i"
+	match len(sys.argv):
+		case 1:
+			#NOTE: no arguments
+			pass
+		case 2:
+			file = sys.argv[1]
+			
+			
+		case 3:
+			file = sys.argv[2]
+
+			match sys.argv[1]:
+				case "--lex":
+					LastStage = "lex"
+				case "--parse":
+					LastStage = "parse"
+				case "--codegen":
+					LastStage = "assemblyGeneration"
+				case _:
+					print("Error Invalid command option.")
+					sys.exit(1)
+
+			
+			print(LastStage)
+		case _:
+			print("Error Invalid command option.")
+			sys.exit(1)
+
+	#lexonly
+
+	#NOTE: you have an archive
+	prepC = "gcc -E -P " + file + " -o "
+
+	iFile = os.path.dirname(file) + "/" +  os.path.basename(file).split('.')[0] + ".i"
 
 	prepC = prepC + iFile
 
@@ -35,96 +68,15 @@ if __name__ == "__main__":
 		#note here you already have a file in the same directory
 		#preprocessor file
 
-		with open(iFile, "r") as file:
+		with open(iFile, "r") as preprocessedfile:
 
-			buffer = file.read()
+			buffer = preprocessedfile.read()
 
-			tokenList = []
-
-			while buffer != r'':
-				#breakpoint()
-
-				print(buffer)
-
-				is_wspace = r"\s+"
-				wspace = re.match(is_wspace, buffer)
-				if wspace:
-					buffer = wspace.string[wspace.span()[1]:]
-
-				print(buffer)
-
-				is_not = r"\d+[a-zA-Z]"
-				is_not_valid = re.match(is_not, buffer)
-				if is_not_valid:
-					#raise Exception("Error invalid token: {0}".format(buffer))
-					print("Error invalid token: {0}".format(buffer))
-					os.remove(iFile)
-					sys.exit(1)
-
-
-				is_numeric = r"\d+"
-				numeric = re.match(is_numeric, buffer)
-				if numeric:
-					 
-					tokenList.append((numeric.group(), TokenType.CONSTANT))
-
-					buffer = numeric.string[numeric.span()[1]:]
-					print(buffer)
-				else:
-					is_alphanumeric = r"[a-zA-Z_]\w*"
-					alphanumeric = re.match(is_alphanumeric, buffer)
-					if alphanumeric:
-						
-						match alphanumeric.group():
-							case "int":
-								tokenList.append(("int", TokenType.INT_KW))
-								
-							case "void":
-								tokenList.append(("void", TokenType.VOID_KW))
-								
-							case "return":
-								tokenList.append(("return", TokenType.RETURN_KW))
-
-							case _:
-								tokenList.append((alphanumeric.group(), TokenType.IDENTIFIER))
-
-						buffer = alphanumeric.string[alphanumeric.span()[1]:]
-						print(buffer)
-					else:
-						is_char = r"[(){};]"
-						char = re.match(is_char, buffer)
-						if char:
-							print(char)
-							match char.group():
-								case "(":
-									tokenList.append(("(", TokenType.OPEN_PAREN))
-									
-								case ")":
-									tokenList.append((")", TokenType.CLOSE_PAREN))
-
-								case "{":
-									tokenList.append(("{", TokenType.OPEN_BRACE))
-									
-								case "}":
-									tokenList.append(("}", TokenType.CLOSE_BRACE))
-									
-								case ";":
-									tokenList.append((";", TokenType.SEMICOLON))
-
-							#aqui tiene que ser keyword
-							buffer = char.string[char.span()[1]:]
-							print(buffer)
-						else:
-							if buffer != '':
-								#raise Exception("Error invalid token: {0}".format(buffer))
-								print("Error invalid token: {0}".format(buffer))
-								os.remove(iFile)
-								sys.exit(1)
-		
-			#aqui termina el while con la lista
+			
+			tokenList = Lex(buffer)
+			
 			os.remove(iFile)
 
-			print(tokenList)
 			pro = parser.parseProgram(tokenList)
 
 			if tokenList != []:
@@ -138,7 +90,7 @@ if __name__ == "__main__":
 
 			output = codeEmission.outputAsmFile(ass)
 
-			asmFile = os.path.dirname(sys.argv[1]) + "/" + os.path.basename(sys.argv[1]).split('.')[0] + '.s'
+			asmFile = os.path.dirname(file) + "/" + os.path.basename(file).split('.')[0] + '.s'
 			#print(asmFile)
 			aFile = open(asmFile, 'w')
 			aFile.write(output)
@@ -146,7 +98,7 @@ if __name__ == "__main__":
 
 			
 			#assembly file
-			assC = "gcc " + asmFile + " -o " + os.path.dirname(sys.argv[1]) + "/" + os.path.basename(sys.argv[1]).split('.')[0]
+			assC = "gcc " + asmFile + " -o " + os.path.dirname(file) + "/" + os.path.basename(file).split('.')[0]
 			
 			#print(assC)
 
@@ -161,10 +113,7 @@ if __name__ == "__main__":
 		"""
 
 	sys.exit(0)
-
-
-
-				
+					
 
 			
 			
