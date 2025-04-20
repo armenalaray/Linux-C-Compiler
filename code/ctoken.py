@@ -24,14 +24,14 @@ def Lex(buffer):
     while buffer != r'':
         #breakpoint()
 
-        print(buffer)
+        #print(buffer)
 
         is_wspace = r"\s+"
         wspace = re.match(is_wspace, buffer)
         if wspace:
             buffer = wspace.string[wspace.span()[1]:]
 
-        print(buffer)
+        #print(buffer)
 
         is_not = r"\d+[a-zA-Z]"
         is_not_valid = re.match(is_not, buffer)
@@ -50,14 +50,14 @@ def Lex(buffer):
             tokenList.append((numeric.group(), TokenType.CONSTANT))
 
             buffer = numeric.string[numeric.span()[1]:]
-            print(buffer)
+            #print(buffer)
         else:
             is_dd = r"--"
             dd = re.match(is_dd, buffer)
             if dd:
                 tokenList.append(("--", TokenType.TWOHYPHENS))
                 buffer = dd.string[dd.span()[1]:]
-                print(buffer)
+                #print(buffer)
         
             else:
                 is_alphanumeric = r"[a-zA-Z_]\w*"
@@ -78,12 +78,12 @@ def Lex(buffer):
                             tokenList.append((alphanumeric.group(), TokenType.IDENTIFIER))
 
                     buffer = alphanumeric.string[alphanumeric.span()[1]:]
-                    print(buffer)
+                    #print(buffer)
                 else:
                     is_char = r"[(){};~-]"
                     char = re.match(is_char, buffer)
                     if char:
-                        print(char)
+                        #print(char)
                         match char.group():
                             case "(":
                                 tokenList.append(("(", TokenType.OPEN_PAREN))
@@ -107,7 +107,7 @@ def Lex(buffer):
 
                         #aqui tiene que ser keyword
                         buffer = char.string[char.span()[1]:]
-                        print(buffer)
+                        #print(buffer)
                     else:
                         if buffer != '':
                             #raise Exception("Error invalid token: {0}".format(buffer))

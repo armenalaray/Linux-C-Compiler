@@ -86,6 +86,11 @@ if __name__ == "__main__":
 				print("Syntax Error Extra code inside program. {0}".format(tokenList))
 				sys.exit(1)
 			
+			print(pro)
+
+			if LastStage == 'parse':
+				sys.exit(0)
+
 			ass = assemblyGenerator.parseAST(pro)
 
 			#print(ass)
