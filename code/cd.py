@@ -95,8 +95,10 @@ if __name__ == "__main__":
 			if LastStage == 'parse':
 				sys.exit(0)
 
-			tac = tacGenerator.parseProgram(pro)
+			tac = tacGenerator.TAC_parseProgram(pro)
 
+			print(tac)
+			
 			if LastStage == 'tac':
 				sys.exit(0)
 
