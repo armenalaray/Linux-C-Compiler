@@ -4,6 +4,9 @@ import parser
 class TAC_Program:
     def __init__(self, function):
         self.function = function
+    
+    def __str__(self):
+        return "TAC Program:\n\t{self.function}".format(self=self)
 
 class TAC_Function:
     instructions = []
@@ -11,18 +14,33 @@ class TAC_Function:
         self.identifier = identifier
         self.instructions = instructions
 
+    def __str__(self):
+        return "Function: {self.identifier} instructions:\n\t\t{self.instructions}".format(self=self)
+        
 class instruction:
     pass
 
 class TAC_returnInstruction(instruction):
     def __init__(self, Value):
         self.Value = Value
-
+    
+    def __str__(self):
+        return "Return {self.Value}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+    
 class TAC_UnaryInstruction(instruction):
     def __init__(self, operator, src, dst):
         self.operator = operator
         self.src = src 
         self.dst = dst   
+    
+    def __str__(self):
+        return "{self.dst} = {self.operator}{self.src}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
 
 class Value:
     pass
@@ -30,11 +48,17 @@ class Value:
 class TAC_ConstantValue(Value):
     def __init__(self, intValue):
         self.intValue = intValue
+    
+    def __str__(self):
+        return "{self.intValue}".format(self=self)
 
 class TAC_VariableValue(Value):
     def __init__(self, identifier):
         self.identifier = identifier
 
+    def __str__(self):
+        return "{self.identifier}".format(self=self)
+    
 class OperatorType(Enum):
     NEGATE = 1
     COMPLEMENT = 2
@@ -46,7 +70,13 @@ class TAC_UnaryOperator(Operator):
     def __init__(self, operator):
         self.operator = operator
     
-
+    def __str__(self):
+        match self.operator:
+            case parser.OperatorType.NEGATE:
+                return "-"
+            case parser.OperatorType.COMPLEMENT:
+                return "~"
+            
 
 global_value = 0
 

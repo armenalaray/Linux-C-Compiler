@@ -85,7 +85,7 @@ def peek(tokenList):
 def expect(expected, tokenList):
     actual = takeToken(tokenList)
     
-    print("actual: ", actual)
+    #print("actual: ", actual)
     if actual != ():
         if actual[1] != expected:
             print("Syntax Error Expected: {0} got: {1} at Line {2}.".format(expected, actual[0], actual[2]))
