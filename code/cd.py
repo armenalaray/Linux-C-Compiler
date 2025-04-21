@@ -6,6 +6,8 @@ import parser
 import assemblyGenerator
 import codeEmission
 
+import tacGenerator
+
 """
 def lex(file):
 	pass
@@ -43,6 +45,8 @@ if __name__ == "__main__":
 					LastStage = "lex"
 				case "--parse":
 					LastStage = "parse"
+				case "--tacky":
+					LastStage = "tac"
 				case "--codegen":
 					LastStage = "assemblyGeneration"
 				case _:
@@ -91,7 +95,12 @@ if __name__ == "__main__":
 			if LastStage == 'parse':
 				sys.exit(0)
 
-			ass = assemblyGenerator.parseAST(pro)
+			tac = tacGenerator.parseProgram(pro)
+
+			if LastStage == 'tac':
+				sys.exit(0)
+
+			ass = assemblyGenerator.parseAST(tac)
 
 			#print(ass)
 

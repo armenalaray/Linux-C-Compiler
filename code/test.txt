@@ -34,3 +34,17 @@ previous stackframe
  rbp - address ->rbp
        val0
  rsp - val1
+
+inner most expression and working our way out!
+tmp.0 = -8
+tmp.1 = ~tmp.0 
+tmp.2 = -tmp.1
+return tmp.2
+
+
+
+
+
+
+
+
