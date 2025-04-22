@@ -106,9 +106,14 @@ if __name__ == "__main__":
 
 			print(ass)
 
-			assemblyGenerator.ReplacePseudoRegisters(ass)
+			offset = assemblyGenerator.ReplacePseudoRegisters(ass)
+
 			print(ass)
 
+			assemblyGenerator.FixingUpInstructions(ass, offset)
+
+			print(ass)
+			
 			if LastStage == 'assemblyGeneration':
 				sys.exit(0)
 

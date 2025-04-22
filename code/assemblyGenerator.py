@@ -62,6 +62,17 @@ class UnaryInstruction:
     def __repr__(self):
         return self.__str__()
 
+class AllocateStackInstruction:
+    def __init__(self, offset):
+        self.offset = offset
+    
+    def __str__(self):
+        return "AllocateStack({self.offset})".format(self=self)
+    
+    
+    def __repr__(self):
+        return self.__str__()
+
 class PseudoRegisterOperand:
 
     def __init__(self, pseudo):
@@ -231,4 +242,8 @@ def ReplacePseudoRegisters(ass):
                         i.dest = StackOperand(value)
                         
 
-        print(table)
+    return offset
+
+def FixingUpInstructions(ass, offset):
+    ass.function.insList.insert(0,AllocateStackInstruction(-offset))
+    
