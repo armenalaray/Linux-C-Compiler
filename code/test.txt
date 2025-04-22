@@ -56,7 +56,9 @@ newStackOperand->next  = actual->next
 actual2, offset - 4
 actual3, offset - 8
 
+actual, reg
 
+reg    , other
 
 
 

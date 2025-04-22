@@ -113,7 +113,7 @@ if __name__ == "__main__":
 			assemblyGenerator.FixingUpInstructions(ass, offset)
 
 			print(ass)
-			
+
 			if LastStage == 'assemblyGeneration':
 				sys.exit(0)
 

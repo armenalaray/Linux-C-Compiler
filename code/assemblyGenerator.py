@@ -130,7 +130,7 @@ class UnaryOperator:
 
 class RegisterType(Enum):
     AX = 1
-    
+    R10 = 2
 
 class Register:
     def __init__(self, register):
@@ -140,6 +140,8 @@ class Register:
         match self.register:
             case RegisterType.AX:
                 return "AX"
+            case RegisterType.R10:
+                return "R10d"
 
 def parseValue(v):
     match v:
@@ -246,4 +248,17 @@ def ReplacePseudoRegisters(ass):
 
 def FixingUpInstructions(ass, offset):
     ass.function.insList.insert(0,AllocateStackInstruction(-offset))
+
+    for index, i in enumerate(ass.function.insList):
+        match i:
+            case MovInstruction(sourceO=src, destO=dst):
+                if type(src) == StackOperand and type(dst) == StackOperand:
+                    
+                    i.destO = RegisterOperand(Register(RegisterType.R10))
+
+                    instruction = MovInstruction(RegisterOperand(Register(RegisterType.R10)),dst)
+                    ass.function.insList.insert(index+1, instruction)
+                    
+
+        
     
