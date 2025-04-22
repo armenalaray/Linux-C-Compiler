@@ -41,8 +41,20 @@ tmp.1 = ~tmp.0
 tmp.2 = -tmp.1
 return tmp.2
 
+insert (actual, offset)
+buscas 
+usas
+
+insertas
+usas
+
+parent->next = newStackOperand
+newStackOperand->next  = actual->next
 
 
+(actual, offset - 0)
+actual2, offset - 4
+actual3, offset - 8
 
 
 

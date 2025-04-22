@@ -104,10 +104,14 @@ if __name__ == "__main__":
 
 			ass = assemblyGenerator.ASM_parseAST(tac)
 
+			print(ass)
+
+			assemblyGenerator.ReplacePseudoRegisters(ass)
+			print(ass)
+
 			if LastStage == 'assemblyGeneration':
 				sys.exit(0)
 
-			#print(ass)
 
 			output = codeEmission.outputAsmFile(ass)
 

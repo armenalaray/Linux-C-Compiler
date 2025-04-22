@@ -9,7 +9,7 @@ class Program:
 
     def __str__(self):
 
-        return "Asm Program\n\t{self.function}".format(self=self)
+        return "ASM Program\n\t{self.function}".format(self=self)
 
 
 class Function:
@@ -31,10 +31,10 @@ class ReturnInstruction:
     def __str__(self):
         return "ret"
     
-    """
+    
     def __repr__(self):
         return self.__str__()
-    """
+    
 
 class MovInstruction:
 
@@ -43,16 +43,24 @@ class MovInstruction:
         self.destO = destO
         
     def __str__(self):
-        return "movl {self.sourceO}, {self.destO}".format(self=self)
+        return "Mov({self.sourceO}, {self.destO})".format(self=self)
     
-    """
+    
     def __repr__(self):
         return self.__str__()
-    """
+    
+
 class UnaryInstruction:
     def __init__(self, operator, dest):
         self.operator = operator
         self.dest = dest
+    
+    def __str__(self):
+        return "Unary({self.operator}, {self.dest})".format(self=self)
+    
+    
+    def __repr__(self):
+        return self.__str__()
 
 class PseudoRegisterOperand:
 
@@ -60,8 +68,14 @@ class PseudoRegisterOperand:
         self.pseudo = pseudo
     
     def __str__(self):
-        return r"%eax"
+        return r"Pseudo({self.pseudo})".format(self=self)
 
+class StackOperand:
+    def __init__(self, offset):
+        self.offset = offset
+
+    def __str__(self):
+        return r"Stack({self.offset})".format(self=self)
 
 class RegisterOperand:
 
@@ -69,7 +83,7 @@ class RegisterOperand:
         self.register = register
     
     def __str__(self):
-        return r"%eax"
+        return r"Reg({self.register})".format(self=self)
     """
     
     def __repr__(self):
@@ -81,7 +95,7 @@ class ImmediateOperand:
         self.imm = intVal
 
     def __str__(self):
-        return r"${self.imm}".format(self=self)
+        return r"Imm({self.imm})".format(self=self)
     
     """
     def __repr__(self):
@@ -95,6 +109,13 @@ class OperatorType(Enum):
 class UnaryOperator:
     def __init__(self, operator):
         self.operator = operator
+    
+    def __str__(self):
+        match self.operator:
+            case OperatorType.Not:
+                return "Not"
+            case OperatorType.Neg:
+                return "Neg"
 
 class RegisterType(Enum):
     AX = 1
@@ -103,6 +124,11 @@ class RegisterType(Enum):
 class Register:
     def __init__(self, register):
         self.register = register
+
+    def __str__(self):
+        match self.register:
+            case RegisterType.AX:
+                return "AX"
 
 def parseValue(v):
     match v:
@@ -164,4 +190,45 @@ def ASM_parseAST(ast):
     ast.function
     function = ASM_parseFunction(ast.function)
     return Program(function)
-    
+
+def ReplacePseudoRegisters(ass):
+    offset = 0
+    table = {}
+    for i in ass.function.insList:
+        match i:
+            case MovInstruction(sourceO=src, destO=dst):
+                match src:
+                    case PseudoRegisterOperand(pseudo=id):
+
+                        if table.get(id) == None:
+                            offset -= 4
+                            table.update({id : offset})
+                            
+                        value = table[id] 
+                        
+                        i.sourceO = StackOperand(value)
+                        
+                match dst:
+                    case PseudoRegisterOperand(pseudo=id):
+                        if table.get(id) == None:
+                            offset -= 4
+                            table.update({id : offset})
+                            
+                        value = table[id] 
+                        
+                        i.destO = StackOperand(value)
+                        
+
+            case UnaryInstruction(operator=o, dest=dst):
+                match dst:
+                    case PseudoRegisterOperand(pseudo=id):
+                        if table.get(id) == None:
+                            offset -= 4
+                            table.update({id : offset})
+                            
+                        value = table[id] 
+                        
+                        i.dest = StackOperand(value)
+                        
+
+        print(table)
