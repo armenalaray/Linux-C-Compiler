@@ -5,9 +5,13 @@ These are the compiler passes I made for the compiler:
 
 <img width="338" alt="compiler_passes" src="https://github.com/user-attachments/assets/a53943b8-7b22-4a76-8ac5-09bb6c9a2b21" />
 
+## Output
+
 These is the ouput for an expression:
 
 ![Screenshot 2025-04-22 150223](https://github.com/user-attachments/assets/700272ac-0f71-4920-afa2-ab351ec104cf)
+
+## Debugging
 
 This is the debugging of the assembly code with GDB:
 
