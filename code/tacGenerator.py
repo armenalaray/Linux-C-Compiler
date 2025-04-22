@@ -72,9 +72,9 @@ class TAC_UnaryOperator(Operator):
     
     def __str__(self):
         match self.operator:
-            case parser.OperatorType.NEGATE:
+            case OperatorType.NEGATE:
                 return "-"
-            case parser.OperatorType.COMPLEMENT:
+            case OperatorType.COMPLEMENT:
                 return "~"
             
 
@@ -86,6 +86,17 @@ def makeTemp():
     global_value += 1
     return name
     
+def parseOperator(op):
+    match op:
+        case parser.UnaryOperator(operator=o):
+            match o:
+                case parser.OperatorType.NEGATE:
+                    return TAC_UnaryOperator(OperatorType.NEGATE)
+                case parser.OperatorType.COMPLEMENT:
+                    return TAC_UnaryOperator(OperatorType.COMPLEMENT)
+                case _:
+                    print("Invalid Parser operator.")
+                    sys.exit(1)
 
 def TAC_parseInstructions(expression, instructions):
     
@@ -98,8 +109,8 @@ def TAC_parseInstructions(expression, instructions):
             src = TAC_parseInstructions(inner, instructions)
 
             dst = TAC_VariableValue(makeTemp())
-            
-            instructions.append(TAC_UnaryInstruction(TAC_UnaryOperator(op.operator), src, dst))
+            operator = parseOperator(op)
+            instructions.append(TAC_UnaryInstruction(operator, src, dst))
 
             return dst
         

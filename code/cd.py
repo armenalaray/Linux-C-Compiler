@@ -98,11 +98,14 @@ if __name__ == "__main__":
 			tac = tacGenerator.TAC_parseProgram(pro)
 
 			print(tac)
-			
+
 			if LastStage == 'tac':
 				sys.exit(0)
 
-			ass = assemblyGenerator.parseAST(tac)
+			ass = assemblyGenerator.ASM_parseAST(tac)
+
+			if LastStage == 'assemblyGeneration':
+				sys.exit(0)
 
 			#print(ass)
 

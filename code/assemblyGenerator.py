@@ -1,8 +1,6 @@
-from parser import Statement
-from parser import ReturnStmt
-from parser import Expression
-from parser import Constant_Expression
-from parser import Null_Expression
+from enum import Enum
+import tacGenerator
+import sys
 
 class Program:
     
@@ -51,7 +49,20 @@ class MovInstruction:
     def __repr__(self):
         return self.__str__()
     """
-        
+class UnaryInstruction:
+    def __init__(self, operator, dest):
+        self.operator = operator
+        self.dest = dest
+
+class PseudoRegisterOperand:
+
+    def __init__(self, pseudo):
+        self.pseudo = pseudo
+    
+    def __str__(self):
+        return r"%eax"
+
+
 class RegisterOperand:
 
     def __init__(self, register):
@@ -76,43 +87,81 @@ class ImmediateOperand:
     def __repr__(self):
         return self.__str__()
     """
-        
-
-def parseOperand(astExpression):
-
-    if issubclass(type(astExpression), Expression):
-        if type(astExpression) == Null_Expression:
-            return RegisterOperand('EAX')
-        elif type(astExpression) == Constant_Expression:
-            return ImmediateOperand(astExpression.intValue)
+class OperatorType(Enum):
+    Not = 1
+    Neg = 2
     
 
-def parseInstructions(astStment):
-    instList = []
+class UnaryOperator:
+    def __init__(self, operator):
+        self.operator = operator
 
-    #breakpoint()
-    if issubclass(type(astStment),Statement):
-        
-        if type(astStment.expression) == Constant_Expression:
-            SourceOperand = parseOperand(astStment.expression)
-            DestOperand = parseOperand(Null_Expression())
-            instList.append(MovInstruction(SourceOperand, DestOperand))
-
-        if type(astStment) == ReturnStmt:
-            instList.append(ReturnInstruction())
-    
-    return instList
+class RegisterType(Enum):
+    AX = 1
     
 
-def parseFunction(astFunc):
+class Register:
+    def __init__(self, register):
+        self.register = register
 
-    identifier = astFunc.iden
-    insList = parseInstructions(astFunc.statement)
-    return Function(identifier, insList)
+def parseValue(v):
+    match v:
+        case tacGenerator.TAC_ConstantValue(intValue=i):
+            return ImmediateOperand(i)
+            
+        case tacGenerator.TAC_VariableValue(identifier=i):
+            return PseudoRegisterOperand(i)
+
+
+def parseOperator(op):
+    match op:
+        case tacGenerator.TAC_UnaryOperator(operator=o):
+            match o:
+                case tacGenerator.OperatorType.NEGATE:
+                    return UnaryOperator(OperatorType.Neg)
+                case tacGenerator.OperatorType.COMPLEMENT:
+                    return UnaryOperator(OperatorType.Not)
+                case _:
+                    print("Invalid TAC operator.")
+                    sys.exit(1)
+            
+
+def ASM_parseInstructions(TAC_Instructions):
+    ASM_Instructions = []
+
+    for i in TAC_Instructions:
+        match i:
+            case tacGenerator.TAC_returnInstruction(Value=v):
+                src = parseValue(v)
+                dst = RegisterOperand(Register(RegisterType.AX))
+                instruction0 = MovInstruction(src, dst)
+                instruction1 = ReturnInstruction()
+                
+                ASM_Instructions.append(instruction0)
+                ASM_Instructions.append(instruction1)
+                 
+            case tacGenerator.TAC_UnaryInstruction(operator=o, src=src_, dst=dst_):
+                src = parseValue(src_)
+                dst = parseValue(dst_)
+                operator = parseOperator(o)
+
+                instruction0 = MovInstruction(src, dst)
+                instruction1 = UnaryInstruction(operator, dst)
+                
+                ASM_Instructions.append(instruction0)
+                ASM_Instructions.append(instruction1)
+                
+    
+    return ASM_Instructions
+    
+def ASM_parseFunction(astFunc):
+    identifier = astFunc.identifier
+    instructions = ASM_parseInstructions(astFunc.instructions)
+    return Function(identifier, instructions)
     
 
-def parseAST(ast):
+def ASM_parseAST(ast):
     ast.function
-    function = parseFunction(ast.function)
+    function = ASM_parseFunction(ast.function)
     return Program(function)
     

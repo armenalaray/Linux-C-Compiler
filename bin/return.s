@@ -21,7 +21,7 @@ main:
     
     # esto es el codigo 
     # store 2 in rbp -4
-    movl $2, -4(%rbp)
+    movl $2, -4(%rbp) stack(-4)
 
     # aqui ya lo moviste se nega en la memoria
     # 32 bit value
