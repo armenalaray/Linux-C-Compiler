@@ -181,7 +181,7 @@ def parseFactor(tokenList):
         
     elif token[1] == TokenType.OPEN_PAREN:
         takeToken(tokenList)
-        inner_exp = parseExp(tokenList)
+        inner_exp = parseExp(tokenList, 0)
         expect(TokenType.CLOSE_PAREN, tokenList)
         return inner_exp
         
@@ -261,3 +261,34 @@ def parseProgram(tokenList):
     return Program(fun)
     
 
+def printAST(pro):
+    output = 'Program AST:\n\tfunction: {0}\n'.format(pro.function.iden)
+
+    Level = 2
+    match pro.function.statement:
+        case ReturnStmt(expression=exp):
+            match exp:
+                case Unary_Expression():
+                    i = 0
+                    while i < Level:
+                        output += '\t'
+                        i += 1
+
+                    output += 'Unary_Expression'
+                    pass
+                case Binary_Expression(operator=op, left=left, right=right):
+                    i = 0
+                    while i < Level:
+                        output += '\t'
+                        i += 1
+                    
+                    output += 'Binary_Expression'
+
+                    match op:
+                        case BinopType.SUBTRACT:
+                            pass
+
+                
+
+    print(output)
+    

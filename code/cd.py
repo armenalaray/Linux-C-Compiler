@@ -91,6 +91,7 @@ if __name__ == "__main__":
 				sys.exit(1)
 			
 			print(pro)
+			#parser.printAST(pro)
 
 			if LastStage == 'parse':
 				sys.exit(0)
