@@ -190,19 +190,43 @@ def parseFactor(tokenList):
         sys.exit(1)
 
 
-def parseExp(tokenList):
+precTable = {
+    TokenType.ASTERISK : 50, 
+    TokenType.FORWARD_SLASH : 50,
+    TokenType.PERCENT : 50,
+    TokenType.PLUS : 45,
+    TokenType.HYPHEN : 45
+    }
+
+def precedence(token):
+    if token != ():
+        return precTable[token[1]]
+    
+    print("Syntax Error Expected a token but there are no more tokens.")
+    sys.exit(1)
+
+
+def BinaryOperatorToken(token):
+    if token != ():
+        print(token)
+        if token[1] == TokenType.ASTERISK or token[1] == TokenType.PLUS or token[1] == TokenType.FORWARD_SLASH or token[1] == TokenType.PERCENT or token[1] == TokenType.HYPHEN:
+            return True
+        
+    return False
+
+def parseExp(tokenList, min_prec):
     left = parseFactor(tokenList)
     next_token = peek(tokenList)
-    while next_token[1] == TokenType.PLUS or next_token[1] == TokenType.HYPHEN:
+    while BinaryOperatorToken(next_token) and precedence(next_token) >= min_prec:
         op = parseBinop(tokenList)
-        right = parseFactor(tokenList)
+        right = parseExp(tokenList, precedence(next_token) + 1)
         left = Binary_Expression(op, left, right)
         next_token = peek(tokenList)
     return left
 
 def parseStatement(tokenList):
     expect(TokenType.RETURN_KW, tokenList)
-    retVal = parseExp(tokenList)
+    retVal = parseExp(tokenList, 0)
     expect(TokenType.SEMICOLON, tokenList)
     return ReturnStmt(retVal) 
 
