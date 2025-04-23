@@ -3,7 +3,7 @@
 
 # My compiler
 
-#lastStage="--codegen"
+lastStage="--parse"
 
 python3 "$(pwd)"/code/cd.py $lastStage "$(pwd)"/test_/test.c
 echo $?
@@ -33,6 +33,6 @@ gcc "$(pwd)"/bin/return.s -o bin/return
 #echo $?
 '
 
-gdb -x gdbcommands.txt 
+#gdb -x gdbcommands.txt 
 #--args bin/return 
 

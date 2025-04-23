@@ -61,4 +61,10 @@ actual, reg
 reg    , other
 
 
++ - * % /
+left associative
+
+precedence
+* / %
++ - 
 

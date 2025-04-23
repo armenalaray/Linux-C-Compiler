@@ -55,9 +55,28 @@ class Unary_Expression(Expression):
         #super().__str__()
         return "Unary Expression:\n\t\t\t\tOperator: {self.operator}\n\t\t\t\tExpression: {self.expression}".format(self=self)
 
-class OperatorType(Enum):
+class Binary_Expression:
+    def __init__(self, operator, left, right):
+        self.operator = operator
+        self.left = left
+        self.right = right
+
+    def __str__(self):
+        #super().__str__()
+        return "Binary Expression:\n\t\t\t\tOperator: {self.operator}\n\t\t\t\tLeft: {self.left}\n\t\t\t\tRight: {self.right}".format(self=self)
+#(op, left, right)
+
+
+class UnopType(Enum):
     NEGATE = 1
     COMPLEMENT = 2
+
+class BinopType(Enum):
+    SUBTRACT = 1
+    ADD = 2
+    MULTIPLY = 3
+    DIVIDE = 4
+    MODULO = 5
 
 class Operator:
     pass
@@ -69,10 +88,14 @@ class UnaryOperator(Operator):
     def __str__(self):
         #super().__str__()
         return "{self.operator}".format(self=self) 
-    
-#def prettyPrintAST(pro, level):
-#    pro.
-#    pass
+
+class BinaryOperator(Operator):
+    def __init__(self, operator):
+        self.operator = operator
+
+    def __str__(self):
+        #super().__str__()
+        return "{self.operator}".format(self=self) 
 
 def takeToken(tokenList):
     if(tokenList != []):
@@ -115,9 +138,9 @@ def parseUnop(tokenList):
     if actual != ():
         match actual[1]:
             case TokenType.HYPHEN:
-                return UnaryOperator(OperatorType.NEGATE)
+                return UnaryOperator(UnopType.NEGATE)
             case TokenType.TILDE:
-                return UnaryOperator(OperatorType.COMPLEMENT)
+                return UnaryOperator(UnopType.COMPLEMENT)
             case _:
                 print("Syntax Error Expected an Unary Operator but: {0} at Line {1}".format(actual[0], actual[2]))
                 sys.exit(1)            
@@ -125,9 +148,26 @@ def parseUnop(tokenList):
     print("Syntax Error Expected an Unary Operator but there are no more tokens.")
     sys.exit(1)
 
+def parseBinop(tokenList):
+    actual = takeToken(tokenList)
+    if actual != ():
+        match actual[1]:
+            case TokenType.HYPHEN:
+                return BinaryOperator(BinopType.SUBTRACT)
+            case TokenType.PLUS:
+                return BinaryOperator(BinopType.ADD)
+            case TokenType.FORWARD_SLASH:
+                return BinaryOperator(BinopType.DIVIDE)
+            case TokenType.ASTERISK:
+                return BinaryOperator(BinopType.MULTIPLY)
+            case TokenType.PERCENT:
+                return BinaryOperator(BinopType.MODULO)
+            case _:
+                print("Syntax Error Expected a Binary Operator but: {0} at Line {1}".format(actual[0], actual[2]))
+                sys.exit(1)            
     
     
-def parseExp(tokenList):
+def parseFactor(tokenList):
     token = peek(tokenList)
 
     if token[1] == TokenType.CONSTANT:
@@ -136,7 +176,7 @@ def parseExp(tokenList):
     
     elif token[1] == TokenType.TILDE or token[1] == TokenType.HYPHEN:
         operator = parseUnop(tokenList)
-        inner_exp = parseExp(tokenList)
+        inner_exp = parseFactor(tokenList)
         return Unary_Expression(operator, inner_exp)
         
     elif token[1] == TokenType.OPEN_PAREN:
@@ -148,6 +188,17 @@ def parseExp(tokenList):
     else:
         print("Malformed expression at Line {0}.".format(token[2]))
         sys.exit(1)
+
+
+def parseExp(tokenList):
+    left = parseFactor(tokenList)
+    next_token = peek(tokenList)
+    while next_token[1] == TokenType.PLUS or next_token[1] == TokenType.HYPHEN:
+        op = parseBinop(tokenList)
+        right = parseFactor(tokenList)
+        left = Binary_Expression(op, left, right)
+        next_token = peek(tokenList)
+    return left
 
 def parseStatement(tokenList):
     expect(TokenType.RETURN_KW, tokenList)

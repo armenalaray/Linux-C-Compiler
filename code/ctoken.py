@@ -17,6 +17,10 @@ class TokenType(Enum):
     TILDE = 12
     HYPHEN = 13
     TWOHYPHENS = 14
+    FORWARD_SLASH = 15
+    PERCENT = 16
+    ASTERISK = 17
+    PLUS = 18
 
 def Lex(buffer):
     tokenList = []
@@ -87,7 +91,7 @@ def Lex(buffer):
                     buffer = alphanumeric.string[alphanumeric.span()[1]:]
                     #print(buffer)
                 else:
-                    is_char = r"[(){};~-]"
+                    is_char = r"[%/*+(){};~-]"
                     char = re.match(is_char, buffer)
                     if char:
                         #print(char)
@@ -106,11 +110,24 @@ def Lex(buffer):
                                 
                             case ";":
                                 tokenList.append((";", TokenType.SEMICOLON, LineNumber))
+
                             case "~":
                                 tokenList.append(("~", TokenType.TILDE, LineNumber))
+
                             case "-":
                                 tokenList.append(("-", TokenType.HYPHEN, LineNumber))
                                 
+                            case "/":
+                                tokenList.append(("/", TokenType.FORWARD_SLASH, LineNumber))
+                            
+                            case "*":
+                                tokenList.append(("*", TokenType.ASTERISK, LineNumber))
+                            
+                            case "%":
+                                tokenList.append(("%", TokenType.PERCENT, LineNumber))
+
+                            case "+":
+                                tokenList.append(("+", TokenType.PLUS, LineNumber))
 
                         #aqui tiene que ser keyword
                         buffer = char.string[char.span()[1]:]
