@@ -42,6 +42,21 @@ class TAC_UnaryInstruction(instruction):
     def __repr__(self):
         return self.__str__()
 
+class TAC_BinaryInstruction:
+    def __init__(self, operator, src1, src2, dst):
+        self.operator = operator
+        self.src1 = src1 
+        self.src2 = src2
+        self.dst = dst   
+    
+    def __str__(self):
+        return "{self.dst} = {self.src1} {self.operator} {self.src2}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+
+#(operator, src1, src2, dst)
+
 class Value:
     pass
 
@@ -59,9 +74,16 @@ class TAC_VariableValue(Value):
     def __str__(self):
         return "{self.identifier}".format(self=self)
     
-class OperatorType(Enum):
+class UnopType(Enum):
     NEGATE = 1
     COMPLEMENT = 2
+
+class BinopType(Enum):
+    ADD = 1
+    SUBTRACT = 2
+    MULTIPLY = 3
+    DIVIDE = 4
+    REMAINDER = 5
 
 class Operator:
     pass
@@ -72,11 +94,27 @@ class TAC_UnaryOperator(Operator):
     
     def __str__(self):
         match self.operator:
-            case OperatorType.NEGATE:
+            case UnopType.NEGATE:
                 return "-"
-            case OperatorType.COMPLEMENT:
+            case UnopType.COMPLEMENT:
                 return "~"
-            
+
+class TAC_BinaryOperator(Operator):
+    def __init__(self, operator):
+        self.operator = operator
+
+    def __str__(self):
+        match self.operator:
+            case BinopType.ADD:
+                return "+"
+            case BinopType.SUBTRACT:
+                return "-"
+            case BinopType.DIVIDE:
+                return "/"
+            case BinopType.MULTIPLY:
+                return "*"
+            case BinopType.REMAINDER:
+                return "%"
 
 global_value = 0
 
@@ -90,10 +128,34 @@ def parseOperator(op):
     match op:
         case parser.UnaryOperator(operator=o):
             match o:
-                case parser.OperatorType.NEGATE:
-                    return TAC_UnaryOperator(OperatorType.NEGATE)
-                case parser.OperatorType.COMPLEMENT:
-                    return TAC_UnaryOperator(OperatorType.COMPLEMENT)
+                case parser.UnopType.NEGATE:
+                    return TAC_UnaryOperator(UnopType.NEGATE)
+                case parser.UnopType.COMPLEMENT:
+                    return TAC_UnaryOperator(UnopType.COMPLEMENT)
+                case _:
+                    print("Invalid Parser operator.")
+                    sys.exit(1)
+
+        case parser.BinaryOperator(operator=o):
+            match o:
+                case parser.BinopType.SUBTRACT:
+                    return TAC_BinaryOperator(BinopType.SUBTRACT)
+                    
+            
+                case parser.BinopType.ADD:
+                    return TAC_BinaryOperator(BinopType.ADD)
+                    
+                    
+                case parser.BinopType.MULTIPLY:
+                    return TAC_BinaryOperator(BinopType.MULTIPLY)
+                    
+                    
+                case parser.BinopType.DIVIDE:
+                    return TAC_BinaryOperator(BinopType.DIVIDE)
+                    
+                case parser.BinopType.MODULO:
+                    return TAC_BinaryOperator(BinopType.REMAINDER)
+                    
                 case _:
                     print("Invalid Parser operator.")
                     sys.exit(1)
@@ -114,6 +176,20 @@ def TAC_parseInstructions(expression, instructions):
 
             return dst
         
+        case parser.Binary_Expression(operator=op, left=left, right=right):
+            src1 = TAC_parseInstructions(left, instructions)
+            src2 = TAC_parseInstructions(right, instructions)
+
+            dst = TAC_VariableValue(makeTemp())
+
+            operator = parseOperator(op)
+
+            instructions.append(TAC_BinaryInstruction(operator, src1, src2, dst))
+
+            return dst
+
+
+
             
 
     #if type(expression_) == Unary_Expression:
