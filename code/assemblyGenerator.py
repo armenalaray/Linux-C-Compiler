@@ -399,8 +399,11 @@ def ReplacePseudoRegisters(ass):
 
 def FixingUpInstructions(ass, offset):
     ass.function.insList.insert(0,AllocateStackInstruction(-offset))
+    newList = []
+    oldSize = len(newList)
 
     for index, i in enumerate(ass.function.insList):
+        
         match i:
             case MovInstruction(sourceO=src, destO=dst):
                 if type(src) == StackOperand and type(dst) == StackOperand:
@@ -408,7 +411,62 @@ def FixingUpInstructions(ass, offset):
                     i.destO = RegisterOperand(Register(RegisterType.R10))
 
                     instruction = MovInstruction(RegisterOperand(Register(RegisterType.R10)),dst)
-                    ass.function.insList.insert(index+1, instruction)
+
+                    newList.append(i)
+                    newList.append(instruction)
+                
+            
+            case IDivInstruction(divisor=div):
+                match div:
+                    case ImmediateOperand():
+                        i.divisor = RegisterOperand(Register(RegisterType.R10))
+                        instruction = MovInstruction(div, RegisterOperand(Register(RegisterType.R10)))
+
+                        newList.append(instruction)
+                        newList.append(i)
+                    
+
+            case BinaryInstruction(operator=op, src=src, dest=dst):
+                
+                if type(dst) == StackOperand:
+                    match op:
+                            case BinaryOperator(operator=o):
+                                #print(o)
+                                if o == BinopType.Mult:
+                                    instruction0 = MovInstruction(i.dest, RegisterOperand(Register(RegisterType.R11)))
+
+                                    instruction1 = MovInstruction(RegisterOperand(Register(RegisterType.R11)), i.dest)
+
+                                    i.dest = RegisterOperand(Register(RegisterType.R11))
+
+
+
+                                    newList.append(instruction0)
+                                    newList.append(i)
+                                    newList.append(instruction1)
+
+
+                if type(src) == StackOperand and type(dst) == StackOperand:
+                    match op:
+                        case BinaryOperator(operator=o):
+                            #print(o)
+                            if o == BinopType.Sub or o == BinopType.Add:
+
+                                instruction = MovInstruction(i.src, RegisterOperand(Register(RegisterType.R10)))
+
+                                i.src = RegisterOperand(Register(RegisterType.R10))
+
+                                newList.append(instruction)
+                                newList.append(i)
+                                
+                            
+        if len(newList) == oldSize:
+            newList.append(i)
+
+        oldSize = len(newList)
+
+    ass.function.insList = newList
+    
                     
 
         
