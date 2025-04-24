@@ -12,8 +12,16 @@ def matchOperand(operand, output):
                         case assemblyGenerator.RegisterType.AX:
                             output += '%eax'
                             
+                        case assemblyGenerator.RegisterType.DX:
+                            output += '%edx'
+
                         case assemblyGenerator.RegisterType.R10:
                             output += '%r10d'
+                        
+                        case assemblyGenerator.RegisterType.R11:
+                            output += '%r11d'
+                        
+                        
                             
             
         case assemblyGenerator.ImmediateOperand(imm=im):
@@ -50,16 +58,40 @@ def printFunction(function):
                 match o:
                     case assemblyGenerator.UnaryOperator(operator=op):
                         match op:
-                            case assemblyGenerator.OperatorType.Not:
+                            case assemblyGenerator.UnopType.Not:
                                 output += '\n\tnotl '
                                 
-                            case assemblyGenerator.OperatorType.Neg:
+                            case assemblyGenerator.UnopType.Neg:
                                 output += '\n\tnegl '
                                 
 
                 output = matchOperand(dst, output)
 
-                        
+            case assemblyGenerator.BinaryInstruction(operator=op, src=src, dest=dst):
+                match op:
+                    case assemblyGenerator.BinaryOperator(operator=o):
+                        match o:
+                            case assemblyGenerator.BinopType.Add:
+                                output += '\n\taddl '
+                                pass
+                            case assemblyGenerator.BinopType.Sub:
+                                output += '\n\tsubl '
+                                pass
+                            case assemblyGenerator.BinopType.Mult:
+                                output += '\n\timull '
+                                pass
+                
+                output = matchOperand(src, output)
+                output += ', '
+                output = matchOperand(dst, output)
+
+            case assemblyGenerator.IDivInstruction(divisor=divisor):
+                output += '\n\tidivl '
+                output = matchOperand(divisor, output)
+                
+            case assemblyGenerator.CDQInstruction():
+                output += '\n\tcdq'
+                
                 
         #output += '\n\t{0}'.format(i)
         
