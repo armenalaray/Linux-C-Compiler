@@ -259,7 +259,7 @@ def ASM_parseInstructions(TAC_Instructions):
 
             case tacGenerator.TAC_BinaryInstruction(operator=op, src1=src1_, src2=src2_, dst=dst_):
                 
-                print(type(op.operator))
+                
                 match op.operator:
                     case tacGenerator.BinopType.DIVIDE:
                         src1 = parseValue(src1_)
@@ -322,6 +322,7 @@ def ReplacePseudoRegisters(ass):
     offset = 0
     table = {}
     for i in ass.function.insList:
+        #print(type(i))
         match i:
             case MovInstruction(sourceO=src, destO=dst):
                 match src:
@@ -345,6 +346,7 @@ def ReplacePseudoRegisters(ass):
                         
                         i.destO = StackOperand(value)
                         
+            
 
             case UnaryInstruction(operator=o, dest=dst):
                 match dst:
@@ -356,7 +358,42 @@ def ReplacePseudoRegisters(ass):
                         value = table[id] 
                         
                         i.dest = StackOperand(value)
+
+            case BinaryInstruction(operator=op, src=src, dest=dst):
+                
+                match src:
+                    case PseudoRegisterOperand(pseudo=id):
+
+                        if table.get(id) == None:
+                            offset -= 4
+                            table.update({id : offset})
+                            
+                        value = table[id] 
                         
+                        i.src = StackOperand(value)
+                        
+                match dst:
+                    case PseudoRegisterOperand(pseudo=id):
+                        
+                        if table.get(id) == None:
+                            offset -= 4
+                            table.update({id : offset})
+                            
+                        value = table[id] 
+                        
+                        i.dest = StackOperand(value)
+            
+            case IDivInstruction(divisor=div):  
+                match div:
+                    case PseudoRegisterOperand(pseudo=id):
+                        
+                        if table.get(id) == None:
+                            offset -= 4
+                            table.update({id : offset})
+                            
+                        value = table[id] 
+                        
+                        i.divisor = StackOperand(value)
 
     return offset
 
