@@ -21,6 +21,15 @@ class TokenType(Enum):
     PERCENT = 16
     ASTERISK = 17
     PLUS = 18
+    EXCLAMATION = 19
+    GREATERT = 20
+    LESST = 21
+    TAMPERSANDS = 22
+    TVERTICALB = 23
+    TEQUALS = 24
+    EXCLAMATIONEQUAL = 25
+    LESSTEQUALT = 26
+    GREATERTEQUALT = 27
 
 def Lex(buffer):
     tokenList = []
@@ -63,14 +72,29 @@ def Lex(buffer):
             buffer = numeric.string[numeric.span()[1]:]
             #print(buffer)
         else:
-            is_dd = r"--"
-            dd = re.match(is_dd, buffer)
-            if dd:
-                tokenList.append(("--", TokenType.TWOHYPHENS, LineNumber))
-                buffer = dd.string[dd.span()[1]:]
-                #print(buffer)
-        
-            else:
+            mList = [
+                (r"--", TokenType.TWOHYPHENS), 
+                (r"&&", TokenType.TAMPERSANDS), 
+                (r"\|\|", TokenType.TVERTICALB), 
+                (r"==", TokenType.TEQUALS), 
+                (r"!=", TokenType.EXCLAMATIONEQUAL), 
+                (r"<=", TokenType.LESSTEQUALT), 
+                (r">=", TokenType.GREATERTEQUALT)
+                ]
+
+            dd = None
+
+            for i in mList:
+                dd = re.match(i[0], buffer)
+                if dd:
+                    
+                    tokenList.append((dd.group(), i[1], LineNumber))
+                    buffer = dd.string[dd.span()[1]:]
+                
+                    break
+                    
+
+            if dd == None:        
                 is_alphanumeric = r"[a-zA-Z_]\w*"
                 alphanumeric = re.match(is_alphanumeric, buffer)
                 if alphanumeric:
@@ -91,7 +115,7 @@ def Lex(buffer):
                     buffer = alphanumeric.string[alphanumeric.span()[1]:]
                     #print(buffer)
                 else:
-                    is_char = r"[%/*+(){};~-]"
+                    is_char = r"[><!%/*+(){};~-]"
                     char = re.match(is_char, buffer)
                     if char:
                         #print(char)
@@ -128,6 +152,15 @@ def Lex(buffer):
 
                             case "+":
                                 tokenList.append(("+", TokenType.PLUS, LineNumber))
+                            
+                            case "!":
+                                tokenList.append(("!", TokenType.EXCLAMATION, LineNumber))
+
+                            case ">":
+                                tokenList.append((">", TokenType.GREATERT, LineNumber))
+                            
+                            case "<":
+                                tokenList.append(("<", TokenType.LESST, LineNumber))
 
                         #aqui tiene que ser keyword
                         buffer = char.string[char.span()[1]:]

@@ -1,20 +1,8 @@
+#ifdef SUPPRESS_WARNINGS
+#ifndef __clang__
+#pragma GCC diagnostic ignored "-Wparentheses"
+#endif
+#endif
 int main(void) {
-    //return 3%3;
-    return -5 * 4 / 2 -
-        3 % (2 + 1) - (~20 -4);
+    return (0 == 0 && 3 == 2 + 1 > 1 < 1 || 2 && !2 != 24 >= 54 <= 34) + 1;
 }
-
-//3 0
-//2
-/*
--20 / 2  = -10
-
-0
-
--12 -10
--16 3
--20 0
--24 -10
--10 - 0
--10
-*/
