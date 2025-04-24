@@ -1,3 +1,4 @@
+import sys
 from enum import Enum
 import parser
 
@@ -42,6 +43,61 @@ class TAC_UnaryInstruction(instruction):
     def __repr__(self):
         return self.__str__()
 
+class TAC_CopyInstruction(instruction):
+    def __init__(self, src, dst):
+        self.src = src 
+        self.dst = dst   
+    
+    def __str__(self):
+        return "{self.dst} = {self.src}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+
+
+class TAC_JumpIfZeroInst(instruction):
+    def __init__(self, condition, label):
+        self.condition = condition
+        self.label = label
+    
+    def __str__(self):
+        return "JumpIfZero({self.condition}, {self.label})".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+
+class TAC_JumpIfNotZeroInst(instruction):
+    def __init__(self, condition, label):
+        self.condition = condition
+        self.label = label
+    
+    def __str__(self):
+        return "{self.dst} = {self.operator}{self.src}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+
+class TAC_JumpInst(instruction):
+    def __init__(self, label):
+        self.label = label
+    
+    def __str__(self):
+        return "Jump({self.label})".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+
+class TAC_LabelInst(instruction):
+    def __init__(self, identifier):
+        self.identifier = identifier
+    
+    def __str__(self):
+        return "{self.dst} = {self.operator}{self.src}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+
+
 class TAC_BinaryInstruction:
     def __init__(self, operator, src1, src2, dst):
         self.operator = operator
@@ -77,6 +133,7 @@ class TAC_VariableValue(Value):
 class UnopType(Enum):
     NEGATE = 1
     COMPLEMENT = 2
+    NOT = 3
 
 class BinopType(Enum):
     ADD = 1
@@ -84,6 +141,12 @@ class BinopType(Enum):
     MULTIPLY = 3
     DIVIDE = 4
     REMAINDER = 5
+    EQUAL = 6
+    NOTEQUAL = 7
+    LESSTHAN = 8
+    LESSOREQUAL = 9
+    GREATERTHAN = 10
+    GREATEROREQUAL = 11
 
 class Operator:
     pass
@@ -98,6 +161,8 @@ class TAC_UnaryOperator(Operator):
                 return "-"
             case UnopType.COMPLEMENT:
                 return "~"
+            case _:
+                return "_"
 
 class TAC_BinaryOperator(Operator):
     def __init__(self, operator):
@@ -115,6 +180,8 @@ class TAC_BinaryOperator(Operator):
                 return "*"
             case BinopType.REMAINDER:
                 return "%"
+            case _:
+                return "_"
 
 global_value = 0
 
@@ -132,6 +199,9 @@ def parseOperator(op):
                     return TAC_UnaryOperator(UnopType.NEGATE)
                 case parser.UnopType.COMPLEMENT:
                     return TAC_UnaryOperator(UnopType.COMPLEMENT)
+                case parser.UnopType.NOT:
+                    return TAC_UnaryOperator(UnopType.NOT)
+                
                 case _:
                     print("Invalid Parser operator.")
                     sys.exit(1)
@@ -141,7 +211,6 @@ def parseOperator(op):
                 case parser.BinopType.SUBTRACT:
                     return TAC_BinaryOperator(BinopType.SUBTRACT)
                     
-            
                 case parser.BinopType.ADD:
                     return TAC_BinaryOperator(BinopType.ADD)
                     
@@ -149,13 +218,30 @@ def parseOperator(op):
                 case parser.BinopType.MULTIPLY:
                     return TAC_BinaryOperator(BinopType.MULTIPLY)
                     
-                    
                 case parser.BinopType.DIVIDE:
                     return TAC_BinaryOperator(BinopType.DIVIDE)
                     
                 case parser.BinopType.MODULO:
                     return TAC_BinaryOperator(BinopType.REMAINDER)
-                    
+                
+                case parser.BinopType.EQUAL:
+                    return TAC_BinaryOperator(BinopType.EQUAL)
+                
+                case parser.BinopType.NOTEQUAL:
+                    return TAC_BinaryOperator(BinopType.NOTEQUAL)
+
+                case parser.BinopType.LESSTHAN:
+                    return TAC_BinaryOperator(BinopType.LESSTHAN)
+                
+                case parser.BinopType.LESSOREQUAL:
+                    return TAC_BinaryOperator(BinopType.LESSOREQUAL)
+                
+                case parser.BinopType.GREATERTHAN:
+                    return TAC_BinaryOperator(BinopType.GREATERTHAN)
+
+                case parser.BinopType.GREATEROREQUAL:
+                    return TAC_BinaryOperator(BinopType.GREATEROREQUAL)
+                
                 case _:
                     print("Invalid Parser operator.")
                     sys.exit(1)
@@ -177,16 +263,46 @@ def TAC_parseInstructions(expression, instructions):
             return dst
         
         case parser.Binary_Expression(operator=op, left=left, right=right):
-            src1 = TAC_parseInstructions(left, instructions)
-            src2 = TAC_parseInstructions(right, instructions)
+            #print(op)
+            match op:
+                case parser.BinaryOperator(operator=o):
+                    
+                    match o:
+                        case parser.BinopType.AND:
+                            
+                            v1 = TAC_parseInstructions(left, instructions)
+                            
+                            instructions.append(TAC_JumpIfZeroInst(v1, TAC_ConstantValue('false_label')))
+                            v2 = TAC_parseInstructions(right, instructions)
+                            instructions.append(TAC_JumpIfZeroInst(v2, TAC_ConstantValue('false_label')))
 
-            dst = TAC_VariableValue(makeTemp())
+                            result = makeTemp()
+                            instructions.append(TAC_CopyInstruction(TAC_ConstantValue(1), TAC_VariableValue(result)))
 
-            operator = parseOperator(op)
+                            instructions.append(TAC_JumpInst(TAC_ConstantValue('end')))
+                            instructions.append(TAC_CopyInstruction(TAC_ConstantValue(0), TAC_VariableValue(result)))
 
-            instructions.append(TAC_BinaryInstruction(operator, src1, src2, dst))
 
-            return dst
+                        case parser.BinopType.OR:
+                            print('Ale')
+                        
+                        case _:
+                            
+                            src1 = TAC_parseInstructions(left, instructions)
+                            src2 = TAC_parseInstructions(right, instructions)
+
+                            dst = TAC_VariableValue(makeTemp())
+
+                            operator = parseOperator(op)
+
+                            instructions.append(TAC_BinaryInstruction(operator, src1, src2, dst))
+
+                            return dst
+                            
+
+                case parser.UnaryOperator():
+                    print("Invalid operator.")
+                    sys.exit(1)
 
 
 
