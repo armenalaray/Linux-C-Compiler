@@ -70,6 +70,7 @@ class Binary_Expression:
 class UnopType(Enum):
     NEGATE = 1
     COMPLEMENT = 2
+    NOT = 3
 
 class BinopType(Enum):
     SUBTRACT = 1
@@ -77,6 +78,14 @@ class BinopType(Enum):
     MULTIPLY = 3
     DIVIDE = 4
     MODULO = 5
+    AND = 6
+    OR = 7
+    EQUAL = 8
+    NOTEQUAL = 9
+    LESSTHAN = 10
+    LESSOREQUAL = 11
+    GREATERTHAN = 12
+    GREATEROREQUAL = 13
 
 class Operator:
     pass
@@ -141,6 +150,8 @@ def parseUnop(tokenList):
                 return UnaryOperator(UnopType.NEGATE)
             case TokenType.TILDE:
                 return UnaryOperator(UnopType.COMPLEMENT)
+            case TokenType.EXCLAMATION:
+                return UnaryOperator(UnopType.NOT)
             case _:
                 print("Syntax Error Expected an Unary Operator but: {0} at Line {1}".format(actual[0], actual[2]))
                 sys.exit(1)            
@@ -162,6 +173,22 @@ def parseBinop(tokenList):
                 return BinaryOperator(BinopType.MULTIPLY)
             case TokenType.PERCENT:
                 return BinaryOperator(BinopType.MODULO)
+            case TokenType.LESST:
+                return BinaryOperator(BinopType.LESSTHAN)
+            case TokenType.GREATERT:
+                return BinaryOperator(BinopType.GREATERTHAN)
+            case TokenType.LESSTEQUALT:
+                return BinaryOperator(BinopType.LESSOREQUAL)
+            case TokenType.GREATERTEQUALT:
+                return BinaryOperator(BinopType.GREATEROREQUAL)
+            case TokenType.TEQUALS:
+                return BinaryOperator(BinopType.EQUAL)
+            case TokenType.EXCLAMATIONEQUAL:
+                return BinaryOperator(BinopType.NOTEQUAL)
+            case TokenType.TAMPERSANDS:
+                return BinaryOperator(BinopType.AND)
+            case TokenType.TVERTICALB:
+                return BinaryOperator(BinopType.OR)
             case _:
                 print("Syntax Error Expected a Binary Operator but: {0} at Line {1}".format(actual[0], actual[2]))
                 sys.exit(1)            
@@ -174,7 +201,7 @@ def parseFactor(tokenList):
         intValue = parseInt(tokenList)
         return Constant_Expression(intValue)
     
-    elif token[1] == TokenType.TILDE or token[1] == TokenType.HYPHEN:
+    elif token[1] == TokenType.TILDE or token[1] == TokenType.HYPHEN or token[1] == TokenType.EXCLAMATION:
         operator = parseUnop(tokenList)
         inner_exp = parseFactor(tokenList)
         return Unary_Expression(operator, inner_exp)
@@ -195,7 +222,15 @@ precTable = {
     TokenType.FORWARD_SLASH : 50,
     TokenType.PERCENT : 50,
     TokenType.PLUS : 45,
-    TokenType.HYPHEN : 45
+    TokenType.HYPHEN : 45,
+    TokenType.LESST : 35,
+    TokenType.LESSTEQUALT : 35,
+    TokenType.GREATERT : 35,
+    TokenType.GREATERTEQUALT : 35,
+    TokenType.TEQUALS : 30,
+    TokenType.EXCLAMATIONEQUAL : 30,
+    TokenType.TAMPERSANDS : 10,
+    TokenType.TVERTICALB : 5
     }
 
 def precedence(token):
@@ -209,7 +244,7 @@ def precedence(token):
 def BinaryOperatorToken(token):
     if token != ():
         print(token)
-        if token[1] == TokenType.ASTERISK or token[1] == TokenType.PLUS or token[1] == TokenType.FORWARD_SLASH or token[1] == TokenType.PERCENT or token[1] == TokenType.HYPHEN:
+        if token[1] == TokenType.ASTERISK or token[1] == TokenType.PLUS or token[1] == TokenType.FORWARD_SLASH or token[1] == TokenType.PERCENT or token[1] == TokenType.HYPHEN or token[1] == TokenType.TAMPERSANDS or token[1] == TokenType.TVERTICALB or token[1] == TokenType.TEQUALS or token[1] == TokenType.EXCLAMATIONEQUAL or token[1] == TokenType.LESSTEQUALT or token[1] == TokenType.GREATERTEQUALT or token[1] == TokenType.GREATERT or token[1] == TokenType.LESST:
             return True
         
     return False
