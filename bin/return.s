@@ -19,24 +19,15 @@ main:
     #solo tienes 8 bytes
     subq $8, %rsp
     
-    # esto es el codigo 
-    # store 2 in rbp -4
-    movl $2, -4(%rbp) stack(-4)
+    movl $2, -4(%rbp)
 
-    # aqui ya lo moviste se nega en la memoria
-    # 32 bit value
-    # esta es la direccion de memoria
-    negl -4(%rbp)
+    movl $9, %eax
 
-    # aqui la movemos a -8
-    movl -4(%rbp), %r10d
-    movl %r10d, -8(%rbp)
+    cdq
 
-    #this is ~
-    notl -8(%rbp)
+    idivl -4(%rbp)
 
-    movl -8(%rbp), %eax
-
+    movl %edx, %eax
 
     # esto es el stack!!!!
     # function epilogue

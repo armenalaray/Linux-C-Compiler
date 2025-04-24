@@ -3,7 +3,8 @@
 
 # My compiler
 
-lastStage="--tacky"
+
+lastStage="--codegen"
 
 python3 "$(pwd)"/code/cd.py $lastStage "$(pwd)"/test_/test.c
 echo $?
@@ -29,9 +30,10 @@ echo $?
 
 : '
 gcc "$(pwd)"/bin/return.s -o bin/return
-#./bin/return
-#echo $?
+./bin/return
+echo $?
 '
+
 
 #gdb -x gdbcommands.txt 
 #--args bin/return 

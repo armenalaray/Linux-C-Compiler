@@ -68,3 +68,28 @@ precedence
 * / %
 + - 
 
+subl a, b
+
+b = b - a
+
+
+--------------------------------------
+
+a / b b is the divisor
+
+    
+
+
+a = RDX RAX
+idivq b
+
+a = EDX EAX
+idivl b 
+
+EDX = quotient
+EAX = remainder
+
+-------------------------------------------
+
+Sign extension
+

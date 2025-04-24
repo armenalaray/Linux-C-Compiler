@@ -62,6 +62,42 @@ class UnaryInstruction:
     
     def __repr__(self):
         return self.__str__()
+    
+class BinaryInstruction:
+    def __init__(self, operator, src, dest):
+        self.operator = operator
+        self.src = src
+        self.dest = dest
+    
+    def __str__(self):
+        return "Binary({self.operator}, {self.src}, {self.dest})".format(self=self)
+    
+    
+    def __repr__(self):
+        return self.__str__()
+
+#(operator, src2, dst)
+
+class IDivInstruction:
+    def __init__(self, divisor):
+        self.divisor = divisor
+    
+    def __str__(self):
+        return "Idiv({self.divisor})".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+    
+
+class CDQInstruction:
+    pass
+
+    def __str__(self):
+        return "Cdq"
+    
+    
+    def __repr__(self):
+        return self.__str__()
 
 class AllocateStackInstruction:
     def __init__(self, offset):
@@ -113,10 +149,14 @@ class ImmediateOperand:
     def __repr__(self):
         return self.__str__()
     """
-class OperatorType(Enum):
+class UnopType(Enum):
     Not = 1
     Neg = 2
     
+class BinopType(Enum):
+    Add = 1
+    Sub = 2
+    Mult = 3
 
 class UnaryOperator:
     def __init__(self, operator):
@@ -124,14 +164,29 @@ class UnaryOperator:
     
     def __str__(self):
         match self.operator:
-            case OperatorType.Not:
+            case UnopType.Not:
                 return "Not"
-            case OperatorType.Neg:
+            case UnopType.Neg:
                 return "Neg"
+
+class BinaryOperator:
+    def __init__(self, operator):
+        self.operator = operator
+
+    def __str__(self):
+        match self.operator:
+            case BinopType.Add:
+                return "Add"
+            case BinopType.Sub:
+                return "Sub"
+            case BinopType.Mult:
+                return "Mult"
 
 class RegisterType(Enum):
     AX = 1
+    DX = 3
     R10 = 2
+    R11 = 4
 
 class Register:
     def __init__(self, register):
@@ -143,6 +198,10 @@ class Register:
                 return "AX"
             case RegisterType.R10:
                 return "R10d"
+            case RegisterType.DX:
+                return "DX"
+            case RegisterType.R11:
+                return "R11d"
 
 def parseValue(v):
     match v:
@@ -157,14 +216,21 @@ def parseOperator(op):
     match op:
         case tacGenerator.TAC_UnaryOperator(operator=o):
             match o:
-                case tacGenerator.OperatorType.NEGATE:
-                    return UnaryOperator(OperatorType.Neg)
-                case tacGenerator.OperatorType.COMPLEMENT:
-                    return UnaryOperator(OperatorType.Not)
+                case tacGenerator.UnopType.NEGATE:
+                    return UnaryOperator(UnopType.Neg)
+                case tacGenerator.UnopType.COMPLEMENT:
+                    return UnaryOperator(UnopType.Not)
                 case _:
                     print("Invalid TAC operator.")
                     sys.exit(1)
-            
+        case tacGenerator.TAC_BinaryOperator(operator=o):
+            match o:
+                case tacGenerator.BinopType.ADD:
+                    return BinaryOperator(BinopType.Add)
+                case tacGenerator.BinopType.MULTIPLY:
+                    return BinaryOperator(BinopType.Mult)
+                case tacGenerator.BinopType.SUBTRACT:
+                    return BinaryOperator(BinopType.Sub)
 
 def ASM_parseInstructions(TAC_Instructions):
     ASM_Instructions = []
@@ -190,6 +256,52 @@ def ASM_parseInstructions(TAC_Instructions):
                 
                 ASM_Instructions.append(instruction0)
                 ASM_Instructions.append(instruction1)
+
+            case tacGenerator.TAC_BinaryInstruction(operator=op, src1=src1_, src2=src2_, dst=dst_):
+                
+                print(type(op.operator))
+                match op.operator:
+                    case tacGenerator.BinopType.DIVIDE:
+                        src1 = parseValue(src1_)
+                        src2 = parseValue(src2_)
+                        dst = parseValue(dst_)
+
+                        instruction0 = MovInstruction(src1, RegisterOperand(Register(RegisterType.AX)))
+                        instruction1 = CDQInstruction()
+                        instruction2 = IDivInstruction(src2)
+                        instruction3 = MovInstruction(RegisterOperand(Register(RegisterType.AX)), dst)
+
+                        ASM_Instructions.append(instruction0)
+                        ASM_Instructions.append(instruction1)
+                        ASM_Instructions.append(instruction2)
+                        ASM_Instructions.append(instruction3)
+                        
+                    case tacGenerator.BinopType.REMAINDER:
+                        src1 = parseValue(src1_)
+                        src2 = parseValue(src2_)
+                        dst = parseValue(dst_)
+
+                        instruction0 = MovInstruction(src1, RegisterOperand(Register(RegisterType.AX)))
+                        instruction1 = CDQInstruction()
+                        instruction2 = IDivInstruction(src2)
+                        instruction3 = MovInstruction(RegisterOperand(Register(RegisterType.DX)), dst)
+
+                        ASM_Instructions.append(instruction0)
+                        ASM_Instructions.append(instruction1)
+                        ASM_Instructions.append(instruction2)
+                        ASM_Instructions.append(instruction3)
+
+                    case _:
+                        src1 = parseValue(src1_)
+                        src2 = parseValue(src2_)
+                        dst = parseValue(dst_)
+                        operator = parseOperator(op)
+
+                        instruction0 = MovInstruction(src1, dst)
+                        instruction1 = BinaryInstruction(operator, src2, dst)
+                        
+                        ASM_Instructions.append(instruction0)
+                        ASM_Instructions.append(instruction1)
                 
     
     return ASM_Instructions
@@ -205,6 +317,7 @@ def ASM_parseAST(ast):
     function = ASM_parseFunction(ast.function)
     return Program(function)
 
+# Replace Pseudos #2
 def ReplacePseudoRegisters(ass):
     offset = 0
     table = {}
