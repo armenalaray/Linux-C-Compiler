@@ -72,7 +72,7 @@ class TAC_JumpIfNotZeroInst(instruction):
         self.label = label
     
     def __str__(self):
-        return "{self.dst} = {self.operator}{self.src}".format(self=self)
+        return "JumpIfNotZero({self.condition}, {self.label})".format(self=self)
     
     def __repr__(self):
         return self.__str__()
@@ -92,7 +92,7 @@ class TAC_LabelInst(instruction):
         self.identifier = identifier
     
     def __str__(self):
-        return "{self.dst} = {self.operator}{self.src}".format(self=self)
+        return "Label({self.identifier})".format(self=self)
     
     def __repr__(self):
         return self.__str__()
@@ -272,19 +272,55 @@ def TAC_parseInstructions(expression, instructions):
                             
                             v1 = TAC_parseInstructions(left, instructions)
                             
-                            instructions.append(TAC_JumpIfZeroInst(v1, TAC_ConstantValue('false_label')))
+                            false_label = TAC_VariableValue(makeTemp())
+
+                            instructions.append(TAC_JumpIfZeroInst(v1, false_label))
                             v2 = TAC_parseInstructions(right, instructions)
-                            instructions.append(TAC_JumpIfZeroInst(v2, TAC_ConstantValue('false_label')))
+                            instructions.append(TAC_JumpIfZeroInst(v2, false_label))
 
-                            result = makeTemp()
-                            instructions.append(TAC_CopyInstruction(TAC_ConstantValue(1), TAC_VariableValue(result)))
+                            result = TAC_VariableValue(makeTemp())
+                            end = TAC_VariableValue(makeTemp())
 
-                            instructions.append(TAC_JumpInst(TAC_ConstantValue('end')))
-                            instructions.append(TAC_CopyInstruction(TAC_ConstantValue(0), TAC_VariableValue(result)))
+                            instructions.append(TAC_CopyInstruction(TAC_ConstantValue(1), result))
+
+                            instructions.append(TAC_JumpInst(end))
+
+                            instructions.append(TAC_LabelInst(false_label))
+
+                            instructions.append(TAC_CopyInstruction(TAC_ConstantValue(0), result))
+
+
+                            instructions.append(TAC_LabelInst(end))
+
+                            return result
 
 
                         case parser.BinopType.OR:
-                            print('Ale')
+                            
+                            v1 = TAC_parseInstructions(left, instructions)
+                            
+                            true_label = TAC_VariableValue(makeTemp())
+
+                            instructions.append(TAC_JumpIfNotZeroInst(v1, true_label))
+                            v2 = TAC_parseInstructions(right, instructions)
+                            instructions.append(TAC_JumpIfNotZeroInst(v2, true_label))
+
+                            result = TAC_VariableValue(makeTemp())
+                            end = TAC_VariableValue(makeTemp())
+
+                            instructions.append(TAC_CopyInstruction(TAC_ConstantValue(0), result))
+
+                            instructions.append(TAC_JumpInst(end))
+
+                            instructions.append(TAC_LabelInst(true_label))
+
+                            instructions.append(TAC_CopyInstruction(TAC_ConstantValue(1), result))
+
+
+                            instructions.append(TAC_LabelInst(end))
+
+                            return result
+
                         
                         case _:
                             

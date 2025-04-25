@@ -4,7 +4,7 @@
 # My compiler
 
 
-lastStage="--tacky"
+lastStage="--codegen"
 
 python3 "$(pwd)"/code/cd.py $lastStage "$(pwd)"/test_/test.c
 echo $?

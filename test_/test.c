@@ -1,10 +1,8 @@
 #ifdef SUPPRESS_WARNINGS
-#ifdef __clang__
-#pragma clang diagnostic ignored "-Wlogical-op-parentheses"
-#else
+#ifndef __clang__
 #pragma GCC diagnostic ignored "-Wparentheses"
 #endif
 #endif
 int main(void) {
-    return !0 && 0;
+    return (0 == 0 && 3 == 2 + 1 > 1) + 1;
 }
