@@ -9,7 +9,8 @@ These are the compiler passes I made for the compiler:
 
 These is the ouput for an expression:
 
-![Screenshot 2025-04-22 150223](https://github.com/user-attachments/assets/700272ac-0f71-4920-afa2-ab351ec104cf)
+![Screenshot 2025-04-25 140518](https://github.com/user-attachments/assets/f782684a-2dda-487f-b897-01ce3d2f0be2)
+
 
 ## Debugging
 
