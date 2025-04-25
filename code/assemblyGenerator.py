@@ -49,6 +49,7 @@ class MovInstruction:
     
     def __repr__(self):
         return self.__str__()
+
     
 
 class UnaryInstruction:
@@ -62,7 +63,68 @@ class UnaryInstruction:
     
     def __repr__(self):
         return self.__str__()
+
+class CompInst:
+    def __init__(self, operand0, operand1):
+        self.operand0 = operand0
+        self.operand1 = operand1
     
+    def __str__(self):
+        return "Cmp({self.operand0}, {self.operand1})".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+    
+class JumpInst:
+    def __init__(self, identifier):
+        self.identifier = identifier
+    
+    def __str__(self):
+        return "Jmp({self.identifier})".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+
+class ConcCodeType(Enum):
+    E = 1
+    NE = 2
+    G = 3
+    GE = 4
+    L = 5
+    LE = 6
+
+class JumpCCInst:
+    def __init__(self, conc_code, identifier):
+        self.conc_code = conc_code
+        self.identifier = identifier
+    
+    def __str__(self):
+        return "JmpCC({self.conc_code}, {self.identifier})".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+
+class SetCCInst:
+    def __init__(self, conc_code, operand):
+        self.conc_code = conc_code
+        self.operand = operand
+    
+    def __str__(self):
+        return "SetCC({self.conc_code}, {self.operand})".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+
+class LabelInst:
+    def __init__(self, identifier):
+        self.identifier = identifier
+    
+    def __str__(self):
+        return "Idiv({self.divisor})".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+
 class BinaryInstruction:
     def __init__(self, operator, src, dest):
         self.operator = operator
@@ -247,61 +309,117 @@ def ASM_parseInstructions(TAC_Instructions):
                 ASM_Instructions.append(instruction1)
                  
             case tacGenerator.TAC_UnaryInstruction(operator=o, src=src_, dst=dst_):
-                src = parseValue(src_)
-                dst = parseValue(dst_)
-                operator = parseOperator(o)
+                
+                match o:
+                    case tacGenerator.TAC_UnaryOperator(operator=op):
+                        match op:
+                            case tacGenerator.UnopType.NOT:
+                                
+                                src = parseValue(src_)
+                                dst = parseValue(dst_)
+                                
+                                instruction0 = CompInst(ImmediateOperand(0), src)
+                                instruction1 = MovInstruction(ImmediateOperand(0), dst)
+                                instruction2 = SetCCInst(ConcCodeType.E, dst)
 
-                instruction0 = MovInstruction(src, dst)
-                instruction1 = UnaryInstruction(operator, dst)
+                                ASM_Instructions.append(instruction0)
+                                ASM_Instructions.append(instruction1)
+                                ASM_Instructions.append(instruction2)
+                                
+                            case _:
+                                src = parseValue(src_)
+                                dst = parseValue(dst_)
+                                operator = parseOperator(o)
+
+                                instruction0 = MovInstruction(src, dst)
+                                instruction1 = UnaryInstruction(operator, dst)
+                                
+                                ASM_Instructions.append(instruction0)
+                                ASM_Instructions.append(instruction1)
+                    
+            case tacGenerator.TAC_BinaryInstruction(operator=op, src1=src1_, src2=src2_, dst=dst_):
+                
+                if op.operator == tacGenerator.BinopType.EQUAL or op.operator == tacGenerator.BinopType.GREATERTHAN or op.operator == tacGenerator.BinopType.LESSTHAN or op.operator == tacGenerator.BinopType.GREATEROREQUAL or op.operator == tacGenerator.BinopType.LESSOREQUAL or op.operator == tacGenerator.BinopType.NOTEQUAL:
+                    #print(op.operator)
+                    src1 = parseValue(src1_)
+                    src2 = parseValue(src2_)
+                    dst = parseValue(dst_)
+
+                    instruction0 = CompInst(src2, src1)
+                    instruction1 = MovInstruction(ImmediateOperand(0), dst)
+                    instruction2 = SetCCInst(list(ConcCodeType)[op.operator.value], dst)
+
+                    ASM_Instructions.append(instruction0)
+                    ASM_Instructions.append(instruction1)
+                    ASM_Instructions.append(instruction2)
+                    
+                else:
+                    match op.operator:
+                        case tacGenerator.BinopType.DIVIDE:
+                            src1 = parseValue(src1_)
+                            src2 = parseValue(src2_)
+                            dst = parseValue(dst_)
+
+                            instruction0 = MovInstruction(src1, RegisterOperand(Register(RegisterType.AX)))
+                            instruction1 = CDQInstruction()
+                            instruction2 = IDivInstruction(src2)
+                            instruction3 = MovInstruction(RegisterOperand(Register(RegisterType.AX)), dst)
+
+                            ASM_Instructions.append(instruction0)
+                            ASM_Instructions.append(instruction1)
+                            ASM_Instructions.append(instruction2)
+                            ASM_Instructions.append(instruction3)
+                            
+                        case tacGenerator.BinopType.REMAINDER:
+                            src1 = parseValue(src1_)
+                            src2 = parseValue(src2_)
+                            dst = parseValue(dst_)
+
+                            instruction0 = MovInstruction(src1, RegisterOperand(Register(RegisterType.AX)))
+                            instruction1 = CDQInstruction()
+                            instruction2 = IDivInstruction(src2)
+                            instruction3 = MovInstruction(RegisterOperand(Register(RegisterType.DX)), dst)
+
+                            ASM_Instructions.append(instruction0)
+                            ASM_Instructions.append(instruction1)
+                            ASM_Instructions.append(instruction2)
+                            ASM_Instructions.append(instruction3)
+
+                        case _:
+                            src1 = parseValue(src1_)
+                            src2 = parseValue(src2_)
+                            dst = parseValue(dst_)
+                            operator = parseOperator(op)
+
+                            instruction0 = MovInstruction(src1, dst)
+                            instruction1 = BinaryInstruction(operator, src2, dst)
+                            
+                            ASM_Instructions.append(instruction0)
+                            ASM_Instructions.append(instruction1)
+            
+            case tacGenerator.TAC_JumpInst(label=label):
+                ASM_Instructions.append(JumpInst(label))
+
+            case tacGenerator.TAC_JumpIfZeroInst(condition=cond, label=label):
+                c = parseValue(cond)
+                l = parseValue(label)
+
+                instruction0 = CompInst(ImmediateOperand(0), c)
+                instruction1 = JumpCCInst(ConcCodeType.E, l)
                 
                 ASM_Instructions.append(instruction0)
                 ASM_Instructions.append(instruction1)
 
-            case tacGenerator.TAC_BinaryInstruction(operator=op, src1=src1_, src2=src2_, dst=dst_):
+            case tacGenerator.TAC_JumpIfNotZeroInst(condition=cond, label=label):
+                c = parseValue(cond)
+                l = parseValue(label)
+
+                instruction0 = CompInst(ImmediateOperand(0), c)
+                instruction1 = JumpCCInst(ConcCodeType.NE, l)
                 
-                
-                match op.operator:
-                    case tacGenerator.BinopType.DIVIDE:
-                        src1 = parseValue(src1_)
-                        src2 = parseValue(src2_)
-                        dst = parseValue(dst_)
+                ASM_Instructions.append(instruction0)
+                ASM_Instructions.append(instruction1)
 
-                        instruction0 = MovInstruction(src1, RegisterOperand(Register(RegisterType.AX)))
-                        instruction1 = CDQInstruction()
-                        instruction2 = IDivInstruction(src2)
-                        instruction3 = MovInstruction(RegisterOperand(Register(RegisterType.AX)), dst)
-
-                        ASM_Instructions.append(instruction0)
-                        ASM_Instructions.append(instruction1)
-                        ASM_Instructions.append(instruction2)
-                        ASM_Instructions.append(instruction3)
-                        
-                    case tacGenerator.BinopType.REMAINDER:
-                        src1 = parseValue(src1_)
-                        src2 = parseValue(src2_)
-                        dst = parseValue(dst_)
-
-                        instruction0 = MovInstruction(src1, RegisterOperand(Register(RegisterType.AX)))
-                        instruction1 = CDQInstruction()
-                        instruction2 = IDivInstruction(src2)
-                        instruction3 = MovInstruction(RegisterOperand(Register(RegisterType.DX)), dst)
-
-                        ASM_Instructions.append(instruction0)
-                        ASM_Instructions.append(instruction1)
-                        ASM_Instructions.append(instruction2)
-                        ASM_Instructions.append(instruction3)
-
-                    case _:
-                        src1 = parseValue(src1_)
-                        src2 = parseValue(src2_)
-                        dst = parseValue(dst_)
-                        operator = parseOperator(op)
-
-                        instruction0 = MovInstruction(src1, dst)
-                        instruction1 = BinaryInstruction(operator, src2, dst)
-                        
-                        ASM_Instructions.append(instruction0)
-                        ASM_Instructions.append(instruction1)
                 
     
     return ASM_Instructions

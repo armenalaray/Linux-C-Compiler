@@ -136,17 +136,17 @@ class UnopType(Enum):
     NOT = 3
 
 class BinopType(Enum):
-    ADD = 1
-    SUBTRACT = 2
-    MULTIPLY = 3
-    DIVIDE = 4
-    REMAINDER = 5
-    EQUAL = 6
-    NOTEQUAL = 7
-    LESSTHAN = 8
-    LESSOREQUAL = 9
-    GREATERTHAN = 10
-    GREATEROREQUAL = 11
+    EQUAL = 0
+    NOTEQUAL = 1
+    GREATERTHAN = 2
+    GREATEROREQUAL = 3
+    LESSTHAN = 4
+    LESSOREQUAL = 5
+    ADD = 6
+    SUBTRACT = 7
+    MULTIPLY = 8
+    DIVIDE = 9
+    REMAINDER = 10
 
 class Operator:
     pass
