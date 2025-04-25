@@ -583,6 +583,23 @@ def FixingUpInstructions(ass, offset):
 
                         newList.append(instruction)
                         newList.append(i)
+            
+            case CompInst(operand0=op0, operand1=op1):
+                if type(op0) == StackOperand and type(op1) == StackOperand:
+                    
+                    instruction = MovInstruction(i.operand0, RegisterOperand(Register(RegisterType.R10)))
+
+                    i.operand0 = RegisterOperand(Register(RegisterType.R10))
+
+                    newList.append(instruction)
+                    newList.append(i)
+                elif type(op1) == ImmediateOperand:
+                    instruction = MovInstruction(i.operand1, RegisterOperand(Register(RegisterType.R11)))
+
+                    i.operand1 = RegisterOperand(Register(RegisterType.R11))
+
+                    newList.append(instruction)
+                    newList.append(i)
                     
 
             case BinaryInstruction(operator=op, src=src, dest=dst):

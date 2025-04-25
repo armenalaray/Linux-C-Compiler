@@ -4,5 +4,5 @@
 #endif
 #endif
 int main(void) {
-    return !1 || 2;
+    return ((2+1) > (1 - 2) ) || (2 != 3);
 }
