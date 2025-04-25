@@ -272,14 +272,14 @@ def TAC_parseInstructions(expression, instructions):
                             
                             v1 = TAC_parseInstructions(left, instructions)
                             
-                            false_label = TAC_VariableValue(makeTemp())
+                            false_label = makeTemp()
 
                             instructions.append(TAC_JumpIfZeroInst(v1, false_label))
                             v2 = TAC_parseInstructions(right, instructions)
                             instructions.append(TAC_JumpIfZeroInst(v2, false_label))
 
                             result = TAC_VariableValue(makeTemp())
-                            end = TAC_VariableValue(makeTemp())
+                            end = makeTemp()
 
                             instructions.append(TAC_CopyInstruction(TAC_ConstantValue(1), result))
 
@@ -299,14 +299,14 @@ def TAC_parseInstructions(expression, instructions):
                             
                             v1 = TAC_parseInstructions(left, instructions)
                             
-                            true_label = TAC_VariableValue(makeTemp())
+                            true_label = makeTemp()
 
                             instructions.append(TAC_JumpIfNotZeroInst(v1, true_label))
                             v2 = TAC_parseInstructions(right, instructions)
                             instructions.append(TAC_JumpIfNotZeroInst(v2, true_label))
 
                             result = TAC_VariableValue(makeTemp())
-                            end = TAC_VariableValue(makeTemp())
+                            end = makeTemp()
 
                             instructions.append(TAC_CopyInstruction(TAC_ConstantValue(0), result))
 

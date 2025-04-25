@@ -120,7 +120,7 @@ class LabelInst:
         self.identifier = identifier
     
     def __str__(self):
-        return "Idiv({self.divisor})".format(self=self)
+        return "Label({self.identifier})".format(self=self)
     
     def __repr__(self):
         return self.__str__()
@@ -402,24 +402,32 @@ def ASM_parseInstructions(TAC_Instructions):
 
             case tacGenerator.TAC_JumpIfZeroInst(condition=cond, label=label):
                 c = parseValue(cond)
-                l = parseValue(label)
 
                 instruction0 = CompInst(ImmediateOperand(0), c)
-                instruction1 = JumpCCInst(ConcCodeType.E, l)
+                instruction1 = JumpCCInst(ConcCodeType.E, label)
                 
                 ASM_Instructions.append(instruction0)
                 ASM_Instructions.append(instruction1)
 
             case tacGenerator.TAC_JumpIfNotZeroInst(condition=cond, label=label):
                 c = parseValue(cond)
-                l = parseValue(label)
 
                 instruction0 = CompInst(ImmediateOperand(0), c)
-                instruction1 = JumpCCInst(ConcCodeType.NE, l)
+                instruction1 = JumpCCInst(ConcCodeType.NE, label)
                 
                 ASM_Instructions.append(instruction0)
                 ASM_Instructions.append(instruction1)
 
+            case tacGenerator.TAC_CopyInstruction(src=src_, dst=dst_):
+                src = parseValue(src_)
+                dst = parseValue(dst_)
+                instruction0 = MovInstruction(src, dst)
+
+                ASM_Instructions.append(instruction0)
+                
+            case tacGenerator.TAC_LabelInst(identifier=id):
+                
+                ASM_Instructions.append(LabelInst(id))
                 
     
     return ASM_Instructions
@@ -512,6 +520,39 @@ def ReplacePseudoRegisters(ass):
                         value = table[id] 
                         
                         i.divisor = StackOperand(value)
+            case SetCCInst(conc_code=code, operand=op):
+                match op:
+                    case PseudoRegisterOperand(pseudo=id):
+                        
+                        if table.get(id) == None:
+                            offset -= 4
+                            table.update({id : offset})
+
+                        value = table[id] 
+
+                        i.operand = StackOperand(value)
+            case CompInst(operand0=op0, operand1=op1):
+                match op0:
+                    case PseudoRegisterOperand(pseudo=id):
+
+                        if table.get(id) == None:
+                            offset -= 4
+                            table.update({id : offset})
+                            
+                        value = table[id] 
+                        
+                        i.operand0 = StackOperand(value)
+                        
+                match op1:
+                    case PseudoRegisterOperand(pseudo=id):
+                        
+                        if table.get(id) == None:
+                            offset -= 4
+                            table.update({id : offset})
+                            
+                        value = table[id] 
+                        
+                        i.operand1 = StackOperand(value)
 
     return offset
 
