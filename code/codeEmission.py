@@ -22,8 +22,6 @@ def matchOperand(operand, output):
                             output += '%r11d'
                         
                         
-                            
-            
         case assemblyGenerator.ImmediateOperand(imm=im):
             output += '${0}'.format(im)
             #print(output)
@@ -91,8 +89,45 @@ def printFunction(function):
                 
             case assemblyGenerator.CDQInstruction():
                 output += '\n\tcdq'
+            
+            case assemblyGenerator.CompInst(operand0=op0, operand1=op1):
                 
+                output += '\n\tcmpl '
+                output = matchOperand(op0, output)
+
+                output += ', '
+
+                output = matchOperand(op1, output)
+            
+            case assemblyGenerator.JumpInst(identifier=id):
+                output += '\n\tjmp .L{0}'.format(id)
+
+            case assemblyGenerator.JumpCCInst(conc_code=code, identifier=id):
+                output += '\n\tj{0} .L{1}'.format(code.name, id)
                 
+            
+            case assemblyGenerator.SetCCInst(conc_code=code, operand=op):
+                output += '\n\tset{0} '.format(code.name)
+                
+                match op:
+                    case assemblyGenerator.RegisterOperand(register=reg):
+                        match reg.register:
+                            case assemblyGenerator.RegisterType.AX:
+                                output += '%al'
+                            case assemblyGenerator.RegisterType.DX:
+                                output += '%dl'
+                            case assemblyGenerator.RegisterType.R10:
+                                output += '%r10b'
+                            case assemblyGenerator.RegisterType.R11:
+                                output += '%r11b'
+                    case _:
+                        output = matchOperand(op, output)
+                
+
+            case assemblyGenerator.LabelInst(identifier=id):
+                output += '\n.L{0}:'.format(id)
+                
+
         #output += '\n\t{0}'.format(i)
         
     output += '\n'
