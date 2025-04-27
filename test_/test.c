@@ -1,5 +1,4 @@
-int main(void) {
-    int var0;
-    var0 = 2;
-    return var0;
+int main(void)
+{
+    int 10 = return 0;
 }

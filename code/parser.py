@@ -18,7 +18,7 @@ class Function:
     
     def __str__(self):
 
-        return "Function: {self.iden}\n\t\tStatement: {self.statement}".format(self=self)
+        return "Function: {self.iden}\n\t\tList: {self.blockItemList}".format(self=self)
 
 class BlockItem:
     pass
@@ -26,11 +26,22 @@ class BlockItem:
 class S(BlockItem):
     def __init__(self, statement):
         self.statement = statement
+    
+    def __str__(self):
+        return "Statement: {self.statement}".format(self=self)
+
+    def __repr__(self):
+        return self.__str__()
         
 class D(BlockItem):
     def __init__(self, declaration):
         self.declaration = declaration
+    
+    def __str__(self):
+        return "Declaration: {self.declaration}".format(self=self)
 
+    def __repr__(self):
+        return self.__str__()
 
 class Statement:
     pass
@@ -41,11 +52,14 @@ class ReturnStmt(Statement):
 
     def __str__(self):
         #super().__str__()
-        return "Return Statement:\n\t\t\tExpression: {self.expression}".format(self=self)
+        return "return {self.expression}".format(self=self)
 
 class ExpressionStmt(Statement):
     def __init__(self, exp):
         self.exp = exp
+    
+    def __str__(self):
+        return "{self.exp}".format(self=self)
 
 class NullStatement(Statement):
     def __init__(self):
@@ -58,6 +72,9 @@ class Declaration(Decl):
     def __init__(self, identifier, exp=None):
         self.identifier = identifier
         self.exp = exp
+    
+    def __str__(self):
+        return "{self.identifier} = {self.exp}".format(self=self)
 
 class Expression:
     pass
@@ -80,7 +97,7 @@ class Unary_Expression(Expression):
 
     def __str__(self):
         #super().__str__()
-        return "Unary Expression:\n\t\t\t\tOperator: {self.operator}\n\t\t\t\tExpression: {self.expression}".format(self=self)
+        return "Unary Expression: Operator: {self.operator} Expression: {self.expression}".format(self=self)
 
 class Binary_Expression:
     def __init__(self, operator, left, right):
@@ -90,17 +107,22 @@ class Binary_Expression:
 
     def __str__(self):
         #super().__str__()
-        return "Binary Expression:\n\t\t\t\tOperator: {self.operator}\n\t\t\t\tLeft: {self.left}\n\t\t\t\tRight: {self.right}".format(self=self)
+        return "Binary Expression: Operator: {self.operator} Left: {self.left} Right: {self.right}".format(self=self)
 
 class Var_Expression:
     def __init__(self, identifier):
         self.identifier = identifier
+
+    def __str__(self):
+        return "{self.identifier}".format(self=self)
 
 class Assignment_Expression:
     def __init__(self, lvalue, exp):
         self.lvalue = lvalue
         self.exp = exp
 
+    def __str__(self):
+        return "{self.lvalue} = {self.exp}".format(self=self)
 
 class UnopType(Enum):
     NEGATE = 1
@@ -236,6 +258,10 @@ def parseFactor(tokenList):
         intValue = parseInt(tokenList)
         return Constant_Expression(intValue)
     
+    elif token[1] == TokenType.IDENTIFIER:
+        id = parseIdentifier(tokenList)
+        return Var_Expression(id)
+
     elif token[1] == TokenType.TILDE or token[1] == TokenType.HYPHEN or token[1] == TokenType.EXCLAMATION:
         operator = parseUnop(tokenList)
         inner_exp = parseFactor(tokenList)
@@ -265,7 +291,8 @@ precTable = {
     TokenType.TEQUALS : 30,
     TokenType.EXCLAMATIONEQUAL : 30,
     TokenType.TAMPERSANDS : 10,
-    TokenType.TVERTICALB : 5
+    TokenType.TVERTICALB : 5,
+    TokenType.EQUAL : 1
     }
 
 def precedence(token):
@@ -279,26 +306,27 @@ def precedence(token):
 def BinaryOperatorToken(token):
     if token != ():
         
-        if token[1] == TokenType.ASTERISK or token[1] == TokenType.PLUS or token[1] == TokenType.FORWARD_SLASH or token[1] == TokenType.PERCENT or token[1] == TokenType.HYPHEN or token[1] == TokenType.TAMPERSANDS or token[1] == TokenType.TVERTICALB or token[1] == TokenType.TEQUALS or token[1] == TokenType.EXCLAMATIONEQUAL or token[1] == TokenType.LESSTEQUALT or token[1] == TokenType.GREATERTEQUALT or token[1] == TokenType.GREATERT or token[1] == TokenType.LESST:
+        if token[1] == TokenType.ASTERISK or token[1] == TokenType.PLUS or token[1] == TokenType.FORWARD_SLASH or token[1] == TokenType.PERCENT or token[1] == TokenType.HYPHEN or token[1] == TokenType.TAMPERSANDS or token[1] == TokenType.TVERTICALB or token[1] == TokenType.TEQUALS or token[1] == TokenType.EXCLAMATIONEQUAL or token[1] == TokenType.LESSTEQUALT or token[1] == TokenType.GREATERTEQUALT or token[1] == TokenType.GREATERT or token[1] == TokenType.LESST or token[1] == TokenType.EQUAL:
             return True
         
     return False
 
 def parseExp(tokenList, min_prec):
+    #breakpoint()
     left = parseFactor(tokenList)
     next_token = peek(tokenList)
     while BinaryOperatorToken(next_token) and precedence(next_token) >= min_prec:
-        op = parseBinop(tokenList)
-        right = parseExp(tokenList, precedence(next_token) + 1)
-        left = Binary_Expression(op, left, right)
+        if next_token[1] == TokenType.EQUAL:
+            takeToken(tokenList)
+            right = parseExp(tokenList, precedence(next_token))
+            left = Assignment_Expression(left, right)
+        else:
+            op = parseBinop(tokenList)
+            right = parseExp(tokenList, precedence(next_token) + 1)
+            left = Binary_Expression(op, left, right)
         next_token = peek(tokenList)
     return left
 
-def parseStatement(tokenList):
-    expect(TokenType.RETURN_KW, tokenList)
-    retVal = parseExp(tokenList, 0)
-    expect(TokenType.SEMICOLON, tokenList)
-    return ReturnStmt(retVal) 
 
 def parseIdentifier(tokenList):
     actual = takeToken(tokenList)
@@ -314,6 +342,45 @@ def parseIdentifier(tokenList):
     print("Syntax Error Expected an identifier but there are no more tokens.")
     sys.exit(1)
 
+def parseStatement(tokenList):
+    token = peek(tokenList)
+
+    if token[1] == TokenType.RETURN_KW:
+        takeToken(tokenList)
+        retVal = parseExp(tokenList, 0)
+        expect(TokenType.SEMICOLON, tokenList)
+        return ReturnStmt(retVal) 
+    elif token[1] == TokenType.SEMICOLON:
+        takeToken(tokenList)
+        return NullStatement()
+    else:
+        #breakpoint()
+        retVal = parseExp(tokenList, 0)
+        expect(TokenType.SEMICOLON, tokenList)
+        return ExpressionStmt(retVal)
+
+def parseDeclaration(tokenList):
+    #we are not parsing the type
+    takeToken(tokenList)
+    id = parseIdentifier(tokenList)
+    token = peek(tokenList)
+    if token[1] == TokenType.EQUAL:
+        takeToken(tokenList)
+        exp = parseExp(tokenList, 0)
+        expect(TokenType.SEMICOLON, tokenList)
+        return Declaration(id, exp)
+    
+    expect(TokenType.SEMICOLON, tokenList)
+    return Declaration(id) 
+
+def parseBlockItem(tokenList):
+    token = peek(tokenList)
+    if token[1] == TokenType.INT_KW:
+        declaration = parseDeclaration(tokenList)
+        return D(declaration)
+    else:
+        statement = parseStatement(tokenList)
+        return S(statement)
 
 def parseFunction(tokenList):
     expect(TokenType.INT_KW, tokenList)
@@ -331,7 +398,12 @@ def parseFunction(tokenList):
     BlockItems = []
 
     #TODO: ADD elements
-    
+    while peek(tokenList)[1] != TokenType.CLOSE_BRACE:
+        BlockItem = parseBlockItem(tokenList)
+        BlockItems.append(BlockItem)
+        
+    takeToken(tokenList)
+
     return Function(iden, BlockItems)
 
 def parseProgram(tokenList):
