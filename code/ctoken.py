@@ -30,6 +30,7 @@ class TokenType(Enum):
     EXCLAMATIONEQUAL = 25
     LESSTEQUALT = 26
     GREATERTEQUALT = 27
+    EQUAL = 28
 
 def Lex(buffer):
     tokenList = []
@@ -48,7 +49,7 @@ def Lex(buffer):
             if is_newline:
                 LineNumber += 1
             
-            print(LineNumber)
+            #print(LineNumber)
             buffer = wspace.string[wspace.span()[1]:]
 
         #print(buffer)
@@ -115,7 +116,7 @@ def Lex(buffer):
                     buffer = alphanumeric.string[alphanumeric.span()[1]:]
                     #print(buffer)
                 else:
-                    is_char = r"[><!%/*+(){};~-]"
+                    is_char = r"[=><!%/*+(){};~-]"
                     char = re.match(is_char, buffer)
                     if char:
                         #print(char)
@@ -161,6 +162,9 @@ def Lex(buffer):
                             
                             case "<":
                                 tokenList.append(("<", TokenType.LESST, LineNumber))
+
+                            case "=":
+                                tokenList.append(("=", TokenType.EQUAL, LineNumber))
 
                         #aqui tiene que ser keyword
                         buffer = char.string[char.span()[1]:]

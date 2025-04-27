@@ -12,25 +12,52 @@ class Program:
 
 class Function:
     
-    def __init__(self, iden, statement):
+    def __init__(self, iden, blockItemList):
         self.iden = iden
-        self.statement = statement
+        self.blockItemList = blockItemList
     
     def __str__(self):
 
         return "Function: {self.iden}\n\t\tStatement: {self.statement}".format(self=self)
+
+class BlockItem:
+    pass
+
+class S(BlockItem):
+    def __init__(self, statement):
+        self.statement = statement
         
-        
+class D(BlockItem):
+    def __init__(self, declaration):
+        self.declaration = declaration
+
+
 class Statement:
     pass
 
 class ReturnStmt(Statement):
-    def __init__(self, retVal):
-        self.expression = retVal
+    def __init__(self, exp):
+        self.expression = exp
 
     def __str__(self):
         #super().__str__()
         return "Return Statement:\n\t\t\tExpression: {self.expression}".format(self=self)
+
+class ExpressionStmt(Statement):
+    def __init__(self, exp):
+        self.exp = exp
+
+class NullStatement(Statement):
+    def __init__(self):
+        pass
+
+class Decl:
+    pass
+
+class Declaration(Decl):
+    def __init__(self, identifier, exp=None):
+        self.identifier = identifier
+        self.exp = exp
 
 class Expression:
     pass
@@ -64,7 +91,15 @@ class Binary_Expression:
     def __str__(self):
         #super().__str__()
         return "Binary Expression:\n\t\t\t\tOperator: {self.operator}\n\t\t\t\tLeft: {self.left}\n\t\t\t\tRight: {self.right}".format(self=self)
-#(op, left, right)
+
+class Var_Expression:
+    def __init__(self, identifier):
+        self.identifier = identifier
+
+class Assignment_Expression:
+    def __init__(self, lvalue, exp):
+        self.lvalue = lvalue
+        self.exp = exp
 
 
 class UnopType(Enum):
@@ -282,14 +317,22 @@ def parseIdentifier(tokenList):
 
 def parseFunction(tokenList):
     expect(TokenType.INT_KW, tokenList)
+    
     iden = parseIdentifier(tokenList)
     expect(TokenType.OPEN_PAREN, tokenList)
     expect(TokenType.VOID_KW, tokenList)
     expect(TokenType.CLOSE_PAREN, tokenList)
     expect(TokenType.OPEN_BRACE, tokenList)
-    statement = parseStatement(tokenList)
-    expect(TokenType.CLOSE_BRACE, tokenList)
-    return Function(iden, statement)
+    
+
+    #statement = parseStatement(tokenList)
+    #expect(TokenType.CLOSE_BRACE, tokenList)
+
+    BlockItems = []
+
+    #TODO: ADD elements
+    
+    return Function(iden, BlockItems)
 
 def parseProgram(tokenList):
     fun = parseFunction(tokenList)

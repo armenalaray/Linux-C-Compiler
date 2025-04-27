@@ -1,12 +1,5 @@
-#ifdef SUPPRESS_WARNINGS
-#ifndef __clang__
-#pragma GCC diagnostic ignored "-Wparentheses"
-#endif
-#endif
 int main(void) {
-    return (0 == 0 && 3 == 2 + 1 > 1) + 1;
+    int var0;
+    var0 = 2;
+    return var0;
 }
-
-//3 
-//1
-//1 && 0
