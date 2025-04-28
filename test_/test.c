@@ -1,6 +1,6 @@
 int main(void) {
-    int var0 = 2;
-    var0 = 3;
-    int varT;
-    return var0;
+    int a = 0;
+    return a;
+    int b = 1;
+    return a;
 }
