@@ -379,9 +379,8 @@ def TAC_parseBlockItems(blockList):
     for i in blockList:
         match i:
             case parser.D(declaration=decl):
-                
                 TAC_parseDeclarations(decl, instructions)
-                pass
+                
             case parser.S(statement=statement):
                 TAC_parseStatement(statement, instructions)
                 
@@ -392,6 +391,10 @@ def TAC_parseBlockItems(blockList):
 def TAC_parseFunction(function):
     identifier = function.iden
     instructions = TAC_parseBlockItems(function.blockItemList)
+
+    Val = TAC_ConstantValue(0)
+    instructions.append(TAC_returnInstruction(Val))
+    
     return TAC_Function(identifier, instructions)
     
 
