@@ -97,7 +97,7 @@ class Unary_Expression(Expression):
 
     def __str__(self):
         #super().__str__()
-        return "Unary Expression: Operator: {self.operator} Expression: {self.expression}".format(self=self)
+        return "Unary Expression: Operator: {self.operator}Expression: {self.expression}".format(self=self)
 
 class Binary_Expression:
     def __init__(self, operator, left, right):

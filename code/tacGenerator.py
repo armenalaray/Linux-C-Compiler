@@ -327,13 +327,9 @@ def TAC_parseInstructions(expression, instructions):
                             
                             src1 = TAC_parseInstructions(left, instructions)
                             src2 = TAC_parseInstructions(right, instructions)
-
                             dst = TAC_VariableValue(makeTemp())
-
                             operator = parseOperator(op)
-
                             instructions.append(TAC_BinaryInstruction(operator, src1, src2, dst))
-
                             return dst
                             
 
@@ -341,7 +337,16 @@ def TAC_parseInstructions(expression, instructions):
                     print("Invalid operator.")
                     sys.exit(1)
 
+        case parser.Var_Expression(identifier=id):
+            return TAC_VariableValue(id)
+            
 
+        case parser.Assignment_Expression(lvalue=lvalue, exp=exp):
+            src = TAC_parseInstructions(exp, instructions)
+            dst = TAC_parseInstructions(lvalue, instructions)
+            instructions.append(TAC_CopyInstruction(src, dst))
+            return dst
+            
 
             
 
@@ -349,19 +354,44 @@ def TAC_parseInstructions(expression, instructions):
     #    expression_ = expression_.expression
     
     
-def TAC_parseStatement(statement):
+def TAC_parseStatement(statement, instructions):
+    match statement:
+        case parser.ExpressionStmt(exp=exp):
+            TAC_parseInstructions(exp, instructions)
+
+        case parser.ReturnStmt(expression=exp):
+            Val = TAC_parseInstructions(exp, instructions)
+            instructions.append(TAC_returnInstruction(Val))
+        case parser.NullStatement():
+            pass
+
+def TAC_parseDeclarations(decl, instructions):
+    match decl:
+        case parser.Declaration(identifier=id, exp=exp):
+            print(id)
+            if exp:
+                src = TAC_parseInstructions(exp, instructions)
+                dst = TAC_VariableValue(id)
+                instructions.append(TAC_CopyInstruction(src, dst))
+                
+def TAC_parseBlockItems(blockList):
     instructions = []
-
-    if type(statement) == parser.ReturnStmt:
-        Val = TAC_parseInstructions(statement.expression, instructions)
-
-        instructions.append(TAC_returnInstruction(Val))
+    for i in blockList:
+        match i:
+            case parser.D(declaration=decl):
+                
+                TAC_parseDeclarations(decl, instructions)
+                pass
+            case parser.S(statement=statement):
+                TAC_parseStatement(statement, instructions)
+                
 
     return instructions
+    
 
 def TAC_parseFunction(function):
     identifier = function.iden
-    instructions = TAC_parseStatement(function.statement)
+    instructions = TAC_parseBlockItems(function.blockItemList)
     return TAC_Function(identifier, instructions)
     
 

@@ -1,6 +1,6 @@
 int main(void) {
-    int a = 0;
-    return a;
-    int b = 1;
-    return a;
-}
+    int b;
+    int a = 10 + 1;
+    b = a * 2;
+    return b;
+   }
