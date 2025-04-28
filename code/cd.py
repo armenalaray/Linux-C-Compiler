@@ -5,7 +5,7 @@ from ctoken import *
 import parser
 import assemblyGenerator
 import codeEmission
-
+import semanticAnalysis
 import tacGenerator
 
 """
@@ -45,6 +45,8 @@ if __name__ == "__main__":
 					LastStage = "lex"
 				case "--parse":
 					LastStage = "parse"
+				case "--validate":
+					LastStage = "validate"
 				case "--tacky":
 					LastStage = "tac"
 				case "--codegen":
@@ -95,7 +97,14 @@ if __name__ == "__main__":
 			if LastStage == 'parse':
 				sys.exit(0)
 
-			tac = tacGenerator.TAC_parseProgram(pro)
+			res = semanticAnalysis.variableResolution(pro)
+
+			print(res)
+
+			if LastStage == 'validate':
+				sys.exit(0)
+
+			tac = tacGenerator.TAC_parseProgram(res)
 
 			print(tac)
 

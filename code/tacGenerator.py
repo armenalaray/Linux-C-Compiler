@@ -1,6 +1,8 @@
 import sys
 from enum import Enum
 import parser
+import semanticAnalysis
+#from semanticAnalysis import global_value
 
 class TAC_Program:
     def __init__(self, function):
@@ -183,12 +185,11 @@ class TAC_BinaryOperator(Operator):
             case _:
                 return "_"
 
-global_value = 0
+
 
 def makeTemp():
-    global global_value
-    name = "tmp.{0}".format(global_value) 
-    global_value += 1
+    name = "tmp.{0}".format(semanticAnalysis.global_value) 
+    semanticAnalysis.global_value += 1
     return name
     
 def parseOperator(op):
