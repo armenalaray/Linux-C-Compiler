@@ -347,14 +347,47 @@ def TAC_parseInstructions(expression, instructions):
             instructions.append(TAC_CopyInstruction(src, dst))
             return dst
             
+        case parser.Conditional_Expression(condExp=condExp, thenExp=thenExp, elseExp=elseExp):
+            cond = TAC_parseInstructions(condExp, instructions)
+            c = TAC_VariableValue(makeTemp())
+            #print(dst)
+            instructions.append(TAC_CopyInstruction(cond, c))
 
+            e2_label = makeTemp()
+            instructions.append(TAC_JumpIfZeroInst(c, e2_label))
+
+            #print(type(thenExp))
+            thenE = TAC_parseInstructions(thenExp, instructions)
+
+            v1 = TAC_VariableValue(makeTemp())
+            instructions.append(TAC_CopyInstruction(thenE, v1))
+
+            result = TAC_VariableValue(makeTemp())
+            instructions.append(TAC_CopyInstruction(v1, result))
+
+            end = makeTemp()
+            instructions.append(TAC_JumpInst(end))
+
+            instructions.append(TAC_LabelInst(e2_label))
+
+            elseE = TAC_parseInstructions(elseExp, instructions)
+
+            v2 = TAC_VariableValue(makeTemp())
+            instructions.append(TAC_CopyInstruction(elseE, v2))
+
+            instructions.append(TAC_CopyInstruction(v2, result))
+
+            instructions.append(TAC_LabelInst(end))
+
+            return result
+            
             
 
     #if type(expression_) == Unary_Expression:
     #    expression_ = expression_.expression
     
     
-def TAC_parseStatement(statement, instructions):
+def TAC_parseStatement(statement, instructions, end=None):
     match statement:
         case parser.ExpressionStmt(exp=exp):
             TAC_parseInstructions(exp, instructions)
@@ -362,13 +395,58 @@ def TAC_parseStatement(statement, instructions):
         case parser.ReturnStmt(expression=exp):
             Val = TAC_parseInstructions(exp, instructions)
             instructions.append(TAC_returnInstruction(Val))
+
+        case parser.IfStatement(exp=exp, thenS=thenS, elseS=elseS):
+            val = TAC_parseInstructions(exp, instructions)
+            #print(type(val))
+            c = TAC_VariableValue(makeTemp())
+            ins0 = TAC_CopyInstruction(val, c)
+
+            instructions.append(ins0)
+
+            if end == None:
+                end = makeTemp()
+
+            if elseS:
+
+                else_label = makeTemp()
+
+                ins1 = TAC_JumpIfZeroInst(c, else_label)
+                instructions.append(ins1)
+                
+                TAC_parseStatement(thenS, instructions)
+
+                instructions.append(TAC_JumpInst(end))
+
+                instructions.append(TAC_LabelInst(else_label))
+
+                print(type(elseS))
+
+                TAC_parseStatement(elseS, instructions, end)
+
+                if type(elseS) != parser.IfStatement:
+                    instructions.append(TAC_LabelInst(end))
+
+                
+            else:
+                ins1 = TAC_JumpIfZeroInst(c, end)
+                instructions.append(ins1)
+
+                #aqui nunca pasa porq no tiene un else
+                TAC_parseStatement(thenS, instructions, end)
+
+                instructions.append(TAC_LabelInst(end))
+
+
+            
+
         case parser.NullStatement():
             pass
 
 def TAC_parseDeclarations(decl, instructions):
     match decl:
         case parser.Declaration(identifier=id, exp=exp):
-            print(id)
+            #print(id)
             if exp:
                 src = TAC_parseInstructions(exp, instructions)
                 dst = TAC_VariableValue(id)
