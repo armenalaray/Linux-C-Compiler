@@ -46,6 +46,16 @@ class D(BlockItem):
 class Statement:
     pass
 
+class IfStatement(Statement):
+    def __init__(self, expCond, thenS, elseS=None):
+        self.exp = expCond
+        self.thenS = thenS
+        self.elseS = elseS
+    
+    def __str__(self):
+        return "if ({self.exp}) thenS: {self.thenS} elseS: {self.elseS}".format(self=self)
+
+
 class ReturnStmt(Statement):
     def __init__(self, exp):
         self.expression = exp
@@ -345,6 +355,28 @@ def parseIdentifier(tokenList):
 def parseStatement(tokenList):
     token = peek(tokenList)
 
+    if token[1] == TokenType.IF_KW:
+        takeToken(tokenList)
+        expect(TokenType.OPEN_PAREN, tokenList)
+
+        #var expression 
+        expCond = parseExp(tokenList, 0)
+
+        #breakpoint()
+        expect(TokenType.CLOSE_PAREN, tokenList)
+
+        thenS = parseStatement(tokenList)
+
+        token = peek(tokenList)
+        #print(token)
+        if token[1] == TokenType.ELSE_KW:
+            takeToken(tokenList)
+            elseS = parseStatement(tokenList)
+            #breakpoint()
+            return IfStatement(expCond, thenS, elseS)    
+
+        return IfStatement(expCond, thenS)
+        
     if token[1] == TokenType.RETURN_KW:
         takeToken(tokenList)
         retVal = parseExp(tokenList, 0)
@@ -400,6 +432,7 @@ def parseFunction(tokenList):
     #TODO: ADD elements
     while peek(tokenList)[1] != TokenType.CLOSE_BRACE:
         BlockItem = parseBlockItem(tokenList)
+        #breakpoint()
         BlockItems.append(BlockItem)
         
     takeToken(tokenList)
