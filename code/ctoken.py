@@ -31,6 +31,11 @@ class TokenType(Enum):
     LESSTEQUALT = 26
     GREATERTEQUALT = 27
     EQUAL = 28
+    QUESTION_MARK = 29
+    COLON = 30
+    IF_KW = 31
+    ELSE_KW = 32
+
 
 def Lex(buffer):
     tokenList = []
@@ -101,6 +106,13 @@ def Lex(buffer):
                 if alphanumeric:
                     
                     match alphanumeric.group():
+
+                        case "if":
+                            tokenList.append(("if", TokenType.IF_KW, LineNumber))
+
+                        case "else":
+                            tokenList.append(("else", TokenType.ELSE_KW, LineNumber))
+
                         case "int":
                             tokenList.append(("int", TokenType.INT_KW, LineNumber))
                             
@@ -109,18 +121,23 @@ def Lex(buffer):
                             
                         case "return":
                             tokenList.append(("return", TokenType.RETURN_KW, LineNumber))
-
+                        
+                        
                         case _:
                             tokenList.append((alphanumeric.group(), TokenType.IDENTIFIER, LineNumber))
 
                     buffer = alphanumeric.string[alphanumeric.span()[1]:]
                     #print(buffer)
                 else:
-                    is_char = r"[=><!%/*+(){};~-]"
+                    is_char = r"[?:=><!%/*+(){};~-]"
                     char = re.match(is_char, buffer)
                     if char:
                         #print(char)
                         match char.group():
+                            case "?":
+                                tokenList.append(("?", TokenType.OPEN_PAREN, LineNumber))
+                            case ":":
+                                pass
                             case "(":
                                 tokenList.append(("(", TokenType.OPEN_PAREN, LineNumber))
                                 
