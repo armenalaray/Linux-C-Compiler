@@ -135,9 +135,9 @@ def Lex(buffer):
                         #print(char)
                         match char.group():
                             case "?":
-                                tokenList.append(("?", TokenType.OPEN_PAREN, LineNumber))
+                                tokenList.append(("?", TokenType.QUESTION_MARK, LineNumber))
                             case ":":
-                                pass
+                                tokenList.append((":", TokenType.COLON, LineNumber))
                             case "(":
                                 tokenList.append(("(", TokenType.OPEN_PAREN, LineNumber))
                                 

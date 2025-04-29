@@ -119,6 +119,16 @@ class Binary_Expression:
         #super().__str__()
         return "Binary Expression: Operator: {self.operator} Left: {self.left} Right: {self.right}".format(self=self)
 
+class Conditional_Expression:
+    def __init__(self, condExp, thenExp, elseExp):
+        self.condExp = condExp
+        self.thenExp = thenExp
+        self.elseExp = elseExp
+    
+    def __str__(self):
+        return "{self.condExp} ? {self.thenExp} : {self.elseExp}".format(self=self)
+        pass
+
 class Var_Expression:
     def __init__(self, identifier):
         self.identifier = identifier
@@ -133,6 +143,8 @@ class Assignment_Expression:
 
     def __str__(self):
         return "{self.lvalue} = {self.exp}".format(self=self)
+
+
 
 class UnopType(Enum):
     NEGATE = 1
@@ -302,6 +314,7 @@ precTable = {
     TokenType.EXCLAMATIONEQUAL : 30,
     TokenType.TAMPERSANDS : 10,
     TokenType.TVERTICALB : 5,
+    TokenType.QUESTION_MARK : 3,
     TokenType.EQUAL : 1
     }
 
@@ -316,10 +329,16 @@ def precedence(token):
 def BinaryOperatorToken(token):
     if token != ():
         
-        if token[1] == TokenType.ASTERISK or token[1] == TokenType.PLUS or token[1] == TokenType.FORWARD_SLASH or token[1] == TokenType.PERCENT or token[1] == TokenType.HYPHEN or token[1] == TokenType.TAMPERSANDS or token[1] == TokenType.TVERTICALB or token[1] == TokenType.TEQUALS or token[1] == TokenType.EXCLAMATIONEQUAL or token[1] == TokenType.LESSTEQUALT or token[1] == TokenType.GREATERTEQUALT or token[1] == TokenType.GREATERT or token[1] == TokenType.LESST or token[1] == TokenType.EQUAL:
+        if token[1] == TokenType.ASTERISK or token[1] == TokenType.PLUS or token[1] == TokenType.FORWARD_SLASH or token[1] == TokenType.PERCENT or token[1] == TokenType.HYPHEN or token[1] == TokenType.TAMPERSANDS or token[1] == TokenType.TVERTICALB or token[1] == TokenType.TEQUALS or token[1] == TokenType.EXCLAMATIONEQUAL or token[1] == TokenType.LESSTEQUALT or token[1] == TokenType.GREATERTEQUALT or token[1] == TokenType.GREATERT or token[1] == TokenType.LESST or token[1] == TokenType.EQUAL or token[1] == TokenType.QUESTION_MARK:
             return True
         
     return False
+
+def parseConditionalMiddle(tokenList):
+    expect(TokenType.QUESTION_MARK, tokenList)
+    middle = parseExp(tokenList, 0)
+    expect(TokenType.COLON, tokenList)
+    return middle
 
 def parseExp(tokenList, min_prec):
     #breakpoint()
@@ -330,6 +349,12 @@ def parseExp(tokenList, min_prec):
             takeToken(tokenList)
             right = parseExp(tokenList, precedence(next_token))
             left = Assignment_Expression(left, right)
+
+        elif next_token[1] == TokenType.QUESTION_MARK:
+            middle = parseConditionalMiddle(tokenList)
+            right = parseExp(tokenList, precedence(next_token))
+            left = Conditional_Expression(left, middle, right)
+            
         else:
             op = parseBinop(tokenList)
             right = parseExp(tokenList, precedence(next_token) + 1)
