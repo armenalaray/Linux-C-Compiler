@@ -34,6 +34,15 @@ def resolveExpression(exp, varMap):
             return parser.Binary_Expression(op, l, r)
             pass            
         
+        case parser.Conditional_Expression(condExp=condExp, thenExp=thenExp, elseExp=elseExp):
+            print(type(elseExp))
+            c = resolveExpression(condExp, varMap)
+            t = resolveExpression(thenExp, varMap)
+            e = resolveExpression(elseExp, varMap)
+
+            return parser.Conditional_Expression(c, t, e)
+            
+
         case _:
             print("Invalid expression type.")
             sys.exit(1)
@@ -68,6 +77,15 @@ def resolveStatement(statement, varMap):
             return parser.ExpressionStmt(resolveExpression(exp, varMap))
         case parser.ReturnStmt(expression=exp):
             return parser.ReturnStmt(resolveExpression(exp, varMap))
+        case parser.IfStatement(exp=exp, thenS=thenS, elseS=elseS):
+            print(type(exp))
+            p = resolveExpression(exp, varMap)
+
+            t = resolveStatement(thenS, varMap)
+            e = resolveStatement(elseS, varMap)
+
+            return parser.IfStatement(p, t, e)
+            
         case parser.NullStatement():
             return parser.NullStatement()
             
@@ -81,6 +99,7 @@ def variableResolution(pro):
                 Decl = resolveDeclaration(dec, varMap)
                 i.declaration = Decl
             case parser.S(statement=statement):
+                #print(type(statement))
                 s = resolveStatement(statement, varMap)
                 i.statement = s
                 
