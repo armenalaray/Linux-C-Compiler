@@ -35,3 +35,25 @@ int main(void) {
     else 
         return case > 2 ? 4 : 5;
 }
+
+int main(void)
+{
+    int FocusDistance;
+    int HalfWidth;
+    int HalfHeight;
+    int LookFrom;
+    int u;
+    int v;
+    int w;
+    int Origin = LookFrom;
+
+    if (Origin > LookFrom)
+    {
+        int LowerLeftCorner = (Origin - (HalfWidth * FocusDistance * u) - (HalfHeight * FocusDistance * v) - w * FocusDistance);
+    }
+    else
+    {
+        int Horizontal = 2 * HalfWidth * FocusDistance * u;
+        int Vertical = 2 * HalfHeight * FocusDistance * v;
+    }
+}

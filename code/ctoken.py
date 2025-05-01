@@ -35,6 +35,11 @@ class TokenType(Enum):
     COLON = 30
     IF_KW = 31
     ELSE_KW = 32
+    DO_KW = 33
+    WHILE_KW = 34
+    FOR_KW = 35
+    BREAK_KW = 36
+    CONTINUE_KW = 37
 
 
 def Lex(buffer):
@@ -112,6 +117,21 @@ def Lex(buffer):
 
                         case "else":
                             tokenList.append(("else", TokenType.ELSE_KW, LineNumber))
+
+                        case "do":
+                            tokenList.append(("do", TokenType.DO_KW, LineNumber))
+
+                        case "while":
+                            tokenList.append(("while", TokenType.WHILE_KW, LineNumber))
+
+                        case "for":
+                            tokenList.append(("for", TokenType.FOR_KW, LineNumber))
+
+                        case "break":
+                            tokenList.append(("break", TokenType.BREAK_KW, LineNumber))
+
+                        case "continue":
+                            tokenList.append(("continue", TokenType.CONTINUE_KW, LineNumber))
 
                         case "int":
                             tokenList.append(("int", TokenType.INT_KW, LineNumber))

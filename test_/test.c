@@ -1,15 +1,11 @@
 int main(void) {
-    int a = 2;
-    int b = 7;
-    
-    if(a > b)
-    {
-        a = -4;
-        int a = 7;
-        b = a + 1;
-        return a;
+    int a = 10;
+    int b = 20;
+    for (b = -20; b < 0; b = b + 1) {
+        a = a - 1;
+        if (a <= 0)
+            break;
     }
 
-    return a;
-    //return b == 8 && a == -4;
+    return a == 0 && b == -11;
 }
