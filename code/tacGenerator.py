@@ -396,6 +396,11 @@ def TAC_parseStatement(statement, instructions, end=None):
             Val = TAC_parseInstructions(exp, instructions)
             instructions.append(TAC_returnInstruction(Val))
 
+        case parser.CompoundStatement(block=block):
+            #print(block.blockItemList)
+            TAC_parseBlockItems(block.blockItemList, instructions)
+            
+
         case parser.IfStatement(exp=exp, thenS=thenS, elseS=elseS):
             val = TAC_parseInstructions(exp, instructions)
             #print(type(val))
@@ -452,8 +457,7 @@ def TAC_parseDeclarations(decl, instructions):
                 dst = TAC_VariableValue(id)
                 instructions.append(TAC_CopyInstruction(src, dst))
                 
-def TAC_parseBlockItems(blockList):
-    instructions = []
+def TAC_parseBlockItems(blockList, instructions):
     for i in blockList:
         match i:
             case parser.D(declaration=decl):
@@ -461,14 +465,18 @@ def TAC_parseBlockItems(blockList):
                 
             case parser.S(statement=statement):
                 TAC_parseStatement(statement, instructions)
-                
-
-    return instructions
+            
     
+def TAC_parseBlock(block):
+    instructions = []
+    TAC_parseBlockItems(block.blockItemList, instructions)
+    return instructions
 
 def TAC_parseFunction(function):
     identifier = function.iden
-    instructions = TAC_parseBlockItems(function.blockItemList)
+
+    instructions = TAC_parseBlock(function.block)
+    #instructions = TAC_parseBlockItems(function.block.blockItemList)
 
     Val = TAC_ConstantValue(0)
     instructions.append(TAC_returnInstruction(Val))
