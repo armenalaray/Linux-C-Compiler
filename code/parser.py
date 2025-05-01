@@ -12,13 +12,20 @@ class Program:
 
 class Function:
     
-    def __init__(self, iden, blockItemList):
+    def __init__(self, iden, block):
         self.iden = iden
-        self.blockItemList = blockItemList
+        self.block = block
     
     def __str__(self):
 
-        return "Function: {self.iden}\n\t\tList: {self.blockItemList}".format(self=self)
+        return "Function: {self.iden}\n\tBlock: {self.block}".format(self=self)
+
+class Block():
+    def __init__(self, blockItemList):
+        self.blockItemList = blockItemList
+    
+    def __str__(self):
+        return "{self.blockItemList}".format(self=self)
 
 class BlockItem:
     pass
@@ -70,6 +77,14 @@ class ExpressionStmt(Statement):
     
     def __str__(self):
         return "{self.exp}".format(self=self)
+
+class CompoundStatement(Statement):
+    def __init__(self, block):
+        self.block = block
+    
+    def __str__(self):
+        return "Block: {self.block}".format(self=self)
+
 
 class NullStatement(Statement):
     def __init__(self):
@@ -188,10 +203,16 @@ class BinaryOperator(Operator):
 def takeToken(tokenList):
     if(tokenList != []):
         return tokenList.pop(0)
-    return ()
+    
+    print("No more tokens.")
+    sys.exit(1)
 
 def peek(tokenList):
-    return tokenList[0]
+    if(tokenList != []):
+        return tokenList[0]
+    
+    print("No more tokens.")
+    sys.exit(1)
 
 def expect(expected, tokenList):
     actual = takeToken(tokenList)
@@ -380,6 +401,10 @@ def parseIdentifier(tokenList):
 def parseStatement(tokenList):
     token = peek(tokenList)
 
+    if token[1] == TokenType.OPEN_BRACE:
+        block = parseBlock(tokenList)
+        return CompoundStatement(block)
+    
     if token[1] == TokenType.IF_KW:
         takeToken(tokenList)
         expect(TokenType.OPEN_PAREN, tokenList)
@@ -439,6 +464,20 @@ def parseBlockItem(tokenList):
         statement = parseStatement(tokenList)
         return S(statement)
 
+def parseBlock(tokenList):
+    
+    BlockItemList = []
+
+    expect(TokenType.OPEN_BRACE, tokenList)
+    
+    while peek(tokenList)[1] != TokenType.CLOSE_BRACE:
+        BlockItem = parseBlockItem(tokenList)
+        BlockItemList.append(BlockItem)
+        
+    takeToken(tokenList)
+
+    return Block(BlockItemList)
+
 def parseFunction(tokenList):
     expect(TokenType.INT_KW, tokenList)
     
@@ -446,23 +485,10 @@ def parseFunction(tokenList):
     expect(TokenType.OPEN_PAREN, tokenList)
     expect(TokenType.VOID_KW, tokenList)
     expect(TokenType.CLOSE_PAREN, tokenList)
-    expect(TokenType.OPEN_BRACE, tokenList)
-    
 
-    #statement = parseStatement(tokenList)
-    #expect(TokenType.CLOSE_BRACE, tokenList)
+    block = parseBlock(tokenList)
 
-    BlockItems = []
-
-    #TODO: ADD elements
-    while peek(tokenList)[1] != TokenType.CLOSE_BRACE:
-        BlockItem = parseBlockItem(tokenList)
-        #breakpoint()
-        BlockItems.append(BlockItem)
-        
-    takeToken(tokenList)
-
-    return Function(iden, BlockItems)
+    return Function(iden, block)
 
 def parseProgram(tokenList):
     fun = parseFunction(tokenList)

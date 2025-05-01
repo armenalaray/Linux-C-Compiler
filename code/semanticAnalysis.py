@@ -1,3 +1,4 @@
+import copy
 import sys
 import parser
 
@@ -14,7 +15,7 @@ def resolveExpression(exp, varMap):
         
         case parser.Var_Expression(identifier=id):
             if id in varMap:
-                return parser.Var_Expression(varMap[id])
+                return parser.Var_Expression(varMap[id][0])
             else:
                 print("Undeclared Variable!")
                 sys.exit(1)
@@ -57,19 +58,30 @@ def makeTemporary(id):
     return name
 
 def resolveDeclaration(dec, varMap):
-    if dec.identifier in varMap:
+    if dec.identifier in varMap and varMap[dec.identifier][1]:
         print("Variable is already declared.")
         sys.exit(1)
 
     #asi esta bien!
     uniqueName = makeTemporary(dec.identifier)
-    varMap[dec.identifier] = uniqueName
+    varMap[dec.identifier] = [uniqueName, True]
 
     if dec.exp:
         exp = resolveExpression(dec.exp, varMap)
         return parser.Declaration(uniqueName, exp)
     
     return parser.Declaration(uniqueName)
+
+def copyVarMap(varMap):
+    print("VAR map: ", varMap)
+    
+    newMap = copy.deepcopy(varMap)
+    for i in newMap.values():
+        i[1] = False
+    
+    print("NEW map: ", newMap)
+
+    return newMap
 
 def resolveStatement(statement, varMap):
     match statement:
@@ -78,32 +90,41 @@ def resolveStatement(statement, varMap):
         case parser.ReturnStmt(expression=exp):
             return parser.ReturnStmt(resolveExpression(exp, varMap))
         case parser.IfStatement(exp=exp, thenS=thenS, elseS=elseS):
-            print(type(exp))
+            #print(type(exp))
             p = resolveExpression(exp, varMap)
 
             t = resolveStatement(thenS, varMap)
             e = resolveStatement(elseS, varMap)
 
             return parser.IfStatement(p, t, e)
+        case parser.CompoundStatement(block=block):
+            newVarMap = copyVarMap(varMap)
+            return parser.CompoundStatement(resolveBlock(block, newVarMap))
             
         case parser.NullStatement():
             return parser.NullStatement()
             
+def resolveBlock(block, varMap):
+    blockItemList = []
+
+    for i in block.blockItemList:
+        match i:
+            case parser.D(declaration=dec):
+                Decl = resolveDeclaration(dec, varMap)
+                blockItemList.append(parser.D(Decl))
+
+            case parser.S(statement=statement):
+                s = resolveStatement(statement, varMap)
+                blockItemList.append(parser.S(s))
+
+    return parser.Block(blockItemList)
+    
 
 def variableResolution(pro):
     
     varMap = {}
-    for i in pro.function.blockItemList:
-        match i:
-            case parser.D(declaration=dec):
-                Decl = resolveDeclaration(dec, varMap)
-                i.declaration = Decl
-            case parser.S(statement=statement):
-                #print(type(statement))
-                s = resolveStatement(statement, varMap)
-                i.statement = s
-                
-                
-            
+    block = resolveBlock(pro.function.block, varMap)
+    pro.function.block = block
+
     return pro
 
