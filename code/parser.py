@@ -57,12 +57,17 @@ class ForInit:
 class InitDecl(ForInit):
     def __init__(self, decl):
         self.decl = decl
-    
+        
+    def __str__(self):
+        return "Declaration: {self.decl}".format(self=self)
+
 
 class InitExp(ForInit):
     def __init__(self, exp=None):
         self.exp = exp
     
+    def __str__(self):
+        return "InitExp: {self.exp}".format(self=self)
 
 class Statement:
     pass
@@ -96,22 +101,34 @@ class ExpressionStmt(Statement):
 class BreakStatement(Statement):
     def __init__(self, identifier=None):
         self.identifier = identifier
+    
+    def __str__(self):
+        return "break"
 
 class ContinueStatement(Statement):
     def __init__(self, identifier=None):
         self.identifier = identifier
+    
+    def __str__(self):
+        return "continue"
 
 class WhileStatement(Statement):
     def __init__(self, condExp, statement, identifier=None):
         self.condExp = condExp
         self.statement = statement
         self.identifier = identifier
+    
+    def __str__(self):
+        return "while ({self.condExp}) thenS: {self.statement}".format(self=self)
 
 class DoWhileStatement(Statement):
     def __init__(self, statement, condExp, identifier=None):
         self.statement = statement
         self.condExp = condExp
         self.identifier = identifier
+    
+    def __str__(self):
+        return "do {self.statement} while ({self.condExp})".format(self=self)
 
 class ForStatement(Statement):
     def __init__(self, forInit, statement, condExp=None, postExp=None, identifier=None):
@@ -120,6 +137,9 @@ class ForStatement(Statement):
         self.postExp = postExp
         self.statement = statement
         self.identifier = identifier
+    
+    def __str__(self):
+        return "for ({self.forInit} ; {self.condExp} ; {self.postExp}) thenS: {self.statement}".format(self=self)
 
 
 class CompoundStatement(Statement):
@@ -442,14 +462,98 @@ def parseIdentifier(tokenList):
     print("Syntax Error Expected an identifier but there are no more tokens.")
     sys.exit(1)
 
+def parseForInit(tokenList):
+    token = peek(tokenList)
+    if token[1] == TokenType.SEMICOLON:
+        takeToken(tokenList)
+        return InitExp()
+    
+    if token[1] == TokenType.INT_KW:
+        decl = parseDeclaration(tokenList)
+        return InitDecl(decl)
+    else:
+        exp = parseExp(tokenList, 0)
+        expect(TokenType.SEMICOLON, tokenList)
+        return InitExp(exp)
+
+    
+
 def parseStatement(tokenList):
     token = peek(tokenList)
 
+    if token[1] == TokenType.FOR_KW:
+        takeToken(tokenList)
+        expect(TokenType.OPEN_PAREN, tokenList)
+
+        forInit = parseForInit(tokenList)
+        
+        token = peek(tokenList)
+
+        condExp = None
+
+        if token[1] != TokenType.SEMICOLON:
+            condExp = parseExp(tokenList, 0)
+
+        expect(TokenType.SEMICOLON, tokenList)
+
+        token = peek(tokenList)
+
+        postExp = None
+
+        if token[1] != TokenType.CLOSE_PAREN:
+            postExp = parseExp(tokenList, 0)
+
+        expect(TokenType.CLOSE_PAREN, tokenList)
+        
+        thenS = parseStatement(tokenList)
+
+        return ForStatement(forInit, thenS, condExp, postExp)
+        
+    if token[1] == TokenType.DO_KW:
+        takeToken(tokenList)
+        thenS = parseStatement(tokenList)
+        print(thenS)
+
+        expect(TokenType.WHILE_KW, tokenList)
+        expect(TokenType.OPEN_PAREN, tokenList)
+        
+        expCond = parseExp(tokenList, 0)
+
+        expect(TokenType.CLOSE_PAREN, tokenList)
+
+        expect(TokenType.SEMICOLON, tokenList)
+        return DoWhileStatement(thenS, expCond)
+
+    if token[1] == TokenType.WHILE_KW:
+        #print(token)
+        takeToken(tokenList)
+        expect(TokenType.OPEN_PAREN, tokenList)
+        #breakpoint()
+        expCond = parseExp(tokenList, 0)
+        expect(TokenType.CLOSE_PAREN, tokenList)
+
+        thenS = parseStatement(tokenList)
+
+        return WhileStatement(expCond, thenS)
+    
+    if token[1] == TokenType.BREAK_KW:
+        takeToken(tokenList)
+        expect(TokenType.SEMICOLON, tokenList)
+
+        return BreakStatement()
+    
+    if token[1] == TokenType.CONTINUE_KW:
+        takeToken(tokenList)
+        expect(TokenType.SEMICOLON, tokenList)
+
+        return ContinueStatement()
+
     if token[1] == TokenType.OPEN_BRACE:
+        #breakpoint()
         block = parseBlock(tokenList)
         return CompoundStatement(block)
     
-    if token[1] == TokenType.IF_KW:
+    elif token[1] == TokenType.IF_KW:
         takeToken(tokenList)
         expect(TokenType.OPEN_PAREN, tokenList)
 
@@ -471,11 +575,12 @@ def parseStatement(tokenList):
 
         return IfStatement(expCond, thenS)
         
-    if token[1] == TokenType.RETURN_KW:
+    elif token[1] == TokenType.RETURN_KW:
         takeToken(tokenList)
         retVal = parseExp(tokenList, 0)
         expect(TokenType.SEMICOLON, tokenList)
         return ReturnStmt(retVal) 
+    
     elif token[1] == TokenType.SEMICOLON:
         takeToken(tokenList)
         return NullStatement()
@@ -516,6 +621,7 @@ def parseBlock(tokenList):
     
     while peek(tokenList)[1] != TokenType.CLOSE_BRACE:
         BlockItem = parseBlockItem(tokenList)
+        #print(BlockItem)
         BlockItemList.append(BlockItem)
         
     takeToken(tokenList)
