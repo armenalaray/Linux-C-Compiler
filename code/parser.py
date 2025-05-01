@@ -50,8 +50,23 @@ class D(BlockItem):
     def __repr__(self):
         return self.__str__()
 
+
+class ForInit:
+    pass
+
+class InitDecl(ForInit):
+    def __init__(self, decl):
+        self.decl = decl
+    
+
+class InitExp(ForInit):
+    def __init__(self, exp=None):
+        self.exp = exp
+    
+
 class Statement:
     pass
+
 
 class IfStatement(Statement):
     def __init__(self, expCond, thenS, elseS=None):
@@ -77,6 +92,35 @@ class ExpressionStmt(Statement):
     
     def __str__(self):
         return "{self.exp}".format(self=self)
+
+class BreakStatement(Statement):
+    def __init__(self, identifier=None):
+        self.identifier = identifier
+
+class ContinueStatement(Statement):
+    def __init__(self, identifier=None):
+        self.identifier = identifier
+
+class WhileStatement(Statement):
+    def __init__(self, condExp, statement, identifier=None):
+        self.condExp = condExp
+        self.statement = statement
+        self.identifier = identifier
+
+class DoWhileStatement(Statement):
+    def __init__(self, statement, condExp, identifier=None):
+        self.statement = statement
+        self.condExp = condExp
+        self.identifier = identifier
+
+class ForStatement(Statement):
+    def __init__(self, forInit, statement, condExp=None, postExp=None, identifier=None):
+        self.forInit = forInit
+        self.condExp = condExp
+        self.postExp = postExp
+        self.statement = statement
+        self.identifier = identifier
+
 
 class CompoundStatement(Statement):
     def __init__(self, block):
