@@ -83,8 +83,58 @@ def copyVarMap(varMap):
 
     return newMap
 
+def resolveForInit(forInit, varMap):
+    print(type(forInit))
+
+    match forInit:
+        case parser.InitDecl(decl=decl):
+            d = resolveDeclaration(decl, varMap)
+            return parser.InitDecl(d)
+        
+        case parser.InitExp(exp=exp):
+            e = None
+            if exp:
+                e = resolveExpression(exp, varMap)
+
+            return parser.InitExp(e)
+            
+
 def resolveStatement(statement, varMap):
     match statement:
+        case parser.BreakStatement():
+            return parser.BreakStatement()
+        
+        case parser.ContinueStatement():
+            return parser.ContinueStatement()
+
+        case parser.ForStatement(forInit=forInit, condExp=condExp, postExp=postExp, statement=statement, identifier=identifier):
+            newVarMap = copyVarMap(varMap)
+
+            f = resolveForInit(forInit, newVarMap)
+            
+            c = None
+            if condExp:
+                c = resolveExpression(condExp, newVarMap)
+
+            p = None
+            if postExp:
+                p = resolveExpression(postExp, newVarMap)
+
+            s = resolveStatement(statement, newVarMap)
+
+            return parser.ForStatement(f, s, c, p)
+            
+
+        case parser.DoWhileStatement(statement=statement, condExp=condExp, identifier=id):
+            s = resolveStatement(statement, varMap)
+            c = resolveExpression(condExp, varMap)
+            return parser.DoWhileStatement(s, c)
+
+        case parser.WhileStatement(condExp=condExp, statement=statement, identifier=id):
+            c = resolveExpression(condExp, varMap)
+            s = resolveStatement(statement, varMap)
+            return parser.WhileStatement(c, s)
+            
         case parser.ExpressionStmt(exp=exp):
             return parser.ExpressionStmt(resolveExpression(exp, varMap))
         case parser.ReturnStmt(expression=exp):

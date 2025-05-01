@@ -1,4 +1,47 @@
 int main(void) {
+    int a = 10;
+    do
+    {
+        if(a > 4)
+        {
+            break;
+        }
+    }
+    while ((a = 1));
+    return a;
+}
+
+
+
+
+
+
+
+
+
+
+int main(void) {
+    int a = 0;
+
+    while (a < 5)
+    {
+        if (a > 3)
+        {
+            break;
+        }
+        
+        a = a + 2;
+    }
+
+    return a;
+}
+
+
+
+
+
+
+int main(void) {
     int a = 0;
     a = 1 ? 2 : 3;
     
