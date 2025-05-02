@@ -399,6 +399,55 @@ def TAC_parseStatement(statement, instructions, end=None):
         case parser.CompoundStatement(block=block):
             #print(block.blockItemList)
             TAC_parseBlockItems(block.blockItemList, instructions)
+
+        case parser.BreakStatement(identifier=id):
+            instructions.append(TAC_JumpInst('break_{0}'.format(id)))
+             
+        case parser.ContinueStatement(identifier=id):
+            instructions.append(TAC_JumpInst('continue_{0}'.format(id)))
+
+        case parser.ForStatement():
+            pass
+
+        case parser.WhileStatement(condExp=condExp, statement=statement, identifier=id):
+
+            startLabel = "continue_{0}".format(id)
+
+            instructions.append(TAC_LabelInst(startLabel))
+
+            Val = TAC_parseInstructions(condExp, instructions)
+
+            v = TAC_VariableValue(makeTemp())
+            instructions.append(TAC_CopyInstruction(Val, v))
+
+            endLabel = "break_{0}".format(id)
+            instructions.append(TAC_JumpIfZeroInst(v, endLabel))
+
+            TAC_parseStatement(statement, instructions)
+
+            instructions.append(TAC_JumpInst(startLabel))
+
+            instructions.append(TAC_LabelInst(endLabel))
+            
+
+        case parser.DoWhileStatement(statement=statement, condExp=condExp, identifier=id):    
+            
+            startLabel = makeTemp()
+
+            instructions.append(TAC_LabelInst(startLabel))
+
+            TAC_parseStatement(statement, instructions)
+
+            instructions.append(TAC_LabelInst('continue_{0}'.format(id)))
+
+            Val = TAC_parseInstructions(condExp, instructions)
+
+            v = TAC_VariableValue(makeTemp())
+            instructions.append(TAC_CopyInstruction(Val, v))
+
+            instructions.append(TAC_JumpIfNotZeroInst(v, startLabel))
+
+            instructions.append(TAC_LabelInst('break_{0}'.format(id)))
             
 
         case parser.IfStatement(exp=exp, thenS=thenS, elseS=elseS):
