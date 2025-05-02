@@ -1,3 +1,41 @@
+
+int main(void)
+{
+    int a = 0;
+
+    while (a < 5)
+        if (a > 3)
+        {
+
+            break;
+            do
+            {
+                if (a > 4)
+                {
+                    int a = 2 + 3;
+                    
+                    // int a = 12345;
+                    int i;
+                    
+                    for (i = 5; i >= 0; i = i - 1)
+                    {
+                        continue;
+                        a = a / 3;
+                    }
+                    
+                    return a;
+                }
+                break;
+            } while ((a = 1));
+            return a;
+        }
+        else
+            continue;
+}
+
+
+
+
 int main(void) {
     int a = 10;
     do

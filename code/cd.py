@@ -7,6 +7,7 @@ import assemblyGenerator
 import codeEmission
 import semanticAnalysis
 import tacGenerator
+import loopLabeling
 
 """
 def lex(file):
@@ -101,10 +102,14 @@ if __name__ == "__main__":
 
 			print(res)
 
+			loo = loopLabeling.labelProgram(res)
+
+			print(loo)
+
 			if LastStage == 'validate':
 				sys.exit(0)
 
-			tac = tacGenerator.TAC_parseProgram(res)
+			tac = tacGenerator.TAC_parseProgram(loo)
 
 			print(tac)
 

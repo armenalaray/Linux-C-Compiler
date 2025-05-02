@@ -137,8 +137,10 @@ def resolveStatement(statement, varMap):
             
         case parser.ExpressionStmt(exp=exp):
             return parser.ExpressionStmt(resolveExpression(exp, varMap))
+        
         case parser.ReturnStmt(expression=exp):
             return parser.ReturnStmt(resolveExpression(exp, varMap))
+        
         case parser.IfStatement(exp=exp, thenS=thenS, elseS=elseS):
             #print(type(exp))
             p = resolveExpression(exp, varMap)
@@ -147,6 +149,7 @@ def resolveStatement(statement, varMap):
             e = resolveStatement(elseS, varMap)
 
             return parser.IfStatement(p, t, e)
+        
         case parser.CompoundStatement(block=block):
             newVarMap = copyVarMap(varMap)
             return parser.CompoundStatement(resolveBlock(block, newVarMap))

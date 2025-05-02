@@ -103,14 +103,14 @@ class BreakStatement(Statement):
         self.identifier = identifier
     
     def __str__(self):
-        return "break"
+        return "break loopOwner: {self.identifier}".format(self=self)
 
 class ContinueStatement(Statement):
     def __init__(self, identifier=None):
         self.identifier = identifier
     
     def __str__(self):
-        return "continue"
+        return "continue loopOwner: {self.identifier}".format(self=self)
 
 class WhileStatement(Statement):
     def __init__(self, condExp, statement, identifier=None):
@@ -119,7 +119,7 @@ class WhileStatement(Statement):
         self.identifier = identifier
     
     def __str__(self):
-        return "while ({self.condExp}) thenS: {self.statement}".format(self=self)
+        return "while {self.identifier} ({self.condExp}) thenS: {self.statement}".format(self=self)
 
 class DoWhileStatement(Statement):
     def __init__(self, statement, condExp, identifier=None):
@@ -128,7 +128,7 @@ class DoWhileStatement(Statement):
         self.identifier = identifier
     
     def __str__(self):
-        return "do {self.statement} while ({self.condExp})".format(self=self)
+        return "do {self.identifier} thenS: {self.statement} while ({self.condExp})".format(self=self)
 
 class ForStatement(Statement):
     def __init__(self, forInit, statement, condExp=None, postExp=None, identifier=None):
@@ -139,7 +139,7 @@ class ForStatement(Statement):
         self.identifier = identifier
     
     def __str__(self):
-        return "for ({self.forInit} ; {self.condExp} ; {self.postExp}) thenS: {self.statement}".format(self=self)
+        return "for {self.identifier} ({self.forInit} ; {self.condExp} ; {self.postExp}) thenS: {self.statement}".format(self=self)
 
 
 class CompoundStatement(Statement):
