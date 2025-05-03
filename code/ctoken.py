@@ -214,6 +214,6 @@ def Lex(buffer):
                             sys.exit(1)
 
     #aqui termina el while con la lista
-    print(tokenList)
+    #print(tokenList)
 
     return tokenList

@@ -4,10 +4,15 @@
 # My compiler
 
 
-#lastStage="--tacky"
+#lastStage="--lex"
+#noLink="-c"
 
-python3 "$(pwd)"/code/cd.py $lastStage "$(pwd)"/test_/test.c
+python3 "$(pwd)"/code/cd.py $lastStage $noLink "$(pwd)"/test_/test.c
 echo $?
+
+python3 "$(pwd)"/code/cd.py $lastStage $noLink "$(pwd)"/test_/other.c
+echo $?
+
 
 if test -f test_/test; then
     ./test_/test

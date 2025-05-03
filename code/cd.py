@@ -29,14 +29,14 @@ if __name__ == "__main__":
 
 	file = ''
 	LastStage = "codeEmission"
+	NoLink = False
 
 	match len(sys.argv):
 		case 1:
 			#NOTE: no arguments
 			pass
 		case 2:
-			file = sys.argv[1]
-			
+			file = sys.argv[1]	
 			
 		case 3:
 			file = sys.argv[2]
@@ -52,6 +52,51 @@ if __name__ == "__main__":
 					LastStage = "tac"
 				case "--codegen":
 					LastStage = "assemblyGeneration"
+				case "-c":
+					NoLink = True
+				case _:
+					print("Error Invalid command option.")
+					sys.exit(1)
+
+		case 4:
+			file = sys.argv[3]
+			#como sabes que no modificaste el mismo
+
+			#if sys.argv[2] == sys.argv[1]:
+
+
+			match sys.argv[1]:
+				case "--lex":
+					LastStage = "lex"
+				case "--parse":
+					LastStage = "parse"
+				case "--validate":
+					LastStage = "validate"
+				case "--tacky":
+					LastStage = "tac"
+				case "--codegen":
+					LastStage = "assemblyGeneration"
+				case "-c":
+					NoLink = True
+					pass
+				case _:
+					print("Error Invalid command option.")
+					sys.exit(1)
+
+			match sys.argv[2]:
+				case "--lex":
+					LastStage = "lex"
+				case "--parse":
+					LastStage = "parse"
+				case "--validate":
+					LastStage = "validate"
+				case "--tacky":
+					LastStage = "tac"
+				case "--codegen":
+					LastStage = "assemblyGeneration"
+				case "-c":
+					NoLink = True
+					pass
 				case _:
 					print("Error Invalid command option.")
 					sys.exit(1)
@@ -64,6 +109,7 @@ if __name__ == "__main__":
 	
 	print("File: ", file)
 	print("Last Stage: ", LastStage)
+	print("NoLink: ", NoLink)
 
 	#NOTE: you have an archive
 	prepC = "gcc -E -P " + file + " -o "
@@ -140,13 +186,17 @@ if __name__ == "__main__":
 			aFile.write(output)
 			aFile.close()
 
-			
-			#assembly file
-			assC = "gcc " + asmFile + " -o " + os.path.dirname(file) + "/" + os.path.basename(file).split('.')[0]
-			
-			#print(assC)
+			if NoLink:
+				assC = "gcc -c " + asmFile + " -o " + os.path.dirname(file) + "/" + os.path.basename(file).split('.')[0] + '.o'
 
-			os.system(assC)
+				print(assC)
+
+				os.system(assC)
+
+				pass
+			else:	
+				assC = "gcc " + asmFile + " -o " + os.path.dirname(file) + "/" + os.path.basename(file).split('.')[0]
+				os.system(assC)
 			
 			
 			
