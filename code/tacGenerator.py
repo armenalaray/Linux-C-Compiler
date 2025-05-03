@@ -336,6 +336,9 @@ def TAC_parseInstructions(expression, instructions):
                 case parser.UnaryOperator():
                     print("Invalid operator.")
                     sys.exit(1)
+                
+                
+
 
         case parser.Var_Expression(identifier=id):
             return TAC_VariableValue(id)
@@ -386,6 +389,18 @@ def TAC_parseInstructions(expression, instructions):
     #if type(expression_) == Unary_Expression:
     #    expression_ = expression_.expression
     
+def TAC_parseForInit(forInit, instructions):
+    print(type(forInit))
+    match forInit:
+        case parser.InitExp(exp=exp):
+            if exp:
+                TAC_parseInstructions(exp, instructions)
+            
+        case parser.InitDecl(decl=decl):
+            TAC_parseDeclarations(decl, instructions)
+            
+    
+
     
 def TAC_parseStatement(statement, instructions, end=None):
     match statement:
@@ -406,8 +421,38 @@ def TAC_parseStatement(statement, instructions, end=None):
         case parser.ContinueStatement(identifier=id):
             instructions.append(TAC_JumpInst('continue_{0}'.format(id)))
 
-        case parser.ForStatement():
+        case parser.ForStatement(forInit=forInit, condExp=condExp, postExp=postExp, statement=statement, identifier=id):
+
+            TAC_parseForInit(forInit, instructions)
+
+            #jump label
+            startLabel = makeTemp()
+            instructions.append(TAC_LabelInst(startLabel))
+            
+            breakLabel = "break_{0}".format(id)
+
+            if condExp:
+                Val = TAC_parseInstructions(condExp, instructions)
+
+                v = TAC_VariableValue(makeTemp())
+                instructions.append(TAC_CopyInstruction(Val, v))
+
+                instructions.append(TAC_JumpIfZeroInst(v, breakLabel))
+
+
+            TAC_parseStatement(statement, instructions)
+
+            continueLabel = "continue_{0}".format(id)
+            instructions.append(TAC_LabelInst(continueLabel))
+
+            if postExp:
+                TAC_parseInstructions(postExp, instructions)
+
+            instructions.append(TAC_JumpInst(startLabel))
+
+            instructions.append(TAC_LabelInst(breakLabel))
             pass
+        
 
         case parser.WhileStatement(condExp=condExp, statement=statement, identifier=id):
 

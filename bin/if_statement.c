@@ -1,6 +1,32 @@
 
 int main(void)
 {
+    int n1 = 0;
+    int n2 = 1; 
+
+    int n=10;
+    
+    int result = 0;
+
+    if(n == 0)
+        return n1;
+
+    if(n == 1)
+        return n2;
+
+    for (int i = 0; i < n-1; i = i + 1)
+    {   
+        result = n1 + n2;
+        n1 = n2;
+        n2 = result;
+    }
+
+    return result;
+}
+
+
+int main(void)
+{
     int a = 0;
 
     while (a < 5)
