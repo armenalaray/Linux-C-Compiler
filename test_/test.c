@@ -1,18 +1,8 @@
-int sub(int a, int b) {
-    int a(void){return 4;}
-    int a = 2;
-
-    sub(a - b, a * b);
-
-    for(int a = 1;;)
-    {
-        return a - b;
-    }
+/* Trailing commas aren't permitted in parameter lists */
+int foo(int a, int b) {
+    return a + 1;
 }
 
-//int a = 0;
-
 int main(void) {
-    int sum = sub(1 + 2, 1);
-    return sum;
+    return foo(4,);
 }

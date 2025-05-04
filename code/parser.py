@@ -181,7 +181,9 @@ class NullStatement(Statement):
         pass
 
 class Expression:
-    pass
+    def __repr__(self):
+        return self.__str__()
+    
 
 class Null_Expression(Expression):
     pass
@@ -203,7 +205,7 @@ class Unary_Expression(Expression):
         #super().__str__()
         return "Unary Expression: Operator: {self.operator}Expression: {self.expression}".format(self=self)
 
-class Binary_Expression:
+class Binary_Expression(Expression):
     def __init__(self, operator, left, right):
         self.operator = operator
         self.left = left
@@ -212,8 +214,9 @@ class Binary_Expression:
     def __str__(self):
         #super().__str__()
         return "Binary Expression: Operator: {self.operator} Left: {self.left} Right: {self.right}".format(self=self)
+    
 
-class Conditional_Expression:
+class Conditional_Expression(Expression):
     def __init__(self, condExp, thenExp, elseExp):
         self.condExp = condExp
         self.thenExp = thenExp
@@ -223,14 +226,14 @@ class Conditional_Expression:
         return "{self.condExp} ? {self.thenExp} : {self.elseExp}".format(self=self)
         pass
 
-class Var_Expression:
+class Var_Expression(Expression):
     def __init__(self, identifier):
         self.identifier = identifier
 
     def __str__(self):
         return "{self.identifier}".format(self=self)
 
-class Assignment_Expression:
+class Assignment_Expression(Expression):
     def __init__(self, lvalue, exp):
         self.lvalue = lvalue
         self.exp = exp
@@ -238,11 +241,13 @@ class Assignment_Expression:
     def __str__(self):
         return "{self.lvalue} = {self.exp}".format(self=self)
 
-class FunctionCall_Exp:
+class FunctionCall_Exp(Expression):
     def __init__(self, identifer, argumentList):
         self.identifier = identifer
         self.argumentList = argumentList
     
+    def __str__(self):
+        return "{self.identifier}({self.argumentList})".format(self=self)
 
 class UnopType(Enum):
     NEGATE = 1
@@ -704,28 +709,30 @@ def parseBlock(tokenList):
 def parseParamList(tokenList):
     paramList = []
 
-    while True:
+    token = peek(tokenList)
+
+    if token[1] == TokenType.VOID_KW:
+        takeToken(tokenList)
+        return paramList
+    
+    expect(TokenType.INT_KW, tokenList)
+
+    iden = parseIdentifier(tokenList)
+    paramList.append(iden)
+
+    token = peek(tokenList)
+
+    while token[1] == TokenType.COMMA:
+        takeToken(tokenList)
+        #print(tokenList)
+        expect(TokenType.INT_KW, tokenList)
+
+        iden = parseIdentifier(tokenList)
+        paramList.append(iden)
+
         token = peek(tokenList)
-        match token[1]:
-            case TokenType.CLOSE_PAREN:
-                break
-            case TokenType.VOID_KW:
-                takeToken(tokenList)
 
-            case TokenType.INT_KW:
-                takeToken(tokenList)
-
-            case TokenType.COMMA:
-                takeToken(tokenList)
-             
-            case TokenType.IDENTIFIER:
-                paramList.append(token[0])
-                takeToken(tokenList)
-                token = peek(tokenList)
-            
-            case _:
-                print("Error: {0} is not a valid parameter.".format(token[0]))
-                sys.exit(1)
+    #   print(paramList)
 
     return paramList
     
