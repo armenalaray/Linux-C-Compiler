@@ -40,7 +40,7 @@ class TokenType(Enum):
     FOR_KW = 35
     BREAK_KW = 36
     CONTINUE_KW = 37
-
+    COMMA = 38
 
 def Lex(buffer):
     tokenList = []
@@ -149,11 +149,13 @@ def Lex(buffer):
                     buffer = alphanumeric.string[alphanumeric.span()[1]:]
                     #print(buffer)
                 else:
-                    is_char = r"[?:=><!%/*+(){};~-]"
+                    is_char = r"[,?:=><!%/*+(){};~-]"
                     char = re.match(is_char, buffer)
                     if char:
                         #print(char)
                         match char.group():
+                            case ",":
+                                tokenList.append((",", TokenType.COMMA, LineNumber))
                             case "?":
                                 tokenList.append(("?", TokenType.QUESTION_MARK, LineNumber))
                             case ":":
@@ -214,6 +216,6 @@ def Lex(buffer):
                             sys.exit(1)
 
     #aqui termina el while con la lista
-    #print(tokenList)
+    print(tokenList)
 
     return tokenList

@@ -1,9 +1,12 @@
+int sub(int a, int b) {
+    /* Make sure arguments are passed in the right order
+     * (we can test this with subtraction since a - b  != b - a)
+     */
+    return a - b;
+}
+
 int main(void) {
-    int a = 12345;
-    int i;
-
-    for (i = 5; i >= 0; i = i - 1)
-        a = a / 3;
-
-    return a;
+    /* Make sure we can evaluate expressions passed as arguments */
+    int sum = sub(1 + 2, 1);
+    return sum;
 }
