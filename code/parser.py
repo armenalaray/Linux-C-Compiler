@@ -4,21 +4,11 @@ from enum import Enum
 
 class Program:
 
-    def __init__(self, function):
-        self.function = function
+    def __init__(self, funcDeclList):
+        self.funcDeclList = funcDeclList
     
     def __str__(self):
-        return "AST Program:\n\t{self.function}".format(self=self)
-
-class Function:
-    
-    def __init__(self, iden, block):
-        self.iden = iden
-        self.block = block
-    
-    def __str__(self):
-
-        return "Function: {self.iden}\n\tBlock: {self.block}".format(self=self)
+        return "AST Program: {self.funcDeclList}".format(self=self)
 
 class Block():
     def __init__(self, blockItemList):
@@ -50,16 +40,53 @@ class D(BlockItem):
     def __repr__(self):
         return self.__str__()
 
+class Decl:
+    pass
+
+class VarDecl(Decl):
+    def __init__(self, variableDecl):
+        self.variableDecl = variableDecl
+    
+    def __str__(self):
+        return "{self.variableDecl}".format(self=self)
+    
+class FunDecl(Decl):
+    def __init__(self, funDecl):
+        self.funDecl = funDecl
+    
+    def __str__(self):
+        return "{self.funDecl}".format(self=self)
+
+class VariableDecl:
+    def __init__(self, identifier, exp=None):
+        self.identifier = identifier
+        self.exp = exp
+    
+    def __str__(self):
+        return "{self.identifier} = {self.exp}".format(self=self)
+
+class FunctionDecl:    
+    def __init__(self, iden, paramList, block=None):
+        self.iden = iden
+        self.paramList = paramList
+        self.block = block
+    
+    def __str__(self):
+
+        return "Function: {self.iden} ({self.paramList}) Block: {self.block}".format(self=self)
+
+    def __repr__(self):
+        return self.__str__()
 
 class ForInit:
     pass
 
 class InitDecl(ForInit):
-    def __init__(self, decl):
-        self.decl = decl
+    def __init__(self, varDecl):
+        self.varDecl = varDecl
         
     def __str__(self):
-        return "Declaration: {self.decl}".format(self=self)
+        return "Declaration: {self.varDecl}".format(self=self)
 
 
 class InitExp(ForInit):
@@ -71,7 +98,6 @@ class InitExp(ForInit):
 
 class Statement:
     pass
-
 
 class IfStatement(Statement):
     def __init__(self, expCond, thenS, elseS=None):
@@ -154,17 +180,6 @@ class NullStatement(Statement):
     def __init__(self):
         pass
 
-class Decl:
-    pass
-
-class Declaration(Decl):
-    def __init__(self, identifier, exp=None):
-        self.identifier = identifier
-        self.exp = exp
-    
-    def __str__(self):
-        return "{self.identifier} = {self.exp}".format(self=self)
-
 class Expression:
     pass
 
@@ -223,7 +238,11 @@ class Assignment_Expression:
     def __str__(self):
         return "{self.lvalue} = {self.exp}".format(self=self)
 
-
+class FunctionCall_Exp:
+    def __init__(self, identifer, argumentList):
+        self.identifier = identifer
+        self.argumentList = argumentList
+    
 
 class UnopType(Enum):
     NEGATE = 1
@@ -271,9 +290,12 @@ def takeToken(tokenList):
     print("No more tokens.")
     sys.exit(1)
 
-def peek(tokenList):
+def peek(tokenList, index=None):
     if(tokenList != []):
-        return tokenList[0]
+        if index:
+            return tokenList[index]
+        else:
+            return tokenList[0]
     
     print("No more tokens.")
     sys.exit(1)
@@ -358,7 +380,42 @@ def parseBinop(tokenList):
                 sys.exit(1)            
     
     
+def parseArgumentList(tokenList):
+    expList = []
+
+    while True:
+        token = peek(tokenList)
+        match token[1]:
+            case TokenType.CLOSE_PAREN:
+                break
+            case TokenType.COMMA:
+                takeToken(tokenList)
+                pass
+            case _:
+                exp = parseExp(tokenList, 0)
+                #print(exp)
+                expList.append(exp)
+                
+
+    #print(expList)
+
+    return expList
+    
+
 def parseFactor(tokenList):
+
+    token = peek(tokenList, 1)
+
+    #print(token)
+
+    if token[1] == TokenType.OPEN_PAREN:
+        iden = parseIdentifier(tokenList)
+        expect(TokenType.OPEN_PAREN, tokenList)
+        expList = parseArgumentList(tokenList)
+        expect(TokenType.CLOSE_PAREN, tokenList)
+        return FunctionCall_Exp(iden, expList)
+        
+
     token = peek(tokenList)
 
     if token[1] == TokenType.CONSTANT:
@@ -469,8 +526,8 @@ def parseForInit(tokenList):
         return InitExp()
     
     if token[1] == TokenType.INT_KW:
-        decl = parseDeclaration(tokenList)
-        return InitDecl(decl)
+        v = parseVarDecl(tokenList)
+        return InitDecl(v)
     else:
         exp = parseExp(tokenList, 0)
         expect(TokenType.SEMICOLON, tokenList)
@@ -482,6 +539,7 @@ def parseStatement(tokenList):
     token = peek(tokenList)
 
     if token[1] == TokenType.FOR_KW:
+        print(token)
         takeToken(tokenList)
         expect(TokenType.OPEN_PAREN, tokenList)
 
@@ -512,7 +570,7 @@ def parseStatement(tokenList):
     if token[1] == TokenType.DO_KW:
         takeToken(tokenList)
         thenS = parseStatement(tokenList)
-        print(thenS)
+        #print(thenS)
 
         expect(TokenType.WHILE_KW, tokenList)
         expect(TokenType.OPEN_PAREN, tokenList)
@@ -590,19 +648,34 @@ def parseStatement(tokenList):
         expect(TokenType.SEMICOLON, tokenList)
         return ExpressionStmt(retVal)
 
-def parseDeclaration(tokenList):
-    #we are not parsing the type
+def parseVarDecl(tokenList):
     takeToken(tokenList)
+
     id = parseIdentifier(tokenList)
+    
     token = peek(tokenList)
     if token[1] == TokenType.EQUAL:
         takeToken(tokenList)
         exp = parseExp(tokenList, 0)
         expect(TokenType.SEMICOLON, tokenList)
-        return Declaration(id, exp)
-    
+        return VariableDecl(id, exp)
+
     expect(TokenType.SEMICOLON, tokenList)
-    return Declaration(id) 
+    return VariableDecl(id) 
+
+
+def parseDeclaration(tokenList):
+    #we are not parsing the type
+
+    token = peek(tokenList, 2)
+    #print(token)
+    
+    if token[1] == TokenType.OPEN_PAREN:
+        f = parseFunctionDecl(tokenList)
+        return FunDecl(f)
+    else:
+        v = parseVarDecl(tokenList)
+        return VarDecl(v)
 
 def parseBlockItem(tokenList):
     token = peek(tokenList)
@@ -628,21 +701,65 @@ def parseBlock(tokenList):
 
     return Block(BlockItemList)
 
-def parseFunction(tokenList):
+def parseParamList(tokenList):
+    paramList = []
+
+    while True:
+        token = peek(tokenList)
+        match token[1]:
+            case TokenType.CLOSE_PAREN:
+                break
+            case TokenType.VOID_KW:
+                takeToken(tokenList)
+
+            case TokenType.INT_KW:
+                takeToken(tokenList)
+
+            case TokenType.COMMA:
+                takeToken(tokenList)
+             
+            case TokenType.IDENTIFIER:
+                paramList.append(token[0])
+                takeToken(tokenList)
+                token = peek(tokenList)
+            
+            case _:
+                print("Error: {0} is not a valid parameter.".format(token[0]))
+                sys.exit(1)
+
+    return paramList
+    
+
+def parseFunctionDecl(tokenList):
+    
     expect(TokenType.INT_KW, tokenList)
     
     iden = parseIdentifier(tokenList)
+
     expect(TokenType.OPEN_PAREN, tokenList)
-    expect(TokenType.VOID_KW, tokenList)
+
+    paramList = parseParamList(tokenList)
+    
     expect(TokenType.CLOSE_PAREN, tokenList)
 
-    block = parseBlock(tokenList)
+    token = peek(tokenList)
 
-    return Function(iden, block)
+    block = None
+
+    if token[1] == TokenType.SEMICOLON:
+        takeToken(tokenList)
+    else:
+        block = parseBlock(tokenList)
+
+    return FunctionDecl(iden, paramList, block)
 
 def parseProgram(tokenList):
-    fun = parseFunction(tokenList)
-    return Program(fun)
+    funDeclList = []
+    while tokenList != []:
+        funDecl = parseFunctionDecl(tokenList)
+        funDeclList.append(funDecl)
+
+    return Program(funDeclList)
     
 
 def printAST(pro):
