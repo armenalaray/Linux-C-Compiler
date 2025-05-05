@@ -83,6 +83,7 @@ def makeTemporary(id):
 
 def resolveFunctionDeclaration(funDecl, idMap):
     #print(funDecl)
+    #YOUAREHERE!
     if funDecl.iden in idMap:
         prev_Entry = idMap[funDecl.iden]
         if prev_Entry[1]['from_current_scope'] and not prev_Entry[2]['has_linkage']:
@@ -161,8 +162,8 @@ def resolveForInit(forInit, idMap):
     print(type(forInit))
 
     match forInit:
-        case parser.InitDecl(decl=decl):
-            d = resolveDeclaration(decl, idMap)
+        case parser.InitDecl(varDecl = varDecl):
+            d = resolveVarDeclaration(varDecl, idMap)
             return parser.InitDecl(d)
         
         case parser.InitExp(exp=exp):
