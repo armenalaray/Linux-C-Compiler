@@ -110,7 +110,7 @@ def resolveFunctionDeclaration(funDecl, idMap):
 def resolveID(id, idMap):
 
     if id in idMap and idMap[id][1]['from_current_scope']:
-        print("Variable is already declared.")
+        print("Variable '{0}' is already declared.".format(id))
         sys.exit(1)
 
     #asi esta bien!
@@ -138,7 +138,7 @@ def resolveDeclaration(dec, idMap):
             
         case parser.FunDecl(funDecl = funDecl):
             if funDecl.block:
-                print("Invalid nested function definition.")
+                print("Invalid nested function definition for '{0}'.".format(funDecl.iden))
                 sys.exit(1)
 
             f = resolveFunctionDeclaration(funDecl, idMap)
@@ -252,7 +252,7 @@ def resolveBlock(block, idMap):
     return parser.Block()
     
 
-def variableResolution(pro):
+def IdentifierResolution(pro):
     
     if pro.funcDeclList:
         idMap = {}

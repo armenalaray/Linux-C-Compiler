@@ -7,6 +7,7 @@ import assemblyGenerator
 import codeEmission
 import semanticAnalysis
 import tacGenerator
+import typeChecker
 import loopLabeling
 
 """
@@ -144,10 +145,14 @@ if __name__ == "__main__":
 			if LastStage == 'parse':
 				sys.exit(0)
 
-			res = semanticAnalysis.variableResolution(pro)
+			res = semanticAnalysis.IdentifierResolution(pro)
 
 			print(res)
 
+			typeChekedProgram, symbolTable = typeChecker.typeCheckProgram(res)
+
+			print(symbolTable)
+			
 			#loo = loopLabeling.labelProgram(res)
 
 			#print(loo)
