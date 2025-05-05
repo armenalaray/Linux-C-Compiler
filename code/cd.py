@@ -148,9 +148,9 @@ if __name__ == "__main__":
 
 			print(res)
 
-			loo = loopLabeling.labelProgram(res)
+			#loo = loopLabeling.labelProgram(res)
 
-			print(loo)
+			#print(loo)
 
 			if LastStage == 'validate':
 				sys.exit(0)
