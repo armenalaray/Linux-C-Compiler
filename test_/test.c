@@ -4,5 +4,5 @@ int foo(int a, int b) {
 }
 
 int main(void) {
-    return foo(4,);
+    return foo(4,5,6);
 }

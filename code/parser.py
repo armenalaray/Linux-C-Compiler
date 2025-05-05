@@ -242,7 +242,7 @@ class Assignment_Expression(Expression):
         return "{self.lvalue} = {self.exp}".format(self=self)
 
 class FunctionCall_Exp(Expression):
-    def __init__(self, identifer, argumentList):
+    def __init__(self, identifer, argumentList=None):
         self.identifier = identifer
         self.argumentList = argumentList
     
@@ -388,21 +388,18 @@ def parseBinop(tokenList):
 def parseArgumentList(tokenList):
     expList = []
 
-    while True:
-        token = peek(tokenList)
-        match token[1]:
-            case TokenType.CLOSE_PAREN:
-                break
-            case TokenType.COMMA:
-                takeToken(tokenList)
-                pass
-            case _:
-                exp = parseExp(tokenList, 0)
-                #print(exp)
-                expList.append(exp)
-                
+    exp = parseExp(tokenList, 0)
 
-    #print(expList)
+    expList.append(exp)
+
+    token = peek(tokenList)
+
+    while token[1] == TokenType.COMMA:
+        takeToken(tokenList)
+        exp = parseExp(tokenList, 0)
+        expList.append(exp)
+        token = peek(tokenList)
+        
 
     return expList
     
@@ -416,7 +413,15 @@ def parseFactor(tokenList):
     if token[1] == TokenType.OPEN_PAREN:
         iden = parseIdentifier(tokenList)
         expect(TokenType.OPEN_PAREN, tokenList)
+
+        token = peek(tokenList)
+        if token[1] == TokenType.CLOSE_PAREN:
+            expect(TokenType.CLOSE_PAREN, tokenList)
+            return FunctionCall_Exp(iden)
+            
+
         expList = parseArgumentList(tokenList)
+
         expect(TokenType.CLOSE_PAREN, tokenList)
         return FunctionCall_Exp(iden, expList)
         
@@ -732,7 +737,7 @@ def parseParamList(tokenList):
 
         token = peek(tokenList)
 
-    #   print(paramList)
+    #print(paramList)
 
     return paramList
     
