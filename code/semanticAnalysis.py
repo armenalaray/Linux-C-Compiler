@@ -17,7 +17,7 @@ def resolveExpression(exp, idMap):
             if id in idMap:
                 return parser.Var_Expression(idMap[id][0]['new_name'])
             else:
-                print("Undeclared Variable!")
+                print("Undeclared Variable {0}".format(id))
                 sys.exit(1)
 
         case parser.Constant_Expression(intValue=intValue):
@@ -26,9 +26,22 @@ def resolveExpression(exp, idMap):
         case parser.FunctionCall_Exp(identifier=id, argumentList = argumentList):
             #print(id)
             if id in idMap:
-                pass
+                newName = idMap[id][0]['new_name']
+
+                expList = []
+                if argumentList:
+                    for exp in argumentList:
+                        #print(i)
+                        expList.append(resolveExpression(exp, idMap))
+                    
+                    #print(expList)
+
+                    return parser.FunctionCall_Exp(newName, expList)
+
+                return parser.FunctionCall_Exp(newName)
+                
             else:
-                print("Undeclared function!")
+                print("Undeclared function {0}.".format(id))
                 sys.exit(1)
 
             #return parser.FunctionCall_Exp(id, argumentList)
@@ -52,7 +65,6 @@ def resolveExpression(exp, idMap):
             e = resolveExpression(elseExp, idMap)
 
             return parser.Conditional_Expression(c, t, e)
-            
 
         case _:
             print(type(exp))
@@ -73,9 +85,8 @@ def resolveFunctionDeclaration(funDecl, idMap):
     #print(funDecl)
     if funDecl.iden in idMap:
         prev_Entry = idMap[funDecl.iden]
-        print(prev_Entry)
-        if prev_Entry[1] and not prev_Entry[2]:
-            print("Duplicate Declaration!")
+        if prev_Entry[1]['from_current_scope'] and not prev_Entry[2]['has_linkage']:
+            print("Duplicate Declaration of {0}".format(funDecl.iden))
             sys.exit(1)
             
     idMap[funDecl.iden] = [{'new_name':funDecl.iden}, {'from_current_scope':True}, {'has_linkage':True}]
@@ -96,10 +107,6 @@ def resolveFunctionDeclaration(funDecl, idMap):
 
 
 def resolveID(id, idMap):
-    """
-    if id in idMap:
-        print(idMap[id][1]['from_current_scope'])
-    """
 
     if id in idMap and idMap[id][1]['from_current_scope']:
         print("Variable is already declared.")
