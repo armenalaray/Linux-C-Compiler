@@ -53,7 +53,6 @@ def typeCheckExpression(exp, symbolTable):
                 sys.exit(1)
         
         case parser.Assignment_Expression(lvalue=lvalue, exp=exp):
-            print(lvalue)
             typeCheckExpression(lvalue, symbolTable)
             typeCheckExpression(exp, symbolTable)
 
@@ -61,13 +60,18 @@ def typeCheckExpression(exp, symbolTable):
             pass 
 
         case parser.Unary_Expression(operator=op, expression=exp):
-            pass               
+            typeCheckExpression(exp, symbolTable)
+                          
 
         case parser.Binary_Expression(operator=op, left=left, right=right):
-            pass
+            typeCheckExpression(left, symbolTable)
+            typeCheckExpression(right, symbolTable)
+
 
         case parser.Conditional_Expression(condExp=condExp, thenExp=thenExp, elseExp=elseExp):
-            pass
+            typeCheckExpression(condExp, symbolTable)
+            typeCheckExpression(thenExp, symbolTable)
+            typeCheckExpression(elseExp, symbolTable)
 
         case _:
             print(type(exp))
@@ -89,8 +93,63 @@ def typeCheckDeclaration(dec, symbolTable):
         case parser.FunDecl(funDecl = funDecl):
             typeCheckFunctionDeclaration(funDecl, symbolTable)
 
+def typeCheckForInit(forInit, symbolTable):
+    match forInit:
+        case parser.InitDecl(varDecl = varDecl):
+            typeCheckVarDeclaration(varDecl, symbolTable)
+        
+        case parser.InitExp(exp=exp):
+            if exp:
+                typeCheckExpression(exp, symbolTable)
+
 def typeCheckStatement(statement, symbolTable):
-    pass
+    match statement:
+        case parser.BreakStatement():
+            pass
+
+        case parser.ContinueStatement():
+            pass
+
+        case parser.ForStatement(forInit=forInit, condExp=condExp, postExp=postExp, statement=statement, identifier=identifier):
+            typeCheckForInit(forInit, symbolTable)
+            
+            if condExp:
+                typeCheckExpression(condExp, symbolTable)
+
+            if postExp:
+                typeCheckExpression(postExp, symbolTable)
+
+            typeCheckStatement(statement, symbolTable)
+        
+        case parser.DoWhileStatement(statement=statement, condExp=condExp, identifier=id):
+            typeCheckStatement(statement, symbolTable)
+            typeCheckExpression(condExp, symbolTable)
+
+        case parser.WhileStatement(condExp=condExp, statement=statement, identifier=id):
+            typeCheckExpression(condExp, symbolTable)
+            typeCheckStatement(statement, symbolTable)
+
+        case parser.ExpressionStmt(exp=exp):
+            typeCheckExpression(exp, symbolTable)
+            
+
+        case parser.ReturnStmt(expression=exp):
+            typeCheckExpression(exp, symbolTable)
+            
+        case parser.IfStatement(exp=exp, thenS=thenS, elseS=elseS):
+            typeCheckExpression(exp, symbolTable)
+            typeCheckStatement(thenS, symbolTable)
+
+            if elseS:
+                typeCheckStatement(elseS, symbolTable)
+
+            
+        case parser.CompoundStatement(block=block):
+            typeCheckBlock(block, symbolTable)
+
+        case parser.NullStatement():
+            pass
+
 
 def typeCheckBlock(block, symbolTable):
     if block.blockItemList:
@@ -101,8 +160,6 @@ def typeCheckBlock(block, symbolTable):
                     
                 case parser.S(statement=statement):
                     typeCheckStatement(statement, symbolTable)
-                    pass
-                    #resolveStatement(statement, idMap)
                     
         
 def typeCheckFunctionDeclaration(funDec, symbolTable):
