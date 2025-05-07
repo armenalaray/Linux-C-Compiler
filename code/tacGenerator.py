@@ -2,24 +2,27 @@ import sys
 from enum import Enum
 import parser
 import semanticAnalysis
-#from semanticAnalysis import global_value
 
 class TAC_Program:
-    def __init__(self, function):
-        self.function = function
+    def __init__(self, funcDefList):
+        self.funcDefList = funcDefList
     
     def __str__(self):
-        return "TAC Program:\n\t{self.function}".format(self=self)
+        return "TAC Program:{self.funcDefList}".format(self=self)
 
-class TAC_Function:
+class TAC_FunctionDef:
     instructions = []
-    def __init__(self, identifier, instructions):
+    def __init__(self, identifier, params, instructions):
         self.identifier = identifier
+        self.params = params
         self.instructions = instructions
 
     def __str__(self):
-        return "Function: {self.identifier} instructions:\n\t\t{self.instructions}".format(self=self)
-        
+        return "Function: {self.identifier} ({self.params}) instructions:{self.instructions}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+
 class instruction:
     pass
 
@@ -113,7 +116,17 @@ class TAC_BinaryInstruction:
     def __repr__(self):
         return self.__str__()
 
-#(operator, src1, src2, dst)
+class TAC_FunCallInstruction:
+    def __init__(self, funName, arguments, dst):
+        self.funName = funName
+        self.arguments = arguments
+        self.dst = dst
+    
+    def __str__(self):
+        return "{self.dst} = {self.funName}({self.arguments})".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
 
 class Value:
     pass
@@ -125,12 +138,18 @@ class TAC_ConstantValue(Value):
     def __str__(self):
         return "{self.intValue}".format(self=self)
 
+    def __repr__(self):
+        return self.__str__()
+
 class TAC_VariableValue(Value):
     def __init__(self, identifier):
         self.identifier = identifier
 
     def __str__(self):
         return "{self.identifier}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
     
 class UnopType(Enum):
     NEGATE = 1
@@ -349,7 +368,22 @@ def TAC_parseInstructions(expression, instructions):
             dst = TAC_parseInstructions(lvalue, instructions)
             instructions.append(TAC_CopyInstruction(src, dst))
             return dst
+
+        case parser.FunctionCall_Exp(identifier=id, argumentList = argumentList):
+            a = []
+
+            if argumentList:
+                for exp in argumentList:
+                    src = TAC_parseInstructions(exp, instructions)
+                    dst = TAC_VariableValue(makeTemp())
+                    instructions.append(TAC_CopyInstruction(src, dst))
+                    a.append(dst)
+                
+            dst = TAC_VariableValue(makeTemp())
+            instructions.append(TAC_FunCallInstruction(id, a, dst))
             
+            return dst        
+
         case parser.Conditional_Expression(condExp=condExp, thenExp=thenExp, elseExp=elseExp):
             cond = TAC_parseInstructions(condExp, instructions)
             c = TAC_VariableValue(makeTemp())
@@ -542,42 +576,46 @@ def TAC_parseStatement(statement, instructions, end=None):
         case parser.NullStatement():
             pass
 
+def TAC_parseVarDeclarations(variableDecl, instructions):
+    if variableDecl.exp:
+        src = TAC_parseInstructions(variableDecl.exp, instructions)
+        dst = TAC_VariableValue(variableDecl.identifier)
+        instructions.append(TAC_CopyInstruction(src, dst))
+
 def TAC_parseDeclarations(decl, instructions):
     match decl:
-        case parser.Declaration(identifier=id, exp=exp):
-            #print(id)
-            if exp:
-                src = TAC_parseInstructions(exp, instructions)
-                dst = TAC_VariableValue(id)
-                instructions.append(TAC_CopyInstruction(src, dst))
-                
-def TAC_parseBlockItems(blockList, instructions):
-    for i in blockList:
-        match i:
-            case parser.D(declaration=decl):
-                TAC_parseDeclarations(decl, instructions)
-                
-            case parser.S(statement=statement):
-                TAC_parseStatement(statement, instructions)
-            
-    
+        case parser.VarDecl(variableDecl = variableDecl):
+            TAC_parseVarDeclarations(variableDecl, instructions)
+                    
 def TAC_parseBlock(block):
     instructions = []
-    TAC_parseBlockItems(block.blockItemList, instructions)
+    if block.blockItemList:        
+        for i in block.blockItemList:
+            match i:
+                case parser.D(declaration=dec):
+                    TAC_parseDeclarations(dec, instructions)
+
+                case parser.S(statement=statement):
+                    TAC_parseStatement(statement, instructions)
+        
     return instructions
 
-def TAC_parseFunction(function):
-    identifier = function.iden
+def TAC_parseFunctionDefinition(functionDef):
+    if functionDef.block:
+        identifier = functionDef.iden
 
-    instructions = TAC_parseBlock(function.block)
-    #instructions = TAC_parseBlockItems(function.block.blockItemList)
+        instructions = TAC_parseBlock(functionDef.block)
+        Val = TAC_ConstantValue(0)
+        instructions.append(TAC_returnInstruction(Val))
+        
+        return TAC_FunctionDef(identifier, functionDef.paramList, instructions)
+        
 
-    Val = TAC_ConstantValue(0)
-    instructions.append(TAC_returnInstruction(Val))
-    
-    return TAC_Function(identifier, instructions)
-    
+def TAC_parseProgram(pro):
+    funcDecList = []
+    if pro.funcDeclList:
+        for funDec in pro.funcDeclList:
+            f = TAC_parseFunctionDefinition(funDec)
+            funcDecList.append(f)
 
-def TAC_parseProgram(AST_Program):
-    function = TAC_parseFunction(AST_Program.function)
-    return TAC_Program(function)
+    return TAC_Program(funcDecList)

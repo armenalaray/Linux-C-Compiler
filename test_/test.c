@@ -1,39 +1,12 @@
-#ifdef SUPPRESS_WARNINGS
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-#endif
-int putchar(int c);
-
-/* Make sure we can correctly manage calling conventions from the callee side
- * (by accessing parameters, including parameters on the stack) and the caller side
- * (by calling a standard library function) in the same function
- */
-int foo(int a, int b, int c, int d, int e, int f, int g, int h) {
-    putchar(h);
-
-    for(;;)
-    {
-        if(a > b)
-        {
-            do
-            {
-                /* code */
-                break;
-            } while (1);
-            
-        }
-        continue;
-    }
-
-    continue;;
-
-    while(1)
-    {
-        continue;
-    }
-
-    return a + g;
+int sub(int a, int b) {
+    /* Make sure arguments are passed in the right order
+     * (we can test this with subtraction since a - b  != b - a)
+     */
+    return a - b;
 }
 
 int main(void) {
-    return foo(1, 2, 3, 4, 5, 6, 7, 65);
+    /* Make sure we can evaluate expressions passed as arguments */
+    int sum = sub(1 + 2, 1);
+    return sum;
 }
