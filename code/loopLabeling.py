@@ -1,3 +1,4 @@
+import sys
 import parser
 import tacGenerator
 
@@ -61,6 +62,24 @@ def labelStatement(statement, currentLabel):
             return parser.NullStatement()
 
 def labelBlock(block, currentLabel):
+    
+    if block.blockItemList:
+        blockItemList = []
+        
+        for i in block.blockItemList:
+            match i:
+                case parser.D(declaration=dec):
+                    blockItemList.append(parser.D(dec))
+
+                case parser.S(statement=statement):
+                    s = labelStatement(statement, currentLabel)
+                    blockItemList.append(parser.S(s))
+        
+        return parser.Block(blockItemList)
+
+    return parser.Block()
+
+    
     blockItemList = []
 
     for i in block.blockItemList:
@@ -74,8 +93,24 @@ def labelBlock(block, currentLabel):
 
     return parser.Block(blockItemList)
 
+def labelFunctionDeclaration(funDecl, currentLabel):
+    #aqui solo tienes que checar el bloque
+    block = None
+    if funDecl.block:
+        block = labelBlock(funDecl.block, currentLabel)
+        
+    return parser.FunctionDecl(funDecl.iden, funDecl.paramList, block)
 
 def labelProgram(pro):
+    if pro.funcDeclList:
+        funcDecList = []
+        for funDec in pro.funcDeclList:
+            f = labelFunctionDeclaration(funDec, None)
+            funcDecList.append(f)
+            
+        return parser.Program(funcDecList)
+
+    return parser.Program()
 
     block = labelBlock(pro.function.block, None)
 

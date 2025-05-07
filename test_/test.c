@@ -1,40 +1,39 @@
-int foo(int a, int b);
+#ifdef SUPPRESS_WARNINGS
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#endif
+int putchar(int c);
 
-int main(void)
-{
-    int c = foo(1,2);
+/* Make sure we can correctly manage calling conventions from the callee side
+ * (by accessing parameters, including parameters on the stack) and the caller side
+ * (by calling a standard library function) in the same function
+ */
+int foo(int a, int b, int c, int d, int e, int f, int g, int h) {
+    putchar(h);
 
-    int b;
-    int d = 2 > b ? b : c;
-
-    int a;
-    if(a > 0)
+    for(;;)
     {
-        return a;
+        if(a > b)
+        {
+            do
+            {
+                /* code */
+                break;
+            } while (1);
+            
+        }
+        continue;
     }
-    else{
-        return 3;
-    }
+
+    continue;;
 
     while(1)
     {
-        int ale;
+        continue;
     }
 
-    do
-    {
-        int pollo;
-    } while (a < 4);
-    
-    int comida;
-    for(comida = 4; comida < 4; comida = comida + 1)
-    {
-        int cama = 6;
-    }
-    
+    return a + g;
 }
 
-int foo(int a, int b)
-{
-    return a + b;
+int main(void) {
+    return foo(1, 2, 3, 4, 5, 6, 7, 65);
 }
