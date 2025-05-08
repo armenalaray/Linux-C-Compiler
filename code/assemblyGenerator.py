@@ -4,12 +4,12 @@ import sys
 
 class Program:
     
-    def __init__(self, function):
-        self.function = function
+    def __init__(self, funcDefList):
+        self.funcDefList = funcDefList
 
     def __str__(self):
 
-        return "ASM Program\n\t{self.function}".format(self=self)
+        return "ASM Program: {self.funcDefList}".format(self=self)
 
 
 class Function:
@@ -20,8 +20,10 @@ class Function:
 
     def __str__(self):
         
-        return "Function {self.identifier} instructions:\n\t\t{self.insList}".format(self=self)
-        
+        return "Function {self.identifier} instructions:{self.insList}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
 
 class ReturnInstruction:
 
@@ -172,6 +174,19 @@ class AllocateStackInstruction:
     def __repr__(self):
         return self.__str__()
 
+
+class DeallocateStackInstruction():
+    def __init__(self, offset):
+        self.offset = offset
+    
+class PushInstruction():
+    def __init__(self, operand):
+        self.operand = operand
+    
+class CallInstruction():
+    def __init__(self, identifier):
+        self.identifier = identifier    
+
 class PseudoRegisterOperand:
 
     def __init__(self, pseudo):
@@ -245,10 +260,18 @@ class BinaryOperator:
                 return "Mult"
 
 class RegisterType(Enum):
-    AX = 1
-    DX = 3
-    R10 = 2
-    R11 = 4
+    #These are used for registers
+    DI = 0
+    SI = 1
+    DX = 2
+    CX = 3
+    R8 = 4
+    R9 = 5
+    AX = 6
+    R10 = 7
+    R11 = 8
+
+#regTable = [RegisterType.DI, RegisterType.]
 
 class Register:
     def __init__(self, register):
@@ -258,10 +281,20 @@ class Register:
         match self.register:
             case RegisterType.AX:
                 return "AX"
-            case RegisterType.R10:
-                return "R10d"
+            case RegisterType.CX:
+                return "CX"
             case RegisterType.DX:
                 return "DX"
+            case RegisterType.DI:
+                return "DI"
+            case RegisterType.SI:
+                return "SI"
+            case RegisterType.R8:
+                return "R8d"
+            case RegisterType.R9:
+                return "R9d"
+            case RegisterType.R10:
+                return "R10d"
             case RegisterType.R11:
                 return "R11d"
 
@@ -294,8 +327,7 @@ def parseOperator(op):
                 case tacGenerator.BinopType.SUBTRACT:
                     return BinaryOperator(BinopType.Sub)
 
-def ASM_parseInstructions(TAC_Instructions):
-    ASM_Instructions = []
+def ASM_parseInstructions(TAC_Instructions, ASM_Instructions):
 
     for i in TAC_Instructions:
         match i:
@@ -434,20 +466,36 @@ def ASM_parseInstructions(TAC_Instructions):
     
 def ASM_parseFunction(astFunc):
     identifier = astFunc.identifier
-    instructions = ASM_parseInstructions(astFunc.instructions)
-    return Function(identifier, instructions)
+
+    ASM_Instructions = []
+
+    offset = 16 
+    for i, param in enumerate(astFunc.params):
+        
+        a = None
+        if i > 5:
+            a = MovInstruction(StackOperand(offset),    PseudoRegisterOperand(param))
+            offset += 8
+        else:
+            a = MovInstruction(RegisterOperand(Register(list(RegisterType)[i])), PseudoRegisterOperand(param))
+
+        ASM_Instructions.append(a)
+        
+
+    instructions = ASM_parseInstructions(astFunc.instructions, ASM_Instructions)
+    return Function(identifier, ASM_Instructions)
     
 
 def ASM_parseAST(ast):
-    ast.function
-    function = ASM_parseFunction(ast.function)
-    return Program(function)
+    funcDefList = []
+    for i in ast.funcDefList:
+        function = ASM_parseFunction(i)
+        funcDefList.append(function)
 
-# Replace Pseudos #2
-def ReplacePseudoRegisters(ass):
-    offset = 0
-    table = {}
-    for i in ass.function.insList:
+    return Program(funcDefList)
+
+def ReplaceFuncDef(funcDef, table, offset):
+    for i in funcDef.insList:
         #print(type(i))
         match i:
             case MovInstruction(sourceO=src, destO=dst):
@@ -553,7 +601,16 @@ def ReplacePseudoRegisters(ass):
                         value = table[id] 
                         
                         i.operand1 = StackOperand(value)
+    pass
 
+# Replace Pseudos #2
+def ReplacePseudoRegisters(ass):
+    offset = 0
+    table = {}
+
+    for funcDef in ass.funcDefList:
+        ReplaceFuncDef(funcDef, table, offset)    
+         
     return offset
 
 def FixingUpInstructions(ass, offset):

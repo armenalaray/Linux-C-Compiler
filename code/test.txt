@@ -1,3 +1,33 @@
+
+Necesitas si 
+
+caller -> callee
+        el callee
+
+24
+8
+8
+16
+8
+
+
+8
+8
+8
+8
+
+a + g
+
+
+8 bytes puntero a el return instruction address
+
+
+32
+//7
+add 32 rbp, eax
+
+
+
 Osea si se puede ghosting, no 
 
 So field type is identifier and the name main
