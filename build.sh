@@ -4,7 +4,7 @@
 # My compiler
 
 
-lastStage="--codegen"
+#lastStage="--tacky"
 #noLink="-c"
 
 python3 "$(pwd)"/code/cd.py $lastStage $noLink "$(pwd)"/test_/test.c

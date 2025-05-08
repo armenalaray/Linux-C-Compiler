@@ -185,7 +185,7 @@ if __name__ == "__main__":
 				sys.exit(0)
 
 
-			output = codeEmission.outputAsmFile(ass)
+			output = codeEmission.outputAsmFile(ass, symbolTable)
 
 			asmFile = os.path.dirname(file) + "/" + os.path.basename(file).split('.')[0] + '.s'
 			#print(asmFile)
