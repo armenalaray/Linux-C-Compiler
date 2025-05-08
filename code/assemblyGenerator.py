@@ -398,24 +398,24 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions):
                     #is odd
                     stackPadding = 8
                 
-                print("stackPadding", stackPadding)
+                #print("stackPadding", stackPadding)
                 if stackPadding != 0:
                     ASM_Instructions.append(AllocateStackInstruction(stackPadding))
                     pass
                 
                 for i, arg in enumerate(registerArgs):
-                    print(type(arg))
+                    #print(type(arg))
                     asmArg = parseValue(arg)
                     ASM_Instructions.append(MovInstruction(asmArg, RegisterOperand(Register(list(RegisterType)[i]))))
                     
                 stackArgs.reverse()
 
-                print(stackArgs)
+                #print(stackArgs)
 
                 for arg in stackArgs:
                     asmArg = parseValue(arg)
 
-                    print(type(asmArg))
+                    #print(type(asmArg))
                     if type(asmArg) == ImmediateOperand or type(asmArg) == RegisterOperand:
                         ASM_Instructions.append(PushInstruction(asmArg))
                         
@@ -428,7 +428,13 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions):
 
                 ASM_Instructions.append(CallInstruction(funName))
 
-                pass
+                bytesToRemove = stackPadding + 8 * len(stackArgs)
+                if bytesToRemove:
+                    ASM_Instructions.append(DeallocateStackInstruction(bytesToRemove))
+                
+                asmDst = parseValue(dst)
+                #print(type(asmDst))
+                ASM_Instructions.append(MovInstruction(RegisterOperand(Register(RegisterType.AX)), asmDst))
 
             case tacGenerator.TAC_BinaryInstruction(operator=op, src1=src1_, src2=src2_, dst=dst_):
                 
