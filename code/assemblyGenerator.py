@@ -179,10 +179,22 @@ class AllocateStackInstruction:
 class DeallocateStackInstruction():
     def __init__(self, offset):
         self.offset = offset
+
+    def __str__(self):
+        return "De allocate Stack({self.offset})".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()    
     
 class PushInstruction():
     def __init__(self, operand):
         self.operand = operand
+    
+    def __str__(self):
+        return "Push({self.operand})".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
     
 class CallInstruction():
     def __init__(self, identifier):
@@ -679,12 +691,18 @@ def ReplacePseudoRegisters(ass):
         offset = ReplaceFuncDef(funcDef, table, offset)    
         funcDef.stackOffset = offset
 
-def FixingUpInstructions(ass):
-    ass.function.insList.insert(0,AllocateStackInstruction(-offset))
+def FixUpFuncDef(funcDef):
+    offset = funcDef.stackOffset
+
+    offset = offset - offset % 16
+    print(offset)
+
+    funcDef.insList.insert(0,AllocateStackInstruction(-offset))
+
     newList = []
     oldSize = len(newList)
 
-    for index, i in enumerate(ass.function.insList):
+    for index, i in enumerate(funcDef.insList):
         
         match i:
             case MovInstruction(sourceO=src, destO=dst):
@@ -764,7 +782,13 @@ def FixingUpInstructions(ass):
 
         oldSize = len(newList)
 
-    ass.function.insList = newList
+    funcDef.insList = newList
+
+def FixingUpInstructions(ass):
+    for funcDef in ass.funcDefList:
+        FixUpFuncDef(funcDef)
+
+    
     
                     
 
