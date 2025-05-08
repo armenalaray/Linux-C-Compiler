@@ -172,13 +172,13 @@ if __name__ == "__main__":
 			print(ass)
 
 			
-			#offset = assemblyGenerator.ReplacePseudoRegisters(ass)
+			assemblyGenerator.ReplacePseudoRegisters(ass)
 
-			#print(ass)
+			print(ass)
 
-			#assemblyGenerator.FixingUpInstructions(ass, offset)
+			assemblyGenerator.FixingUpInstructions(ass)
 
-			#print(ass)
+			print(ass)
 		
 
 			if LastStage == 'assemblyGeneration':

@@ -14,13 +14,14 @@ class Program:
 
 class Function:
 
-    def __init__(self, identifier, insList):
+    def __init__(self, identifier, insList, stackOffset = None):
         self.identifier = identifier
         self.insList = insList
+        self.stackOffset = stackOffset 
 
     def __str__(self):
         
-        return "Function {self.identifier} instructions:{self.insList}".format(self=self)
+        return "Function {self.identifier} stackOffset: {self.stackOffset} instructions:{self.insList}".format(self=self)
     
     def __repr__(self):
         return self.__str__()
@@ -666,19 +667,19 @@ def ReplaceFuncDef(funcDef, table, offset):
                         value = table[id] 
                         
                         i.operand1 = StackOperand(value)
-    pass
+    
+    return offset
 
 # Replace Pseudos #2
 def ReplacePseudoRegisters(ass):
-    offset = 0
-    table = {}
 
     for funcDef in ass.funcDefList:
-        ReplaceFuncDef(funcDef, table, offset)    
-         
-    return offset
+        offset = 0
+        table = {}
+        offset = ReplaceFuncDef(funcDef, table, offset)    
+        funcDef.stackOffset = offset
 
-def FixingUpInstructions(ass, offset):
+def FixingUpInstructions(ass):
     ass.function.insList.insert(0,AllocateStackInstruction(-offset))
     newList = []
     oldSize = len(newList)
