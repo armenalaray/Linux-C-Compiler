@@ -186,6 +186,12 @@ class PushInstruction():
 class CallInstruction():
     def __init__(self, identifier):
         self.identifier = identifier    
+    
+    def __str__(self):
+        return "Call({self.identifier})".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
 
 class PseudoRegisterOperand:
 
@@ -331,6 +337,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions):
 
     for i in TAC_Instructions:
         match i:
+            
             case tacGenerator.TAC_returnInstruction(Value=v):
                 src = parseValue(v)
                 dst = RegisterOperand(Register(RegisterType.AX))
@@ -368,7 +375,61 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions):
                                 
                                 ASM_Instructions.append(instruction0)
                                 ASM_Instructions.append(instruction1)
+
+            case tacGenerator.TAC_FunCallInstruction(funName = funName, arguments = arguments, dst = dst):
+                
+                """
+                stackArgs = len(arguments) - 6
+                if stackArguments < 0:
+                    stackArguments = 0
+
+                registerArgs = len(arguments) - stackArgs 
+                """
+
+                registerArgs = arguments[:6]
+                stackArgs = arguments[6:]
+
+                print(registerArgs)
+                print(stackArgs)
+
+                #Alignement
+                stackPadding = 0
+                if len(stackArgs) % 2:
+                    #is odd
+                    stackPadding = 8
+                
+                print("stackPadding", stackPadding)
+                if stackPadding != 0:
+                    ASM_Instructions.append(AllocateStackInstruction(stackPadding))
+                    pass
+                
+                for i, arg in enumerate(registerArgs):
+                    print(type(arg))
+                    asmArg = parseValue(arg)
+                    ASM_Instructions.append(MovInstruction(asmArg, RegisterOperand(Register(list(RegisterType)[i]))))
                     
+                stackArgs.reverse()
+
+                print(stackArgs)
+
+                for arg in stackArgs:
+                    asmArg = parseValue(arg)
+
+                    print(type(asmArg))
+                    if type(asmArg) == ImmediateOperand or type(asmArg) == RegisterOperand:
+                        ASM_Instructions.append(PushInstruction(asmArg))
+                        
+                    else:
+                        i0 = MovInstruction(asmArg, RegisterOperand(Register(RegisterType.AX)))
+                        
+                        ASM_Instructions.append(i0)
+                        ASM_Instructions.append(PushInstruction(RegisterOperand(Register(RegisterType.AX))))
+                        pass
+
+                ASM_Instructions.append(CallInstruction(funName))
+
+                pass
+
             case tacGenerator.TAC_BinaryInstruction(operator=op, src1=src1_, src2=src2_, dst=dst_):
                 
                 if op.operator == tacGenerator.BinopType.EQUAL or op.operator == tacGenerator.BinopType.GREATERTHAN or op.operator == tacGenerator.BinopType.LESSTHAN or op.operator == tacGenerator.BinopType.GREATEROREQUAL or op.operator == tacGenerator.BinopType.LESSOREQUAL or op.operator == tacGenerator.BinopType.NOTEQUAL:
@@ -460,9 +521,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions):
             case tacGenerator.TAC_LabelInst(identifier=id):
                 
                 ASM_Instructions.append(LabelInst(id))
-                
-    
-    return ASM_Instructions
+
     
 def ASM_parseFunction(astFunc):
     identifier = astFunc.identifier
@@ -482,7 +541,7 @@ def ASM_parseFunction(astFunc):
         ASM_Instructions.append(a)
         
 
-    instructions = ASM_parseInstructions(astFunc.instructions, ASM_Instructions)
+    ASM_parseInstructions(astFunc.instructions, ASM_Instructions)
     return Function(identifier, ASM_Instructions)
     
 
