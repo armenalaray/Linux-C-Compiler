@@ -71,7 +71,7 @@ class VariableDecl:
         self.storageClass = storageClass    
 
     def __str__(self):
-        return "{self.identifier} = {self.exp}".format(self=self)
+        return "{self.storageClass} {self.identifier} = {self.exp}".format(self=self)
 
 class FunctionDecl:    
     def __init__(self, iden, paramList, block=None, storageClass=None):
@@ -82,7 +82,7 @@ class FunctionDecl:
     
     def __str__(self):
 
-        return "Function: {self.iden} ({self.paramList}) Block: {self.block}".format(self=self)
+        return "Function: {self.storageClass} {self.iden} ({self.paramList}) Block: {self.block}".format(self=self)
 
     def __repr__(self):
         return self.__str__()
@@ -717,7 +717,7 @@ def parseTypeAndStorageClass(specifierList):
         else:
             print("Error: Invalid Storage Class: {0}".format(s[0]))
             
-    return True, (type, storageClass)
+    return (type, storageClass)
     
 def isSpecifier(token):
     #print(token)
