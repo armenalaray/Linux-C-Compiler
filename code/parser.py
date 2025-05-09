@@ -1,14 +1,15 @@
 import sys
 from ctoken import TokenType
+
 from enum import Enum
 
 class Program:
 
-    def __init__(self, funcDeclList=None):
-        self.funcDeclList = funcDeclList
+    def __init__(self, declList=None):
+        self.declList = declList
     
     def __str__(self):
-        return "AST Program: {self.funcDeclList}".format(self=self)
+        return "AST Program: {self.declList}".format(self=self)
 
 class Block():
     def __init__(self, blockItemList=None):
@@ -50,26 +51,34 @@ class VarDecl(Decl):
     def __str__(self):
         return "{self.variableDecl}".format(self=self)
     
+    def __repr__(self):
+        return self.__str__()
+    
 class FunDecl(Decl):
     def __init__(self, funDecl):
         self.funDecl = funDecl
     
     def __str__(self):
         return "{self.funDecl}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
 
 class VariableDecl:
-    def __init__(self, identifier, exp=None):
+    def __init__(self, identifier, exp=None, storageClass=None):
         self.identifier = identifier
         self.exp = exp
-    
+        self.storageClass = storageClass    
+
     def __str__(self):
         return "{self.identifier} = {self.exp}".format(self=self)
 
 class FunctionDecl:    
-    def __init__(self, iden, paramList, block=None):
+    def __init__(self, iden, paramList, block=None, storageClass=None):
         self.iden = iden
         self.paramList = paramList
         self.block = block
+        self.storageClass = storageClass
     
     def __str__(self):
 
@@ -77,6 +86,14 @@ class FunctionDecl:
 
     def __repr__(self):
         return self.__str__()
+
+#puede ser 0 o 1 
+#tiene que ser 1
+
+class StorageType(Enum):
+    INT = 1
+    STATIC = 2
+    EXTERN = 3
 
 class ForInit:
     pass
@@ -529,24 +546,32 @@ def parseIdentifier(tokenList):
     print("Syntax Error Expected an identifier but there are no more tokens.")
     sys.exit(1)
 
+#ERROR: Esta mal por que tiene int kw cuando puede no ser asi tienes que 
+#parsear con parsetypeandstorageclass
+
 def parseForInit(tokenList):
+    
+    isValid, Decl = parseDeclaration(tokenList)
+
+    if isValid:
+        #print(type(Decl))
+        if type(Decl) == FunDecl:
+            print("Invalid function declaration in for Initializer.")
+            sys.exit(1)
+
+        return InitDecl(Decl)
     
     token = peek(tokenList)
     
     if token[1] == TokenType.SEMICOLON:
         takeToken(tokenList)
         return InitExp()
-    
-    if token[1] == TokenType.INT_KW:
-        v = parseVarDecl(tokenList)
-        return InitDecl(v)
-    
     else:
         exp = parseExp(tokenList, 0)
         expect(TokenType.SEMICOLON, tokenList)
         return InitExp(exp)
 
-    
+        
 
 def parseStatement(tokenList):
     token = peek(tokenList)
@@ -659,46 +684,92 @@ def parseStatement(tokenList):
         expect(TokenType.SEMICOLON, tokenList)
         return ExpressionStmt(retVal)
 
-def parseVarDecl(tokenList):
 
-    expect(TokenType.INT_KW, tokenList)
+def parseTypeAndStorageClass(specifierList):
+    types = []
+    storageClasses = []
+    for specifier in specifierList:
+        if specifier[1] ==  TokenType.INT_KW:
+            types.append(specifier)
+        else:
+            storageClasses.append(specifier)
+            
+        
+    if len(types) != 1:
+        print("Invalid type specifier.")
+        sys.exit(1)
 
-    id = parseIdentifier(tokenList)
+    if len(storageClasses) > 1:
+        print("Invalid Storage Class.")
+        sys.exit(1)
+
+    type = StorageType.INT        
+    storageClass = None
+
+    if len(storageClasses) == 1:
+        s = storageClasses[0]
+        if s[1] == TokenType.EXTERN_KW:
+            storageClass = StorageType.EXTERN
+            
+        elif s[1] == TokenType.STATIC_KW:
+            storageClass = StorageType.STATIC
+
+        else:
+            print("Error: Invalid Storage Class: {0}".format(s[0]))
+            
+    return True, (type, storageClass)
     
-    token = peek(tokenList)
-
-    exp = None
-    if token[1] == TokenType.EQUAL:
-        takeToken(tokenList)
-        exp = parseExp(tokenList, 0)
-
-    expect(TokenType.SEMICOLON, tokenList)
-    return VariableDecl(id, exp) 
-
+def isSpecifier(token):
+    #print(token)
+    
+    if token[1] == TokenType.EXTERN_KW or token[1] == TokenType.STATIC_KW or token[1] == TokenType.INT_KW: 
+        return True
+    
+    return False
 
 def parseDeclaration(tokenList):
     #we are not parsing the type
 
-    token = peek(tokenList, 2)
-    #print(token)
+    token = peek(tokenList)
+    if isSpecifier(token) == False:
+        return False, None
     
+    specifierList = []
+    while isSpecifier(token):
+        specifierList.append(takeToken(tokenList))
+        token = peek(tokenList)
+        
+    #print(specifierList)
+    typeAndStorage = parseTypeAndStorageClass(specifierList)
+
+    token = peek(tokenList, 1)
+
     if token[1] == TokenType.OPEN_PAREN:
-        f = parseFunctionDecl(tokenList)
-        return FunDecl(f)
+        f = parseFunctionDecl(tokenList, typeAndStorage)
+        return True, FunDecl(f)
     else:
-        v = parseVarDecl(tokenList)
-        return VarDecl(v)
+        v = parseVarDecl(tokenList, typeAndStorage)
+        return True, VarDecl(v)
+    
+
+#ERROR: Esta mal por que tiene int kw cuando puede no ser asi tienes que 
+#parsear con parsetypeandstorageclass
 
 def parseBlockItem(tokenList):
     
-    token = peek(tokenList)
+    isValid, decl = parseDeclaration(tokenList)
     
-    if token[1] == TokenType.INT_KW:
-        declaration = parseDeclaration(tokenList)
-        return D(declaration)
-    else:
-        statement = parseStatement(tokenList)
-        return S(statement)
+    if isValid:
+        if type(decl) == FunDecl:
+            print(type(decl.funDecl.block))
+            if decl.funDecl.block:
+                print("Invalid Nested function definition in block.")
+                sys.exit(1)
+
+        return D(decl)
+
+    statement = parseStatement(tokenList)
+    return S(statement)
 
 def parseBlock(tokenList):
     
@@ -751,10 +822,26 @@ def parseParamList(tokenList):
 
     return paramList
     
+def parseVarDecl(tokenList, typeAndStorage):
 
-def parseFunctionDecl(tokenList):
+    #expect(TokenType.INT_KW, tokenList)
+
+    id = parseIdentifier(tokenList)
     
-    expect(TokenType.INT_KW, tokenList)
+    token = peek(tokenList)
+
+    exp = None
+    if token[1] == TokenType.EQUAL:
+        takeToken(tokenList)
+        exp = parseExp(tokenList, 0)
+
+    expect(TokenType.SEMICOLON, tokenList)
+    return VariableDecl(id, exp, typeAndStorage) 
+
+
+def parseFunctionDecl(tokenList, typeAndStorage):
+    
+    #expect(TokenType.INT_KW, tokenList)
     
     iden = parseIdentifier(tokenList)
 
@@ -773,7 +860,7 @@ def parseFunctionDecl(tokenList):
     else:
         block = parseBlock(tokenList)
 
-    return FunctionDecl(iden, paramList, block)
+    return FunctionDecl(iden, paramList, block, typeAndStorage)
 
 def parseProgram(tokenList):
     
@@ -782,40 +869,13 @@ def parseProgram(tokenList):
     
     funDeclList = []
     while tokenList != []:
-        funDecl = parseFunctionDecl(tokenList)
-        funDeclList.append(funDecl)
+        isValid, decl = parseDeclaration(tokenList)
+
+        if isValid == False:
+            print("Invalid Declaration.")
+            sys.exit(1)
+
+        funDeclList.append(decl)
 
     return Program(funDeclList)
-    
-
-def printAST(pro):
-    output = 'Program AST:\n\tfunction: {0}\n'.format(pro.function.iden)
-
-    Level = 2
-    match pro.function.statement:
-        case ReturnStmt(expression=exp):
-            match exp:
-                case Unary_Expression():
-                    i = 0
-                    while i < Level:
-                        output += '\t'
-                        i += 1
-
-                    output += 'Unary_Expression'
-                    pass
-                case Binary_Expression(operator=op, left=left, right=right):
-                    i = 0
-                    while i < Level:
-                        output += '\t'
-                        i += 1
-                    
-                    output += 'Binary_Expression'
-
-                    match op:
-                        case BinopType.SUBTRACT:
-                            pass
-
-                
-
-    print(output)
     

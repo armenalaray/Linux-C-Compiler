@@ -41,6 +41,8 @@ class TokenType(Enum):
     BREAK_KW = 36
     CONTINUE_KW = 37
     COMMA = 38
+    STATIC_KW = 39
+    EXTERN_KW = 40
 
 def Lex(buffer):
     tokenList = []
@@ -111,6 +113,13 @@ def Lex(buffer):
                 if alphanumeric:
                     
                     match alphanumeric.group():
+                        
+
+                        case "extern":
+                            tokenList.append(("extern", TokenType.EXTERN_KW, LineNumber))
+
+                        case "static":
+                            tokenList.append(("static", TokenType.STATIC_KW, LineNumber))
 
                         case "if":
                             tokenList.append(("if", TokenType.IF_KW, LineNumber))

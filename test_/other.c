@@ -1,9 +1,9 @@
-int main(void) {
-    int a = 12345;
-    int i;
+int foo(void)
+{
+    return 1;
+}
 
-    for (i = 5; i >= 0; i = i - 1)
-        a = a / 3;
-
-    return a;
+int bar(void)
+{
+    return 2;
 }

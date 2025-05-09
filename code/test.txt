@@ -1,4 +1,28 @@
 
+AST Program: [Function: foo ([]) Block: None, Function: main ([]) Block: [
+    
+    Declaration: Function: a ([]) Block: None
+    
+    , Statement: for None (Declaration: a = None ; None ; None) thenS: Block: None, Statement: return foo], foo = None, foo = 4]
+
+{}
+
+AST Program: [Function: foo ([]) Block: None, Function: main ([]) Block: [
+    
+    Declaration: Function: a ([]) Block: None
+
+    , Statement: for None (Declaration: a = None ; None ; None) thenS: Block: None, Statement: return foo], foo = None, foo = 4]
+
+;
+
+
+All external variables are static
+
+external subset of static
+
+
+
+
 Necesitas si 
 
 caller -> callee

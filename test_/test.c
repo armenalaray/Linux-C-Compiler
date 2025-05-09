@@ -1,10 +1,24 @@
-int putchar(int i);
+/* A variable with internal linkage may be tentatively defined
+ * and declared multiple times, but defined only once
+ */
 
-int foo(int a, int b) {
-    int i = a;
-    return i;
-}
+/* A tentative definition */
+extern int foo(void);
 
 int main(void) {
-    return foo(70, 80);
+    
+    extern int a(void);
+
+    for(int extern a(void){};;)
+    {
+
+    }
+
+    return foo;
 }
+
+/* A declaration */
+extern int foo;
+
+/* A non-tentative definition */
+static int foo = 4;
