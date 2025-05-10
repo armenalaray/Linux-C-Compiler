@@ -23,6 +23,36 @@ class FunType:
     def __repr__(self):
         return self.__str__()
 
+class IdentifierAttributes:
+    pass
+
+class FunAttributes(IdentifierAttributes):
+    def __init__(self, defined, global_):
+        self.defined = defined
+        self.global_ = global_
+
+ 
+class StaticAttributes(IdentifierAttributes):
+    def __init__(self, initialVal, global_):
+        self.initialVal = initialVal
+        self.global_ = global_
+
+class LocalAttributes(IdentifierAttributes):
+    pass
+
+class InitialValue:
+    pass
+
+class Tentative(InitialValue):
+    pass
+
+class Initial(InitialValue):
+    def __init__(self, value):
+        self.value = value
+
+class NoInitializer(InitialValue):
+    pass
+
 def typeCheckExpression(exp, symbolTable):
     match exp:
         case parser.FunctionCall_Exp(identifier=id, argumentList = argumentList):
@@ -164,8 +194,17 @@ def typeCheckBlock(block, symbolTable):
         
 def typeCheckFunctionDeclaration(funDec, symbolTable):
     funType = FunType(len(funDec.paramList))
-    hasBody = funDec.block is not None
+    hasBody = funDec.block != None
+
+    #print(hasBody)
+
     alreadyDefined = False
+
+    global_ = True
+    
+    if funDec.storageClass[1] and funDec.storageClass[1] == parser.StorageType.STATIC:
+        global_ = False
+    
 
     if funDec.iden in symbolTable:
         oldDecl = symbolTable[funDec.iden]
@@ -181,13 +220,24 @@ def typeCheckFunctionDeclaration(funDec, symbolTable):
             print("Error: Incompatible function declarations.")
             sys.exit(1)
 
-        alreadyDefined = oldDecl[2]
+        alreadyDefined = oldDecl[2].defined
 
         if alreadyDefined and hasBody:
             print("Error: function is defined more than once.")
             sys.exit(1)
 
-    symbolTable[funDec.iden] = (IDType.FUNCTION, funType, alreadyDefined or hasBody)
+        if oldDecl[2].global_ and funDec.storageClass[1] == parser.StorageType.STATIC:
+            print("Static function declaration follows non-static.")
+            sys.exit(1)
+
+        print("Global: ", global_)
+        print("Old Global: ", oldDecl[2].global_)
+
+        global_ = oldDecl[2].global_
+
+    fattr = FunAttributes(defined=(alreadyDefined or hasBody), global_=global_)
+
+    symbolTable[funDec.iden] = (IDType.FUNCTION, funType, fattr)
 
     if hasBody:
         for param in funDec.paramList:
@@ -198,14 +248,9 @@ def typeCheckFunctionDeclaration(funDec, symbolTable):
     
 
 def typeCheckProgram(pro):
-
     symbolTable = {}
-    
-    if pro.funcDeclList:
-        
-        for funDec in pro.funcDeclList:
-            typeCheckFunctionDeclaration(funDec, symbolTable)
+    if pro.declList:
+        for decl in pro.declList:
+            typeCheckDeclaration(decl, symbolTable)
 
     return pro, symbolTable
-
-    pass

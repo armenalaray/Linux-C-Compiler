@@ -149,9 +149,9 @@ if __name__ == "__main__":
 
 			print(res)
 
-			#typeChekedProgram, symbolTable = typeChecker.typeCheckProgram(res)
+			typeChekedProgram, symbolTable = typeChecker.typeCheckProgram(res)
 
-			#print(symbolTable)
+			print(symbolTable)
 
 			#loo = loopLabeling.labelProgram(typeChekedProgram)
 

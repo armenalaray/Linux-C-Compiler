@@ -173,7 +173,6 @@ def resolveDeclaration(dec, idMap, isBlockDecl):
             f = resolveFunctionDeclaration(funDecl, idMap)
             return parser.FunDecl(f)
             
-    
 
 def copyidMap(idMap):
     #print("VAR map: ", idMap)
