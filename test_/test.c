@@ -1,6 +1,9 @@
 /* A function parameter cannot have a storage class */
-int f(static int i) {
-    return i;
+int a = 3;
+
+static int f(int i) {
+    int a = 4;
+    return a;
 }
 
 int main(void) {

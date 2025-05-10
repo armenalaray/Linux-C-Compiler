@@ -103,7 +103,7 @@ def resolveFunctionDeclaration(funDecl, idMap):
     if funDecl.block:
         block = resolveBlock(funDecl.block, innerMap)
         
-    return parser.FunctionDecl(funDecl.iden, newParams, block)
+    return parser.FunctionDecl(funDecl.iden, newParams, block, funDecl.storageClass)
     
 
 
@@ -120,27 +120,34 @@ def resolveID(id, idMap):
 
     return uniqueName
 
-def resolveVarDeclaration(dec, idMap):
+def resolveFileScopeVarDecl(dec, idMap):
+    idMap[dec.identifier] = [{'new_name':dec.identifier}, {'from_current_scope':True}, {'has_linkage':True}]
+
+    return dec
+
+def resolveVarDeclaration(dec, idMap, isBlockVar):
+
+    if isBlockVar == False:
+        return resolveFileScopeVarDecl(dec, idMap)
+    else:
+        pass
+
     uniqueName = resolveID(dec.identifier, idMap)
 
     if dec.exp:
         exp = resolveExpression(dec.exp, idMap)
-        return parser.VariableDecl(uniqueName, exp)
+        return parser.VariableDecl(uniqueName, exp, dec.storageClass)
     
-    return parser.VariableDecl(uniqueName)
+    return parser.VariableDecl(uniqueName, None, dec.storageClass)
 
-def resolveDeclaration(dec, idMap):
+def resolveDeclaration(dec, idMap, isBlockDecl):
 
     match dec:
         case parser.VarDecl(variableDecl = variableDecl):
-            v = resolveVarDeclaration(variableDecl, idMap)
+            v = resolveVarDeclaration(variableDecl, idMap, isBlockDecl)
             return parser.VarDecl(v)
             
         case parser.FunDecl(funDecl = funDecl):
-            if funDecl.block:
-                print("Invalid nested function definition for '{0}'.".format(funDecl.iden))
-                sys.exit(1)
-
             f = resolveFunctionDeclaration(funDecl, idMap)
             return parser.FunDecl(f)
             
@@ -240,7 +247,7 @@ def resolveBlock(block, idMap):
         for i in block.blockItemList:
             match i:
                 case parser.D(declaration=dec):
-                    Decl = resolveDeclaration(dec, idMap)
+                    Decl = resolveDeclaration(dec, idMap, True)
                     blockItemList.append(parser.D(Decl))
 
                 case parser.S(statement=statement):
@@ -254,11 +261,11 @@ def resolveBlock(block, idMap):
 
 def IdentifierResolution(pro):
     
-    if pro.funcDeclList:
+    if pro.declList:
         idMap = {}
         funcDecList = []
-        for funDec in pro.funcDeclList:
-            f = resolveFunctionDeclaration(funDec, idMap)
+        for decl in pro.declList:
+            f = resolveDeclaration(decl, idMap, False)
             funcDecList.append(f)
             
         return parser.Program(funcDecList)

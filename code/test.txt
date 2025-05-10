@@ -1,4 +1,7 @@
 
+Has linkage or not
+
+
 AST Program: [Function: foo ([]) Block: None, Function: main ([]) Block: [
     
     Declaration: Function: a ([]) Block: None
