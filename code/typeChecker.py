@@ -30,12 +30,24 @@ class FunAttributes(IdentifierAttributes):
     def __init__(self, defined, global_):
         self.defined = defined
         self.global_ = global_
+    
+    def __str__(self):
+        return "Defined: {self.defined} Global: {self.global_}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
 
  
 class StaticAttributes(IdentifierAttributes):
     def __init__(self, initialVal, global_):
         self.initialVal = initialVal
         self.global_ = global_
+    
+    def __str__(self):
+        return "InitialVal: {self.initialVal} Global: {self.global_}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
 
 class LocalAttributes(IdentifierAttributes):
     pass
@@ -49,6 +61,9 @@ class Tentative(InitialValue):
 class Initial(InitialValue):
     def __init__(self, value):
         self.value = value
+
+    def __str__(self):
+        return "{self.value}".format(self=self)
 
 class NoInitializer(InitialValue):
     pass
@@ -180,20 +195,52 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
     symbolTable[varDecl.identifier] = (IDType.INT, vattr)
     
 
-def typeCheckVarDeclaration(varDecl, symbolTable, isBlockScope):
+def typeCheckLocalVarDecl(varDecl, symbolTable):
+    if varDecl.storageClass[1] == parser.StorageType.EXTERN:
+        if varDecl.exp:
+            print("Error: Initializer on local extern variable declaration.")
+            sys.exit(1)
+        
+        if varDecl.identifier in symbolTable:
+            oldDecl = symbolTable[varDecl.identifier]
+            #print(varDecl.identifier, oldDecl)
+
+            if oldDecl[0] != IDType.INT:
+                print("Error: Function redeclared as variable.")
+                sys.exit(1)
+                
+        else:
+            #print("Ale")
+            symbolTable[varDecl.identifier] = (IDType.INT, StaticAttributes(NoInitializer(), global_=True))
+            pass
     
+    elif varDecl.storageClass[1] == parser.StorageType.STATIC:
+        initialValue = None
+        if varDecl.exp:
+            match varDecl.exp:
+                case parser.Constant_Expression(intValue = intValue):
+                    initialValue = Initial(intValue)
+                case _:
+                    print("Error: Non constant initializer on local static variable.")
+                    sys.exit(1)
+                    
+        else:
+            initialValue = Initial("0")
+            
+
+        print(initialValue)
+    else:
+        symbolTable[varDecl.identifier] = (IDType.INT, LocalAttributes())
+        
+        if varDecl.exp:
+            typeCheckExpression(varDecl.exp, symbolTable)
+
+def typeCheckVarDeclaration(varDecl, symbolTable, isBlockScope):
     if isBlockScope:
-        pass
+        typeCheckLocalVarDecl(varDecl, symbolTable)
     else:
         typeCheckFileScopeVarDecl(varDecl, symbolTable)
-        pass
-    
-    #symbolTable[varDecl.identifier] = (IDType.INT,)
-
-
-    if varDecl.exp:
-        typeCheckExpression(varDecl.exp, symbolTable)
-        #print(type(VarDecl.exp))
+        
         
 def typeCheckDeclaration(dec, symbolTable, isBlockScope):
     match dec:
