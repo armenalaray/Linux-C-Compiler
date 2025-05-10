@@ -1,11 +1,10 @@
-/* A function parameter cannot have a storage class */
-int a = 3;
+int o(int a, int b)
+{
 
-static int f(int i) {
-    int a = 4;
-    return a;
 }
 
 int main(void) {
-    return f(1);
+    int x = 3;
+    static int b(void);
+    return x;
 }

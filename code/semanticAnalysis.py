@@ -96,6 +96,7 @@ def resolveFunctionDeclaration(funDecl, idMap):
     newParams = []
     innerMap = copyidMap(idMap)
     for id in funDecl.paramList:
+        #ERROR: Change this to resolveVarLocalDeclaration
         newParams.append(resolveID(id, innerMap))
 
     
@@ -113,6 +114,7 @@ def resolveID(id, idMap):
         print("Variable '{0}' is already declared.".format(id))
         sys.exit(1)
 
+
     #asi esta bien!
     uniqueName = makeTemporary(id)
 
@@ -125,20 +127,35 @@ def resolveFileScopeVarDecl(dec, idMap):
 
     return dec
 
-def resolveVarDeclaration(dec, idMap, isBlockVar):
+def resolveLocalVarDecl(dec, idMap):
 
+    if dec.identifier in idMap:
+        prevEntry = idMap[dec.identifier]
+        if prevEntry[1]['from_current_scope']:
+            #print(prevEntry)
+            if dec.storageClass[1] != parser.StorageType.EXTERN or not prevEntry[2]['has_linkage']:
+                print("Conflicting declarations.".format(dec.identifier))
+                sys.exit(1)
+
+    #print(type(dec.storageClass[1]))
+    storageClass = dec.storageClass[1]
+
+    if storageClass and storageClass == parser.StorageType.EXTERN:
+        return resolveFileScopeVarDecl(dec, idMap)
+    else:
+        uniqueName = resolveID(dec.identifier, idMap)
+        if dec.exp:
+            exp = resolveExpression(dec.exp, idMap)
+            return parser.VariableDecl(uniqueName, exp, dec.storageClass)
+    
+        return parser.VariableDecl(uniqueName, None, dec.storageClass)
+
+
+def resolveVarDeclaration(dec, idMap, isBlockVar):
     if isBlockVar == False:
         return resolveFileScopeVarDecl(dec, idMap)
     else:
-        pass
-
-    uniqueName = resolveID(dec.identifier, idMap)
-
-    if dec.exp:
-        exp = resolveExpression(dec.exp, idMap)
-        return parser.VariableDecl(uniqueName, exp, dec.storageClass)
-    
-    return parser.VariableDecl(uniqueName, None, dec.storageClass)
+        return resolveLocalVarDecl(dec, idMap)
 
 def resolveDeclaration(dec, idMap, isBlockDecl):
 
@@ -148,6 +165,11 @@ def resolveDeclaration(dec, idMap, isBlockDecl):
             return parser.VarDecl(v)
             
         case parser.FunDecl(funDecl = funDecl):
+            
+            if isBlockDecl and funDecl.storageClass[1] == parser.StorageType.STATIC:
+                print("Error cannot declare static function in block scope.")
+                sys.exit(1)
+
             f = resolveFunctionDeclaration(funDecl, idMap)
             return parser.FunDecl(f)
             

@@ -1,4 +1,9 @@
 
+prev not tiene linkage or nueva no es extern:
+    
+not (prev_entry.has_linkage and decl.storage_class == Extern)
+
+
 Has linkage or not
 
 
