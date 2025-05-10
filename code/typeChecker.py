@@ -108,17 +108,97 @@ def typeCheckExpression(exp, symbolTable):
             print("Invalid expression type.")
             sys.exit(1)
 
-def typeCheckVarDeclaration(VarDecl, symbolTable):
-    symbolTable[VarDecl.identifier] = (IDType.INT,)
-    if VarDecl.exp:
-        typeCheckExpression(VarDecl.exp, symbolTable)
+
+def typeCheckFileScopeVarDecl(varDecl, symbolTable):
+
+    initialValue = None
+
+    if varDecl.exp:
+        match varDecl.exp:
+            case parser.Constant_Expression(intValue = intValue):
+                
+                #print(intValue)
+
+                initialValue = Initial(intValue)
+            
+            case _:
+                print("Error: Non constant initializer.")
+                sys.exit(1)
+    else:
+        #print(varDecl.storageClass)
+        if varDecl.storageClass[1] == parser.StorageType.EXTERN:
+            initialValue = NoInitializer()
+        
+        else:
+            initialValue = Tentative()
+            pass
+
+    #print(initialValue)                   
+
+    global_ = True
+    if varDecl.storageClass[1] and varDecl.storageClass[1] == parser.StorageType.STATIC:
+        global_ = False
+
+
+    #print(global_)
+    
+    if varDecl.identifier in symbolTable:
+        #print(varDecl.identifier)
+
+        oldDecl = symbolTable[varDecl.identifier]    
+
+        if oldDecl[0] != IDType.INT:
+            print("Error: Function redeclared as variable.")
+            sys.exit(1)
+        
+        if varDecl.storageClass[1] == parser.StorageType.EXTERN:
+            #print(type(oldDecl[1]))
+            global_ = oldDecl[1].global_
+        
+        elif oldDecl[1].global_ != global_:
+            print("Error: Conflicting Variable Linkage.")
+            sys.exit(1)
+
+        match oldDecl[1].initialVal:
+            case Initial():
+                match initialValue:
+                    case Initial():
+                        print("Error: Conflicting File Scope variable definitions.")
+                        sys.exit(1)
+                    case _:
+                        initialValue = oldDecl[1].initialVal
+            case Tentative():
+                if type(initialValue) != Initial:
+                    #print("Ale")
+                    initialValue = Tentative()
+
+
+    #print(initialValue)
+
+    vattr = StaticAttributes(initialVal=initialValue, global_=global_)
+
+    symbolTable[varDecl.identifier] = (IDType.INT, vattr)
+    
+
+def typeCheckVarDeclaration(varDecl, symbolTable, isBlockScope):
+    
+    if isBlockScope:
+        pass
+    else:
+        typeCheckFileScopeVarDecl(varDecl, symbolTable)
+        pass
+    
+    #symbolTable[varDecl.identifier] = (IDType.INT,)
+
+
+    if varDecl.exp:
+        typeCheckExpression(varDecl.exp, symbolTable)
         #print(type(VarDecl.exp))
         
-
-def typeCheckDeclaration(dec, symbolTable):
+def typeCheckDeclaration(dec, symbolTable, isBlockScope):
     match dec:
         case parser.VarDecl(variableDecl = variableDecl):
-            typeCheckVarDeclaration(variableDecl, symbolTable)
+            typeCheckVarDeclaration(variableDecl, symbolTable, isBlockScope)
             
         case parser.FunDecl(funDecl = funDecl):
             typeCheckFunctionDeclaration(funDecl, symbolTable)
@@ -186,7 +266,7 @@ def typeCheckBlock(block, symbolTable):
         for i in block.blockItemList:
             match i:
                 case parser.D(declaration=dec):
-                    typeCheckDeclaration(dec, symbolTable)
+                    typeCheckDeclaration(dec, symbolTable, True)
                     
                 case parser.S(statement=statement):
                     typeCheckStatement(statement, symbolTable)
@@ -213,7 +293,7 @@ def typeCheckFunctionDeclaration(funDec, symbolTable):
         #aqui si son funciones
 
         if oldDecl[0] != IDType.FUNCTION:
-            print("Error: OldType was not a function.")
+            print("Error: Variable redeclared as function.")
             sys.exit(1)
 
         if oldDecl[1] != funType:
@@ -230,8 +310,8 @@ def typeCheckFunctionDeclaration(funDec, symbolTable):
             print("Static function declaration follows non-static.")
             sys.exit(1)
 
-        print("Global: ", global_)
-        print("Old Global: ", oldDecl[2].global_)
+        #print("Global: ", global_)
+        #print("Old Global: ", oldDecl[2].global_)
 
         global_ = oldDecl[2].global_
 
@@ -251,6 +331,6 @@ def typeCheckProgram(pro):
     symbolTable = {}
     if pro.declList:
         for decl in pro.declList:
-            typeCheckDeclaration(decl, symbolTable)
+            typeCheckDeclaration(decl, symbolTable, False)
 
     return pro, symbolTable

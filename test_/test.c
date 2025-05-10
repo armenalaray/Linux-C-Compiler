@@ -2,18 +2,11 @@
 
 static int o(int a, int b);
 
-int o(int a, int b);
 
-int main(void) {
-    
-    int o(int a, int b);
-    o(1,2);
-    static int a = 3;
-    return a;
-}
+int a;
+int a;
+
+extern int a = 0;
 
 
-static int o(int a, int b)
-{
-    
-}
+
