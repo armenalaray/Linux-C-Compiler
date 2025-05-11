@@ -99,22 +99,26 @@ def labelFunctionDeclaration(funDecl, currentLabel):
     if funDecl.block:
         block = labelBlock(funDecl.block, currentLabel)
         
-    return parser.FunctionDecl(funDecl.iden, funDecl.paramList, block)
+    return parser.FunctionDecl(funDecl.iden, funDecl.paramList, block, funDecl.storageClass)
+
+def labelDeclaration(decl):
+    match decl:
+        case parser.VarDecl(variableDecl = variableDecl):
+            return parser.VarDecl(variableDecl)
+            
+        case parser.FunDecl(funDecl = funDecl):
+            f = labelFunctionDeclaration(funDecl, None)
+            return parser.FunDecl(f)
 
 def labelProgram(pro):
-    if pro.funcDeclList:
-        funcDecList = []
-        for funDec in pro.funcDeclList:
-            f = labelFunctionDeclaration(funDec, None)
-            funcDecList.append(f)
+
+    if pro.declList:
+        declList = []
+        for decl in pro.declList:
+            f = labelDeclaration(decl)
+            declList.append(f)
             
-        return parser.Program(funcDecList)
+        return parser.Program(declList)
 
     return parser.Program()
-
-    block = labelBlock(pro.function.block, None)
-
-    pro.function.block = block
-
-    return pro
     

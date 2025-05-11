@@ -1,7 +1,37 @@
-/* This declares a global variable */
-extern int foo;
+/* verify that automatic and external variables with the same name
+ * are distinct, can be read and updated separately,
+ * and can shadow one another
+ */
 
-int main(void) {
-    /* Treating a variable as a function is a type error. */
-    return foo();
+/* a global variable 'a' */
+int a = 5;
+
+int return_a(void)
+{
+    /* return the current value of the global variable */
+    return a;
+}
+
+int main(void)
+{
+    /* automatic variable 'a', distinct from the global variable 'a' */
+
+    for (int i = 0; i < 4; i = i + 1)
+    {
+        int a = 3;
+        {
+            /* this declaration refers to the global variable,
+             * shadowing the automatic variable declared above
+             */
+            extern int a;
+            if (a != 5)
+                return 1;
+            /* update global variable */
+            a = 4;
+        }
+        break;
+    }
+
+    /* return the sum of the global and local 'a' variables */
+    return a + return_a();
 }
