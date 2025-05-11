@@ -4,16 +4,25 @@ import parser
 import semanticAnalysis
 
 class TAC_Program:
-    def __init__(self, funcDefList):
-        self.funcDefList = funcDefList
+    def __init__(self, topLevelList):
+        self.topLevelList = topLevelList
     
     def __str__(self):
-        return "TAC Program:{self.funcDefList}".format(self=self)
+        return "TAC Program:{self.topLevelList}".format(self=self)
 
-class TAC_FunctionDef:
-    instructions = []
-    def __init__(self, identifier, params, instructions):
+class TopLevel:
+    pass
+
+class StaticVariable(TopLevel):
+    def __init__(self, identifier, global_, init):
         self.identifier = identifier
+        self.global_ = global_
+        self.init = init
+
+class TAC_FunctionDef(TopLevel):
+    def __init__(self, identifier, global_, params, instructions):
+        self.identifier = identifier
+        self.global_ = global_
         self.params = params
         self.instructions = instructions
 
@@ -597,7 +606,7 @@ def TAC_parseBlock(block, instructions):
                 case parser.S(statement=statement):
                     TAC_parseStatement(statement, instructions)
 
-def TAC_parseFunctionDefinition(functionDef):
+def TAC_parseFunctionDefinition(functionDef, symbolTable):
     if functionDef.block:
         identifier = functionDef.iden
 
@@ -608,15 +617,30 @@ def TAC_parseFunctionDefinition(functionDef):
         Val = TAC_ConstantValue(0)
         instructions.append(TAC_returnInstruction(Val))
         
-        return TAC_FunctionDef(identifier, functionDef.paramList, instructions)
-        
+        if functionDef.iden in symbolTable:
+            decl = symbolTable[functionDef.iden]
+            print(decl[2].global_)
+            global_ = decl[2].global_
+            return TAC_FunctionDef(identifier, global_,functionDef.paramList, instructions)
 
-def TAC_parseProgram(pro):
+        print("ERROR: function is not in symbol table.")
+        sys.exit(1)
+
+def TAC_parseTopLevel(decl, symbolTable):
+    match decl:
+        case parser.VarDecl(variableDecl = variableDecl):
+            pass
+            #return TAC_parseVarDeclarations(variableDecl, instructions)
+
+        case parser.FunDecl(funDecl = funDecl):
+            return TAC_parseFunctionDefinition(funDecl, symbolTable)
+
+def TAC_parseProgram(pro, symbolTable):
     funcDecList = []
-    if pro.funcDeclList:
-        for funDec in pro.funcDeclList:
-            f = TAC_parseFunctionDefinition(funDec)
-            if f:
-                funcDecList.append(f)
+    if pro.declList:
+        for decl in pro.declList:
+            topLevel = TAC_parseTopLevel(decl, symbolTable)
+            if topLevel:
+                funcDecList.append(topLevel)
 
     return TAC_Program(funcDecList)
