@@ -1,18 +1,7 @@
+/* This declares a global variable */
+extern int foo;
 
-
-static int o(int a, int b);
-
-
-int a;
-
-
-int main(void)
-{
-    extern int c;
-
-    static int f = 4;
-    static int e;
-    static int d = c + 4;
-
-    int b = a + 4;
+int main(void) {
+    /* Treating a variable as a function is a type error. */
+    return foo();
 }

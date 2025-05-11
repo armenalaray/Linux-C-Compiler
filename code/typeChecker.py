@@ -226,14 +226,17 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
                     
         else:
             initialValue = Initial("0")
+        
+        symbolTable[varDecl.identifier] = (IDType.INT, StaticAttributes(initialVal=initialValue, global_=False))
             
 
-        print(initialValue)
+        #print(initialValue)
     else:
         symbolTable[varDecl.identifier] = (IDType.INT, LocalAttributes())
         
         if varDecl.exp:
             typeCheckExpression(varDecl.exp, symbolTable)
+
 
 def typeCheckVarDeclaration(varDecl, symbolTable, isBlockScope):
     if isBlockScope:
@@ -253,7 +256,11 @@ def typeCheckDeclaration(dec, symbolTable, isBlockScope):
 def typeCheckForInit(forInit, symbolTable):
     match forInit:
         case parser.InitDecl(varDecl = varDecl):
-            typeCheckVarDeclaration(varDecl, symbolTable)
+            if varDecl.storageClass[1]:
+                print("Error: Invalid Storage class specifier in variable declaration in for init.")
+                sys.exit(1)
+
+            typeCheckVarDeclaration(varDecl, symbolTable, True)
         
         case parser.InitExp(exp=exp):
             if exp:

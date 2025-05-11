@@ -191,7 +191,8 @@ def resolveForInit(forInit, idMap):
 
     match forInit:
         case parser.InitDecl(varDecl = varDecl):
-            d = resolveVarDeclaration(varDecl, idMap)
+            print(type(varDecl))
+            d = resolveVarDeclaration(varDecl, idMap, True)
             return parser.InitDecl(d)
         
         case parser.InitExp(exp=exp):

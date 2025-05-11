@@ -550,6 +550,8 @@ def parseIdentifier(tokenList):
 
 def parseForInit(tokenList):
     
+    #v = parseVarDecl(tokenList, typeAndStorage)
+    
     isValid, Decl = parseDeclaration(tokenList)
 
     if isValid:
@@ -558,7 +560,7 @@ def parseForInit(tokenList):
             print("Invalid function declaration in for Initializer.")
             sys.exit(1)
 
-        return InitDecl(Decl)
+        return InitDecl(Decl.variableDecl)
     
     token = peek(tokenList)
     
