@@ -9,6 +9,8 @@ import semanticAnalysis
 import tacGenerator
 import typeChecker
 import loopLabeling
+import ReplacePseudoRegisters
+
 
 """
 def lex(file):
@@ -172,13 +174,13 @@ if __name__ == "__main__":
 			print(ass)
 
 			
-			assemblyGenerator.ReplacePseudoRegisters(ass)
+			ReplacePseudoRegisters.ReplacePseudoRegisters(ass)
 
 			print(ass)
 
-			assemblyGenerator.FixingUpInstructions(ass)
+			#assemblyGenerator.FixingUpInstructions(ass)
 
-			print(ass)
+			#print(ass)
 		
 
 			if LastStage == 'assemblyGeneration':

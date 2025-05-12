@@ -5,6 +5,7 @@
 
 /* a global variable 'a' */
 int a = 5;
+static int b;
 
 int return_a(void) {
     /* return the current value of the global variable */

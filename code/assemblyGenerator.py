@@ -4,18 +4,34 @@ import sys
 
 class Program:
     
-    def __init__(self, funcDefList):
-        self.funcDefList = funcDefList
+    def __init__(self, topLevelList):
+        self.topLevelList = topLevelList
 
     def __str__(self):
 
-        return "ASM Program: {self.funcDefList}".format(self=self)
+        return "ASM Program: {self.topLevelList}".format(self=self)
 
+class TopLevel:
+    pass
 
-class Function:
+class StaticVariable(TopLevel):
 
-    def __init__(self, identifier, insList, stackOffset = None):
+    def __init__(self, identifier, global_, init):
         self.identifier = identifier
+        self.global_ = global_
+        self.init = init
+
+    def __str__(self):
+        return "Static Variable: Global = {self.global_} : {self.identifier} = {self.init}".format(self=self)
+
+    def __repr__(self):
+        return self.__str__()
+    
+class Function(TopLevel):
+
+    def __init__(self, identifier, global_, insList, stackOffset = None):
+        self.identifier = identifier
+        self.global_ = global_
         self.insList = insList
         self.stackOffset = stackOffset 
 
@@ -206,6 +222,10 @@ class CallInstruction():
     def __repr__(self):
         return self.__str__()
 
+
+class Operand:
+    pass
+
 class PseudoRegisterOperand:
 
     def __init__(self, pseudo):
@@ -220,6 +240,10 @@ class StackOperand:
 
     def __str__(self):
         return r"Stack({self.offset})".format(self=self)
+
+class DataOperand:
+    def __init__(self, identifier):
+        self.identifier = identifier
 
 class RegisterOperand:
 
@@ -541,155 +565,39 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions):
                 
                 ASM_Instructions.append(LabelInst(id))
 
-    
-def ASM_parseFunction(astFunc):
-    identifier = astFunc.identifier
 
-    ASM_Instructions = []
-
-    offset = 16 
-    for i, param in enumerate(astFunc.params):
+def ASM_parseTopLevel(topLevel):
+    match topLevel:
+        case tacGenerator.StaticVariable(identifier = identifier, global_ = global_,init = init):
+            print(identifier)
+            return StaticVariable(identifier, global_, init)
         
-        a = None
-        if i > 5:
-            a = MovInstruction(StackOperand(offset),    PseudoRegisterOperand(param))
-            offset += 8
-        else:
-            a = MovInstruction(RegisterOperand(Register(list(RegisterType)[i])), PseudoRegisterOperand(param))
+        case tacGenerator.TAC_FunctionDef(identifier = identifier, global_ = global_, params = params, instructions = instructions):
+            ASM_Instructions = []
 
-        ASM_Instructions.append(a)
-        
+            offset = 16 
+            for i, param in enumerate(params):
 
-    ASM_parseInstructions(astFunc.instructions, ASM_Instructions)
-    return Function(identifier, ASM_Instructions)
-    
+                a = None
+                if i > 5:
+                    a = MovInstruction(StackOperand(offset), PseudoRegisterOperand(param))
+                    offset += 8
+                else:
+                    a = MovInstruction(RegisterOperand(Register(list(RegisterType)[i])), PseudoRegisterOperand(param))
+
+                ASM_Instructions.append(a)
+                
+            ASM_parseInstructions(instructions, ASM_Instructions)
+            return Function(identifier, global_, ASM_Instructions)
 
 def ASM_parseAST(ast):
     funcDefList = []
-    for i in ast.funcDefList:
-        function = ASM_parseFunction(i)
+    for topLevel in ast.topLevelList:
+        function = ASM_parseTopLevel(topLevel)
         funcDefList.append(function)
 
     return Program(funcDefList)
 
-def ReplaceFuncDef(funcDef, table, offset):
-    for i in funcDef.insList:
-        #print(type(i))
-        match i:
-            case MovInstruction(sourceO=src, destO=dst):
-                match src:
-                    case PseudoRegisterOperand(pseudo=id):
-
-                        if table.get(id) == None:
-                            offset -= 4
-                            table.update({id : offset})
-                            
-                        value = table[id] 
-                        
-                        i.sourceO = StackOperand(value)
-                        
-                match dst:
-                    case PseudoRegisterOperand(pseudo=id):
-                        if table.get(id) == None:
-                            offset -= 4
-                            table.update({id : offset})
-                            
-                        value = table[id] 
-                        
-                        i.destO = StackOperand(value)
-                        
-            
-
-            case UnaryInstruction(operator=o, dest=dst):
-                match dst:
-                    case PseudoRegisterOperand(pseudo=id):
-                        if table.get(id) == None:
-                            offset -= 4
-                            table.update({id : offset})
-                            
-                        value = table[id] 
-                        
-                        i.dest = StackOperand(value)
-
-            case BinaryInstruction(operator=op, src=src, dest=dst):
-                
-                match src:
-                    case PseudoRegisterOperand(pseudo=id):
-
-                        if table.get(id) == None:
-                            offset -= 4
-                            table.update({id : offset})
-                            
-                        value = table[id] 
-                        
-                        i.src = StackOperand(value)
-                        
-                match dst:
-                    case PseudoRegisterOperand(pseudo=id):
-                        
-                        if table.get(id) == None:
-                            offset -= 4
-                            table.update({id : offset})
-                            
-                        value = table[id] 
-                        
-                        i.dest = StackOperand(value)
-            
-            case IDivInstruction(divisor=div):  
-                match div:
-                    case PseudoRegisterOperand(pseudo=id):
-                        
-                        if table.get(id) == None:
-                            offset -= 4
-                            table.update({id : offset})
-                            
-                        value = table[id] 
-                        
-                        i.divisor = StackOperand(value)
-            case SetCCInst(conc_code=code, operand=op):
-                match op:
-                    case PseudoRegisterOperand(pseudo=id):
-                        
-                        if table.get(id) == None:
-                            offset -= 4
-                            table.update({id : offset})
-
-                        value = table[id] 
-
-                        i.operand = StackOperand(value)
-            case CompInst(operand0=op0, operand1=op1):
-                match op0:
-                    case PseudoRegisterOperand(pseudo=id):
-
-                        if table.get(id) == None:
-                            offset -= 4
-                            table.update({id : offset})
-                            
-                        value = table[id] 
-                        
-                        i.operand0 = StackOperand(value)
-                        
-                match op1:
-                    case PseudoRegisterOperand(pseudo=id):
-                        
-                        if table.get(id) == None:
-                            offset -= 4
-                            table.update({id : offset})
-                            
-                        value = table[id] 
-                        
-                        i.operand1 = StackOperand(value)
-    
-    return offset
-
-# Replace Pseudos #2
-def ReplacePseudoRegisters(ass):
-
-    for funcDef in ass.funcDefList:
-        offset = 0
-        table = {}
-        offset = ReplaceFuncDef(funcDef, table, offset)    
-        funcDef.stackOffset = offset
 
 def FixUpFuncDef(funcDef):
     offset = funcDef.stackOffset
