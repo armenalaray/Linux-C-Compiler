@@ -593,10 +593,15 @@ def TAC_parseStatement(statement, instructions, end=None):
             pass
 
 def TAC_parseVarDeclarations(variableDecl, instructions):
-    if variableDecl.exp:
-        src = TAC_parseInstructions(variableDecl.exp, instructions)
-        dst = TAC_VariableValue(variableDecl.identifier)
-        instructions.append(TAC_CopyInstruction(src, dst))
+    print(variableDecl.storageClass[1])
+
+    if variableDecl.storageClass[1]:
+        pass
+    else:
+        if variableDecl.exp:
+            src = TAC_parseInstructions(variableDecl.exp, instructions)
+            dst = TAC_VariableValue(variableDecl.identifier)
+            instructions.append(TAC_CopyInstruction(src, dst))
 
 def TAC_parseDeclarations(decl, instructions):
     match decl:
@@ -648,7 +653,7 @@ def TAC_convertSymbolsToTAC(symbolTable):
         #print(type(entry.attrs))
         match entry.attrs:
             case typeChecker.StaticAttributes(initialVal = initialVal, global_ = global_):
-                print(type(initialVal))
+                #print(type(initialVal))
                 match initialVal:
                     case typeChecker.Tentative():
                         tacDefs.append(StaticVariable(name, global_, "0"))
@@ -656,7 +661,7 @@ def TAC_convertSymbolsToTAC(symbolTable):
                     case typeChecker.Initial(value = value):
                         tacDefs.append(StaticVariable(name, global_, value))
 
-    print(tacDefs)
+    #print(tacDefs)
     return tacDefs 
                 
         
