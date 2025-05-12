@@ -23,6 +23,15 @@ class FunType:
     def __repr__(self):
         return self.__str__()
 
+class Entry:
+    def __init__(self, name, attrs, type, funtype=None):
+        self.name = name
+        self.attrs = attrs
+        self.type = type
+        self.funtype = funtype
+
+#TODO: Change the entry in symboltable into entry class
+
 class IdentifierAttributes:
     pass
 

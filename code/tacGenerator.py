@@ -635,6 +635,13 @@ def TAC_parseTopLevel(decl, symbolTable):
         case parser.FunDecl(funDecl = funDecl):
             return TAC_parseFunctionDefinition(funDecl, symbolTable)
 
+def TAC_convertSymbolsToTAC(symbolTable):
+    tacDefs = []
+    for name, entry in symbolTable.items():
+        print("Key:", name, "Value:", entry)
+        #match entry[]
+        pass
+      
 def TAC_parseProgram(pro, symbolTable):
     funcDecList = []
     if pro.declList:
@@ -643,4 +650,7 @@ def TAC_parseProgram(pro, symbolTable):
             if topLevel:
                 funcDecList.append(topLevel)
 
-    return TAC_Program(funcDecList)
+    ast = TAC_Program(funcDecList)
+    tacDefs = TAC_convertSymbolsToTAC(symbolTable)
+
+    

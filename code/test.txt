@@ -1,4 +1,16 @@
 
+
+entry
+    name
+    attrs
+    type
+
+    StaticAttributes 
+        Init 
+            Tentative
+            Initial
+
+
 Si la viejita es global 
 
 
