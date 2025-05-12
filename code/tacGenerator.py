@@ -2,6 +2,7 @@ import sys
 from enum import Enum
 import parser
 import semanticAnalysis
+import typeChecker
 
 class TAC_Program:
     def __init__(self, topLevelList):
@@ -18,6 +19,12 @@ class StaticVariable(TopLevel):
         self.identifier = identifier
         self.global_ = global_
         self.init = init
+    
+    def __str__(self):
+        return "Global: {self.global_} {self.identifier} = {self.init}".format(self=self)
+
+    def __repr__(self):
+        return self.__str__()
 
 class TAC_FunctionDef(TopLevel):
     def __init__(self, identifier, global_, params, instructions):
@@ -619,9 +626,9 @@ def TAC_parseFunctionDefinition(functionDef, symbolTable):
         
         if functionDef.iden in symbolTable:
             decl = symbolTable[functionDef.iden]
-            print(decl[2].global_)
-            global_ = decl[2].global_
-            return TAC_FunctionDef(identifier, global_,functionDef.paramList, instructions)
+            #print(decl[2].global_)
+            global_ = decl.attrs.global_
+            return TAC_FunctionDef(identifier, global_, functionDef.paramList, instructions)
 
         print("ERROR: function is not in symbol table.")
         sys.exit(1)
@@ -638,19 +645,35 @@ def TAC_parseTopLevel(decl, symbolTable):
 def TAC_convertSymbolsToTAC(symbolTable):
     tacDefs = []
     for name, entry in symbolTable.items():
-        print("Key:", name, "Value:", entry)
-        #match entry[]
-        pass
+        #print(type(entry.attrs))
+        match entry.attrs:
+            case typeChecker.StaticAttributes(initialVal = initialVal, global_ = global_):
+                print(type(initialVal))
+                match initialVal:
+                    case typeChecker.Tentative():
+                        tacDefs.append(StaticVariable(name, global_, "0"))
+
+                    case typeChecker.Initial(value = value):
+                        tacDefs.append(StaticVariable(name, global_, value))
+
+    print(tacDefs)
+    return tacDefs 
+                
+        
       
 def TAC_parseProgram(pro, symbolTable):
-    funcDecList = []
+    topLevelList = []
     if pro.declList:
         for decl in pro.declList:
             topLevel = TAC_parseTopLevel(decl, symbolTable)
             if topLevel:
-                funcDecList.append(topLevel)
+                topLevelList.append(topLevel)
 
-    ast = TAC_Program(funcDecList)
+    ast = TAC_Program(topLevelList)
     tacDefs = TAC_convertSymbolsToTAC(symbolTable)
+
+    ast.topLevelList.extend(tacDefs)
+
+    return ast
 
     

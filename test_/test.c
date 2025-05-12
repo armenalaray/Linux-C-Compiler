@@ -1,37 +1,26 @@
-/* verify that automatic and external variables with the same name
- * are distinct, can be read and updated separately,
- * and can shadow one another
+/* Verify that if variable is tentatively defined one or more times,
+ * but not explicitly initialized, we'll initialize it to 0.
  */
 
-/* a global variable 'a' */
-int a = 5;
+/* This declares foo but does not define it */
+extern int foo = 2;
 
-int return_a(void)
-{
-    /* return the current value of the global variable */
-    return a;
-}
+/* A tentative definition of foo */
+int foo;
 
-int main(void)
-{
-    /* automatic variable 'a', distinct from the global variable 'a' */
+/* Another tentative definition of foo */
+int foo;
 
-    for (int i = 0; i < 4; i = i + 1)
-    {
-        int a = 3;
-        {
-            /* this declaration refers to the global variable,
-             * shadowing the automatic variable declared above
-             */
-            extern int a;
-            if (a != 5)
-                return 1;
-            /* update global variable */
-            a = 4;
-        }
-        break;
+int main(void) {
+    extern int b;
+    
+    for (int i = 0; i < 5; i = i + 1)
+    {   
+        static int a = 2 + b;
+        foo = a + 1;
     }
-
-    /* return the sum of the global and local 'a' variables */
-    return a + return_a();
+    return foo;
 }
+
+/* Yet another tentative definition of foo */
+int foo;

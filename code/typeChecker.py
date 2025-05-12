@@ -24,11 +24,14 @@ class FunType:
         return self.__str__()
 
 class Entry:
-    def __init__(self, name, attrs, type, funtype=None):
+    def __init__(self, name, attrs, type, funType=None):
         self.name = name
         self.attrs = attrs
         self.type = type
-        self.funtype = funtype
+        self.funType = funType
+    
+    def __str__(self):
+        return "{self.type} {self.name} = {self.attrs} {self.funType}".format(self=self)
 
 #TODO: Change the entry in symboltable into entry class
 
@@ -81,7 +84,7 @@ def typeCheckExpression(exp, symbolTable):
     match exp:
         case parser.FunctionCall_Exp(identifier=id, argumentList = argumentList):
             
-            if symbolTable[id][0] == IDType.INT:
+            if symbolTable[id].type == IDType.INT:
                 print("Error: Variable {0} used as function name.".format(id))
                 sys.exit(1)
 
@@ -90,7 +93,7 @@ def typeCheckExpression(exp, symbolTable):
             if argumentList:
                 paramCount = len(argumentList)
 
-            if symbolTable[id][1].paramCount != paramCount:
+            if symbolTable[id].funType.paramCount != paramCount:
                 #print(paramCount)
                 print("Error: Function {0}() called with the wrong number of arguments.".format(id))
                 sys.exit(1)
@@ -101,7 +104,7 @@ def typeCheckExpression(exp, symbolTable):
                     
 
         case parser.Var_Expression(identifier=id):
-            if symbolTable[id][0] != IDType.INT:
+            if symbolTable[id].type != IDType.INT:
                 #symbolTable[id][1]
                 print("ERROR: Function {0}() used as variable.".format(id))
                 sys.exit(1)
@@ -171,26 +174,26 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
 
         oldDecl = symbolTable[varDecl.identifier]    
 
-        if oldDecl[0] != IDType.INT:
+        if oldDecl.type != IDType.INT:
             print("Error: Function redeclared as variable.")
             sys.exit(1)
         
         if varDecl.storageClass[1] == parser.StorageType.EXTERN:
             #print(type(oldDecl[1]))
-            global_ = oldDecl[1].global_
+            global_ = oldDecl.attrs.global_
         
-        elif oldDecl[1].global_ != global_:
+        elif oldDecl.attrs.global_ != global_:
             print("Error: Conflicting Variable Linkage.")
             sys.exit(1)
 
-        match oldDecl[1].initialVal:
+        match oldDecl.attrs.initialVal:
             case Initial():
                 match initialValue:
                     case Initial():
                         print("Error: Conflicting File Scope variable definitions.")
                         sys.exit(1)
                     case _:
-                        initialValue = oldDecl[1].initialVal
+                        initialValue = oldDecl.attrs.initialVal
             case Tentative():
                 if type(initialValue) != Initial:
                     #print("Ale")
@@ -201,7 +204,7 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
 
     vattr = StaticAttributes(initialVal=initialValue, global_=global_)
 
-    symbolTable[varDecl.identifier] = (IDType.INT, vattr)
+    symbolTable[varDecl.identifier] = Entry(varDecl.identifier, vattr, IDType.INT)
     
 
 def typeCheckLocalVarDecl(varDecl, symbolTable):
@@ -214,14 +217,14 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
             oldDecl = symbolTable[varDecl.identifier]
             #print(varDecl.identifier, oldDecl)
 
-            if oldDecl[0] != IDType.INT:
+            if oldDecl.type != IDType.INT:
                 print("Error: Function redeclared as variable.")
                 sys.exit(1)
                 
         else:
             #print("Ale")
-            symbolTable[varDecl.identifier] = (IDType.INT, StaticAttributes(NoInitializer(), global_=True))
-            pass
+            symbolTable[varDecl.identifier] = Entry(varDecl.identifier, StaticAttributes(NoInitializer(), global_=True), IDType.INT)
+            
     
     elif varDecl.storageClass[1] == parser.StorageType.STATIC:
         initialValue = None
@@ -236,12 +239,12 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
         else:
             initialValue = Initial("0")
         
-        symbolTable[varDecl.identifier] = (IDType.INT, StaticAttributes(initialVal=initialValue, global_=False))
+        symbolTable[varDecl.identifier] = Entry(varDecl.identifier, StaticAttributes(initialVal=initialValue, global_=False), IDType.INT)
             
 
         #print(initialValue)
     else:
-        symbolTable[varDecl.identifier] = (IDType.INT, LocalAttributes())
+        symbolTable[varDecl.identifier] = Entry(varDecl.identifier, LocalAttributes(), IDType.INT)
         
         if varDecl.exp:
             typeCheckExpression(varDecl.exp, symbolTable)
@@ -355,37 +358,36 @@ def typeCheckFunctionDeclaration(funDec, symbolTable):
         #tu ya checaste que no es una variable!
         #aqui si son funciones
 
-        if oldDecl[0] != IDType.FUNCTION:
+        if oldDecl.type != IDType.FUNCTION:
             print("Error: Variable redeclared as function.")
             sys.exit(1)
 
-        if oldDecl[1] != funType:
+        if oldDecl.funType != funType:
             print("Error: Incompatible function declarations.")
             sys.exit(1)
 
-        alreadyDefined = oldDecl[2].defined
+        alreadyDefined = oldDecl.attrs.defined
 
         if alreadyDefined and hasBody:
             print("Error: function is defined more than once.")
             sys.exit(1)
 
-        if oldDecl[2].global_ and funDec.storageClass[1] == parser.StorageType.STATIC:
+        if oldDecl.attrs.global_ and funDec.storageClass[1] == parser.StorageType.STATIC:
             print("Static function declaration follows non-static.")
             sys.exit(1)
 
         #print("Global: ", global_)
         #print("Old Global: ", oldDecl[2].global_)
 
-        global_ = oldDecl[2].global_
+        global_ = oldDecl.attrs.global_
 
     fattr = FunAttributes(defined=(alreadyDefined or hasBody), global_=global_)
 
-    symbolTable[funDec.iden] = (IDType.FUNCTION, funType, fattr)
+    symbolTable[funDec.iden] = Entry(funDec.iden, fattr, IDType.FUNCTION, funType)
 
     if hasBody:
         for param in funDec.paramList:
-            #print(type(param))
-            symbolTable[param] = (IDType.INT, )
+            symbolTable[param] = Entry(param, LocalAttributes(), IDType.INT)
         
         typeCheckBlock(funDec.block, symbolTable)
     
