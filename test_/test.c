@@ -1,34 +1,21 @@
-/* verify that automatic and external variables with the same name
- * are distinct, can be read and updated separately,
- * and can shadow one another
- */
+// Test updating a static local variable over multiple function invocations;
+// also test passing a static variable as an argument
+int putchar (int ch);
 
-/* a global variable 'a' */
-int a = 5;
-static int b;
-extern int q = 4;
-
-int return_a(void) {
-    /* return the current value of the global variable */
-    return a;
+int print_alphabet(void) {
+    /* the value of count increases by 1
+     * each time we call print_alphabet()
+     */
+    static int count = 0;
+    putchar(count + 65); // 65 is ASCII 'A'
+    count = count + 1;
+    int a = count / 4;
+    if (count < 26) {
+        print_alphabet();
+    }
+    return count;
 }
 
 int main(void) {
-    /* automatic variable 'a', distinct from the global variable 'a' */
-    int a = 3;
-    {
-        /* this declaration refers to the global variable,
-         * shadowing the automatic variable declared above
-         */
-        b = 4;
-        q = q + b;
-        
-        extern int a;
-        if (a != 5)
-            return 1;
-        /* update global variable */
-        a = 4;
-    }
-    /* return the sum of the global and local 'a' variables */
-    return a + return_a();
+    print_alphabet();
 }

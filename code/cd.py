@@ -10,6 +10,7 @@ import tacGenerator
 import typeChecker
 import loopLabeling
 import ReplacePseudoRegisters
+import FixingUpInstructions
 
 
 """
@@ -178,9 +179,9 @@ if __name__ == "__main__":
 
 			print(ass)
 
-			#assemblyGenerator.FixingUpInstructions(ass)
+			FixingUpInstructions.FixingUpInstructions(ass)
 
-			#print(ass)
+			print(ass)
 		
 
 			if LastStage == 'assemblyGeneration':
