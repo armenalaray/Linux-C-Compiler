@@ -245,6 +245,9 @@ class DataOperand:
     def __init__(self, identifier):
         self.identifier = identifier
 
+    def __str__(self):
+        return "Data({self.identifier})".format(self=self)
+
 class RegisterOperand:
 
     def __init__(self, register):

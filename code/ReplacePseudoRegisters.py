@@ -1,3 +1,4 @@
+import typeChecker
 import assemblyGenerator
 
 def ReplaceFuncDef(funcDef, table, offset):
@@ -110,23 +111,96 @@ def ReplaceFuncDef(funcDef, table, offset):
     
     return offset
 
-def ReplaceTopLevel(topLevel):
+def ReplaceOperand(operand, table, offset, symbolTable):
+    match operand:
+        case assemblyGenerator.PseudoRegisterOperand(pseudo=id):
+
+            if table.get(id) == None:
+
+                if id in symbolTable:
+                    print(type(symbolTable[id].attrs))
+                    match symbolTable[id].attrs:
+                        case typeChecker.StaticAttributes():
+                            return offset, assemblyGenerator.DataOperand(id)
+                            
+                
+                offset -= 4
+                table.update({id : offset})
+                
+            value = table[id] 
+            
+            return offset, assemblyGenerator.StackOperand(value)
+    
+    return offset, None
+
+def ReplaceTopLevel(topLevel, symbolTable):
     
     match topLevel:
         case assemblyGenerator.StaticVariable():
             pass
-        case assemblyGenerator.Function():
+        case assemblyGenerator.Function(identifier = identifier, global_ = global_, insList = insList, stackOffset = stackOffset):
             offset = 0
             table = {}
+            #esto es por funcion 
+            for i in insList:
+                #print(type(i))
+                match i:
+                    case assemblyGenerator.MovInstruction(sourceO=src, destO=dst):
+                        offset, object = ReplaceOperand(src, table, offset, symbolTable)
+                        if object:
+                            i.sourceO = object
+                        
+                        offset, object = ReplaceOperand(dst, table, offset, symbolTable)
+                        if object:
+                            i.destO = object
+                    
+
+                    case assemblyGenerator.UnaryInstruction(operator=o, dest=dst):
+
+                        offset, object = ReplaceOperand(dst, table, offset, symbolTable)
+                        if object:
+                            i.dest = object
+
+                    case assemblyGenerator.BinaryInstruction(operator=op, src=src, dest=dst):
+                        
+                        offset, object = ReplaceOperand(src, table, offset, symbolTable)
+                        if object:
+                            i.src = object
+
+                        offset, object = ReplaceOperand(dst, table, offset, symbolTable)
+                        if object:
+                            i.dest = object
+                    
+                    case assemblyGenerator.IDivInstruction(divisor=div):  
+
+                        offset, object = ReplaceOperand(div, table, offset, symbolTable)
+                        if object:
+                            i.divisor = object
+                        
+                    case assemblyGenerator.SetCCInst(conc_code=code, operand=op):
+                        
+                        offset, object = ReplaceOperand(op, table, offset, symbolTable)
+                        if object:
+                            i.operand = object
+
+                    
+                    case assemblyGenerator.CompInst(operand0=op0, operand1=op1):
+
+                        offset, object = ReplaceOperand(op0, table, offset, symbolTable)
+                        if object:
+                            i.operand0 = object
+
+                        offset, object = ReplaceOperand(op1, table, offset, symbolTable)
+                        if object:
+                            i.operand1 = object
+            
+            topLevel.stackOffset = offset
+                    
     
-            pass
-    pass
 
 # Replace Pseudos #2
-def ReplacePseudoRegisters(ass):
+def ReplacePseudoRegisters(ass, symbolTable):
 
     for topLevel in ass.topLevelList:
-        offset = 0
-        table = {}
-        offset = ReplaceTopLevel(topLevel)
+        ReplaceTopLevel(topLevel, symbolTable)
         #funcDef.stackOffset = offset

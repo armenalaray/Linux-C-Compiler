@@ -174,7 +174,7 @@ if __name__ == "__main__":
 			print(ass)
 
 			
-			ReplacePseudoRegisters.ReplacePseudoRegisters(ass)
+			ReplacePseudoRegisters.ReplacePseudoRegisters(ass, symbolTable)
 
 			print(ass)
 
