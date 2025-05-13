@@ -6,6 +6,7 @@
 /* a global variable 'a' */
 int a = 5;
 static int b;
+extern int q = 4;
 
 int return_a(void) {
     /* return the current value of the global variable */
@@ -19,6 +20,9 @@ int main(void) {
         /* this declaration refers to the global variable,
          * shadowing the automatic variable declared above
          */
+        b = 4;
+        q = q + b;
+        
         extern int a;
         if (a != 5)
             return 1;
