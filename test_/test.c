@@ -1,22 +1,11 @@
-// Test updating a static local variable over multiple function invocations;
-// also test passing a static variable as an argument
-int putchar (int ch);
-
-
-static int print_alphabet(void) {
-    /* the value of count increases by 1
-     * each time we call print_alphabet()
-     */
-    static int count = 0;
-    putchar(count + 65); // 65 is ASCII 'A'
-    count = count + 1;
-
-    if (count < 26) {
-        print_alphabet();
-    }
-    return count;
-}
+static int foo = 3;
 
 int main(void) {
-    print_alphabet();
+    return foo;
 }
+
+/* if you declare a variable with the 'extern' keyword when a declaration
+ * with linkage is already in scope, the new declaration takes on the same
+ * linkage as the previous declaration
+ */
+extern int foo;
