@@ -1,22 +1,4 @@
 
-
-
-
-
-"""
-
-class a:
-    pass
-
-class b(a):
-    pass
-
-c = b()
-
-print(issubclass(type(c), a) )
-
-"""
-
 import re
 
 # Validate number
@@ -30,10 +12,10 @@ np = r"\s+"
 
 is_dd_invalid = r"[-]+\w"
 
-dd = r"--"
+dd = "[0-9]+[lL]?"
 
-a = re.match(dd, '- 42dasa_AZ()') # Returns Match object
-b = re.match(dd, '-- 43notanumber43') # Returns None
+a = re.match(dd, '42ldasa_AZ()') # Returns Match object
+b = re.match(dd, '43notanumber43') # Returns None
 
 print(a)
 print(b)

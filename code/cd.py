@@ -1,6 +1,6 @@
 import os
 import sys
-from ctoken import *
+from lexer import *
 
 import parser
 import assemblyGenerator

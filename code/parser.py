@@ -1,5 +1,5 @@
 import sys
-from ctoken import TokenType
+from lexer import TokenType
 
 from enum import Enum
 

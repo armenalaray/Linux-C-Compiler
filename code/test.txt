@@ -1,4 +1,13 @@
 
+ = 2^31
+
+sign extend
+
+Truncate
+
+movl ecx, eax
+
+
 18 + 5 + 6
 
 29

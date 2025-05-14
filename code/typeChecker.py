@@ -32,6 +32,9 @@ class Entry:
     
     def __str__(self):
         return "{self.type} {self.name} = {self.attrs} {self.funType}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
 
 #TODO: Change the entry in symboltable into entry class
 

@@ -4,8 +4,10 @@
 # My compiler
 
 
-#lastStage="--codegen"
+lastStage="--lex"
 #noLink="-c"
+
+
 
 python3 "$(pwd)"/code/cd.py $lastStage $noLink "$(pwd)"/test_/test.c
 echo $?
