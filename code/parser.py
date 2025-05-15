@@ -114,8 +114,9 @@ class FunType(Type):
 
 
 class StorageType(Enum):
-    STATIC = 1
-    EXTERN = 2
+    NULL = 1
+    STATIC = 2
+    EXTERN = 3
 
 class StorageClass:
     def __init__(self, storageClass):
@@ -833,7 +834,7 @@ def parseTypeAndStorageClass(specifierList):
         print("Invalid Storage Class.")
         sys.exit(1)
 
-    storageClass = None
+    storageClass = StorageClass(StorageType.NULL)
 
     if len(storageClasses) == 1:
         s = storageClasses[0]

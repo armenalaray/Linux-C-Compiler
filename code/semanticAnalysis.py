@@ -3,7 +3,7 @@ import sys
 import parser
 
 def resolveExpression(exp, idMap):
-    match exp:
+    match exp:        
         case parser.Assignment_Expression(lvalue=lvalue, exp=exp):
             #print(type(lvalue))
             if type(lvalue) != parser.Var_Expression:
@@ -20,8 +20,8 @@ def resolveExpression(exp, idMap):
                 print("Undeclared Variable {0}".format(id))
                 sys.exit(1)
 
-        case parser.Constant_Expression(intValue=intValue):
-            return parser.Constant_Expression(intValue)
+        case parser.Constant_Expression(const = const):
+            return parser.Constant_Expression(const)
 
         case parser.FunctionCall_Exp(identifier=id, argumentList = argumentList):
             #print(id)
@@ -45,6 +45,10 @@ def resolveExpression(exp, idMap):
                 sys.exit(1)
 
             #return parser.FunctionCall_Exp(id, argumentList)
+        
+        case parser.Cast_Expression(targetType = targetType, exp = exp):
+            e = resolveExpression(exp, idMap)
+            return parser.Cast_Expression(targetType, e)
 
         case parser.Unary_Expression(operator=op, expression=exp):
             #print(type(exp))
@@ -67,8 +71,8 @@ def resolveExpression(exp, idMap):
             return parser.Conditional_Expression(c, t, e)
 
         case _:
-            print(type(exp))
-            print("Invalid expression type.")
+            #print(type(exp))
+            print("Invalid expression type: {0}".format(type(exp)))
             sys.exit(1)
 
 global_value = 0
@@ -95,7 +99,7 @@ def resolveFunctionDeclaration(funDecl, idMap):
 
     newParams = []
     innerMap = copyidMap(idMap)
-    for id in funDecl.paramList:
+    for id in funDecl.paramNames:
         #ERROR: Change this to resolveVarLocalDeclaration
         newParams.append(resolveID(id, innerMap))
 
@@ -104,7 +108,7 @@ def resolveFunctionDeclaration(funDecl, idMap):
     if funDecl.block:
         block = resolveBlock(funDecl.block, innerMap)
         
-    return parser.FunctionDecl(funDecl.iden, newParams, block, funDecl.storageClass)
+    return parser.FunctionDecl(funDecl.iden, funDecl.funType, newParams, block, funDecl.storageClass)
     
 
 
@@ -132,23 +136,19 @@ def resolveLocalVarDecl(dec, idMap):
     if dec.identifier in idMap:
         prevEntry = idMap[dec.identifier]
         if prevEntry[1]['from_current_scope']:
-            #print(prevEntry)
-            if dec.storageClass[1] != parser.StorageType.EXTERN or not prevEntry[2]['has_linkage']:
+            if dec.storageClass.storageClass != parser.StorageType.EXTERN or not prevEntry[2]['has_linkage']:
                 print("Conflicting declarations.".format(dec.identifier))
                 sys.exit(1)
 
-    #print(type(dec.storageClass[1]))
-    storageClass = dec.storageClass[1]
-
-    if storageClass and storageClass == parser.StorageType.EXTERN:
+    if dec.storageClass.storageClass == parser.StorageType.EXTERN:
         return resolveFileScopeVarDecl(dec, idMap)
     else:
         uniqueName = resolveID(dec.identifier, idMap)
         if dec.exp:
             exp = resolveExpression(dec.exp, idMap)
-            return parser.VariableDecl(uniqueName, exp, dec.storageClass)
+            return parser.VariableDecl(uniqueName, dec.varType, exp, dec.storageClass)
     
-        return parser.VariableDecl(uniqueName, None, dec.storageClass)
+        return parser.VariableDecl(uniqueName, dec.varType, None, dec.storageClass)
 
 
 def resolveVarDeclaration(dec, idMap, isBlockVar):
@@ -166,7 +166,7 @@ def resolveDeclaration(dec, idMap, isBlockDecl):
             
         case parser.FunDecl(funDecl = funDecl):
             
-            if isBlockDecl and funDecl.storageClass[1] == parser.StorageType.STATIC:
+            if isBlockDecl and funDecl.storageClass.storageClass == parser.StorageType.STATIC:
                 print("Error cannot declare static function in block scope.")
                 sys.exit(1)
 
@@ -187,11 +187,11 @@ def copyidMap(idMap):
     return newMap
 
 def resolveForInit(forInit, idMap):
-    print(type(forInit))
+    #print(type(forInit))
 
     match forInit:
         case parser.InitDecl(varDecl = varDecl):
-            print(type(varDecl))
+            #print(type(varDecl))
             d = resolveVarDeclaration(varDecl, idMap, True)
             return parser.InitDecl(d)
         

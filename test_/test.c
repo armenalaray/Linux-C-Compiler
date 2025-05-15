@@ -1,5 +1,4 @@
-long static sign_extend(int i, long int expected) {
-    int i = 9223372036854775807l;
+long sign_extend(int i, long expected) {
     long extended = (long) i;
     return (extended == expected);
 }
