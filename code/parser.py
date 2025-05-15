@@ -93,13 +93,16 @@ class FunctionDecl:
         return self.__str__()
 
 class Type:
-    pass
+    def __repr__(self):
+        return self.__str__()
 
 class IntType(Type):
-    pass
+    def __str__(self):
+        return "int"
 
 class LongType(Type):
-    pass
+    def __str__(self):
+        return "long"
 
 class FunType(Type):
     def __init__(self, paramTypes, retType):
@@ -117,6 +120,9 @@ class StorageType(Enum):
 class StorageClass:
     def __init__(self, storageClass):
         self.storageClass = storageClass
+
+    def __str__(self):
+        return "{self.storageClass}".format(self=self)
 
 class ForInit:
     pass
@@ -242,7 +248,7 @@ class Cast_Expression(Expression):
         self.exp = exp
 
     def __str__(self):
-        return "Ale"
+        return "({self.targetType}) {self.exp}".format(self=self)
 
 class Unary_Expression(Expression):
     def __init__(self, operator, expression):
@@ -311,6 +317,9 @@ class ConstInt(Const):
 class ConstLong(Const):
     def __init__(self, int):
         self.int = int
+    
+    def __str__(self):
+        return "{self.int}L".format(self=self)
 
 class UnopType(Enum):
     NEGATE = 1
@@ -415,7 +424,7 @@ def parseConstant(tokenList):
             sys.exit(1)
         
     v = int(digitString)
-    print(v)
+    #print(v)
 
     if v > pow(2, 63) - 1:
         print("Constant is too large to represent as an int or long")
@@ -550,7 +559,7 @@ def parseFactor(tokenList):
 
     if isConstant(token):
         const = parseConstant(tokenList)
-        print(const)
+        #print(const)
         return Constant_Expression(const)
     
     elif token[1] == TokenType.IDENTIFIER:
@@ -791,7 +800,7 @@ def parseStatement(tokenList):
         return ExpressionStmt(retVal)
 
 def parseTypes(types):
-    print(types)
+    #print(types)
 
     if len(types) == 1 and types[0][1] == TokenType.INT_KW:
         return IntType()
@@ -856,7 +865,7 @@ def parseDeclaration(tokenList):
         specifierList.append(takeToken(tokenList))
         token = peek(tokenList)
         
-    print(specifierList)
+    #print(specifierList)
     type, storageClass = parseTypeAndStorageClass(specifierList)
 
     token = peek(tokenList, 1)
@@ -878,7 +887,7 @@ def parseBlockItem(tokenList):
     
     if isValid:
         if type(decl) == FunDecl:
-            print(type(decl.funDecl.block))
+            #print(type(decl.funDecl.block))
             if decl.funDecl.block:
                 print("Invalid Nested function definition in block.")
                 sys.exit(1)
@@ -959,7 +968,7 @@ def parseParamList(tokenList):
 
         token = peek(tokenList)
 
-    print(paramTypes)
+    #print(paramTypes)
 
     return paramTypes, paramNames
     
@@ -990,7 +999,7 @@ def parseFunctionDecl(tokenList, retType, storageClass):
 
     paramTypes, paramNames = parseParamList(tokenList)
 
-    print(paramTypes)
+    #print(paramTypes)
     
     expect(TokenType.CLOSE_PAREN, tokenList)
 
