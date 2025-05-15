@@ -75,7 +75,7 @@ class VariableDecl:
         self.storageClass = storageClass    
 
     def __str__(self):
-        return "{self.storageClass} {self.identifier} = {self.exp}".format(self=self)
+        return "{self.storageClass} {self.varType} {self.identifier} = {self.exp}".format(self=self)
 
 class FunctionDecl:    
     def __init__(self, iden, funType, paramNames, block=None, storageClass=None):
@@ -87,7 +87,7 @@ class FunctionDecl:
     
     def __str__(self):
 
-        return "Function: {self.storageClass} {self.iden} ({self.paramList}) Block: {self.block}".format(self=self)
+        return "Function: {self.storageClass} {self.funType} {self.iden} ({self.paramNames}) Block: {self.block}".format(self=self)
 
     def __repr__(self):
         return self.__str__()
@@ -105,6 +105,9 @@ class FunType(Type):
     def __init__(self, paramTypes, retType):
         self.paramTypes = paramTypes
         self.retType = retType
+    
+    def __str__(self):
+        return "FunType: ParamTypes: {self.paramTypes} RetType: {self.retType}".format(self=self)
 
 
 class StorageType(Enum):
@@ -231,12 +234,15 @@ class Constant_Expression(Expression):
     
     def __str__(self):
         #super().__str__()
-        return "{self.intValue}".format(self=self)
+        return "{self.const}".format(self=self)
 
 class Cast_Expression(Expression):
     def __init__(self, targetType, exp):
         self.targetType = targetType
         self.exp = exp
+
+    def __str__(self):
+        return "Ale"
 
 class Unary_Expression(Expression):
     def __init__(self, operator, expression):
@@ -405,8 +411,8 @@ def parseConstant(tokenList):
                 digitString = result.group()
 
         case _:
-            ##print()
-            pass
+            print("Invalid Constant type. {0}".format(token[1]))
+            sys.exit(1)
         
     v = int(digitString)
     print(v)
@@ -504,6 +510,26 @@ def parseFactor(tokenList):
 
     #print(token)
 
+    if isTypeSpecifier(token):
+
+        expect(TokenType.OPEN_PAREN, tokenList)
+
+        token = peek(tokenList)
+
+        types = []
+        while isTypeSpecifier(token):
+            types.append(takeToken(tokenList))
+            token = peek(tokenList)
+
+        type = parseTypes(types)
+
+        expect(TokenType.CLOSE_PAREN, tokenList)
+
+        exp = parseFactor(tokenList)
+
+        return Cast_Expression(type, exp)
+        
+
     if token[1] == TokenType.OPEN_PAREN:
         iden = parseIdentifier(tokenList)
         expect(TokenType.OPEN_PAREN, tokenList)
@@ -517,13 +543,14 @@ def parseFactor(tokenList):
 
         expect(TokenType.CLOSE_PAREN, tokenList)
         return FunctionCall_Exp(iden, expList)
-        
+
+
 
     token = peek(tokenList)
 
     if isConstant(token):
         const = parseConstant(tokenList)
-        #intValue = parseInt(tokenList)
+        print(const)
         return Constant_Expression(const)
     
     elif token[1] == TokenType.IDENTIFIER:
