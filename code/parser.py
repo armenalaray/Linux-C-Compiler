@@ -1,6 +1,8 @@
 import sys
 import numpy
 
+import re
+
 from lexer import TokenType
 from enum import Enum
 
@@ -294,10 +296,7 @@ class Const:
 
 class ConstInt(Const):
     def __init__(self, int):
-        #este lo convierte en un int32
-        self.int = numpy.int32(int)
-        #y este no
-        #self.int = int
+        self.int = int
 
     def __str__(self):
         return "{self.int}".format(self=self)
@@ -305,7 +304,7 @@ class ConstInt(Const):
 
 class ConstLong(Const):
     def __init__(self, int):
-        self.int = numpy.int64(int)
+        self.int = int
 
 class UnopType(Enum):
     NEGATE = 1
@@ -390,6 +389,38 @@ def parseInt(tokenList):
     sys.exit(1)
 
 
+def parseConstant(tokenList):
+    token = takeToken(tokenList)
+
+    digitString = ""
+    match token[1]:
+        case TokenType.INT_CONSTANT:
+            digitString = token[0]
+        
+        case TokenType.LONG_CONSTANT:
+            #Se quita el Ll
+            regex = "[0-9]+"
+            result = re.match(regex, token[0])
+            if result:
+                digitString = result.group()
+
+        case _:
+            ##print()
+            pass
+        
+    v = int(digitString)
+    print(v)
+
+    if v > pow(2, 63) - 1:
+        print("Constant is too large to represent as an int or long")
+        sys.exit(1)
+        pass
+
+    if token[1] == TokenType.INT_CONSTANT and v <= pow(2, 31) - 1:
+        return ConstInt(v)
+
+    return ConstLong(v)
+    
 
 def parseUnop(tokenList):
     actual = takeToken(tokenList)
@@ -460,6 +491,11 @@ def parseArgumentList(tokenList):
         
 
     return expList
+
+def isConstant(token):
+    if token[1] == TokenType.INT_CONSTANT or token[1] == TokenType.LONG_CONSTANT: 
+        return True
+    return False
     
 
 def parseFactor(tokenList):
@@ -485,9 +521,10 @@ def parseFactor(tokenList):
 
     token = peek(tokenList)
 
-    if token[1] == TokenType.CONSTANT:
-        intValue = parseInt(tokenList)
-        return Constant_Expression(intValue)
+    if isConstant(token):
+        const = parseConstant(tokenList)
+        #intValue = parseInt(tokenList)
+        return Constant_Expression(const)
     
     elif token[1] == TokenType.IDENTIFIER:
         id = parseIdentifier(tokenList)
