@@ -4,7 +4,7 @@
 # My compiler
 
 
-lastStage="--lex"
+lastStage="--parse"
 #noLink="-c"
 
 

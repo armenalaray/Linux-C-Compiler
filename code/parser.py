@@ -1,6 +1,7 @@
 import sys
-from lexer import TokenType
+import numpy
 
+from lexer import TokenType
 from enum import Enum
 
 class Program:
@@ -65,8 +66,9 @@ class FunDecl(Decl):
         return self.__str__()
 
 class VariableDecl:
-    def __init__(self, identifier, exp=None, storageClass=None):
+    def __init__(self, identifier, varType, exp=None, storageClass=None):
         self.identifier = identifier
+        self.varType = varType 
         self.exp = exp
         self.storageClass = storageClass    
 
@@ -74,9 +76,10 @@ class VariableDecl:
         return "{self.storageClass} {self.identifier} = {self.exp}".format(self=self)
 
 class FunctionDecl:    
-    def __init__(self, iden, paramList, block=None, storageClass=None):
+    def __init__(self, iden, funType, paramNames, block=None, storageClass=None):
         self.iden = iden
-        self.paramList = paramList
+        self.funType = funType
+        self.paramNames = paramNames
         self.block = block
         self.storageClass = storageClass
     
@@ -87,13 +90,28 @@ class FunctionDecl:
     def __repr__(self):
         return self.__str__()
 
-#puede ser 0 o 1 
-#tiene que ser 1
+class Type:
+    pass
+
+class IntType(Type):
+    pass
+
+class LongType(Type):
+    pass
+
+class FunType(Type):
+    def __init__(self, paramTypes, retType):
+        self.paramTypes = paramTypes
+        self.retType = retType
+
 
 class StorageType(Enum):
-    INT = 1
-    STATIC = 2
-    EXTERN = 3
+    STATIC = 1
+    EXTERN = 2
+
+class StorageClass:
+    def __init__(self, storageClass):
+        self.storageClass = storageClass
 
 class ForInit:
     pass
@@ -206,12 +224,17 @@ class Null_Expression(Expression):
     pass
 
 class Constant_Expression(Expression):
-    def __init__(self, intValue):
-        self.intValue = intValue
+    def __init__(self, const):
+        self.const = const
     
     def __str__(self):
         #super().__str__()
         return "{self.intValue}".format(self=self)
+
+class Cast_Expression(Expression):
+    def __init__(self, targetType, exp):
+        self.targetType = targetType
+        self.exp = exp
 
 class Unary_Expression(Expression):
     def __init__(self, operator, expression):
@@ -265,6 +288,24 @@ class FunctionCall_Exp(Expression):
     
     def __str__(self):
         return "{self.identifier}({self.argumentList})".format(self=self)
+
+class Const:
+    pass
+
+class ConstInt(Const):
+    def __init__(self, int):
+        #este lo convierte en un int32
+        self.int = numpy.int32(int)
+        #y este no
+        #self.int = int
+
+    def __str__(self):
+        return "{self.int}".format(self=self)
+    
+
+class ConstLong(Const):
+    def __init__(self, int):
+        self.int = numpy.int64(int)
 
 class UnopType(Enum):
     NEGATE = 1
@@ -685,45 +726,59 @@ def parseStatement(tokenList):
         expect(TokenType.SEMICOLON, tokenList)
         return ExpressionStmt(retVal)
 
+def parseTypes(types):
+    print(types)
+
+    if len(types) == 1 and types[0][1] == TokenType.INT_KW:
+        return IntType()
+    
+    if len(types) == 2 and types[0][1] == TokenType.INT_KW and types[1][1] == TokenType.LONG_KW:
+        return LongType()
+    
+    if len(types) == 2 and types[0][1] == TokenType.LONG_KW and types[1][1] == TokenType.INT_KW:
+        return LongType()
+    
+    if len(types) == 1 and types[0][1] == TokenType.LONG_KW:
+        return LongType()
+    
+    print("Invalid Type Specifier.")
+    sys.exit(1)
+    
 
 def parseTypeAndStorageClass(specifierList):
     types = []
     storageClasses = []
     for specifier in specifierList:
-        if specifier[1] ==  TokenType.INT_KW:
+        if specifier[1] ==  TokenType.INT_KW or specifier[1] == TokenType.LONG_KW:
             types.append(specifier)
         else:
             storageClasses.append(specifier)
             
-        
-    if len(types) != 1:
-        print("Invalid type specifier.")
-        sys.exit(1)
+    type = parseTypes(types)
 
     if len(storageClasses) > 1:
         print("Invalid Storage Class.")
         sys.exit(1)
 
-    type = StorageType.INT        
     storageClass = None
 
     if len(storageClasses) == 1:
         s = storageClasses[0]
         if s[1] == TokenType.EXTERN_KW:
-            storageClass = StorageType.EXTERN
+            storageClass = StorageClass(StorageType.EXTERN)
             
         elif s[1] == TokenType.STATIC_KW:
-            storageClass = StorageType.STATIC
+            storageClass = StorageClass(StorageType.STATIC)
 
         else:
             print("Error: Invalid Storage Class: {0}".format(s[0]))
             
-    return (type, storageClass)
+    return type, storageClass
     
 def isSpecifier(token):
     #print(token)
     
-    if token[1] == TokenType.EXTERN_KW or token[1] == TokenType.STATIC_KW or token[1] == TokenType.INT_KW: 
+    if token[1] == TokenType.EXTERN_KW or token[1] == TokenType.STATIC_KW or token[1] == TokenType.INT_KW or token[1] == TokenType.LONG_KW: 
         return True
     
     return False
@@ -740,16 +795,16 @@ def parseDeclaration(tokenList):
         specifierList.append(takeToken(tokenList))
         token = peek(tokenList)
         
-    #print(specifierList)
-    typeAndStorage = parseTypeAndStorageClass(specifierList)
+    print(specifierList)
+    type, storageClass = parseTypeAndStorageClass(specifierList)
 
     token = peek(tokenList, 1)
 
     if token[1] == TokenType.OPEN_PAREN:
-        f = parseFunctionDecl(tokenList, typeAndStorage)
+        f = parseFunctionDecl(tokenList, type, storageClass)
         return True, FunDecl(f)
     else:
-        v = parseVarDecl(tokenList, typeAndStorage)
+        v = parseVarDecl(tokenList, type, storageClass)
         return True, VarDecl(v)
     
 
@@ -823,7 +878,7 @@ def parseParamList(tokenList):
 
     return paramList
     
-def parseVarDecl(tokenList, typeAndStorage):
+def parseVarDecl(tokenList, type, storageClass):
 
     #expect(TokenType.INT_KW, tokenList)
 
@@ -837,10 +892,10 @@ def parseVarDecl(tokenList, typeAndStorage):
         exp = parseExp(tokenList, 0)
 
     expect(TokenType.SEMICOLON, tokenList)
-    return VariableDecl(id, exp, typeAndStorage) 
+    return VariableDecl(id, type, exp, storageClass) 
 
 
-def parseFunctionDecl(tokenList, typeAndStorage):
+def parseFunctionDecl(tokenList, retType, storageClass):
     
     #expect(TokenType.INT_KW, tokenList)
     
@@ -848,7 +903,7 @@ def parseFunctionDecl(tokenList, typeAndStorage):
 
     expect(TokenType.OPEN_PAREN, tokenList)
 
-    paramList = parseParamList(tokenList)
+    paramTypes, paramNames = parseParamList(tokenList)
     
     expect(TokenType.CLOSE_PAREN, tokenList)
 
@@ -861,7 +916,8 @@ def parseFunctionDecl(tokenList, typeAndStorage):
     else:
         block = parseBlock(tokenList)
 
-    return FunctionDecl(iden, paramList, block, typeAndStorage)
+    funType = FunType(paramTypes, retType)
+    return FunctionDecl(iden, funType, paramNames, block, storageClass)
 
 def parseProgram(tokenList):
     
