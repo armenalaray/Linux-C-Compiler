@@ -776,11 +776,8 @@ def parseTypeAndStorageClass(specifierList):
     return type, storageClass
     
 def isSpecifier(token):
-    #print(token)
-    
-    if token[1] == TokenType.EXTERN_KW or token[1] == TokenType.STATIC_KW or token[1] == TokenType.INT_KW or token[1] == TokenType.LONG_KW: 
+    if token[1] == TokenType.EXTERN_KW or token[1] == TokenType.STATIC_KW or isTypeSpecifier(token): 
         return True
-    
     return False
 
 def parseDeclaration(tokenList):
@@ -848,35 +845,59 @@ def parseBlock(tokenList):
 
     return Block(BlockItemList)
 
+def isTypeSpecifier(token):
+    if token[1] == TokenType.INT_KW or token[1] == TokenType.LONG_KW: 
+        return True
+    return False
+
 def parseParamList(tokenList):
-    paramList = []
+    paramNames = []
+    paramTypes = []
 
     token = peek(tokenList)
 
     if token[1] == TokenType.VOID_KW:
         takeToken(tokenList)
-        return paramList
+        return paramTypes, paramNames
     
-    expect(TokenType.INT_KW, tokenList)
+    #parseTypeSpecifier(tokenList, paramTypes)
+    
+    types = []
+    while isTypeSpecifier(token):
+        types.append(takeToken(tokenList))
+        token = peek(tokenList)
+
+    type = parseTypes(types)
+    paramTypes.append(type)
 
     iden = parseIdentifier(tokenList)
-    paramList.append(iden)
+    paramNames.append(iden)
 
     token = peek(tokenList)
 
+
     while token[1] == TokenType.COMMA:
         takeToken(tokenList)
-        #print(tokenList)
-        expect(TokenType.INT_KW, tokenList)
+        
+        types = []
+        token = peek(tokenList)
+
+        while isTypeSpecifier(token):
+            types.append(takeToken(tokenList))
+            token = peek(tokenList)
+
+        type = parseTypes(types)
+        paramTypes.append(type)
+        
 
         iden = parseIdentifier(tokenList)
-        paramList.append(iden)
+        paramNames.append(iden)
 
         token = peek(tokenList)
 
-    #print(paramList)
+    print(paramTypes)
 
-    return paramList
+    return paramTypes, paramNames
     
 def parseVarDecl(tokenList, type, storageClass):
 
@@ -904,6 +925,8 @@ def parseFunctionDecl(tokenList, retType, storageClass):
     expect(TokenType.OPEN_PAREN, tokenList)
 
     paramTypes, paramNames = parseParamList(tokenList)
+
+    print(paramTypes)
     
     expect(TokenType.CLOSE_PAREN, tokenList)
 

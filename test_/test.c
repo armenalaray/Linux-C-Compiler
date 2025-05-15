@@ -1,5 +1,5 @@
 long static
-sign_extend(int i, long expected) {
+sign_extend(int i, long int expected) {
     long extended = (long) i;
     return (extended == expected);
 }
