@@ -105,18 +105,21 @@ def typeCheckExpression(exp, symbolTable):
                 for exp in argumentList:
                     typeCheckExpression(exp, symbolTable)
                     
+        case parser.Cast_Expression():
+            pass
 
-        case parser.Var_Expression(identifier=id):
+        case parser.Var_Expression(identifier = id, retType = retType):
             if symbolTable[id].type != IDType.INT:
-                #symbolTable[id][1]
                 print("ERROR: Function {0}() used as variable.".format(id))
                 sys.exit(1)
+            #exp.
+            #return parser.Var_Expression(id, retType)
         
         case parser.Assignment_Expression(lvalue=lvalue, exp=exp):
             typeCheckExpression(lvalue, symbolTable)
             typeCheckExpression(exp, symbolTable)
 
-        case parser.Constant_Expression(intValue=intValue):
+        case parser.Constant_Expression(const=const):
             pass 
 
         case parser.Unary_Expression(operator=op, expression=exp):
@@ -146,17 +149,13 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
     if varDecl.exp:
         match varDecl.exp:
             case parser.Constant_Expression(intValue = intValue):
-                
-                #print(intValue)
-
                 initialValue = Initial(intValue)
             
             case _:
                 print("Error: Non constant initializer.")
                 sys.exit(1)
     else:
-        #print(varDecl.storageClass)
-        if varDecl.storageClass[1] == parser.StorageType.EXTERN:
+        if varDecl.storageClass.storageClass == parser.StorageType.EXTERN:
             initialValue = NoInitializer()
         
         else:
@@ -166,7 +165,7 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
     #print(initialValue)                   
 
     global_ = True
-    if varDecl.storageClass[1] and varDecl.storageClass[1] == parser.StorageType.STATIC:
+    if varDecl.storageClass.storageClass == parser.StorageType.STATIC:
         global_ = False
 
 
@@ -181,7 +180,7 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
             print("Error: Function redeclared as variable.")
             sys.exit(1)
         
-        if varDecl.storageClass[1] == parser.StorageType.EXTERN:
+        if varDecl.storageClass.storageClass == parser.StorageType.EXTERN:
             #print(type(oldDecl[1]))
             global_ = oldDecl.attrs.global_
         
@@ -211,7 +210,7 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
     
 
 def typeCheckLocalVarDecl(varDecl, symbolTable):
-    if varDecl.storageClass[1] == parser.StorageType.EXTERN:
+    if varDecl.storageClass.storageClass == parser.StorageType.EXTERN:
         if varDecl.exp:
             print("Error: Initializer on local extern variable declaration.")
             sys.exit(1)
@@ -229,7 +228,7 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
             symbolTable[varDecl.identifier] = Entry(varDecl.identifier, StaticAttributes(NoInitializer(), global_=True), IDType.INT)
             
     
-    elif varDecl.storageClass[1] == parser.StorageType.STATIC:
+    elif varDecl.storageClass.storageClass == parser.StorageType.STATIC:
         initialValue = None
         if varDecl.exp:
             match varDecl.exp:
@@ -271,7 +270,7 @@ def typeCheckDeclaration(dec, symbolTable, isBlockScope):
 def typeCheckForInit(forInit, symbolTable):
     match forInit:
         case parser.InitDecl(varDecl = varDecl):
-            if varDecl.storageClass[1]:
+            if varDecl.storageClass.storageClass != parser.StorageType.NULL:
                 print("Error: Invalid Storage class specifier in variable declaration in for init.")
                 sys.exit(1)
 
@@ -342,16 +341,12 @@ def typeCheckBlock(block, symbolTable):
                     
         
 def typeCheckFunctionDeclaration(funDec, symbolTable):
-    funType = FunType(len(funDec.paramList))
+    funType = FunType(len(funDec.paramNames))
     hasBody = funDec.block != None
-
-    #print(hasBody)
-
     alreadyDefined = False
-
     global_ = True
     
-    if funDec.storageClass[1] and funDec.storageClass[1] == parser.StorageType.STATIC:
+    if funDec.storageClass.storageClass == parser.StorageType.STATIC:
         global_ = False
     
 
@@ -375,7 +370,7 @@ def typeCheckFunctionDeclaration(funDec, symbolTable):
             print("Error: function is defined more than once.")
             sys.exit(1)
 
-        if oldDecl.attrs.global_ and funDec.storageClass[1] == parser.StorageType.STATIC:
+        if oldDecl.attrs.global_ and funDec.storageClass.storageClass == parser.StorageType.STATIC:
             print("Static function declaration follows non-static.")
             sys.exit(1)
 
@@ -389,7 +384,7 @@ def typeCheckFunctionDeclaration(funDec, symbolTable):
     symbolTable[funDec.iden] = Entry(funDec.iden, fattr, IDType.FUNCTION, funType)
 
     if hasBody:
-        for param in funDec.paramList:
+        for param in funDec.paramNames:
             symbolTable[param] = Entry(param, LocalAttributes(), IDType.INT)
         
         typeCheckBlock(funDec.block, symbolTable)

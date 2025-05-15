@@ -1,10 +1,11 @@
-long sign_extend(int i, long expected) {
+long static sign_extend(int i, long expected) {
     long extended = (long) i;
     return (extended == expected);
 }
 
-
 int main(void) {
+    int a;
+
     /* Converting a positive or negative int to a long preserves its value */
     if (!sign_extend(10, 10l)) {
         return 1;

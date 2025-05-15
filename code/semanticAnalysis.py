@@ -87,7 +87,6 @@ def makeTemporary(id):
 
 def resolveFunctionDeclaration(funDecl, idMap):
     #print(funDecl)
-    #YOUAREHERE!
     if funDecl.iden in idMap:
         prev_Entry = idMap[funDecl.iden]
         if prev_Entry[1]['from_current_scope'] and not prev_Entry[2]['has_linkage']:

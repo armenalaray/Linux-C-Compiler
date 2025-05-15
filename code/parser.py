@@ -228,6 +228,7 @@ class NullStatement(Statement):
         pass
 
 class Expression:
+    retType = None
     def __repr__(self):
         return self.__str__()
     
@@ -236,35 +237,40 @@ class Null_Expression(Expression):
     pass
 
 class Constant_Expression(Expression):
-    def __init__(self, const):
+    def __init__(self, const, retType = None):
         self.const = const
+        self.retType = retType
     
     def __str__(self):
         #super().__str__()
         return "{self.const}".format(self=self)
 
 class Cast_Expression(Expression):
-    def __init__(self, targetType, exp):
+    def __init__(self, targetType, exp, retType = None):
         self.targetType = targetType
         self.exp = exp
+        self.retType = retType
+
 
     def __str__(self):
         return "({self.targetType}) {self.exp}".format(self=self)
 
 class Unary_Expression(Expression):
-    def __init__(self, operator, expression):
+    def __init__(self, operator, expression, retType = None):
         self.operator = operator
         self.expression = expression
+        self.retType = retType
 
     def __str__(self):
         #super().__str__()
         return "Unary Expression: Operator: {self.operator}Expression: {self.expression}".format(self=self)
 
 class Binary_Expression(Expression):
-    def __init__(self, operator, left, right):
+    def __init__(self, operator, left, right, retType = None):
         self.operator = operator
         self.left = left
         self.right = right
+        self.retType = retType
 
     def __str__(self):
         #super().__str__()
@@ -272,34 +278,38 @@ class Binary_Expression(Expression):
     
 
 class Conditional_Expression(Expression):
-    def __init__(self, condExp, thenExp, elseExp):
+    def __init__(self, condExp, thenExp, elseExp, retType = None):
         self.condExp = condExp
         self.thenExp = thenExp
         self.elseExp = elseExp
+        self.retType = retType
     
     def __str__(self):
         return "{self.condExp} ? {self.thenExp} : {self.elseExp}".format(self=self)
         pass
 
 class Var_Expression(Expression):
-    def __init__(self, identifier):
+    def __init__(self, identifier, retType = None):
         self.identifier = identifier
+        self.retType = retType
 
     def __str__(self):
         return "{self.identifier}".format(self=self)
 
 class Assignment_Expression(Expression):
-    def __init__(self, lvalue, exp):
+    def __init__(self, lvalue, exp, retType = None):
         self.lvalue = lvalue
         self.exp = exp
+        self.retType = retType
 
     def __str__(self):
         return "{self.lvalue} = {self.exp}".format(self=self)
 
 class FunctionCall_Exp(Expression):
-    def __init__(self, identifer, argumentList=None):
+    def __init__(self, identifer, argumentList=None, retType = None):
         self.identifier = identifer
         self.argumentList = argumentList
+        self.retType = retType
     
     def __str__(self):
         return "{self.identifier}({self.argumentList})".format(self=self)
