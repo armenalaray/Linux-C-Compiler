@@ -242,6 +242,10 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
             print("Error: Function redeclared as variable.")
             sys.exit(1)
         
+        if type(oldDecl.type) != type(varDecl.varType):
+            print("Error: Incompatible variable declarations.")
+            sys.exit(1)
+
         if varDecl.storageClass.storageClass == parser.StorageType.EXTERN:
             #print(type(oldDecl[1]))
             global_ = oldDecl.attrs.global_
@@ -269,6 +273,7 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
     
 
 def typeCheckLocalVarDecl(varDecl, symbolTable):
+
     if varDecl.storageClass.storageClass == parser.StorageType.EXTERN:
         if varDecl.exp:
             print("Error: Initializer on local extern variable declaration.")
@@ -280,7 +285,11 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
             if type(oldDecl.type) == parser.FunType:
                 print("Error: Function redeclared as variable.")
                 sys.exit(1)
-                
+
+            if type(oldDecl.type) != type(varDecl.varType):
+                print("Error: Incompatible local variable declarations.")
+                sys.exit(1)
+            
         else:
             symbolTable[varDecl.identifier] = Entry(varDecl.identifier, StaticAttributes(NoInitializer(), global_=True), varDecl.varType)
     
@@ -303,7 +312,12 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
         symbolTable[varDecl.identifier] = Entry(varDecl.identifier, LocalAttributes(), varDecl.varType)
         
         if varDecl.exp:
-            typeCheckExpression(varDecl.exp, symbolTable)
+            e = typeCheckExpression(varDecl.exp, symbolTable)
+            e = convertTo(e, varDecl.varType)
+
+            return parser.VariableDecl(varDecl.identifier, varDecl.varType, e, varDecl.storageClass)
+        
+        return parser.VariableDecl(varDecl.identifier, varDecl.varType, None, varDecl.storageClass)
 
 
 def typeCheckVarDeclaration(varDecl, symbolTable, isBlockScope):
@@ -428,7 +442,11 @@ def typeCheckFunctionDeclaration(funDec, symbolTable):
             sys.exit(1)
 
         if len(oldDecl.type.paramTypes) != len(funType.paramTypes):
-            print("Error: Incompatible function declarations.")
+            print("Error: Incompatible parameter types in function declarations.")
+            sys.exit(1)
+        
+        if type(oldDecl.type.retType) != type(funType.retType):
+            print("Error: Incompatible return type in function declarations.")
             sys.exit(1)
 
         alreadyDefined = oldDecl.attrs.defined
