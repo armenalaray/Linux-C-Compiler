@@ -62,7 +62,7 @@ class NoInitializer(InitialValue):
     pass
 
 def getCommonType(type1, type2):
-    if type1 == type2:
+    if type(type1) == type(type2):
         return type1
     else:
         return parser.LongType()
@@ -71,30 +71,42 @@ def convertTo(exp, resultType):
     if type(exp.retType) == type(resultType):
         return exp
     
-    print("Ale")
+    #print("Ale")
     return parser.Cast_Expression(resultType, exp, resultType)
 
 def typeCheckExpression(exp, symbolTable):
     match exp:
         case parser.FunctionCall_Exp(identifier=id, argumentList = argumentList):
             
-            if type(symbolTable[id].type) != parser.FunType:
-                print("Error: Variable {0} used as function name.".format(id))
-                sys.exit(1)
-
-            #es una funcion, parametrizaje
+            ## NEW CODE
             paramCount = 0
             if argumentList:
                 paramCount = len(argumentList)
 
-            if len(symbolTable[id].type.paramTypes) != paramCount:
-                #print(paramCount)
-                print("Error: Function {0}() called with the wrong number of arguments.".format(id))
-                sys.exit(1)
-            
-            if argumentList:
-                for exp in argumentList:
-                    typeCheckExpression(exp, symbolTable)
+            #aqui estoy buscando la declaracion de la funcion
+            match symbolTable[id].type:
+                case parser.FunType(paramTypes = paramTypes, retType = retType):
+                    if len(paramTypes) != paramCount:
+                        print("Error: Function {0}() called with the wrong number of arguments.".format(id))
+                        sys.exit(1)
+
+                    if argumentList:
+
+                        convertedArgs = []
+                        for exp, targetType in zip(argumentList, paramTypes):
+                            exp = typeCheckExpression(exp, symbolTable)
+                            exp = convertTo(exp, targetType)
+                            convertedArgs.append(exp)
+                        
+                        print(convertedArgs)
+
+                        return parser.FunctionCall_Exp(id, convertedArgs, retType)
+                    
+                    return parser.FunctionCall_Exp(id, None, retType)
+                    
+                case _:
+                    print("Error: Variable {0} used as function name.".format(id))
+                    sys.exit(1)
                     
         case parser.Cast_Expression(targetType = targetType, exp = exp):
             e = typeCheckExpression(exp, symbolTable)
@@ -144,10 +156,11 @@ def typeCheckExpression(exp, symbolTable):
                     return parser.Binary_Expression(op, l, r, parser.IntType())
                 case parser.BinopType.OR:
                     return parser.Binary_Expression(op, l, r, parser.IntType())
-                
+            
+            #print("left: ", type(l.retType), "right: ", type(r.retType))
             commonType = getCommonType(l.retType, r.retType)
 
-            print(commonType)
+            #print(commonType)
 
             l = convertTo(l, commonType)
             r = convertTo(r, commonType)
@@ -171,14 +184,13 @@ def typeCheckExpression(exp, symbolTable):
                     return parser.Binary_Expression(op, l, r, parser.IntType())
 
                     
-
-
         case parser.Conditional_Expression(condExp=condExp, thenExp=thenExp, elseExp=elseExp):
 
             condExp = typeCheckExpression(condExp, symbolTable)
             thenExp = typeCheckExpression(thenExp, symbolTable)
             elseExp = typeCheckExpression(elseExp, symbolTable)
 
+            print("thenExp: ", type(thenExp.retType), "elseExp: ", type(elseExp.retType))
             commonType = getCommonType(thenExp.retType, elseExp.retType)
 
             thenExp = convertTo(thenExp, commonType)
