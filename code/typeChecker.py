@@ -108,8 +108,12 @@ def typeCheckExpression(exp, symbolTable):
             return parser.Var_Expression(id, symbolTable[id].type)
         
         case parser.Assignment_Expression(lvalue=lvalue, exp=exp):
-            typeCheckExpression(lvalue, symbolTable)
-            typeCheckExpression(exp, symbolTable)
+            l = typeCheckExpression(lvalue, symbolTable)
+            r = typeCheckExpression(exp, symbolTable)
+
+            r = convertTo(r, l.retType)
+
+            return parser.Assignment_Expression(l, r, l.retType)
 
         case parser.Constant_Expression(const=const):
             #print(type(const))
@@ -170,9 +174,17 @@ def typeCheckExpression(exp, symbolTable):
 
 
         case parser.Conditional_Expression(condExp=condExp, thenExp=thenExp, elseExp=elseExp):
-            typeCheckExpression(condExp, symbolTable)
-            typeCheckExpression(thenExp, symbolTable)
-            typeCheckExpression(elseExp, symbolTable)
+
+            condExp = typeCheckExpression(condExp, symbolTable)
+            thenExp = typeCheckExpression(thenExp, symbolTable)
+            elseExp = typeCheckExpression(elseExp, symbolTable)
+
+            commonType = getCommonType(thenExp.retType, elseExp.retType)
+
+            thenExp = convertTo(thenExp, commonType)
+            elseExp = convertTo(elseExp, commonType)
+
+            return parser.Conditional_Expression(condExp, thenExp, elseExp, commonType)
 
         case _:
             print(type(exp))

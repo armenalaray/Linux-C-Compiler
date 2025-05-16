@@ -1,5 +1,6 @@
 long static sign_extend(int i, int expected) {
     long extended = (long) i;
+    extended = i > 4 ? 3 : 2;
     return (extended && expected);
 }
 
