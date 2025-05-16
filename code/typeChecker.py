@@ -61,6 +61,19 @@ class Initial(InitialValue):
 class NoInitializer(InitialValue):
     pass
 
+def getCommonType(type1, type2):
+    if type1 == type2:
+        return type1
+    else:
+        return parser.LongType()
+
+def convertTo(exp, resultType):
+    if type(exp.retType) == type(resultType):
+        return exp
+    
+    print("Ale")
+    return parser.Cast_Expression(resultType, exp, resultType)
+
 def typeCheckExpression(exp, symbolTable):
     match exp:
         case parser.FunctionCall_Exp(identifier=id, argumentList = argumentList):
@@ -83,8 +96,9 @@ def typeCheckExpression(exp, symbolTable):
                 for exp in argumentList:
                     typeCheckExpression(exp, symbolTable)
                     
-        case parser.Cast_Expression():
-            pass
+        case parser.Cast_Expression(targetType = targetType, exp = exp):
+            e = typeCheckExpression(exp, symbolTable)
+            return parser.Cast_Expression(targetType, e, targetType)
 
         case parser.Var_Expression(identifier = id):
             if type(symbolTable[id].type) == parser.FunType:
@@ -98,7 +112,7 @@ def typeCheckExpression(exp, symbolTable):
             typeCheckExpression(exp, symbolTable)
 
         case parser.Constant_Expression(const=const):
-            print(type(const))
+            #print(type(const))
             match const:
                 case parser.ConstInt():
                     return parser.Constant_Expression(const, parser.IntType())
@@ -107,12 +121,52 @@ def typeCheckExpression(exp, symbolTable):
                     return parser.Constant_Expression(const, parser.LongType())
 
         case parser.Unary_Expression(operator=op, expression=exp):
-            typeCheckExpression(exp, symbolTable)
+            e = typeCheckExpression(exp, symbolTable)
+            #print(op)
+            match op.operator:
+                case parser.UnopType.NOT:
+                    return parser.Unary_Expression(op, e, parser.IntType())
+                    
+                case _:
+                    return parser.Unary_Expression(op, e, e.retType)
                           
 
         case parser.Binary_Expression(operator=op, left=left, right=right):
-            typeCheckExpression(left, symbolTable)
-            typeCheckExpression(right, symbolTable)
+            l = typeCheckExpression(left, symbolTable)
+            r = typeCheckExpression(right, symbolTable)
+
+            match op.operator:
+                case parser.BinopType.AND:
+                    return parser.Binary_Expression(op, l, r, parser.IntType())
+                case parser.BinopType.OR:
+                    return parser.Binary_Expression(op, l, r, parser.IntType())
+                
+            commonType = getCommonType(l.retType, r.retType)
+
+            print(commonType)
+
+            l = convertTo(l, commonType)
+            r = convertTo(r, commonType)
+
+            match op.operator:
+                case parser.BinopType.ADD:
+                    return parser.Binary_Expression(op, l, r, commonType)
+                case parser.BinopType.SUBTRACT:
+                    return parser.Binary_Expression(op, l, r, commonType)
+                    pass
+                case parser.BinopType.MULTIPLY:
+                    return parser.Binary_Expression(op, l, r, commonType)
+                    pass
+                case parser.BinopType.MODULO:
+                    return parser.Binary_Expression(op, l, r, commonType)
+                    pass
+                case parser.BinopType.DIVIDE:
+                    return parser.Binary_Expression(op, l, r, commonType)
+                    pass
+                case _:
+                    return parser.Binary_Expression(op, l, r, parser.IntType())
+
+                    
 
 
         case parser.Conditional_Expression(condExp=condExp, thenExp=thenExp, elseExp=elseExp):
@@ -356,7 +410,7 @@ def typeCheckFunctionDeclaration(funDec, symbolTable):
 
     if hasBody:
         for paramName, paramType in zip(funDec.paramNames, funType.paramTypes):
-            print(type(paramType))
+            #print(type(paramType))
             symbolTable[paramName] = Entry(paramName, LocalAttributes(), paramType)
         
         typeCheckBlock(funDec.block, symbolTable)

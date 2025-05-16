@@ -1,6 +1,6 @@
-long static sign_extend(int i, long expected) {
+long static sign_extend(int i, int expected) {
     long extended = (long) i;
-    return (extended == expected);
+    return (extended && expected);
 }
 
 int main(void) {
