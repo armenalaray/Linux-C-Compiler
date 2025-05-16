@@ -11,6 +11,8 @@ long static sign_extend(int i, long expected) {
 }
 
 int main(void) {
+    static int i = 2147483648;
+    static long j = 2147483648;
 
     /* Converting a positive or negative int to a long preserves its value */
     if (!sign_extend(10, 10l)) {

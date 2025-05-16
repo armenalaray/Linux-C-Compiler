@@ -1,5 +1,6 @@
 import sys
 from enum import Enum
+import numpy
 
 import parser
 
@@ -52,14 +53,32 @@ class Tentative(InitialValue):
     pass
 
 class Initial(InitialValue):
-    def __init__(self, value):
-        self.value = value
+    def __init__(self, staticInit):
+        self.staticInit = staticInit
 
     def __str__(self):
-        return "{self.value}".format(self=self)
+        return "{self.staticInit}".format(self=self)
 
 class NoInitializer(InitialValue):
     pass
+
+class StaticInit:
+    pass
+
+class IntInit(StaticInit):
+    def __init__(self, int):
+        self.int = numpy.int32(int)
+    
+    def __str__(self):
+        return "{self.int}".format(self=self)
+
+class LongInit(StaticInit):
+    def __init__(self, int):
+        self.int = numpy.int64(int)
+
+    def __str__(self):
+        return "{self.int}".format(self=self)
+
 
 def getCommonType(type1, type2):
     if type(type1) == type(type2):
@@ -132,7 +151,8 @@ def typeCheckExpression(exp, symbolTable):
             match const:
                 case parser.ConstInt():
                     return parser.Constant_Expression(const, parser.IntType())
-                    
+                
+                ##NOTE: Lo vas a hacer despues!
                 case parser.ConstLong():
                     return parser.Constant_Expression(const, parser.LongType())
 
@@ -297,8 +317,37 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
         initialValue = None
         if varDecl.exp:
             match varDecl.exp:
-                case parser.Constant_Expression(intValue = intValue):
-                    initialValue = Initial(intValue)
+                case parser.Constant_Expression(const = const):
+                    print(type(const))
+                    match const:
+                        case parser.ConstLong(int = int):
+                            print(int)
+                            match varDecl.varType:
+                                case parser.IntType():
+                                    #Long a int type
+                                    varDecl.exp = parser.Constant_Expression(const, parser.LongType())
+                                    exp = convertTo(varDecl.exp, varDecl.varType)
+                                    varDecl.exp = exp
+                                    initialValue = Initial(IntInit(int))           
+
+                                case parser.LongType():
+                                    #long a long type
+                                    initialValue = Initial(LongInit(int))
+                                                     
+
+                        case parser.ConstInt(int = int):
+                            match varDecl.varType:
+                                case parser.IntType():
+                                    #Int a Int type
+                                    initialValue = Initial(IntInit(int))
+                                    
+                                case parser.LongType():
+                                    #Int a Long type
+                                    initialValue = Initial(LongInit(int))
+                                                     
+                            
+
+                    #initialValue = Initial(intValue)
                 case _:
                     print("Error: Non constant initializer on local static variable.")
                     sys.exit(1)
