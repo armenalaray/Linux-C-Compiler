@@ -332,15 +332,18 @@ def typeCheckForInit(forInit, symbolTable):
         
         case parser.InitExp(exp=exp):
             if exp:
-                typeCheckExpression(exp, symbolTable)
+                exp = typeCheckExpression(exp, symbolTable)
+                return parser.InitExp(exp)
+            
+            return parser.InitExp()
 
-def typeCheckStatement(statement, symbolTable):
+def typeCheckStatement(statement, symbolTable, functionParentName):
     match statement:
         case parser.BreakStatement():
-            pass
+            return parser.BreakStatement()
 
         case parser.ContinueStatement():
-            pass
+            return parser.ContinueStatement()
 
         case parser.ForStatement(forInit=forInit, condExp=condExp, postExp=postExp, statement=statement, identifier=identifier):
             typeCheckForInit(forInit, symbolTable)
@@ -351,39 +354,51 @@ def typeCheckStatement(statement, symbolTable):
             if postExp:
                 typeCheckExpression(postExp, symbolTable)
 
-            typeCheckStatement(statement, symbolTable)
+            typeCheckStatement(statement, symbolTable, functionParentName)
+
+
         
         case parser.DoWhileStatement(statement=statement, condExp=condExp, identifier=id):
-            typeCheckStatement(statement, symbolTable)
-            typeCheckExpression(condExp, symbolTable)
+            statement = typeCheckStatement(statement, symbolTable, functionParentName)
+            condExp = typeCheckExpression(condExp, symbolTable)
+
+            return parser.DoWhileStatement(statement, condExp, id)
 
         case parser.WhileStatement(condExp=condExp, statement=statement, identifier=id):
-            typeCheckExpression(condExp, symbolTable)
-            typeCheckStatement(statement, symbolTable)
+            condExp = typeCheckExpression(condExp, symbolTable)
+            statement = typeCheckStatement(statement, symbolTable, functionParentName)
+
+            return parser.WhileStatement(condExp, statement, id)
 
         case parser.ExpressionStmt(exp=exp):
-            typeCheckExpression(exp, symbolTable)
-            
+            e = typeCheckExpression(exp, symbolTable)
+            return parser.ExpressionStmt(e)
 
         case parser.ReturnStmt(expression=exp):
-            typeCheckExpression(exp, symbolTable)
+            e = typeCheckExpression(exp, symbolTable)
+            e = convertTo(e, symbolTable[functionParentName].type.retType)
+
+            return parser.ReturnStmt(e)
             
         case parser.IfStatement(exp=exp, thenS=thenS, elseS=elseS):
-            typeCheckExpression(exp, symbolTable)
-            typeCheckStatement(thenS, symbolTable)
+            exp = typeCheckExpression(exp, symbolTable)
+
+            thenS = typeCheckStatement(thenS, symbolTable, functionParentName)
 
             if elseS:
-                typeCheckStatement(elseS, symbolTable)
+                elseS = typeCheckStatement(elseS, symbolTable, functionParentName)
+                return parser.IfStatement(exp, thenS, elseS)
 
+            return parser.IfStatement(exp, thenS)
             
         case parser.CompoundStatement(block=block):
-            typeCheckBlock(block, symbolTable)
+            typeCheckBlock(block, symbolTable, functionParentName)
 
         case parser.NullStatement():
             pass
 
 
-def typeCheckBlock(block, symbolTable):
+def typeCheckBlock(block, symbolTable, functionParentName):
     if block.blockItemList:
         for i in block.blockItemList:
             match i:
@@ -391,7 +406,7 @@ def typeCheckBlock(block, symbolTable):
                     typeCheckDeclaration(dec, symbolTable, True)
                     
                 case parser.S(statement=statement):
-                    typeCheckStatement(statement, symbolTable)
+                    typeCheckStatement(statement, symbolTable, functionParentName)
                     
         
 def typeCheckFunctionDeclaration(funDec, symbolTable):
@@ -437,7 +452,7 @@ def typeCheckFunctionDeclaration(funDec, symbolTable):
             #print(type(paramType))
             symbolTable[paramName] = Entry(paramName, LocalAttributes(), paramType)
         
-        typeCheckBlock(funDec.block, symbolTable)
+        typeCheckBlock(funDec.block, symbolTable, funDec.iden)
     
 
 def typeCheckProgram(pro):
