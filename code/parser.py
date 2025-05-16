@@ -110,7 +110,7 @@ class FunType(Type):
         self.retType = retType
     
     def __str__(self):
-        return "FunType: ParamTypes: {self.paramTypes} RetType: {self.retType}".format(self=self)
+        return "FunType: ParamTypes: {self.paramTypes} Return Type: {self.retType}".format(self=self)
 
 
 class StorageType(Enum):
@@ -243,7 +243,7 @@ class Constant_Expression(Expression):
     
     def __str__(self):
         #super().__str__()
-        return "{self.const}".format(self=self)
+        return "({self.const} RetType: {self.retType})".format(self=self)
 
 class Cast_Expression(Expression):
     def __init__(self, targetType, exp, retType = None):
@@ -253,7 +253,7 @@ class Cast_Expression(Expression):
 
 
     def __str__(self):
-        return "({self.targetType}) {self.exp}".format(self=self)
+        return "(({self.targetType}) {self.exp} RetType: {self.retType})".format(self=self)
 
 class Unary_Expression(Expression):
     def __init__(self, operator, expression, retType = None):
@@ -263,7 +263,7 @@ class Unary_Expression(Expression):
 
     def __str__(self):
         #super().__str__()
-        return "Unary Expression: Operator: {self.operator}Expression: {self.expression}".format(self=self)
+        return "(Unary Expression: Operator: {self.operator}Expression: {self.expression} RetType: {self.retType})".format(self=self)
 
 class Binary_Expression(Expression):
     def __init__(self, operator, left, right, retType = None):
@@ -274,7 +274,7 @@ class Binary_Expression(Expression):
 
     def __str__(self):
         #super().__str__()
-        return "Binary Expression: Operator: {self.operator} Left: {self.left} Right: {self.right}".format(self=self)
+        return "(Binary Expression: Operator: {self.operator} Left: {self.left} Right: {self.right} RetType: {self.retType})".format(self=self)
     
 
 class Conditional_Expression(Expression):
@@ -285,7 +285,7 @@ class Conditional_Expression(Expression):
         self.retType = retType
     
     def __str__(self):
-        return "{self.condExp} ? {self.thenExp} : {self.elseExp}".format(self=self)
+        return "({self.condExp} ? {self.thenExp} : {self.elseExp} RetType: {self.retType})".format(self=self)
         pass
 
 class Var_Expression(Expression):
@@ -294,7 +294,7 @@ class Var_Expression(Expression):
         self.retType = retType
 
     def __str__(self):
-        return "{self.identifier}".format(self=self)
+        return "({self.identifier} RetType: {self.retType})".format(self=self)
 
 class Assignment_Expression(Expression):
     def __init__(self, lvalue, exp, retType = None):
@@ -303,7 +303,7 @@ class Assignment_Expression(Expression):
         self.retType = retType
 
     def __str__(self):
-        return "{self.lvalue} = {self.exp}".format(self=self)
+        return "({self.lvalue} = {self.exp} RetType: {self.retType})".format(self=self)
 
 class FunctionCall_Exp(Expression):
     def __init__(self, identifer, argumentList=None, retType = None):
@@ -312,7 +312,7 @@ class FunctionCall_Exp(Expression):
         self.retType = retType
     
     def __str__(self):
-        return "{self.identifier}({self.argumentList})".format(self=self)
+        return "({self.identifier}({self.argumentList}) RetType: {self.retType})".format(self=self)
 
 class Const:
     pass

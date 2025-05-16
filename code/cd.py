@@ -156,11 +156,13 @@ if __name__ == "__main__":
 
 			typeChekedProgram, symbolTable = typeChecker.typeCheckProgram(res)
 
+			print(typeChekedProgram)
+			
 			print(symbolTable)
 
-			loo = loopLabeling.labelProgram(typeChekedProgram)
+			#loo = loopLabeling.labelProgram(typeChekedProgram)
 
-			print(loo)
+			#print(loo)
 
 			if LastStage == 'validate':
 				sys.exit(0)
