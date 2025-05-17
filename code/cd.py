@@ -147,19 +147,17 @@ if __name__ == "__main__":
 
 			print(pro.printNode(0))
 
-			#ASTDebug.printProgram(pro)			
-			#print(pro)
-
 			if LastStage == 'parse':
 				sys.exit(0)
 
 			res = semanticAnalysis.IdentifierResolution(pro)
 
-			print(res)
+			print(res.printNode(0))
+			
 
 			typeChekedProgram, symbolTable = typeChecker.typeCheckProgram(res)
 
-			print(typeChekedProgram)
+			print(typeChekedProgram.printNode(0))
 
 			print(symbolTable)
 

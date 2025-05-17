@@ -1,3 +1,55 @@
+AST Program:
+        VarDecl: NULL int a
+        VarDecl: NULL int a
+        FunDecl: STATIC sign_extend (i.0, expected.1, ) ParamTypes: (int, long, ) ReturnType: long
+                Declaration:
+                VarDecl: NULL long extended.2 = (long) i.0, int, long
+                Statement: Expression: extended.2, long = (long) (i.0, int GREATERTHAN 4, int, int) ? 3, int : 2, int, int, long, long
+                Statement: return (long) extended.2, long AND expected.1, long, int, long
+        VarDecl: EXTERN long r
+        VarDecl: EXTERN int q
+        VarDecl: EXTERN int i = (int) 2147483648, long, int
+        VarDecl: EXTERN long j = 2147483648, long
+        VarDecl: EXTERN int k = 2147483647, int
+        VarDecl: EXTERN long p = (long) 2147483647, int, long
+        FunDecl: NULL main () ParamTypes: () ReturnType: int
+                Declaration:
+                VarDecl: STATIC long r.3
+                Declaration:
+                VarDecl: STATIC int q.4
+                Declaration:
+                VarDecl: STATIC int i.5 = (int) 2147483648, long, int
+                Declaration:
+                VarDecl: STATIC long j.6 = 2147483648, long
+                Declaration:
+                VarDecl: STATIC int k.7 = 2147483647, int
+                Declaration:
+                VarDecl: STATIC long p.8 = (long) 2147483647, int, long
+                Statement: while (1, int)
+                        Statement: break
+                Statement: do while (1, int)
+                        Statement: continue
+                Statement: for (, , )
+                        Statement: if (NOT sign_extend(10, int, 10, long, ), long, int)
+                                Statement: return 1, int
+                        Statement: if (NOT sign_extend(NEGATE 10, int, int, (long) (a, int GREATERTHAN 4, int, int) ? 3, int : 2, int, int, long, ), long, int)
+                                Statement: return 2, int
+                        Declaration:
+                        VarDecl: NULL long l.9 = (long) 100, int, long
+                        Statement: if (l.9, long NOTEQUAL 100, long, int)
+                                Statement: return 3, int
+                Statement: return 0, int
+
+
+
+
+
+
+
+
+
+
+
 AST Program: [StorageType.NULL int a = None, StorageType.NULL int a = None, Function: StorageType.STATIC FunType: ParamTypes: [int, long] Return Type: long sign_extend (['i.0', 'expected.1']) Block: [Declaration: StorageType.NULL long extended.2 = ((long) (i.0 RetType: int) RetType: long), Statement: ((extended.2 RetType: long) = ((long) ((Binary Expression: Operator: BinopType.GREATERTHAN Left: (i.0 RetType: int) Right: (4 RetType: int) RetType: int) ? (3 RetType: int) : (2 RetType: int) RetType: int) RetType: long) RetType: long), Statement: return ((long) (Binary Expression: Operator: BinopType.AND Left: (extended.2 RetType: long) Right: (expected.1 RetType: long) RetType: int) RetType: long)], StorageType.EXTERN long r = None, StorageType.EXTERN int q = None, StorageType.EXTERN int i = ((int) (2147483648L RetType: long) RetType: int), StorageType.EXTERN long j = (2147483648L RetType: long), StorageType.EXTERN int k = (2147483647 RetType: int), StorageType.EXTERN long p = ((long) (2147483647 RetType: int) RetType: long), Function: StorageType.NULL FunType: ParamTypes: [] Return Type: int main ([]) Block: [Declaration: StorageType.STATIC long r.3 = None, Declaration: StorageType.STATIC int q.4 = None, Declaration: StorageType.STATIC int i.5 = ((int) (2147483648L RetType: long) RetType: int), Declaration: StorageType.STATIC long j.6 = (2147483648L RetType: long), Declaration: StorageType.STATIC int k.7 = (2147483647 RetType: int), Declaration: StorageType.STATIC long p.8 = ((long) (2147483647 RetType: int) RetType: long), Statement: for None (Declaration: StorageType.NULL int m.9 = (0 RetType: int) ; (Binary Expression: Operator: BinopType.LESSTHAN Left: (m.9 RetType: int) Right: (4 RetType: int) RetType: int) ; ((m.9 RetType: int) = (Binary Expression: Operator: BinopType.ADD Left: (m.9 RetType: int) Right: (1 RetType: int) RetType: int) RetType: int)) thenS: Block: None, Statement: if ((Unary Expression: Operator: UnopType.NOTExpression: (sign_extend([(10 RetType: int), (10L RetType: long)]) RetType: long) RetType: int)) thenS: Block: [Statement: return (1 RetType: int)] elseS: None, Statement: if ((Unary Expression: Operator: UnopType.NOTExpression: (sign_extend([(Unary Expression: Operator: UnopType.NEGATEExpression: (10 RetType: int) RetType: int), ((long) ((Binary Expression: Operator: BinopType.GREATERTHAN Left: (a RetType: int) Right: (4 RetType: int) RetType: int) ? (3 RetType: int) : (2 RetType: int) RetType: int) RetType: long)]) RetType: long) RetType: int)) thenS: Block: [Statement: return (2 RetType: int)] elseS: None, Declaration: StorageType.NULL long l.10 = ((long) (100 RetType: int) RetType: long), Statement: if ((Binary Expression: Operator: BinopType.NOTEQUAL Left: (l.10 RetType: long) Right: (100L RetType: long) RetType: int)) thenS: Block: [Statement: return (3 RetType: int)] elseS: None, Statement: return (0 RetType: int)]]
 
 

@@ -463,11 +463,13 @@ class Constant_Expression(Expression, Node):
         return "({self.const} RetType: {self.retType})".format(self=self)
     
     def printNode(self, level):
-        output = ''
+        output = '('
         output += self.const.printNode(level)
 
         if self.retType:
-            output +=  ', ' + self.retType.printNode(level)
+            output +=  ' : ' + self.retType.printNode(level)
+
+        output += ")"
 
         return output
     
@@ -483,14 +485,15 @@ class Cast_Expression(Expression, Node):
         return "(({self.targetType}) {self.exp} RetType: {self.retType})".format(self=self)
     
     def printNode(self, level):
-        output = ""
+        output = "("
         output += "(" + self.targetType.printNode(level) + ") "
 
         output += self.exp.printNode(level)
 
         if self.retType:
-            output +=  ', ' + self.retType.printNode(level)
+            output +=  ' : ' + self.retType.printNode(level)
 
+        output += ")"
         return output
         #return super().printNode(level)
 
@@ -505,12 +508,13 @@ class Unary_Expression(Expression, Node):
         return "(Unary Expression: Operator: {self.operator}Expression: {self.expression} RetType: {self.retType})".format(self=self)
     
     def printNode(self, level):
-        output = ""
+        output = "("
         output += self.operator.printNode(level) + " "
         output += self.expression.printNode(level)
         if self.retType:
-            output +=  ', ' + self.retType.printNode(level)
+            output +=  ' : ' + self.retType.printNode(level)
 
+        output += ")"
         return output
 
 class Binary_Expression(Expression, Node):
@@ -525,7 +529,7 @@ class Binary_Expression(Expression, Node):
         return "(Binary Expression: Operator: {self.operator} Left: {self.left} Right: {self.right} RetType: {self.retType})".format(self=self)
     
     def printNode(self, level):
-        output = ""
+        output = "("
         
         output += self.left.printNode(level) + " "
 
@@ -534,8 +538,9 @@ class Binary_Expression(Expression, Node):
         output += self.right.printNode(level)
 
         if self.retType:
-            output +=  ', ' + self.retType.printNode(level)
+            output +=  ' : ' + self.retType.printNode(level)
 
+        output += ")"
         return output
     
 
@@ -551,7 +556,7 @@ class Conditional_Expression(Expression, Node):
         pass
 
     def printNode(self, level):
-        output = ""
+        output = "("
         
         output += "(" + self.condExp.printNode(level) + ") ? "
 
@@ -560,8 +565,9 @@ class Conditional_Expression(Expression, Node):
         output += self.elseExp.printNode(level)
 
         if self.retType:
-            output +=  ', ' + self.retType.printNode(level)
+            output +=  ' : ' + self.retType.printNode(level)
 
+        output += ")"
         return output
 
 class Var_Expression(Expression, Node):
@@ -573,17 +579,16 @@ class Var_Expression(Expression, Node):
         return "({self.identifier} RetType: {self.retType})".format(self=self)
     
     def printNode(self, level):
-        output = ""
+        output = "("
         
         output += self.identifier
 
         if self.retType:
-            output +=  ', ' + self.retType.printNode(level)
+            output +=  ' : ' + self.retType.printNode(level)
 
+        output += ")"
         return output
     
-        return "Ale"
-        return super().printNode(level)
 
 class Assignment_Expression(Expression, Node):
     def __init__(self, lvalue, exp, retType = None):
@@ -595,19 +600,19 @@ class Assignment_Expression(Expression, Node):
         return "({self.lvalue} = {self.exp} RetType: {self.retType})".format(self=self)
     
     def printNode(self, level):
-        output = ""
+        output = "("
         
         output += self.lvalue.printNode(level) + " = "
 
         output += self.exp.printNode(level)
 
         if self.retType:
-            output +=  ', ' + self.retType.printNode(level)
+            output +=  ' : ' + self.retType.printNode(level)
+
+        output += ")"
 
         return output
         
-        return "Ale"
-        return super().printNode(level)
 
 class FunctionCall_Exp(Expression, Node):
     def __init__(self, identifer, argumentList=None, retType = None):
@@ -619,7 +624,7 @@ class FunctionCall_Exp(Expression, Node):
         return "({self.identifier}({self.argumentList}) RetType: {self.retType})".format(self=self)
     
     def printNode(self, level):
-        output = ""
+        output = "("
         
         output += self.identifier
 
@@ -631,12 +636,11 @@ class FunctionCall_Exp(Expression, Node):
         output += ")"
                 
         if self.retType:
-            output +=  ', ' + self.retType.printNode(level)
+            output +=  ' : ' + self.retType.printNode(level)
 
+        output += ")"
         return output
     
-        return "Ale"
-        return super().printNode(level)
 
 class Const:
     pass
