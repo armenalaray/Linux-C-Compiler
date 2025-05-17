@@ -607,7 +607,12 @@ def typeCheckFunctionDeclaration(funDec, symbolTable):
 def typeCheckProgram(pro):
     symbolTable = {}
     if pro.declList:
+        declList = []
         for decl in pro.declList:
-            typeCheckDeclaration(decl, symbolTable, False)
+            d = typeCheckDeclaration(decl, symbolTable, False)
+            declList.append(d)
 
-    return pro, symbolTable
+        return parser.Program(declList), symbolTable
+    
+    return parser.Program(), symbolTable
+    
