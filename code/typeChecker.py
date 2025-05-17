@@ -442,7 +442,8 @@ def typeCheckDeclaration(dec, symbolTable, isBlockScope):
             return parser.VarDecl(variableDecl)
             
         case parser.FunDecl(funDecl = funDecl):
-            typeCheckFunctionDeclaration(funDecl, symbolTable)
+            funDecl = typeCheckFunctionDeclaration(funDecl, symbolTable)
+            return parser.FunDecl(funDecl)
 
 def typeCheckForInit(forInit, symbolTable):
     match forInit:
@@ -451,7 +452,9 @@ def typeCheckForInit(forInit, symbolTable):
                 print("Error: Invalid Storage class specifier in variable declaration in for init.")
                 sys.exit(1)
 
-            typeCheckVarDeclaration(varDecl, symbolTable, True)
+            varDecl = typeCheckVarDeclaration(varDecl, symbolTable, True)
+            #este esta bien
+            return parser.InitDecl(varDecl)
         
         case parser.InitExp(exp=exp):
             if exp:
@@ -468,30 +471,32 @@ def typeCheckStatement(statement, symbolTable, functionParentName):
         case parser.ContinueStatement():
             return parser.ContinueStatement()
 
-        case parser.ForStatement(forInit=forInit, condExp=condExp, postExp=postExp, statement=statement, identifier=identifier):
-            typeCheckForInit(forInit, symbolTable)
+        case parser.ForStatement(forInit=forInit, condExp=condExp, postExp=postExp, statement=statement):
+            f = typeCheckForInit(forInit, symbolTable)
             
+            c = None
             if condExp:
-                typeCheckExpression(condExp, symbolTable)
+                c = typeCheckExpression(condExp, symbolTable)
 
+            p = None
             if postExp:
-                typeCheckExpression(postExp, symbolTable)
+                p = typeCheckExpression(postExp, symbolTable)
 
-            typeCheckStatement(statement, symbolTable, functionParentName)
+            s = typeCheckStatement(statement, symbolTable, functionParentName)
 
-
+            return parser.ForStatement(f, s, c, p)
         
-        case parser.DoWhileStatement(statement=statement, condExp=condExp, identifier=id):
+        case parser.DoWhileStatement(statement=statement, condExp=condExp):
             statement = typeCheckStatement(statement, symbolTable, functionParentName)
             condExp = typeCheckExpression(condExp, symbolTable)
 
-            return parser.DoWhileStatement(statement, condExp, id)
+            return parser.DoWhileStatement(statement, condExp)
 
-        case parser.WhileStatement(condExp=condExp, statement=statement, identifier=id):
+        case parser.WhileStatement(condExp=condExp, statement=statement):
             condExp = typeCheckExpression(condExp, symbolTable)
             statement = typeCheckStatement(statement, symbolTable, functionParentName)
 
-            return parser.WhileStatement(condExp, statement, id)
+            return parser.WhileStatement(condExp, statement)
 
         case parser.ExpressionStmt(exp=exp):
             e = typeCheckExpression(exp, symbolTable)
@@ -515,22 +520,36 @@ def typeCheckStatement(statement, symbolTable, functionParentName):
             return parser.IfStatement(exp, thenS)
             
         case parser.CompoundStatement(block=block):
-            typeCheckBlock(block, symbolTable, functionParentName)
+            block = typeCheckBlock(block, symbolTable, functionParentName)
+            return parser.CompoundStatement(block)
 
         case parser.NullStatement():
-            pass
+            return parser.NullStatement()
+        
+        case _:
+            print("Error: Invalid Statement {0}".format(statement))
+            sys.exit(1)
 
 
 def typeCheckBlock(block, symbolTable, functionParentName):
+    
     if block.blockItemList:
-        for i in block.blockItemList:
-            match i:
+        
+        blockItemList = []
+
+        for item in block.blockItemList:
+            match item:
                 case parser.D(declaration=dec):
-                    typeCheckDeclaration(dec, symbolTable, True)
+                    dec = typeCheckDeclaration(dec, symbolTable, True)
+                    blockItemList.append(parser.D(dec))
                     
                 case parser.S(statement=statement):
-                    typeCheckStatement(statement, symbolTable, functionParentName)
-                    
+                    statement = typeCheckStatement(statement, symbolTable, functionParentName)
+                    blockItemList.append(parser.S(statement)) 
+                
+        return parser.Block(blockItemList)
+    
+    return parser.Block()      
         
 def typeCheckFunctionDeclaration(funDec, symbolTable):
     
@@ -576,10 +595,13 @@ def typeCheckFunctionDeclaration(funDec, symbolTable):
 
     if hasBody:
         for paramName, paramType in zip(funDec.paramNames, funType.paramTypes):
-            #print(type(paramType))
             symbolTable[paramName] = Entry(paramName, LocalAttributes(), paramType)
         
-        typeCheckBlock(funDec.block, symbolTable, funDec.iden)
+        block = typeCheckBlock(funDec.block, symbolTable, funDec.iden)
+
+        return parser.FunctionDecl(funDec.iden, funType, funDec.paramNames, block, funDec.storageClass)
+    
+    return parser.FunctionDecl(funDec.iden, funType, funDec.paramNames, None, funDec.storageClass)
     
 
 def typeCheckProgram(pro):

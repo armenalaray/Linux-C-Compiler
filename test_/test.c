@@ -33,6 +33,11 @@ int main(void)
     static int k = 2147483647;
     static long p = 2147483647;
 
+    for(int m = 0; m < 4; m = m + 1)
+    {
+
+    }
+
     /* Converting a positive or negative int to a long preserves its value */
     if (!sign_extend(10, 10l))
     {
