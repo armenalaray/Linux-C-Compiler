@@ -161,8 +161,9 @@ if __name__ == "__main__":
 
 			print(symbolTable)
 
-			#loo = loopLabeling.labelProgram(typeChekedProgram)
+			loo = loopLabeling.labelProgram(typeChekedProgram)
 
+			print(loo.printNode(0))
 			#print(loo)
 
 			if LastStage == 'validate':

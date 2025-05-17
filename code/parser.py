@@ -344,7 +344,10 @@ class BreakStatement(Statement, Node):
         return "break loopOwner: {self.identifier}".format(self=self)
     
     def printNode(self, level):
-        return "break"
+        output = "break "
+        if self.identifier:
+            output += "Loop Owner: " + self.identifier
+        return output
     
     
 
@@ -356,7 +359,10 @@ class ContinueStatement(Statement, Node):
         return "continue loopOwner: {self.identifier}".format(self=self)
     
     def printNode(self, level):
-        return "continue"
+        output = "continue "
+        if self.identifier:
+            output += "Loop Owner: " + self.identifier
+        return output
 
 class WhileStatement(Statement, Node):
     def __init__(self, condExp, statement, identifier=None):
@@ -369,13 +375,16 @@ class WhileStatement(Statement, Node):
     
     def printNode(self, level):
         output = ""
-        output += "while (" + self.condExp.printNode(level) + ")"
+        output += "while "
+
+        if self.identifier:
+            output += self.identifier
+
+        output += " (" + self.condExp.printNode(level) + ")"
         output += self.statement.printNode(level)
 
         return output
     
-        return ""
-        return super().printNode(level)
 
 class DoWhileStatement(Statement, Node):
     def __init__(self, statement, condExp, identifier=None):
@@ -387,8 +396,12 @@ class DoWhileStatement(Statement, Node):
         return "do {self.identifier} thenS: {self.statement} while ({self.condExp})".format(self=self)
     
     def printNode(self, level):
-        output = "do "
-        output += "while (" + self.condExp.printNode(level) + ")"
+        output = "do while "
+
+        if self.identifier:
+            output += self.identifier
+
+        output += " (" + self.condExp.printNode(level) + ")"
         output += self.statement.printNode(level)
 
         return output
@@ -407,7 +420,12 @@ class ForStatement(Statement, Node):
 
     def printNode(self, level):
         output = ""
-        output += "for (" + self.forInit.printNode(level) + ", "
+        output += "for "
+
+        if self.identifier:
+            output += self.identifier
+        
+        output += " (" + self.forInit.printNode(level) + ", "
         
         if self.condExp:
             output += self.condExp.printNode(level)

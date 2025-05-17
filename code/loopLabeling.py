@@ -79,19 +79,6 @@ def labelBlock(block, currentLabel):
 
     return parser.Block()
 
-    
-    blockItemList = []
-
-    for i in block.blockItemList:
-        match i:
-            case parser.D(declaration=dec):
-                blockItemList.append(parser.D(dec))
-                
-            case parser.S(statement=statement):
-                s = labelStatement(statement, currentLabel)
-                blockItemList.append(parser.S(s))
-
-    return parser.Block(blockItemList)
 
 def labelFunctionDeclaration(funDecl, currentLabel):
     #aqui solo tienes que checar el bloque
@@ -99,7 +86,7 @@ def labelFunctionDeclaration(funDecl, currentLabel):
     if funDecl.block:
         block = labelBlock(funDecl.block, currentLabel)
         
-    return parser.FunctionDecl(funDecl.iden, funDecl.paramList, block, funDecl.storageClass)
+    return parser.FunctionDecl(funDecl.iden, funDecl.funType, funDecl.paramNames, block, funDecl.storageClass)
 
 def labelDeclaration(decl):
     match decl:
