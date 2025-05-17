@@ -22,7 +22,7 @@ class Program(Node):
         #print("AST Program:")
         output = 'AST Program:\n'
         for i in self.declList:
-            output += i.printNode(level + 1)
+            output += i.printNode(level + 1) + "\n"
         
         return output
 
@@ -36,14 +36,15 @@ class Block(Node):
     def printNode(self, level):
         print(level)
         output = ''
-        for i in self.blockItemList:
-            l = level
-            
-            while l > 0:
-                output += '\t'
-                l -= 1
+        if self.blockItemList:
+            for i in self.blockItemList:
+                l = level
+                
+                while l > 0:
+                    output += '\t'
+                    l -= 1
 
-            output += i.printNode(level)
+                output += i.printNode(level) + "\n"
 
         return output
 
@@ -62,7 +63,7 @@ class S(BlockItem, Node):
     
     def printNode(self, level):
         output = ''
-        output += "Statement: " + self.statement.printNode(level) + "\n"
+        output += "Statement: " + self.statement.printNode(level)
         return output
         
         
@@ -101,7 +102,7 @@ class VarDecl(Decl, Node):
             output += '\t'
             l -= 1
 
-        output += "VarDecl: " + self.variableDecl.printNode(level) + "\n"
+        output += "VarDecl: " + self.variableDecl.printNode(level)
 
         return output
 
@@ -171,7 +172,6 @@ class FunctionDecl(Node):
     
     def printNode(self, level):
         output = ''
-        output += self.funType.printNode(level + 1)
 
         if self.storageClass:
             output += self.storageClass.printNode(level + 1)    
@@ -181,7 +181,11 @@ class FunctionDecl(Node):
         output += ' ('
         for i in self.paramNames:
             output += i + ', '
-        output += ')\n'
+        output += ') '
+
+        output += self.funType.printNode(level + 1)
+
+        output += '\n'
 
         output += self.block.printNode(level + 1)
 
@@ -213,6 +217,20 @@ class FunType(Type, Node):
     
     def __str__(self):
         return "FunType: ParamTypes: {self.paramTypes} Return Type: {self.retType}".format(self=self)
+    
+    def printNode(self, level):
+        output = ""
+
+        output += "ParamTypes: ("
+        for i in self.paramTypes:
+            output += i.printNode(level) + ", "
+            pass
+
+        output += ") ReturnType: "
+
+        output += self.retType.printNode(level)
+        return output
+        return super().printNode(level)
 
 
 class StorageType(Enum):
@@ -242,6 +260,12 @@ class InitDecl(ForInit, Node):
     def __str__(self):
         return "Declaration: {self.varDecl}".format(self=self)
 
+    def printNode(self, level):
+        output = ""
+        output += self.varDecl.printNode(level)
+        return output
+    
+        return super().printNode(level)
 
 class InitExp(ForInit, Node):
     def __init__(self, exp=None):
@@ -249,6 +273,15 @@ class InitExp(ForInit, Node):
     
     def __str__(self):
         return "InitExp: {self.exp}".format(self=self)
+    
+    def printNode(self, level):
+        output = ""
+        if self.exp:
+            output += self.exp.printNode(level)
+
+        return output
+        
+        return super().printNode(level)
 
 class Statement:
     pass
@@ -262,6 +295,18 @@ class IfStatement(Statement, Node):
     def __str__(self):
         return "if ({self.exp}) thenS: {self.thenS} elseS: {self.elseS}".format(self=self)
 
+    def printNode(self, level):
+        output = ""
+        output += "if (" + self.exp.printNode(level) + ")"
+        output += self.thenS.printNode(level)
+
+        if self.elseS:
+            output += self.elseS.printNode(level)
+
+        return output
+    
+        #return super().printNode(level)
+
 
 class ReturnStmt(Statement, Node):
     def __init__(self, exp):
@@ -270,6 +315,12 @@ class ReturnStmt(Statement, Node):
     def __str__(self):
         #super().__str__()
         return "return {self.expression}".format(self=self)
+    
+    def printNode(self, level):
+        output = ""
+        output += "return " + self.expression.printNode(level)
+        return output
+    
 
 class ExpressionStmt(Statement, Node):
     def __init__(self, exp):
@@ -277,6 +328,12 @@ class ExpressionStmt(Statement, Node):
     
     def __str__(self):
         return "{self.exp}".format(self=self)
+    
+    def printNode(self, level):
+        output = ""
+        output += "Expression: " + self.exp.printNode(level)
+        return output
+    
 
 class BreakStatement(Statement, Node):
     def __init__(self, identifier=None):
@@ -284,6 +341,11 @@ class BreakStatement(Statement, Node):
     
     def __str__(self):
         return "break loopOwner: {self.identifier}".format(self=self)
+    
+    def printNode(self, level):
+        return "break"
+    
+    
 
 class ContinueStatement(Statement, Node):
     def __init__(self, identifier=None):
@@ -291,6 +353,9 @@ class ContinueStatement(Statement, Node):
     
     def __str__(self):
         return "continue loopOwner: {self.identifier}".format(self=self)
+    
+    def printNode(self, level):
+        return "continue"
 
 class WhileStatement(Statement, Node):
     def __init__(self, condExp, statement, identifier=None):
@@ -300,6 +365,16 @@ class WhileStatement(Statement, Node):
     
     def __str__(self):
         return "while {self.identifier} ({self.condExp}) thenS: {self.statement}".format(self=self)
+    
+    def printNode(self, level):
+        output = ""
+        output += "while (" + self.condExp.printNode(level) + ")"
+        output += self.statement.printNode(level)
+
+        return output
+    
+        return ""
+        return super().printNode(level)
 
 class DoWhileStatement(Statement, Node):
     def __init__(self, statement, condExp, identifier=None):
@@ -309,6 +384,14 @@ class DoWhileStatement(Statement, Node):
     
     def __str__(self):
         return "do {self.identifier} thenS: {self.statement} while ({self.condExp})".format(self=self)
+    
+    def printNode(self, level):
+        output = "do "
+        output += "while (" + self.condExp.printNode(level) + ")"
+        output += self.statement.printNode(level)
+
+        return output
+        return super().printNode(level)
 
 class ForStatement(Statement, Node):
     def __init__(self, forInit, statement, condExp=None, postExp=None, identifier=None):
@@ -321,6 +404,24 @@ class ForStatement(Statement, Node):
     def __str__(self):
         return "for {self.identifier} ({self.forInit} ; {self.condExp} ; {self.postExp}) thenS: {self.statement}".format(self=self)
 
+    def printNode(self, level):
+        output = ""
+        output += "for (" + self.forInit.printNode(level) + ", "
+        
+        if self.condExp:
+            output += self.condExp.printNode(level)
+            
+        output += ", " 
+        
+        if self.postExp:
+            output += self.postExp.printNode(level) 
+        
+        output += ")"
+
+        output += self.statement.printNode(level)
+
+        return output
+        
 
 class CompoundStatement(Statement, Node):
     def __init__(self, block):
@@ -328,11 +429,19 @@ class CompoundStatement(Statement, Node):
     
     def __str__(self):
         return "Block: {self.block}".format(self=self)
+    
+    def printNode(self, level):
+        output = ""
+        output += "\n" + self.block.printNode(level + 1)
+        return output
 
 
 class NullStatement(Statement, Node):
     def __init__(self):
         pass
+
+    def printNode(self, level):
+        return "NullStatement;"
 
 class Expression:
     retType = None
@@ -354,10 +463,10 @@ class Constant_Expression(Expression, Node):
     
     def printNode(self, level):
         output = ''
-        output += self.const.printNode(level + 1) + ', '
+        output += self.const.printNode(level)
 
         if self.retType:
-            output += self.retType.printNode(level + 1)
+            output +=  ', ' + self.retType.printNode(level)
 
         return output
     
@@ -371,6 +480,18 @@ class Cast_Expression(Expression, Node):
 
     def __str__(self):
         return "(({self.targetType}) {self.exp} RetType: {self.retType})".format(self=self)
+    
+    def printNode(self, level):
+        output = ""
+        output += "(" + self.targetType.printNode(level) + ") "
+
+        output += self.exp.printNode(level)
+
+        if self.retType:
+            output +=  ', ' + self.retType.printNode(level)
+
+        return output
+        #return super().printNode(level)
 
 class Unary_Expression(Expression, Node):
     def __init__(self, operator, expression, retType = None):
@@ -381,6 +502,15 @@ class Unary_Expression(Expression, Node):
     def __str__(self):
         #super().__str__()
         return "(Unary Expression: Operator: {self.operator}Expression: {self.expression} RetType: {self.retType})".format(self=self)
+    
+    def printNode(self, level):
+        output = ""
+        output += self.operator.printNode(level)
+        output += self.expression.printNode(level)
+        if self.retType:
+            output +=  ', ' + self.retType.printNode(level)
+
+        return output
 
 class Binary_Expression(Expression, Node):
     def __init__(self, operator, left, right, retType = None):
@@ -392,6 +522,20 @@ class Binary_Expression(Expression, Node):
     def __str__(self):
         #super().__str__()
         return "(Binary Expression: Operator: {self.operator} Left: {self.left} Right: {self.right} RetType: {self.retType})".format(self=self)
+    
+    def printNode(self, level):
+        output = ""
+        
+        output += self.left.printNode(level) + " "
+
+        output += self.operator.printNode(level) + " "
+        
+        output += self.right.printNode(level)
+
+        if self.retType:
+            output +=  ', ' + self.retType.printNode(level)
+
+        return output
     
 
 class Conditional_Expression(Expression, Node):
@@ -405,6 +549,20 @@ class Conditional_Expression(Expression, Node):
         return "({self.condExp} ? {self.thenExp} : {self.elseExp} RetType: {self.retType})".format(self=self)
         pass
 
+    def printNode(self, level):
+        output = ""
+        
+        output += "(" + self.condExp.printNode(level) + ") ? "
+
+        output += self.thenExp.printNode(level) + " : "
+        
+        output += self.elseExp.printNode(level)
+
+        if self.retType:
+            output +=  ', ' + self.retType.printNode(level)
+
+        return output
+
 class Var_Expression(Expression, Node):
     def __init__(self, identifier, retType = None):
         self.identifier = identifier
@@ -412,6 +570,19 @@ class Var_Expression(Expression, Node):
 
     def __str__(self):
         return "({self.identifier} RetType: {self.retType})".format(self=self)
+    
+    def printNode(self, level):
+        output = ""
+        
+        output += self.identifier
+
+        if self.retType:
+            output +=  ', ' + self.retType.printNode(level)
+
+        return output
+    
+        return "Ale"
+        return super().printNode(level)
 
 class Assignment_Expression(Expression, Node):
     def __init__(self, lvalue, exp, retType = None):
@@ -421,6 +592,21 @@ class Assignment_Expression(Expression, Node):
 
     def __str__(self):
         return "({self.lvalue} = {self.exp} RetType: {self.retType})".format(self=self)
+    
+    def printNode(self, level):
+        output = ""
+        
+        output += self.lvalue.printNode(level) + " = "
+
+        output += self.exp.printNode(level)
+
+        if self.retType:
+            output +=  ', ' + self.retType.printNode(level)
+
+        return output
+        
+        return "Ale"
+        return super().printNode(level)
 
 class FunctionCall_Exp(Expression, Node):
     def __init__(self, identifer, argumentList=None, retType = None):
@@ -430,6 +616,26 @@ class FunctionCall_Exp(Expression, Node):
     
     def __str__(self):
         return "({self.identifier}({self.argumentList}) RetType: {self.retType})".format(self=self)
+    
+    def printNode(self, level):
+        output = ""
+        
+        output += self.identifier
+
+        output += "("
+        if self.argumentList:
+            for i in self.argumentList:
+                output += i.printNode(level) + ", "
+
+        output += ")"
+                
+        if self.retType:
+            output +=  ', ' + self.retType.printNode(level)
+
+        return output
+    
+        return "Ale"
+        return super().printNode(level)
 
 class Const:
     pass
@@ -485,6 +691,9 @@ class UnaryOperator(Operator, Node):
     def __str__(self):
         #super().__str__()
         return "{self.operator}".format(self=self) 
+    
+    def printNode(self, level):
+        return self.operator.name
 
 class BinaryOperator(Operator, Node):
     def __init__(self, operator):
@@ -493,6 +702,9 @@ class BinaryOperator(Operator, Node):
     def __str__(self):
         #super().__str__()
         return "{self.operator}".format(self=self) 
+    
+    def printNode(self, level):
+        return self.operator.name
 
 def takeToken(tokenList):
     if(tokenList != []):
