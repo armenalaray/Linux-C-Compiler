@@ -32,6 +32,20 @@ class Block(Node):
     
     def __str__(self):
         return "{self.blockItemList}".format(self=self)
+    
+    def printNode(self, level):
+        print(level)
+        output = ''
+        for i in self.blockItemList:
+            l = level
+            
+            while l > 0:
+                output += '\t'
+                l -= 1
+
+            output += i.printNode(level)
+
+        return output
 
 class BlockItem:
     pass
@@ -45,6 +59,12 @@ class S(BlockItem, Node):
 
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self, level):
+        output = ''
+        output += "Statement: " + self.statement.printNode(level) + "\n"
+        return output
+        
         
 class D(BlockItem, Node):
     def __init__(self, declaration):
@@ -55,6 +75,11 @@ class D(BlockItem, Node):
 
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self, level):
+        output = ''
+        output += "Declaration:\n" + self.declaration.printNode(level)
+        return output
 
 class Decl:
     pass
@@ -76,7 +101,7 @@ class VarDecl(Decl, Node):
             output += '\t'
             l -= 1
 
-        output += "VarDecl: " + self.variableDecl.printNode(level + 1) + "\n"
+        output += "VarDecl: " + self.variableDecl.printNode(level) + "\n"
 
         return output
 
@@ -90,6 +115,17 @@ class FunDecl(Decl, Node):
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self, level):
+        l = level
+        output = ''
+        while l > 0:
+            output += '\t'
+            l -= 1
+
+        output += "FunDecl: " + self.funDecl.printNode(level)
+
+        return output
 
 class VariableDecl(Node):
     def __init__(self, identifier, varType, exp=None, storageClass=None):
@@ -104,14 +140,14 @@ class VariableDecl(Node):
     def printNode(self, level):
         output = ''
         if self.storageClass:
-            output += self.storageClass.printNode(level + 1) + " "
+            output += self.storageClass.printNode(level) + " "
             
-        output += self.varType.printNode(level + 1) + " "
+        output += self.varType.printNode(level) + " "
         
-        output += self.identifier + " = "
+        output += self.identifier
 
         if self.exp:
-            output += self.exp.printNode(level + 1)
+            output +=  " = " + self.exp.printNode(level)
 
         #output = "{self.storageClass} {self.varType} {self.identifier} = {self.exp}".format(self=self)
 
@@ -132,6 +168,25 @@ class FunctionDecl(Node):
 
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self, level):
+        output = ''
+        output += self.funType.printNode(level + 1)
+
+        if self.storageClass:
+            output += self.storageClass.printNode(level + 1)    
+
+        output += " " + self.iden
+
+        output += ' ('
+        for i in self.paramNames:
+            output += i + ', '
+        output += ')\n'
+
+        output += self.block.printNode(level + 1)
+
+        return output
+        
 
 class Type:
     def __repr__(self):
@@ -306,7 +361,6 @@ class Constant_Expression(Expression, Node):
 
         return output
     
-        return super().printNode(level)
 
 class Cast_Expression(Expression, Node):
     def __init__(self, targetType, exp, retType = None):
