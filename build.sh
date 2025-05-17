@@ -4,7 +4,7 @@
 # My compiler
 
 
-lastStage="--validate"
+lastStage="--parse"
 #noLink="-c"
 
 

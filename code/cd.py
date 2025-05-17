@@ -11,7 +11,7 @@ import typeChecker
 import loopLabeling
 import ReplacePseudoRegisters
 import FixingUpInstructions
-
+import ASTDebug
 
 """
 def lex(file):
@@ -144,8 +144,11 @@ if __name__ == "__main__":
 				#raise Exception("Syntax Error Extra code inside program. {0}".format(tokenList))
 				print("Syntax Error Extra code inside program. {0}".format(tokenList))
 				sys.exit(1)
-			
-			print(pro)
+
+			print(pro.printNode(0))
+
+			#ASTDebug.printProgram(pro)			
+			#print(pro)
 
 			if LastStage == 'parse':
 				sys.exit(0)
@@ -157,7 +160,7 @@ if __name__ == "__main__":
 			typeChekedProgram, symbolTable = typeChecker.typeCheckProgram(res)
 
 			print(typeChekedProgram)
-			
+
 			print(symbolTable)
 
 			#loo = loopLabeling.labelProgram(typeChekedProgram)

@@ -207,10 +207,12 @@ def typeCheckExpression(exp, symbolTable):
         case parser.Conditional_Expression(condExp=condExp, thenExp=thenExp, elseExp=elseExp):
 
             condExp = typeCheckExpression(condExp, symbolTable)
+            
             thenExp = typeCheckExpression(thenExp, symbolTable)
             elseExp = typeCheckExpression(elseExp, symbolTable)
 
-            print("thenExp: ", type(thenExp.retType), "elseExp: ", type(elseExp.retType))
+            #print("thenExp: ", type(thenExp.retType), "elseExp: ", type(elseExp.retType))
+
             commonType = getCommonType(thenExp.retType, elseExp.retType)
 
             thenExp = convertTo(thenExp, commonType)

@@ -1,3 +1,42 @@
+AST Program: [StorageType.NULL int a = None, StorageType.NULL int a = None, Function: StorageType.STATIC FunType: ParamTypes: [int, long] Return Type: long sign_extend (['i.0', 'expected.1']) Block: [Declaration: StorageType.NULL long extended.2 = ((long) (i.0 RetType: int) RetType: long), Statement: ((extended.2 RetType: long) = ((long) ((Binary Expression: Operator: BinopType.GREATERTHAN Left: (i.0 RetType: int) Right: (4 RetType: int) RetType: int) ? (3 RetType: int) : (2 RetType: int) RetType: int) RetType: long) RetType: long), Statement: return ((long) (Binary Expression: Operator: BinopType.AND Left: (extended.2 RetType: long) Right: (expected.1 RetType: long) RetType: int) RetType: long)], StorageType.EXTERN long r = None, StorageType.EXTERN int q = None, StorageType.EXTERN int i = ((int) (2147483648L RetType: long) RetType: int), StorageType.EXTERN long j = (2147483648L RetType: long), StorageType.EXTERN int k = (2147483647 RetType: int), StorageType.EXTERN long p = ((long) (2147483647 RetType: int) RetType: long), Function: StorageType.NULL FunType: ParamTypes: [] Return Type: int main ([]) Block: [Declaration: StorageType.STATIC long r.3 = None, Declaration: StorageType.STATIC int q.4 = None, Declaration: StorageType.STATIC int i.5 = ((int) (2147483648L RetType: long) RetType: int), Declaration: StorageType.STATIC long j.6 = (2147483648L RetType: long), Declaration: StorageType.STATIC int k.7 = (2147483647 RetType: int), Declaration: StorageType.STATIC long p.8 = ((long) (2147483647 RetType: int) RetType: long), Statement: for None (Declaration: StorageType.NULL int m.9 = (0 RetType: int) ; (Binary Expression: Operator: BinopType.LESSTHAN Left: (m.9 RetType: int) Right: (4 RetType: int) RetType: int) ; ((m.9 RetType: int) = (Binary Expression: Operator: BinopType.ADD Left: (m.9 RetType: int) Right: (1 RetType: int) RetType: int) RetType: int)) thenS: Block: None, Statement: if ((Unary Expression: Operator: UnopType.NOTExpression: (sign_extend([(10 RetType: int), (10L RetType: long)]) RetType: long) RetType: int)) thenS: Block: [Statement: return (1 RetType: int)] elseS: None, Statement: if ((Unary Expression: Operator: UnopType.NOTExpression: (sign_extend([(Unary Expression: Operator: UnopType.NEGATEExpression: (10 RetType: int) RetType: int), ((long) ((Binary Expression: Operator: BinopType.GREATERTHAN Left: (a RetType: int) Right: (4 RetType: int) RetType: int) ? (3 RetType: int) : (2 RetType: int) RetType: int) RetType: long)]) RetType: long) RetType: int)) thenS: Block: [Statement: return (2 RetType: int)] elseS: None, Declaration: StorageType.NULL long l.10 = ((long) (100 RetType: int) RetType: long), Statement: if ((Binary Expression: Operator: BinopType.NOTEQUAL Left: (l.10 RetType: long) Right: (100L RetType: long) RetType: int)) thenS: Block: [Statement: return (3 RetType: int)] elseS: None, Statement: return (0 RetType: int)]]
+
+
+
+
+{'a': a int InitialVal: <typeChecker.Tentative object at 0x7f9c3bf31820> Global: True, 'sign_extend': sign_extend FunType: ParamTypes: [int, long] Return Type: long Defined: True Global: False, 'i.0': i.0 int <typeChecker.LocalAttributes object at 0x7f9c3bf31940>, 'expected.1': expected.1 long <typeChecker.LocalAttributes object at 0x7f9c3bf319a0>, 'extended.2': extended.2 long <typeChecker.LocalAttributes object at 0x7f9c3bf31910>, 'r': r long InitialVal: <typeChecker.NoInitializer object at 0x7f9c3bf31f70> Global: True, 'q': q int InitialVal: <typeChecker.NoInitializer object at 0x7f9c3bf32090> Global: True, 'i': i int InitialVal: -2147483648 Global: True, 'j': j long InitialVal: 2147483648 Global: True, 'k': k int InitialVal: 2147483647 Global: True, 'p': p long InitialVal: 2147483647 Global: True, 'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'r.3': r.3 long InitialVal: 0 Global: False, 'q.4': q.4 int InitialVal: 0 Global: False, 'i.5': i.5 int InitialVal: -2147483648 Global: False, 'j.6': j.6 long InitialVal: 2147483648 Global: False, 'k.7': k.7 int InitialVal: 2147483647 Global: False, 'p.8': p.8 long InitialVal: 2147483647 Global: False, 'm.9': m.9 int <typeChecker.LocalAttributes object at 0x7f9c3bf0db80>, 'l.10': l.10 long <typeChecker.LocalAttributes object at 0x7f9c3bf38320>}
+
+
+
+Statement: 
+(
+    #left
+    (extended.2 RetType: long) = 
+    #right
+    (
+        (long) (    
+                    #cond Exp
+                    (
+                        Binary Expression: Operator: BinopType.GREATERTHAN 
+                            Left: (i.0 
+                            RetType: int) 
+                            Right: (4 
+                            RetType: int) 
+
+                    RetType: int) 
+
+                    ? 
+                    #then Exp
+                    (3 RetType: int) 
+                    :
+                    #else Exp 
+                    (2 RetType: int) 
+                
+                #Conditional Expression int
+                RetType: int) 
+        RetType: long) 
+    
+RetType: long)
+
 
  = 2^31
 
