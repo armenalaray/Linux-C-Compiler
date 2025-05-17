@@ -230,8 +230,41 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
 
     if varDecl.exp:
         match varDecl.exp:
-            case parser.Constant_Expression(intValue = intValue):
-                initialValue = Initial(intValue)
+            case parser.Constant_Expression(const = const):
+                match const:
+                    case parser.ConstLong(int = int):
+
+                        varDecl.exp = parser.Constant_Expression(const, parser.LongType())
+                        exp = convertTo(varDecl.exp, varDecl.varType)
+                        varDecl.exp = exp
+
+                        match varDecl.varType:
+                            case parser.IntType():
+                                #Long a int type
+                                initialValue = Initial(IntInit(int))           
+
+                            case parser.LongType():
+                                #long a long type
+                                initialValue = Initial(LongInit(int))
+                                                    
+
+                    case parser.ConstInt(int = int):
+                        
+                        varDecl.exp = parser.Constant_Expression(const, parser.IntType())
+                        exp = convertTo(varDecl.exp, varDecl.varType)
+                        varDecl.exp = exp
+
+                        match varDecl.varType:
+                            case parser.IntType():
+                                #Int a Int type
+                                initialValue = Initial(IntInit(int))
+                                
+                            case parser.LongType():
+                                #Int a Long type
+                                initialValue = Initial(LongInit(int))
+    
+                #NOTE:Esto esta mal
+                #initialValue = Initial(intValue)
             
             case _:
                 print("Error: Non constant initializer.")
@@ -288,8 +321,11 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
                     initialValue = Tentative()
 
     vattr = StaticAttributes(initialVal=initialValue, global_=global_)
-
     symbolTable[varDecl.identifier] = Entry(varDecl.identifier, vattr, varDecl.varType)
+
+    return parser.VariableDecl(varDecl.identifier, varDecl.varType, varDecl.exp, varDecl.storageClass)
+
+
     
 
 def typeCheckLocalVarDecl(varDecl, symbolTable):
@@ -312,22 +348,28 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
             
         else:
             symbolTable[varDecl.identifier] = Entry(varDecl.identifier, StaticAttributes(NoInitializer(), global_=True), varDecl.varType)
+
+        return parser.VariableDecl(varDecl.identifier, varDecl.varType, varDecl.exp, varDecl.storageClass)
     
     elif varDecl.storageClass.storageClass == parser.StorageType.STATIC:
+        
         initialValue = None
+        
         if varDecl.exp:
             match varDecl.exp:
                 case parser.Constant_Expression(const = const):
-                    print(type(const))
+                    #print(type(const))
+                    
                     match const:
                         case parser.ConstLong(int = int):
-                            print(int)
+
+                            varDecl.exp = parser.Constant_Expression(const, parser.LongType())
+                            exp = convertTo(varDecl.exp, varDecl.varType)
+                            varDecl.exp = exp
+
                             match varDecl.varType:
                                 case parser.IntType():
                                     #Long a int type
-                                    varDecl.exp = parser.Constant_Expression(const, parser.LongType())
-                                    exp = convertTo(varDecl.exp, varDecl.varType)
-                                    varDecl.exp = exp
                                     initialValue = Initial(IntInit(int))           
 
                                 case parser.LongType():
@@ -336,6 +378,11 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
                                                      
 
                         case parser.ConstInt(int = int):
+                            
+                            varDecl.exp = parser.Constant_Expression(const, parser.IntType())
+                            exp = convertTo(varDecl.exp, varDecl.varType)
+                            varDecl.exp = exp
+
                             match varDecl.varType:
                                 case parser.IntType():
                                     #Int a Int type
@@ -353,9 +400,21 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
                     sys.exit(1)
                     
         else:
-            initialValue = Initial("0")
+            match varDecl.varType:
+                case parser.IntType():
+                    #Int a Int type
+                    initialValue = Initial(IntInit(0))
+                    
+                case parser.LongType():
+                    #Int a Long type
+                    initialValue = Initial(LongInit(0))
+
+            #initialValue = Initial("0")
         
         symbolTable[varDecl.identifier] = Entry(varDecl.identifier, StaticAttributes(initialVal=initialValue, global_=False), varDecl.varType)
+
+        return parser.VariableDecl(varDecl.identifier, varDecl.varType, varDecl.exp, varDecl.storageClass)
+
             
     else:
         symbolTable[varDecl.identifier] = Entry(varDecl.identifier, LocalAttributes(), varDecl.varType)
@@ -371,15 +430,16 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
 
 def typeCheckVarDeclaration(varDecl, symbolTable, isBlockScope):
     if isBlockScope:
-        typeCheckLocalVarDecl(varDecl, symbolTable)
+        return typeCheckLocalVarDecl(varDecl, symbolTable)
     else:
-        typeCheckFileScopeVarDecl(varDecl, symbolTable)
+        return typeCheckFileScopeVarDecl(varDecl, symbolTable)
         
         
 def typeCheckDeclaration(dec, symbolTable, isBlockScope):
     match dec:
         case parser.VarDecl(variableDecl = variableDecl):
-            typeCheckVarDeclaration(variableDecl, symbolTable, isBlockScope)
+            variableDecl = typeCheckVarDeclaration(variableDecl, symbolTable, isBlockScope)
+            return parser.VarDecl(variableDecl)
             
         case parser.FunDecl(funDecl = funDecl):
             typeCheckFunctionDeclaration(funDecl, symbolTable)
