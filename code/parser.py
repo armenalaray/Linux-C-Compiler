@@ -46,6 +46,7 @@ class Block(Node):
 
                 output += i.printNode(level) + "\n"
 
+        output = output[:-1]
         return output
 
 class BlockItem:
@@ -505,7 +506,7 @@ class Unary_Expression(Expression, Node):
     
     def printNode(self, level):
         output = ""
-        output += self.operator.printNode(level)
+        output += self.operator.printNode(level) + " "
         output += self.expression.printNode(level)
         if self.retType:
             output +=  ', ' + self.retType.printNode(level)
