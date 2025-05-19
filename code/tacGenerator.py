@@ -653,6 +653,10 @@ def TAC_parseStatement(statement, instructions, symbolTable, end=None):
         case parser.NullStatement():
             pass
 
+        case _:
+            print("Invalid Statement")
+            sys.exit(1)
+
 def TAC_parseVarDeclarations(variableDecl, instructions, symbolTable):
 
     if variableDecl.storageClass.storageClass != parser.StorageType.NULL:
