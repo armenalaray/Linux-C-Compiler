@@ -3,7 +3,7 @@ This is a C Compiler I made in Python, it translates from C to x86 assembly lang
 
 These are the compiler passes I made for the compiler:
 
-<img width="266" alt="compiler_passes" src="https://github.com/user-attachments/assets/68c6cbe1-ef92-439e-9899-7f8df58b1bea" />
+<img width="242" alt="compiler_passes" src="https://github.com/user-attachments/assets/58b2c401-b813-4a6c-a456-e6a39018c0b2" />
 
 ## Output
 
