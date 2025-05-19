@@ -1,6 +1,7 @@
 from enum import Enum
 import tacGenerator
 import sys
+import parser
 
 class Program:
     
@@ -11,15 +12,25 @@ class Program:
 
         return "ASM Program: {self.topLevelList}".format(self=self)
 
+class AssemblyType(Enum):
+    LONGWORD = 1
+    QUADWORD = 2
+    
+
+class AssemblySize:
+    def __init__(self, type):
+        self.type = type
+
 class TopLevel:
     pass
 
 class StaticVariable(TopLevel):
 
-    def __init__(self, identifier, global_, init):
+    def __init__(self, identifier, global_, alignment, staticInit):
         self.identifier = identifier
         self.global_ = global_
-        self.init = init
+        self.alignment = alignment
+        self.staticInit = staticInit
 
     def __str__(self):
         return "Static Variable: Global = {self.global_} : {self.identifier} = {self.init}".format(self=self)
@@ -58,7 +69,8 @@ class ReturnInstruction:
 
 class MovInstruction:
 
-    def __init__(self, sourceO, destO):
+    def __init__(self, assType, sourceO, destO):
+        self.assType = assType
         self.sourceO = sourceO
         self.destO = destO
         
@@ -69,22 +81,28 @@ class MovInstruction:
     def __repr__(self):
         return self.__str__()
 
+class MovSXInstruction:
+
+    def __init__(self, sourceO, destO):
+        self.sourceO = sourceO
+        self.destO = destO
     
 
 class UnaryInstruction:
-    def __init__(self, operator, dest):
+    def __init__(self, operator, assType, dest):
         self.operator = operator
+        self.assType = assType
         self.dest = dest
     
     def __str__(self):
         return "Unary({self.operator}, {self.dest})".format(self=self)
     
-    
     def __repr__(self):
         return self.__str__()
 
 class CompInst:
-    def __init__(self, operand0, operand1):
+    def __init__(self, assType, operand0, operand1):
+        self.assType = assType
         self.operand0 = operand0
         self.operand1 = operand1
     
@@ -145,8 +163,9 @@ class LabelInst:
         return self.__str__()
 
 class BinaryInstruction:
-    def __init__(self, operator, src, dest):
+    def __init__(self, operator, assType, src, dest):
         self.operator = operator
+        self.assType = assType
         self.src = src
         self.dest = dest
     
@@ -160,7 +179,8 @@ class BinaryInstruction:
 #(operator, src2, dst)
 
 class IDivInstruction:
-    def __init__(self, divisor):
+    def __init__(self, assType, divisor):
+        self.assType = assType
         self.divisor = divisor
     
     def __str__(self):
@@ -171,7 +191,8 @@ class IDivInstruction:
     
 
 class CDQInstruction:
-    pass
+    def __init__(self, assType):
+        self.assType = assType
 
     def __str__(self):
         return "Cdq"
@@ -316,8 +337,8 @@ class RegisterType(Enum):
     AX = 6
     R10 = 7
     R11 = 8
+    SP = 9
 
-#regTable = [RegisterType.DI, RegisterType.]
 
 class Register:
     def __init__(self, register):
@@ -343,14 +364,43 @@ class Register:
                 return "R10d"
             case RegisterType.R11:
                 return "R11d"
+            case RegisterType.SP:
+                return "SP"
 
-def parseValue(v):
+def parseValue(v, symbolTable):
+    type = None
+    alignment = 0
+
     match v:
-        case tacGenerator.TAC_ConstantValue(intValue=i):
-            return ImmediateOperand(i)
+        case tacGenerator.TAC_ConstantValue(const = const):
+
+            match const:
+                case parser.ConstInt():
+                    type = AssemblySize(AssemblyType.LONGWORD)
+                    alignment = 4
+                    
+                case parser.ConstLong():
+                    type = AssemblySize(AssemblyType.QUADWORD)
+                    alignment = 8
+
+            return type, alignment, ImmediateOperand(const.int)
             
         case tacGenerator.TAC_VariableValue(identifier=i):
-            return PseudoRegisterOperand(i)
+
+            match symbolTable[identifier].type:
+                case parser.IntType():
+                    type = AssemblySize(AssemblyType.LONGWORD)
+                    alignment = 4
+
+                case parser.LongType():
+                    type = AssemblySize(AssemblyType.QUADWORD)
+                    alignment = 8
+
+            return type, alignment, PseudoRegisterOperand(i)
+        
+        case _:
+            print("Error: Invalid Value.")
+            sys.exit(1)
 
 
 def parseOperator(op):
@@ -373,7 +423,7 @@ def parseOperator(op):
                 case tacGenerator.BinopType.SUBTRACT:
                     return BinaryOperator(BinopType.Sub)
 
-def ASM_parseInstructions(TAC_Instructions, ASM_Instructions):
+def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
 
     for i in TAC_Instructions:
         match i:
@@ -529,9 +579,32 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions):
                             src2 = parseValue(src2_)
                             dst = parseValue(dst_)
                             operator = parseOperator(op)
+                            
+                            type = None
 
-                            instruction0 = MovInstruction(src1, dst)
-                            instruction1 = BinaryInstruction(operator, src2, dst)
+                            match src1_:
+                                case tacGenerator.TAC_ConstantValue(const = const):
+                                    match const:
+                                        case parser.ConstInt():
+                                            type = AssemblySize(AssemblyType.LONGWORD)
+                                            
+                                        case parser.ConstLong():
+                                            type = AssemblySize(AssemblyType.QUADWORD)
+
+                                case tacGenerator.TAC_VariableValue(identifier = identifier):
+                                    match symbolTable[identifier].type:
+                                        case parser.IntType():
+                                            type = AssemblySize(AssemblyType.LONGWORD)
+                                            
+                                        case parser.LongType():
+                                            type = AssemblySize(AssemblyType.QUADWORD)
+                            
+                            if type == None:
+                                print("Error")
+                                sys.exit(1)
+                                    
+                            instruction0 = MovInstruction(type, src1, dst)
+                            instruction1 = BinaryInstruction(operator, type, src2, dst)
                             
                             ASM_Instructions.append(instruction0)
                             ASM_Instructions.append(instruction1)
@@ -569,7 +642,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions):
                 ASM_Instructions.append(LabelInst(id))
 
 
-def ASM_parseTopLevel(topLevel):
+def ASM_parseTopLevel(topLevel, symbolTable):
     match topLevel:
         case tacGenerator.StaticVariable(identifier = identifier, global_ = global_,init = init):
             print(identifier)
@@ -590,13 +663,13 @@ def ASM_parseTopLevel(topLevel):
 
                 ASM_Instructions.append(a)
                 
-            ASM_parseInstructions(instructions, ASM_Instructions)
+            ASM_parseInstructions(instructions, ASM_Instructions, symbolTable)
             return Function(identifier, global_, ASM_Instructions)
 
-def ASM_parseAST(ast):
+def ASM_parseAST(ast, symbolTable):
     funcDefList = []
     for topLevel in ast.topLevelList:
-        function = ASM_parseTopLevel(topLevel)
+        function = ASM_parseTopLevel(topLevel, symbolTable)
         funcDefList.append(function)
 
     return Program(funcDefList)

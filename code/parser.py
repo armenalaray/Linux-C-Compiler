@@ -188,7 +188,8 @@ class FunctionDecl(Node):
 
         output += '\n'
 
-        output += self.block.printNode(level + 1)
+        if self.block:
+            output += self.block.printNode(level + 1)
 
         return output
         

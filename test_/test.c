@@ -1,44 +1,85 @@
-/* Test that function arguments, including arguments put on the stack,
- * are converted to the corresponding parameter type */
+/* Test basic arithmetic operations on long integers
+ * when one or both operands and the result are outside the range of int */
 
-int foo(long a, int b, int c, int d, long e, int f, long g, int h) {
-    if (a != -1l)
-        return 1;
+long a;
+long b;
 
-    if (b != 2)
-        return 2;
+int addition(void) {
+    // a == 4294967290l, i.e. 2^32 - 6
+    // b = 5
+    return (a + b == 4294967295l);
+}
 
-    if (c != 0)
-        return 3;
+int subtraction(void) {
+    // a = -4294967290l;
+    // b = 90l;
+    return (a - b == -4294967380l);
+}
 
-    if (d != -5)
-        return 4;
+int multiplication(void) {
+    // a = 4294967290l;
+    return (a * 4l == 17179869160l);
+}
 
-    if (e != -101l)
-        return 5;
+int division(void) {
+    /* The first operand can't fit in an int; this requires us to store the operand in RDX:RAX
+    * using the 'cqo' instruction, instead of in EDX:EAX using 'cdq'
+    */
+    // a = 4294967290l;
+    b = a / 128l;
+    return (b == 33554431l);
+}
 
-    if (f != -123)
-        return 6;
+int remaind(void) {
+    // a = 8589934585l, i.e. 2^33 - 7
+    b = -a % 4294967290l;
+    return (b == -5l);
+}
 
-    if (g != -10l)
-        return 7;
-
-    if (h != 1234)
-        return 8;
-
-    return 0;
+int complement(void) {
+    // a = 9223372036854775806l, i.e. LONG_MAX - 1
+    return (~a == -9223372036854775807l);
 }
 
 int main(void) {
-    int a = -1;
-    long int b = 4294967298;  // 2^32 + 2, becomes 2 when converted to an int
-    long c = -4294967296;     // -2^32, becoems 0 when converted to int
-    long d =
-        21474836475;  // 2^34 + 2^32 - 5, becomes -5 when converted to an int
-    int e = -101;
-    long f = -123;
-    int g = -10;
-    long h = -9223372036854774574;  // -2^63 + 1234, becomes 1234 when converted
-                                    // to an int
-    return foo(a, b, c, d, e, f, g, h);
+
+    /* Addition */
+    a = 4294967290l; // 2^32 - 6
+    b = 5l;
+    if (!addition()) {
+        return 1;
+    }
+
+    /* Subtraction */
+    a = -4294967290l;
+    b = 90l;
+    if (!subtraction()) {
+        return 2;
+    }
+
+    /* Multiplication */
+    a = 4294967290l;
+    if (!multiplication()) {
+        return 3;
+    }
+
+    /* Division */
+    a = 4294967290l;
+    if (!division()) {
+        return 4;
+    }
+
+    /* Remainder */
+    a = 8589934585l; // 2^33 - 7
+    if (!remaind()) {
+        return 5;
+    }
+
+    /* Complement */
+    a = 9223372036854775806l; //LONG_MAX - 1
+    if (!complement()) {
+        return 6;
+    }
+
+    return 0;
 }
