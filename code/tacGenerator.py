@@ -15,9 +15,10 @@ class TopLevel:
     pass
 
 class StaticVariable(TopLevel):
-    def __init__(self, identifier, global_, init):
+    def __init__(self, identifier, global_, type, init):
         self.identifier = identifier
         self.global_ = global_
+        self.type = type
         self.init = init
     
     def __str__(self):
@@ -51,7 +52,20 @@ class TAC_returnInstruction(instruction):
     
     def __repr__(self):
         return self.__str__()
-    
+
+class TAC_signExtendInstruction(instruction):
+    def __init__(self, src, dst):
+        self.src = src
+        self.dst = dst
+
+
+class TAC_truncateInstruction(instruction):
+    def __init__(self, src, dst):
+        self.src = src
+        self.dst = dst
+
+
+
 class TAC_UnaryInstruction(instruction):
     def __init__(self, operator, src, dst):
         self.operator = operator
@@ -118,7 +132,6 @@ class TAC_LabelInst(instruction):
     def __repr__(self):
         return self.__str__()
 
-
 class TAC_BinaryInstruction:
     def __init__(self, operator, src1, src2, dst):
         self.operator = operator
@@ -148,8 +161,8 @@ class Value:
     pass
 
 class TAC_ConstantValue(Value):
-    def __init__(self, intValue):
-        self.intValue = intValue
+    def __init__(self, const):
+        self.const = const
     
     def __str__(self):
         return "{self.intValue}".format(self=self)
@@ -285,10 +298,12 @@ def parseOperator(op):
 def TAC_parseInstructions(expression, instructions):
     
     match expression:
-        case parser.Constant_Expression(intValue=c):
-            return TAC_ConstantValue(c)
+        case parser.Constant_Expression(const = const, retType = retType):
+            return TAC_ConstantValue(const)
+        
+        case parser.Cast_Expression():
+            pass
             
-
         case parser.Unary_Expression(operator=op, expression=inner):
             src = TAC_parseInstructions(inner, instructions)
 
@@ -433,8 +448,10 @@ def TAC_parseInstructions(expression, instructions):
             instructions.append(TAC_LabelInst(end))
 
             return result
-            
-            
+        
+        case _:
+            print("Invalid Expression. {0}".format(type(expression)))
+            sys.exit(1)           
 
     #if type(expression_) == Unary_Expression:
     #    expression_ = expression_.expression
@@ -593,9 +610,9 @@ def TAC_parseStatement(statement, instructions, end=None):
             pass
 
 def TAC_parseVarDeclarations(variableDecl, instructions):
-    print(variableDecl.storageClass[1])
+    #print(variableDecl.storageClass[1])
 
-    if variableDecl.storageClass[1]:
+    if variableDecl.storageClass.storageClass != parser.StorageType.NULL:
         pass
     else:
         if variableDecl.exp:
@@ -633,7 +650,7 @@ def TAC_parseFunctionDefinition(functionDef, symbolTable):
             decl = symbolTable[functionDef.iden]
             #print(decl[2].global_)
             global_ = decl.attrs.global_
-            return TAC_FunctionDef(identifier, global_, functionDef.paramList, instructions)
+            return TAC_FunctionDef(identifier, global_, functionDef.paramNames, instructions)
 
         print("ERROR: function is not in symbol table.")
         sys.exit(1)
@@ -656,10 +673,25 @@ def TAC_convertSymbolsToTAC(symbolTable):
                 #print(type(initialVal))
                 match initialVal:
                     case typeChecker.Tentative():
-                        tacDefs.append(StaticVariable(name, global_, "0"))
+                        print(type(entry.type))
+                        
+                        init = None
+                        match entry.type:
+                            case parser.IntType():
+                                init = typeChecker.IntInit(0)
+                                
+                            case parser.LongType():
+                                init = typeChecker.LongInit(0)
+                                
+                                    
+                        tacDefs.append(StaticVariable(name, global_, entry.type, init))
 
-                    case typeChecker.Initial(value = value):
-                        tacDefs.append(StaticVariable(name, global_, value))
+                    case typeChecker.Initial(staticInit=staticInit):
+                        tacDefs.append(StaticVariable(name, global_, entry.type, staticInit))
+                    
+                    case _:
+                        print("Invalid")
+                        sys.exit(1)
 
     #print(tacDefs)
     return tacDefs 
