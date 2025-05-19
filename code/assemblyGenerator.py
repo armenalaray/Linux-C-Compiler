@@ -20,6 +20,9 @@ class AssemblyType(Enum):
 class AssemblySize:
     def __init__(self, type):
         self.type = type
+    
+    def __str__(self):
+        return "{self.type}".format(self=self)
 
 class TopLevel:
     pass
@@ -387,7 +390,7 @@ def parseValue(v, symbolTable):
             
         case tacGenerator.TAC_VariableValue(identifier=i):
 
-            match symbolTable[identifier].type:
+            match symbolTable[i].type:
                 case parser.IntType():
                     type = AssemblySize(AssemblyType.LONGWORD)
                     alignment = 4
@@ -423,15 +426,26 @@ def parseOperator(op):
                 case tacGenerator.BinopType.SUBTRACT:
                     return BinaryOperator(BinopType.Sub)
 
+def Expect(*args):
+    other = None
+    for i in args:
+        if other:
+            if type(i) != type(other):
+                print("Types are not equal.")
+                sys.exit(1)
+        other = i
+
 def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
 
     for i in TAC_Instructions:
         match i:
             
             case tacGenerator.TAC_returnInstruction(Value=v):
-                src = parseValue(v)
+                type1, alignment1, src = parseValue(v, symbolTable)
+
                 dst = RegisterOperand(Register(RegisterType.AX))
-                instruction0 = MovInstruction(src, dst)
+
+                instruction0 = MovInstruction(type1, src, dst)
                 instruction1 = ReturnInstruction()
                 
                 ASM_Instructions.append(instruction0)
@@ -444,11 +458,11 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                         match op:
                             case tacGenerator.UnopType.NOT:
                                 
-                                src = parseValue(src_)
-                                dst = parseValue(dst_)
+                                type1, alignment1, src = parseValue(src_, symbolTable)
+                                type2, alignment2, dst = parseValue(dst_, symbolTable)
                                 
-                                instruction0 = CompInst(ImmediateOperand(0), src)
-                                instruction1 = MovInstruction(ImmediateOperand(0), dst)
+                                instruction0 = CompInst(type1, ImmediateOperand(0), src)
+                                instruction1 = MovInstruction(type2, ImmediateOperand(0), dst)
                                 instruction2 = SetCCInst(ConcCodeType.E, dst)
 
                                 ASM_Instructions.append(instruction0)
@@ -456,12 +470,13 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                                 ASM_Instructions.append(instruction2)
                                 
                             case _:
-                                src = parseValue(src_)
-                                dst = parseValue(dst_)
+                                type1, alignment1, src = parseValue(src_, symbolTable)
+                                type2, alignment2, dst = parseValue(dst_, symbolTable)
+
                                 operator = parseOperator(o)
 
-                                instruction0 = MovInstruction(src, dst)
-                                instruction1 = UnaryInstruction(operator, dst)
+                                instruction0 = MovInstruction(type1, src, dst)
+                                instruction1 = UnaryInstruction(operator, type1, dst)
                                 
                                 ASM_Instructions.append(instruction0)
                                 ASM_Instructions.append(instruction1)
@@ -522,20 +537,20 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                 if bytesToRemove:
                     ASM_Instructions.append(DeallocateStackInstruction(bytesToRemove))
                 
-                asmDst = parseValue(dst)
+                type1, alignment1, asmDst = parseValue(dst, symbolTable)
                 #print(type(asmDst))
-                ASM_Instructions.append(MovInstruction(RegisterOperand(Register(RegisterType.AX)), asmDst))
+                ASM_Instructions.append(MovInstruction(type1, RegisterOperand(Register(RegisterType.AX)), asmDst))
 
             case tacGenerator.TAC_BinaryInstruction(operator=op, src1=src1_, src2=src2_, dst=dst_):
                 
                 if op.operator == tacGenerator.BinopType.EQUAL or op.operator == tacGenerator.BinopType.GREATERTHAN or op.operator == tacGenerator.BinopType.LESSTHAN or op.operator == tacGenerator.BinopType.GREATEROREQUAL or op.operator == tacGenerator.BinopType.LESSOREQUAL or op.operator == tacGenerator.BinopType.NOTEQUAL:
                     #print(op.operator)
-                    src1 = parseValue(src1_)
-                    src2 = parseValue(src2_)
-                    dst = parseValue(dst_)
+                    type1, alignment1, src1 = parseValue(src1_, symbolTable)
+                    type2, alignment2, src2 = parseValue(src2_, symbolTable)
+                    type3, alignment3, dst = parseValue(dst_, symbolTable)
 
-                    instruction0 = CompInst(src2, src1)
-                    instruction1 = MovInstruction(ImmediateOperand(0), dst)
+                    instruction0 = CompInst(type1, src2, src1)
+                    instruction1 = MovInstruction(type3, ImmediateOperand(0), dst)
                     instruction2 = SetCCInst(list(ConcCodeType)[op.operator.value], dst)
 
                     ASM_Instructions.append(instruction0)
@@ -545,14 +560,14 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                 else:
                     match op.operator:
                         case tacGenerator.BinopType.DIVIDE:
-                            src1 = parseValue(src1_)
-                            src2 = parseValue(src2_)
-                            dst = parseValue(dst_)
+                            type1, alignment1, src1 = parseValue(src1_, symbolTable)
+                            type2, alignment2, src2 = parseValue(src2_, symbolTable)
+                            type3, alignment3, dst = parseValue(dst_, symbolTable)
 
-                            instruction0 = MovInstruction(src1, RegisterOperand(Register(RegisterType.AX)))
-                            instruction1 = CDQInstruction()
-                            instruction2 = IDivInstruction(src2)
-                            instruction3 = MovInstruction(RegisterOperand(Register(RegisterType.AX)), dst)
+                            instruction0 = MovInstruction(type1, src1, RegisterOperand(Register(RegisterType.AX)))
+                            instruction1 = CDQInstruction(type1)
+                            instruction2 = IDivInstruction(type1, src2)
+                            instruction3 = MovInstruction(type1, RegisterOperand(Register(RegisterType.AX)), dst)
 
                             ASM_Instructions.append(instruction0)
                             ASM_Instructions.append(instruction1)
@@ -560,14 +575,14 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                             ASM_Instructions.append(instruction3)
                             
                         case tacGenerator.BinopType.REMAINDER:
-                            src1 = parseValue(src1_)
-                            src2 = parseValue(src2_)
-                            dst = parseValue(dst_)
+                            type1, alignment1, src1 = parseValue(src1_, symbolTable)
+                            type2, alignment2, src2 = parseValue(src2_, symbolTable)
+                            type3, alignment3, dst = parseValue(dst_, symbolTable)
 
-                            instruction0 = MovInstruction(src1, RegisterOperand(Register(RegisterType.AX)))
-                            instruction1 = CDQInstruction()
-                            instruction2 = IDivInstruction(src2)
-                            instruction3 = MovInstruction(RegisterOperand(Register(RegisterType.DX)), dst)
+                            instruction0 = MovInstruction(type1, src1, RegisterOperand(Register(RegisterType.AX)))
+                            instruction1 = CDQInstruction(type1)
+                            instruction2 = IDivInstruction(type1, src2)
+                            instruction3 = MovInstruction(type1, RegisterOperand(Register(RegisterType.DX)), dst)
 
                             ASM_Instructions.append(instruction0)
                             ASM_Instructions.append(instruction1)
@@ -575,36 +590,20 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                             ASM_Instructions.append(instruction3)
 
                         case _:
-                            src1 = parseValue(src1_)
-                            src2 = parseValue(src2_)
-                            dst = parseValue(dst_)
+                            type1, alignment1, src1 = parseValue(src1_, symbolTable)
+
+                            #print(type1, alignment1, src1)
+
+                            type2, alignment2, src2 = parseValue(src2_, symbolTable)
+
+                            type3, alignment3, dst = parseValue(dst_, symbolTable)
+                            
+                            Expect(type1, type2, type3)
+
                             operator = parseOperator(op)
-                            
-                            type = None
-
-                            match src1_:
-                                case tacGenerator.TAC_ConstantValue(const = const):
-                                    match const:
-                                        case parser.ConstInt():
-                                            type = AssemblySize(AssemblyType.LONGWORD)
-                                            
-                                        case parser.ConstLong():
-                                            type = AssemblySize(AssemblyType.QUADWORD)
-
-                                case tacGenerator.TAC_VariableValue(identifier = identifier):
-                                    match symbolTable[identifier].type:
-                                        case parser.IntType():
-                                            type = AssemblySize(AssemblyType.LONGWORD)
-                                            
-                                        case parser.LongType():
-                                            type = AssemblySize(AssemblyType.QUADWORD)
-                            
-                            if type == None:
-                                print("Error")
-                                sys.exit(1)
                                     
-                            instruction0 = MovInstruction(type, src1, dst)
-                            instruction1 = BinaryInstruction(operator, type, src2, dst)
+                            instruction0 = MovInstruction(type1, src1, dst)
+                            instruction1 = BinaryInstruction(operator, type1, src2, dst)
                             
                             ASM_Instructions.append(instruction0)
                             ASM_Instructions.append(instruction1)
@@ -613,9 +612,9 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                 ASM_Instructions.append(JumpInst(label))
 
             case tacGenerator.TAC_JumpIfZeroInst(condition=cond, label=label):
-                c = parseValue(cond)
+                type1, alignment1, c = parseValue(cond, symbolTable)
 
-                instruction0 = CompInst(ImmediateOperand(0), c)
+                instruction0 = CompInst(type1, ImmediateOperand(0), c)
                 instruction1 = JumpCCInst(ConcCodeType.E, label)
                 
                 ASM_Instructions.append(instruction0)
@@ -631,9 +630,10 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                 ASM_Instructions.append(instruction1)
 
             case tacGenerator.TAC_CopyInstruction(src=src_, dst=dst_):
-                src = parseValue(src_)
-                dst = parseValue(dst_)
-                instruction0 = MovInstruction(src, dst)
+                type1, alignment1, src = parseValue(src_, symbolTable)
+                type2, alignment2, dst = parseValue(dst_, symbolTable)
+
+                instruction0 = MovInstruction(type1, src, dst)
 
                 ASM_Instructions.append(instruction0)
                 
