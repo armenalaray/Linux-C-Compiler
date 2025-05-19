@@ -165,7 +165,7 @@ class TAC_ConstantValue(Value):
         self.const = const
     
     def __str__(self):
-        return "{self.intValue}".format(self=self)
+        return "{self.const}".format(self=self)
 
     def __repr__(self):
         return self.__str__()
@@ -295,51 +295,69 @@ def parseOperator(op):
                     print("Invalid Parser operator.")
                     sys.exit(1)
 
-def TAC_parseInstructions(expression, instructions):
+def makeTempVariable(type, symbolTable):
+    dstName = makeTemp()
+    symbolTable[dstName] = typeChecker.Entry(dstName, typeChecker.LocalAttributes(), type)
+    return TAC_VariableValue(dstName)
+
+def TAC_parseInstructions(expression, instructions, symbolTable):
     
     match expression:
-        case parser.Constant_Expression(const = const, retType = retType):
+        case parser.Constant_Expression(const = const):
             return TAC_ConstantValue(const)
         
-        case parser.Cast_Expression():
-            pass
+        case parser.Cast_Expression(targetType = targetType, exp = exp):
+            result = TAC_parseInstructions(exp, instructions, symbolTable)
+            
+            if type(targetType) == type(exp.retType):
+                return result
+            
+            dst = makeTempVariable(targetType, symbolTable)
+
+            if type(targetType) == parser.LongType:
+                instructions.append(TAC_signExtendInstruction(result, dst))
+            else:
+                instructions.append(TAC_truncateInstruction(result, dst))
+
+            return dst
+
+            
             
         case parser.Unary_Expression(operator=op, expression=inner):
-            src = TAC_parseInstructions(inner, instructions)
+            src = TAC_parseInstructions(inner, instructions, symbolTable)
 
-            dst = TAC_VariableValue(makeTemp())
+            dst = makeTempVariable(expression.retType, symbolTable)
             operator = parseOperator(op)
             instructions.append(TAC_UnaryInstruction(operator, src, dst))
 
             return dst
         
         case parser.Binary_Expression(operator=op, left=left, right=right):
-            #print(op)
             match op:
                 case parser.BinaryOperator(operator=o):
                     
                     match o:
                         case parser.BinopType.AND:
                             
-                            v1 = TAC_parseInstructions(left, instructions)
+                            v1 = TAC_parseInstructions(left, instructions, symbolTable)
                             
                             false_label = makeTemp()
 
                             instructions.append(TAC_JumpIfZeroInst(v1, false_label))
-                            v2 = TAC_parseInstructions(right, instructions)
+                            v2 = TAC_parseInstructions(right, instructions, symbolTable)
                             instructions.append(TAC_JumpIfZeroInst(v2, false_label))
 
-                            result = TAC_VariableValue(makeTemp())
+                            result = makeTempVariable(expression.retType,symbolTable)
+
                             end = makeTemp()
 
-                            instructions.append(TAC_CopyInstruction(TAC_ConstantValue(1), result))
+                            instructions.append(TAC_CopyInstruction(TAC_ConstantValue(parser.ConstInt(1)), result))
 
                             instructions.append(TAC_JumpInst(end))
 
                             instructions.append(TAC_LabelInst(false_label))
 
-                            instructions.append(TAC_CopyInstruction(TAC_ConstantValue(0), result))
-
+                            instructions.append(TAC_CopyInstruction(TAC_ConstantValue(parser.ConstInt(0)), result))
 
                             instructions.append(TAC_LabelInst(end))
 
@@ -348,25 +366,25 @@ def TAC_parseInstructions(expression, instructions):
 
                         case parser.BinopType.OR:
                             
-                            v1 = TAC_parseInstructions(left, instructions)
+                            v1 = TAC_parseInstructions(left, instructions, symbolTable)
                             
                             true_label = makeTemp()
 
                             instructions.append(TAC_JumpIfNotZeroInst(v1, true_label))
-                            v2 = TAC_parseInstructions(right, instructions)
+                            v2 = TAC_parseInstructions(right, instructions, symbolTable)
                             instructions.append(TAC_JumpIfNotZeroInst(v2, true_label))
 
-                            result = TAC_VariableValue(makeTemp())
+                            result = makeTempVariable(expression.retType, symbolTable)
+                            
                             end = makeTemp()
 
-                            instructions.append(TAC_CopyInstruction(TAC_ConstantValue(0), result))
+                            instructions.append(TAC_CopyInstruction(TAC_ConstantValue(parser.ConstInt(0)), result))
 
                             instructions.append(TAC_JumpInst(end))
 
                             instructions.append(TAC_LabelInst(true_label))
 
-                            instructions.append(TAC_CopyInstruction(TAC_ConstantValue(1), result))
-
+                            instructions.append(TAC_CopyInstruction(TAC_ConstantValue(parser.ConstInt(1)), result))
 
                             instructions.append(TAC_LabelInst(end))
 
@@ -375,11 +393,14 @@ def TAC_parseInstructions(expression, instructions):
                         
                         case _:
                             
-                            src1 = TAC_parseInstructions(left, instructions)
-                            src2 = TAC_parseInstructions(right, instructions)
-                            dst = TAC_VariableValue(makeTemp())
+                            src1 = TAC_parseInstructions(left, instructions, symbolTable)
+                            src2 = TAC_parseInstructions(right, instructions, symbolTable)
+
+                            dst = makeTempVariable(expression.retType, symbolTable)                            
+
                             operator = parseOperator(op)
                             instructions.append(TAC_BinaryInstruction(operator, src1, src2, dst))
+
                             return dst
                             
 
@@ -395,8 +416,8 @@ def TAC_parseInstructions(expression, instructions):
             
 
         case parser.Assignment_Expression(lvalue=lvalue, exp=exp):
-            src = TAC_parseInstructions(exp, instructions)
-            dst = TAC_parseInstructions(lvalue, instructions)
+            src = TAC_parseInstructions(exp, instructions, symbolTable)
+            dst = TAC_parseInstructions(lvalue, instructions, symbolTable)
             instructions.append(TAC_CopyInstruction(src, dst))
             return dst
 
@@ -405,32 +426,37 @@ def TAC_parseInstructions(expression, instructions):
 
             if argumentList:
                 for exp in argumentList:
-                    src = TAC_parseInstructions(exp, instructions)
-                    dst = TAC_VariableValue(makeTemp())
+                    src = TAC_parseInstructions(exp, instructions, symbolTable)
+                    dst = makeTempVariable(expression.retType, symbolTable)
+
                     instructions.append(TAC_CopyInstruction(src, dst))
                     a.append(dst)
                 
-            dst = TAC_VariableValue(makeTemp())
+            dst = makeTempVariable(expression.retType, symbolTable)
+            
             instructions.append(TAC_FunCallInstruction(id, a, dst))
             
             return dst        
 
         case parser.Conditional_Expression(condExp=condExp, thenExp=thenExp, elseExp=elseExp):
-            cond = TAC_parseInstructions(condExp, instructions)
-            c = TAC_VariableValue(makeTemp())
-            #print(dst)
+            cond = TAC_parseInstructions(condExp, instructions, symbolTable)
+
+            c = makeTempVariable(expression.retType, symbolTable)
+            
             instructions.append(TAC_CopyInstruction(cond, c))
 
             e2_label = makeTemp()
             instructions.append(TAC_JumpIfZeroInst(c, e2_label))
 
-            #print(type(thenExp))
-            thenE = TAC_parseInstructions(thenExp, instructions)
+            thenE = TAC_parseInstructions(thenExp, instructions, symbolTable)
 
-            v1 = TAC_VariableValue(makeTemp())
+
+            v1 = makeTempVariable(expression.retType, symbolTable)
+            
             instructions.append(TAC_CopyInstruction(thenE, v1))
 
-            result = TAC_VariableValue(makeTemp())
+            result = makeTempVariable(expression.retType, symbolTable)
+            
             instructions.append(TAC_CopyInstruction(v1, result))
 
             end = makeTemp()
@@ -438,9 +464,11 @@ def TAC_parseInstructions(expression, instructions):
 
             instructions.append(TAC_LabelInst(e2_label))
 
-            elseE = TAC_parseInstructions(elseExp, instructions)
+            elseE = TAC_parseInstructions(elseExp, instructions, symbolTable)
 
-            v2 = TAC_VariableValue(makeTemp())
+
+            v2 = makeTempVariable(expression.retType, symbolTable)
+            
             instructions.append(TAC_CopyInstruction(elseE, v2))
 
             instructions.append(TAC_CopyInstruction(v2, result))
@@ -453,34 +481,32 @@ def TAC_parseInstructions(expression, instructions):
             print("Invalid Expression. {0}".format(type(expression)))
             sys.exit(1)           
 
-    #if type(expression_) == Unary_Expression:
-    #    expression_ = expression_.expression
     
-def TAC_parseForInit(forInit, instructions):
+def TAC_parseForInit(forInit, instructions, symbolTable):
     print(type(forInit))
     match forInit:
         case parser.InitExp(exp=exp):
             if exp:
-                TAC_parseInstructions(exp, instructions)
+                TAC_parseInstructions(exp, instructions, symbolTable)
             
         case parser.InitDecl(decl=decl):
-            TAC_parseDeclarations(decl, instructions)
+            TAC_parseDeclarations(decl, instructions, symbolTable)
             
     
 
     
-def TAC_parseStatement(statement, instructions, end=None):
+def TAC_parseStatement(statement, instructions, symbolTable, end=None):
     match statement:
         case parser.ExpressionStmt(exp=exp):
-            TAC_parseInstructions(exp, instructions)
+            TAC_parseInstructions(exp, instructions, symbolTable)
 
         case parser.ReturnStmt(expression=exp):
-            Val = TAC_parseInstructions(exp, instructions)
+            Val = TAC_parseInstructions(exp, instructions, symbolTable)
             instructions.append(TAC_returnInstruction(Val))
 
         case parser.CompoundStatement(block=block):
             #print(block.blockItemList)
-            TAC_parseBlock(block, instructions)
+            TAC_parseBlock(block, instructions, symbolTable)
 
         case parser.BreakStatement(identifier=id):
             instructions.append(TAC_JumpInst('break_{0}'.format(id)))
@@ -490,7 +516,7 @@ def TAC_parseStatement(statement, instructions, end=None):
 
         case parser.ForStatement(forInit=forInit, condExp=condExp, postExp=postExp, statement=statement, identifier=id):
 
-            TAC_parseForInit(forInit, instructions)
+            TAC_parseForInit(forInit, instructions, symbolTable)
 
             #jump label
             startLabel = makeTemp()
@@ -499,7 +525,7 @@ def TAC_parseStatement(statement, instructions, end=None):
             breakLabel = "break_{0}".format(id)
 
             if condExp:
-                Val = TAC_parseInstructions(condExp, instructions)
+                Val = TAC_parseInstructions(condExp, instructions, symbolTable)
 
                 v = TAC_VariableValue(makeTemp())
                 instructions.append(TAC_CopyInstruction(Val, v))
@@ -507,13 +533,13 @@ def TAC_parseStatement(statement, instructions, end=None):
                 instructions.append(TAC_JumpIfZeroInst(v, breakLabel))
 
 
-            TAC_parseStatement(statement, instructions)
+            TAC_parseStatement(statement, instructions, symbolTable)
 
             continueLabel = "continue_{0}".format(id)
             instructions.append(TAC_LabelInst(continueLabel))
 
             if postExp:
-                TAC_parseInstructions(postExp, instructions)
+                TAC_parseInstructions(postExp, instructions, symbolTable)
 
             instructions.append(TAC_JumpInst(startLabel))
 
@@ -527,7 +553,7 @@ def TAC_parseStatement(statement, instructions, end=None):
 
             instructions.append(TAC_LabelInst(startLabel))
 
-            Val = TAC_parseInstructions(condExp, instructions)
+            Val = TAC_parseInstructions(condExp, instructions, symbolTable)
 
             v = TAC_VariableValue(makeTemp())
             instructions.append(TAC_CopyInstruction(Val, v))
@@ -535,7 +561,7 @@ def TAC_parseStatement(statement, instructions, end=None):
             endLabel = "break_{0}".format(id)
             instructions.append(TAC_JumpIfZeroInst(v, endLabel))
 
-            TAC_parseStatement(statement, instructions)
+            TAC_parseStatement(statement, instructions, symbolTable)
 
             instructions.append(TAC_JumpInst(startLabel))
 
@@ -548,11 +574,11 @@ def TAC_parseStatement(statement, instructions, end=None):
 
             instructions.append(TAC_LabelInst(startLabel))
 
-            TAC_parseStatement(statement, instructions)
+            TAC_parseStatement(statement, instructions, symbolTable)
 
             instructions.append(TAC_LabelInst('continue_{0}'.format(id)))
 
-            Val = TAC_parseInstructions(condExp, instructions)
+            Val = TAC_parseInstructions(condExp, instructions, symbolTable)
 
             v = TAC_VariableValue(makeTemp())
             instructions.append(TAC_CopyInstruction(Val, v))
@@ -563,7 +589,7 @@ def TAC_parseStatement(statement, instructions, end=None):
             
 
         case parser.IfStatement(exp=exp, thenS=thenS, elseS=elseS):
-            val = TAC_parseInstructions(exp, instructions)
+            val = TAC_parseInstructions(exp, instructions, symbolTable)
             #print(type(val))
             c = TAC_VariableValue(makeTemp())
             ins0 = TAC_CopyInstruction(val, c)
@@ -580,7 +606,7 @@ def TAC_parseStatement(statement, instructions, end=None):
                 ins1 = TAC_JumpIfZeroInst(c, else_label)
                 instructions.append(ins1)
                 
-                TAC_parseStatement(thenS, instructions)
+                TAC_parseStatement(thenS, instructions, symbolTable)
 
                 instructions.append(TAC_JumpInst(end))
 
@@ -588,7 +614,7 @@ def TAC_parseStatement(statement, instructions, end=None):
 
                 print(type(elseS))
 
-                TAC_parseStatement(elseS, instructions, end)
+                TAC_parseStatement(elseS, instructions, symbolTable, end)
 
                 if type(elseS) != parser.IfStatement:
                     instructions.append(TAC_LabelInst(end))
@@ -599,7 +625,7 @@ def TAC_parseStatement(statement, instructions, end=None):
                 instructions.append(ins1)
 
                 #aqui nunca pasa porq no tiene un else
-                TAC_parseStatement(thenS, instructions, end)
+                TAC_parseStatement(thenS, instructions, symbolTable, end)
 
                 instructions.append(TAC_LabelInst(end))
 
@@ -609,31 +635,31 @@ def TAC_parseStatement(statement, instructions, end=None):
         case parser.NullStatement():
             pass
 
-def TAC_parseVarDeclarations(variableDecl, instructions):
+def TAC_parseVarDeclarations(variableDecl, instructions, symbolTable):
     #print(variableDecl.storageClass[1])
 
     if variableDecl.storageClass.storageClass != parser.StorageType.NULL:
         pass
     else:
         if variableDecl.exp:
-            src = TAC_parseInstructions(variableDecl.exp, instructions)
+            src = TAC_parseInstructions(variableDecl.exp, instructions, symbolTable)
             dst = TAC_VariableValue(variableDecl.identifier)
             instructions.append(TAC_CopyInstruction(src, dst))
 
-def TAC_parseDeclarations(decl, instructions):
+def TAC_parseDeclarations(decl, instructions, symbolTable):
     match decl:
         case parser.VarDecl(variableDecl = variableDecl):
-            TAC_parseVarDeclarations(variableDecl, instructions)
+            TAC_parseVarDeclarations(variableDecl, instructions, symbolTable)
                     
-def TAC_parseBlock(block, instructions):
+def TAC_parseBlock(block, instructions, symbolTable):
     if block.blockItemList:        
         for i in block.blockItemList:
             match i:
                 case parser.D(declaration=dec):
-                    TAC_parseDeclarations(dec, instructions)
+                    TAC_parseDeclarations(dec, instructions, symbolTable)
 
                 case parser.S(statement=statement):
-                    TAC_parseStatement(statement, instructions)
+                    TAC_parseStatement(statement, instructions, symbolTable)
 
 def TAC_parseFunctionDefinition(functionDef, symbolTable):
     if functionDef.block:
@@ -641,9 +667,9 @@ def TAC_parseFunctionDefinition(functionDef, symbolTable):
 
         instructions = []
 
-        TAC_parseBlock(functionDef.block, instructions)
-
-        Val = TAC_ConstantValue(0)
+        TAC_parseBlock(functionDef.block, instructions, symbolTable)
+        
+        Val = TAC_ConstantValue(parser.ConstInt(0))
         instructions.append(TAC_returnInstruction(Val))
         
         if functionDef.iden in symbolTable:

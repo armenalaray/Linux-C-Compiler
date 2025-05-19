@@ -172,6 +172,8 @@ if __name__ == "__main__":
 			tac = tacGenerator.TAC_parseProgram(loo, symbolTable)
 
 			print(tac)
+			
+			print(symbolTable)
 
 			if LastStage == 'tac':
 				sys.exit(0)
