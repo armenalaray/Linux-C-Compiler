@@ -1,3 +1,4 @@
+import sys
 import assemblyGenerator
 
 def FixUpFuncDef(funcDef):
@@ -107,14 +108,53 @@ def FixingUpTopLevel(topLevel):
 
 
             newList = []
-            newList.insert(0,assemblyGenerator.AllocateStackInstruction(-offset))
+            #newList.insert(0,assemblyGenerator.AllocateStackInstruction(-offset))
 
             oldSize = len(newList)
 
             for index, i in enumerate(insList):
                 
                 match i:
-                    case assemblyGenerator.MovInstruction(sourceO=src, destO=dst):
+                    
+                    case assemblyGenerator.MovSXInstruction(sourceO = sourceO, destO = destO):
+
+                        #Mov(Longword, Imm(10), Reg(R10))
+                        
+                        #Movsx(Reg(R10), Reg(R11))
+
+                        #Mov(Quadword, Reg(R11), Stack(-16))
+
+                        instruction0 = None
+                        if type(sourceO) == assemblyGenerator.ImmediateOperand:
+                            regr10 = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+
+                            instruction0 = assemblyGenerator.MovInstruction(assemblyGenerator.AssemblySize(assemblyGenerator.AssemblyType.LONGWORD), sourceO, regr10)
+
+                            i.sourceO = regr10
+
+                            newList.append(instruction0)
+                            #newList.append(i)    
+
+                        instruction2 = None
+                        if type(destO) == assemblyGenerator.StackOperand or type(destO) == assemblyGenerator.DataOperand:
+                            regr11 = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11))
+                            
+                            i.destO = regr11
+
+                            instruction2 = assemblyGenerator.MovInstruction(assemblyGenerator.AssemblySize(assemblyGenerator.AssemblyType.QUADWORD), regr11, destO)
+
+                            
+                        if instruction0:
+                            newList.append(instruction0)
+
+                        newList.append(i)
+
+                        if instruction2:
+                            newList.append(instruction2)
+
+                        
+
+                    case assemblyGenerator.MovInstruction(assType=assType, sourceO=src, destO=dst):
                         #stack - stack
                         #data - stack
                         #data - data
@@ -124,26 +164,29 @@ def FixingUpTopLevel(topLevel):
                             
                             i.destO = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
 
-                            instruction = assemblyGenerator.MovInstruction(assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)),dst)
+                            instruction = assemblyGenerator.MovInstruction(assType, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)), dst)
 
+
+                            #mov src, reg
+                            #mov reg, dst
                             newList.append(i)
                             newList.append(instruction)
                         
                     
-                    case assemblyGenerator.IDivInstruction(divisor=div):
+                    case assemblyGenerator.IDivInstruction(assType=assType, divisor=div):
                         match div:
                             case assemblyGenerator.ImmediateOperand():
                                 i.divisor = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
 
-                                instruction = assemblyGenerator.MovInstruction(div, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+                                instruction = assemblyGenerator.MovInstruction(assType, div, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
 
                                 newList.append(instruction)
                                 newList.append(i)
                     
-                    case assemblyGenerator.CompInst(operand0=op0, operand1=op1):
+                    case assemblyGenerator.CompInst(assType=assType, operand0=op0, operand1=op1):
                         if (type(op0) == assemblyGenerator.StackOperand and type(op1) == assemblyGenerator.StackOperand) or (type(op0) == assemblyGenerator.DataOperand and type(op1) == assemblyGenerator.DataOperand) or (type(op0) == assemblyGenerator.DataOperand and type(op1) == assemblyGenerator.StackOperand) or (type(op0) == assemblyGenerator.StackOperand and type(op1) == assemblyGenerator.DataOperand):
                             
-                            instruction = assemblyGenerator.MovInstruction(i.operand0, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+                            instruction = assemblyGenerator.MovInstruction(assType, i.operand0, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
 
                             i.operand0 = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
 
@@ -151,7 +194,7 @@ def FixingUpTopLevel(topLevel):
                             newList.append(i)
 
                         elif type(op1) == assemblyGenerator.ImmediateOperand:
-                            instruction = assemblyGenerator.MovInstruction(i.operand1, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)))
+                            instruction = assemblyGenerator.MovInstruction(assType, i.operand1, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)))
 
                             i.operand1 = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11))
 
@@ -159,7 +202,7 @@ def FixingUpTopLevel(topLevel):
                             newList.append(i)
                             
 
-                    case assemblyGenerator.BinaryInstruction(operator=op, src=src, dest=dst):
+                    case assemblyGenerator.BinaryInstruction(assType=assType, operator=op, src=src, dest=dst):
                         
                         if type(dst) == assemblyGenerator.StackOperand or type(dst) == assemblyGenerator.DataOperand:
                             match op:
@@ -167,9 +210,9 @@ def FixingUpTopLevel(topLevel):
                                         #print(o)
                                         if o == assemblyGenerator.BinopType.Mult:
 
-                                            instruction0 = assemblyGenerator.MovInstruction(i.dest, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)))
+                                            instruction0 = assemblyGenerator.MovInstruction(assType, i.dest, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)))
 
-                                            instruction1 = assemblyGenerator.MovInstruction(assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)), i.dest)
+                                            instruction1 = assemblyGenerator.MovInstruction(assType, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)), i.dest)
 
                                             i.dest = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11))
 
@@ -185,13 +228,18 @@ def FixingUpTopLevel(topLevel):
                                     #print(o)
                                     if o == assemblyGenerator.BinopType.Sub or o == assemblyGenerator.BinopType.Add:
 
-                                        instruction = assemblyGenerator.MovInstruction(i.src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+                                        instruction = assemblyGenerator.MovInstruction(assType, i.src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
 
                                         i.src = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
 
                                         newList.append(instruction)
                                         newList.append(i)
-                                        
+
+                    
+                    #case _:
+                    #    print("Invalid Instruction fixup. {0}".format(type(i)))
+                    #    sys.exit(1)                                        
+                    
                                     
                 if len(newList) == oldSize:
                     newList.append(i)

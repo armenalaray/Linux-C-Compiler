@@ -79,7 +79,7 @@ class MovInstruction:
         self.destO = destO
         
     def __str__(self):
-        return "Mov({self.sourceO}, {self.destO})".format(self=self)
+        return "AssType: {self.assType} Mov({self.sourceO}, {self.destO})".format(self=self)
     
     
     def __repr__(self):
@@ -90,7 +90,12 @@ class MovSXInstruction:
     def __init__(self, sourceO, destO):
         self.sourceO = sourceO
         self.destO = destO
-    
+
+    def __str__(self):
+        return "MovSX({self.sourceO}, {self.destO})".format(self=self)
+
+    def __repr__(self):
+        return self.__str__()    
 
 class UnaryInstruction:
     def __init__(self, operator, assType, dest):
@@ -99,7 +104,7 @@ class UnaryInstruction:
         self.dest = dest
     
     def __str__(self):
-        return "Unary({self.operator}, {self.dest})".format(self=self)
+        return "AssType: {self.assType} Unary({self.operator}, {self.dest})".format(self=self)
     
     def __repr__(self):
         return self.__str__()
@@ -111,7 +116,7 @@ class CompInst:
         self.operand1 = operand1
     
     def __str__(self):
-        return "Cmp({self.operand0}, {self.operand1})".format(self=self)
+        return "AssType: {self.assType} Cmp({self.operand0}, {self.operand1})".format(self=self)
     
     def __repr__(self):
         return self.__str__()
@@ -174,7 +179,7 @@ class BinaryInstruction:
         self.dest = dest
     
     def __str__(self):
-        return "Binary({self.operator}, {self.src}, {self.dest})".format(self=self)
+        return "AssType: {self.assType} Binary({self.operator}, {self.src}, {self.dest})".format(self=self)
     
     
     def __repr__(self):
@@ -188,7 +193,7 @@ class IDivInstruction:
         self.divisor = divisor
     
     def __str__(self):
-        return "Idiv({self.divisor})".format(self=self)
+        return "AssType: {self.assType} Idiv({self.divisor})".format(self=self)
     
     def __repr__(self):
         return self.__str__()
@@ -199,7 +204,7 @@ class CDQInstruction:
         self.assType = assType
 
     def __str__(self):
-        return "Cdq"
+        return "AssType: {self.assType} Cdq"
     
     
     def __repr__(self):
@@ -735,7 +740,12 @@ class ObjEntry(asm_symtab_entry):
 class FunEntry(asm_symtab_entry):
     def __init__(self, defined):
         self.defined = defined
+
+    def __str__(self):
+        return "Defined: {self.defined}".format(self=self)
     
+    def __repr__(self):
+        return self.__str__()
 
 def ASM_parseAST(ast, symbolTable):
     funcDefList = []

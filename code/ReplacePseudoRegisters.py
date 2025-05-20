@@ -1,6 +1,8 @@
+import sys
 import typeChecker
 import assemblyGenerator
 
+"""
 def ReplaceFuncDef(funcDef, table, offset):
     for i in funcDef.insList:
         #print(type(i))
@@ -110,6 +112,7 @@ def ReplaceFuncDef(funcDef, table, offset):
                         i.operand1 = StackOperand(value)
     
     return offset
+"""
 
 def ReplaceOperand(operand, table, offset, symbolTable):
     match operand:
@@ -118,15 +121,36 @@ def ReplaceOperand(operand, table, offset, symbolTable):
             if table.get(id) == None:
 
                 if id in symbolTable:
-                    print(type(symbolTable[id].attrs))
-                    match symbolTable[id].attrs:
-                        case typeChecker.StaticAttributes():
-                            return offset, assemblyGenerator.DataOperand(id)
+
+                    #print(type(symbolTable[id].attrs))
+                    match symbolTable[id]:
+                        case assemblyGenerator.FunEntry():
+                            pass
+                        case assemblyGenerator.ObjEntry(assType = assType, isStatic = isStatic):
+                            if isStatic:
+                                return offset, assemblyGenerator.DataOperand(id)
                             
-                
-                offset -= 4
-                table.update({id : offset})
-                
+                #stack allocation
+                match symbolTable[id]:
+                    case assemblyGenerator.ObjEntry(assType = assType, isStatic = isStatic):
+                        allocateSize = 0
+                        match assType.type:
+                            case assemblyGenerator.AssemblyType.LONGWORD:
+                                allocateSize = 4
+                                offset -= allocateSize
+                                
+                            case assemblyGenerator.AssemblyType.QUADWORD:
+                                allocateSize = 8
+                                offset -= allocateSize
+                                offset = offset - offset % 8
+                                
+
+                        table.update({id : offset})
+            
+            if table.get(id) == None:
+                print("Error: Symbol not in offset table.")
+                sys.exit(1)
+
             value = table[id] 
             
             return offset, assemblyGenerator.StackOperand(value)
@@ -145,6 +169,16 @@ def ReplaceTopLevel(topLevel, symbolTable):
             for i in insList:
                 #print(type(i))
                 match i:
+                    case assemblyGenerator.MovSXInstruction(sourceO=src, destO=dst):
+                        offset, object = ReplaceOperand(src, table, offset, symbolTable)
+                        if object:
+                            i.sourceO = object
+                        
+                        offset, object = ReplaceOperand(dst, table, offset, symbolTable)
+                        if object:
+                            i.destO = object
+                        
+
                     case assemblyGenerator.MovInstruction(sourceO=src, destO=dst):
                         offset, object = ReplaceOperand(src, table, offset, symbolTable)
                         if object:
@@ -193,7 +227,25 @@ def ReplaceTopLevel(topLevel, symbolTable):
                         offset, object = ReplaceOperand(op1, table, offset, symbolTable)
                         if object:
                             i.operand1 = object
-            
+
+                    case assemblyGenerator.ReturnInstruction():
+                        pass
+
+                    case assemblyGenerator.CallInstruction():
+                        pass
+
+                    case assemblyGenerator.JumpCCInst():
+                        pass
+
+                    case assemblyGenerator.LabelInst():
+                        pass
+                    
+                    
+                    #case _:
+                    #    print("Invalid Assembly Instruction. {0}".format(type(i)))
+                    #    sys.exit(1)
+                    
+
             topLevel.stackOffset = offset
                     
     
