@@ -213,50 +213,92 @@ def FixingUpTopLevel(topLevel):
                         # mov src, reg10
                         # mult reg10, dst reg
 
-                        print(assType)
+                        match op.operator:
 
-                        # src es imm
+                            case assemblyGenerator.BinopType.Mult:
+                    
+                                instruction0 = None
+                                instruction1 = None
+                                
+                                if type(dst) == assemblyGenerator.StackOperand or type(dst) == assemblyGenerator.DataOperand:
 
-                        instruction0 = None
-                        instruction1 = None
-                        #i.dest esta modificada
+                                    instruction0 = assemblyGenerator.MovInstruction(assType, i.dest, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)))
 
-                        if type(dst) == assemblyGenerator.StackOperand or type(dst) == assemblyGenerator.DataOperand:
-                            match op:
-                                    case assemblyGenerator.BinaryOperator(operator=o):
-                                        #print(o)
-                                        if o == assemblyGenerator.BinopType.Mult:
+                                    instruction1 = assemblyGenerator.MovInstruction(assType, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)), i.dest)
 
-                                            instruction0 = assemblyGenerator.MovInstruction(assType, i.dest, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)))
+                                    i.dest = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11))
 
-                                            instruction1 = assemblyGenerator.MovInstruction(assType, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)), i.dest)
+                                #newList.append(instruction0)
+                                #newList.append(i)
+                                #newList.append(instruction1)
 
-                                            i.dest = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11))
+                                instructionImm = None
+                                if type(src) == assemblyGenerator.ImmediateOperand and src.imm > pow(2, 31) - 1:
 
-                                            newList.append(instruction0)
-                                            newList.append(i)
-                                            newList.append(instruction1)
+                                    instructionImm = assemblyGenerator.MovInstruction(assType, src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
 
-                        if type(src) == assemblyGenerator.ImmediateOperand:
-                            #este es un numero
-                            #src.imm >  
-                            pass
+                                    i.src = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+
+                                if instruction0:
+                                    newList.append(instruction0)
+
+                                if instructionImm:
+                                    newList.append(instructionImm)
+
+                                newList.append(i)
+
+                                if instruction1:
+                                    newList.append(instruction1)
+                            case assemblyGenerator.BinopType.Add:
+                                
+                                if (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.DataOperand):
+                                    instruction = assemblyGenerator.MovInstruction(assType, i.src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+
+                                    i.src = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+
+                                    newList.append(instruction)
+                                    newList.append(i)
+
+                                elif type(src) == assemblyGenerator.ImmediateOperand and src.imm > pow(2, 31) - 1:
+
+                                    instructionImm = assemblyGenerator.MovInstruction(assType, src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+
+                                    i.src = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+
+                                    newList.append(instructionImm)
+                                    newList.append(i)
+
+                                
+                            case assemblyGenerator.BinopType.Sub:
+
+                                if (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.DataOperand):
+                                    instruction = assemblyGenerator.MovInstruction(assType, i.src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+
+                                    i.src = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+
+                                    newList.append(instruction)
+                                    newList.append(i)
+
+                                elif type(src) == assemblyGenerator.ImmediateOperand and src.imm > pow(2, 31) - 1:
+
+                                    instructionImm = assemblyGenerator.MovInstruction(assType, src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+
+                                    i.src = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+
+                                    newList.append(instructionImm)
+                                    newList.append(i)
+
+                        
+                            
 
                         #aqui estas checando que si los dos estan en memoria
-                        if (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.DataOperand):
-                            
-                            match op:
-                                case assemblyGenerator.BinaryOperator(operator=o):
-                                    #print(o)
-                                    if o == assemblyGenerator.BinopType.Sub or o == assemblyGenerator.BinopType.Add:
 
-                                        instruction = assemblyGenerator.MovInstruction(assType, i.src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+                        #data stack
+                        #stack data
+                        #data data
+                        #stack stack
 
-                                        i.src = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
-
-                                        newList.append(instruction)
-                                        newList.append(i)
-
+                        
                     
                     #case _:
                     #    print("Invalid Instruction fixup. {0}".format(type(i)))
