@@ -132,8 +132,6 @@ def FixingUpTopLevel(topLevel):
 
                             i.sourceO = regr10
 
-                            newList.append(instruction0)
-                            #newList.append(i)    
 
                         instruction2 = None
                         if type(destO) == assemblyGenerator.StackOperand or type(destO) == assemblyGenerator.DataOperand:
@@ -204,6 +202,25 @@ def FixingUpTopLevel(topLevel):
 
                     case assemblyGenerator.BinaryInstruction(assType=assType, operator=op, src=src, dest=dst):
                         
+                        #if add mult subq cmpq pushq cannot immediate 
+
+                        #if mult and dst is memory
+                        # mov dst, reg11
+                        # mov src, reg10
+                        # mult reg10, r11 <- este no puede ser immediate
+                        # mov r11, dst
+
+                        # mov src, reg10
+                        # mult reg10, dst reg
+
+                        print(assType)
+
+                        # src es imm
+
+                        instruction0 = None
+                        instruction1 = None
+                        #i.dest esta modificada
+
                         if type(dst) == assemblyGenerator.StackOperand or type(dst) == assemblyGenerator.DataOperand:
                             match op:
                                     case assemblyGenerator.BinaryOperator(operator=o):
@@ -220,7 +237,12 @@ def FixingUpTopLevel(topLevel):
                                             newList.append(i)
                                             newList.append(instruction1)
 
+                        if type(src) == assemblyGenerator.ImmediateOperand:
+                            #este es un numero
+                            #src.imm >  
+                            pass
 
+                        #aqui estas checando que si los dos estan en memoria
                         if (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.DataOperand):
                             
                             match op:
