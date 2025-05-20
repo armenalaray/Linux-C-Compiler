@@ -693,8 +693,17 @@ def ASM_parseTopLevel(topLevel, symbolTable):
 
             offset = 16 
             for i, param in enumerate(params):
-                
-                type = symbolTable[param].type
+                type = None
+                match symbolTable[param].type:
+                    case parser.IntType():
+                        type = AssemblySize(AssemblyType.LONGWORD)
+
+                    case parser.LongType():
+                        type = AssemblySize(AssemblyType.QUADWORD)
+
+                if type == None:
+                    print("Error")
+                    sys.exit(1)
 
                 a = None
                 if i > 5:
@@ -708,11 +717,40 @@ def ASM_parseTopLevel(topLevel, symbolTable):
             ASM_parseInstructions(instructions, ASM_Instructions, symbolTable)
             return Function(identifier, global_, ASM_Instructions)
 
+class asm_symtab_entry:
+    pass
+
+class ObjEntry(asm_symtab_entry):
+    def __init__(self, assType, isStatic):
+        self.assType = assType
+        self.isStatic = isStatic
+
+
+class FunEntry(asm_symtab_entry):
+    def __init__(self, defined):
+        self.defined = defined
+    
+
 def ASM_parseAST(ast, symbolTable):
     funcDefList = []
     for topLevel in ast.topLevelList:
         function = ASM_parseTopLevel(topLevel, symbolTable)
         funcDefList.append(function)
+
+    backendSymbolTable = {}
+
+    for name, entry in symbolTable.items():
+        print(type(entry.type))
+
+        match entry.type:
+            case parser.FunType():
+                pass 
+            case _:
+                ObjEntry()
+                pass
+
+        #backendSymbolTable[name] = 
+
 
     return Program(funcDefList)
 
