@@ -36,7 +36,7 @@ class StaticVariable(TopLevel):
         self.staticInit = staticInit
 
     def __str__(self):
-        return "Static Variable: Global = {self.global_} : {self.identifier} = {self.init}".format(self=self)
+        return "Static Variable: Global = {self.global_} Alignment = {self.alignment} : {self.identifier} = {self.staticInit}".format(self=self)
 
     def __repr__(self):
         return self.__str__()
@@ -51,7 +51,7 @@ class Function(TopLevel):
 
     def __str__(self):
         
-        return "Function {self.identifier} stackOffset: {self.stackOffset} instructions:{self.insList}".format(self=self)
+        return "Function {self.identifier} stackOffset: {self.stackOffset} global: {self.global_} instructions:{self.insList}".format(self=self)
     
     def __repr__(self):
         return self.__str__()
@@ -483,14 +483,6 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
 
             case tacGenerator.TAC_FunCallInstruction(funName = funName, arguments = arguments, dst = dst):
                 
-                """
-                stackArgs = len(arguments) - 6
-                if stackArguments < 0:
-                    stackArguments = 0
-
-                registerArgs = len(arguments) - stackArgs 
-                """
-
                 registerArgs = arguments[:6]
                 stackArgs = arguments[6:]
 
@@ -510,26 +502,27 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                 
                 for i, arg in enumerate(registerArgs):
                     #print(type(arg))
-                    asmArg = parseValue(arg)
-                    ASM_Instructions.append(MovInstruction(asmArg, RegisterOperand(Register(list(RegisterType)[i]))))
+                    type1, alignment1, asmArg = parseValue(arg, symbolTable)
+
+                    ASM_Instructions.append(MovInstruction(type1, asmArg, RegisterOperand(Register(list(RegisterType)[i]))))
                     
                 stackArgs.reverse()
 
                 #print(stackArgs)
 
                 for arg in stackArgs:
-                    asmArg = parseValue(arg)
+                    type1, alignment1, asmArg = parseValue(arg, symbolTable)
 
-                    #print(type(asmArg))
-                    if type(asmArg) == ImmediateOperand or type(asmArg) == RegisterOperand:
+                    if type(asmArg) == ImmediateOperand or type(asmArg) == RegisterOperand or type1.type == AssemblyType.QUADWORD:
+
                         ASM_Instructions.append(PushInstruction(asmArg))
                         
                     else:
-                        i0 = MovInstruction(asmArg, RegisterOperand(Register(RegisterType.AX)))
+                        i0 = MovInstruction(AssemblySize(AssemblyType.LONGWORD), asmArg, RegisterOperand(Register(RegisterType.AX)))
                         
                         ASM_Instructions.append(i0)
                         ASM_Instructions.append(PushInstruction(RegisterOperand(Register(RegisterType.AX))))
-                        pass
+                        
 
                 ASM_Instructions.append(CallInstruction(funName))
 
@@ -538,7 +531,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                     ASM_Instructions.append(DeallocateStackInstruction(bytesToRemove))
                 
                 type1, alignment1, asmDst = parseValue(dst, symbolTable)
-                #print(type(asmDst))
+                
                 ASM_Instructions.append(MovInstruction(type1, RegisterOperand(Register(RegisterType.AX)), asmDst))
 
             case tacGenerator.TAC_BinaryInstruction(operator=op, src1=src1_, src2=src2_, dst=dst_):
@@ -620,10 +613,13 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                 ASM_Instructions.append(instruction0)
                 ASM_Instructions.append(instruction1)
 
-            case tacGenerator.TAC_JumpIfNotZeroInst(condition=cond, label=label):
-                c = parseValue(cond)
+            case tacGenerator.TAC_signExtendInstruction():
+                pass
 
-                instruction0 = CompInst(ImmediateOperand(0), c)
+            case tacGenerator.TAC_JumpIfNotZeroInst(condition=cond, label=label):
+                type1, alignment1, c = parseValue(cond, symbolTable)
+
+                instruction0 = CompInst(type1, ImmediateOperand(0), c)
                 instruction1 = JumpCCInst(ConcCodeType.NE, label)
                 
                 ASM_Instructions.append(instruction0)
@@ -641,25 +637,43 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                 
                 ASM_Instructions.append(LabelInst(id))
 
+            case _:
+                print("Invalid TAC Instruction. {0}".format(type(i)))
+                sys.exit(1)
+
 
 def ASM_parseTopLevel(topLevel, symbolTable):
     match topLevel:
-        case tacGenerator.StaticVariable(identifier = identifier, global_ = global_,init = init):
+        case tacGenerator.StaticVariable(identifier = identifier, global_ = global_, type = type, init = init):
             print(identifier)
-            return StaticVariable(identifier, global_, init)
+            alignment = 0
+            match type:
+                case parser.IntType():
+                    alignment = 4
+
+                case parser.LongType():
+                    alignment = 8
+                
+                case _:
+                    print("Invalid Type.")
+                    sys.exit(1)
+
+            return StaticVariable(identifier, global_, alignment, init)
         
         case tacGenerator.TAC_FunctionDef(identifier = identifier, global_ = global_, params = params, instructions = instructions):
             ASM_Instructions = []
 
             offset = 16 
             for i, param in enumerate(params):
+                
+                type = symbolTable[param].type
 
                 a = None
                 if i > 5:
-                    a = MovInstruction(StackOperand(offset), PseudoRegisterOperand(param))
+                    a = MovInstruction(type, StackOperand(offset), PseudoRegisterOperand(param))
                     offset += 8
                 else:
-                    a = MovInstruction(RegisterOperand(Register(list(RegisterType)[i])), PseudoRegisterOperand(param))
+                    a = MovInstruction(type, RegisterOperand(Register(list(RegisterType)[i])), PseudoRegisterOperand(param))
 
                 ASM_Instructions.append(a)
                 
