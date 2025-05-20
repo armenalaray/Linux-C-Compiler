@@ -178,9 +178,11 @@ if __name__ == "__main__":
 			if LastStage == 'tac':
 				sys.exit(0)
 
-			ass = assemblyGenerator.ASM_parseAST(tac, symbolTable)
+			ass, backSymbolTable = assemblyGenerator.ASM_parseAST(tac, symbolTable)
 
 			print(ass)
+
+			print(backSymbolTable)
 			
 			#ReplacePseudoRegisters.ReplacePseudoRegisters(ass, symbolTable)
 

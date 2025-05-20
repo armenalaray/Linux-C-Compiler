@@ -2,6 +2,7 @@ from enum import Enum
 import tacGenerator
 import sys
 import parser
+import typeChecker
 
 class Program:
     
@@ -725,6 +726,11 @@ class ObjEntry(asm_symtab_entry):
         self.assType = assType
         self.isStatic = isStatic
 
+    def __str__(self):
+        return "AssType: {self.assType} IsStatic: {self.isStatic}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
 
 class FunEntry(asm_symtab_entry):
     def __init__(self, defined):
@@ -740,19 +746,29 @@ def ASM_parseAST(ast, symbolTable):
     backendSymbolTable = {}
 
     for name, entry in symbolTable.items():
-        print(type(entry.type))
+        #print(type(entry.attrs))
 
+        type_ = None
         match entry.type:
-            case parser.FunType():
-                pass 
-            case _:
-                ObjEntry()
-                pass
+            case parser.IntType():
+                type_ = AssemblySize(AssemblyType.LONGWORD)
 
-        #backendSymbolTable[name] = 
+            case parser.LongType():
+                type_ = AssemblySize(AssemblyType.QUADWORD)
 
+        match entry.attrs:
+            case typeChecker.FunAttributes(defined = defined, global_ = global_):
+                backendSymbolTable[name] = FunEntry(defined=defined)
+             
+            case typeChecker.LocalAttributes():
+                backendSymbolTable[name] = ObjEntry(assType=type_, isStatic=False)
+                
+            case typeChecker.StaticAttributes():
+                backendSymbolTable[name] = ObjEntry(assType=type_, isStatic=True)
+                
+    
 
-    return Program(funcDefList)
+    return Program(funcDefList), backendSymbolTable
 
 
     
