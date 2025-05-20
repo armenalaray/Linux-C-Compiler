@@ -204,6 +204,7 @@ class CDQInstruction:
     def __repr__(self):
         return self.__str__()
 
+"""
 class AllocateStackInstruction:
     def __init__(self, offset):
         self.offset = offset
@@ -225,6 +226,8 @@ class DeallocateStackInstruction():
     
     def __repr__(self):
         return self.__str__()    
+
+"""
     
 class PushInstruction():
     def __init__(self, operand):
@@ -497,7 +500,12 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                 
                 #print("stackPadding", stackPadding)
                 if stackPadding != 0:
-                    ASM_Instructions.append(AllocateStackInstruction(stackPadding))
+                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Sub), AssemblySize(AssemblyType.QUADWORD), ImmediateOperand(stackPadding), RegisterOperand(Register(RegisterType.SP)))
+                    
+                    ASM_Instructions.append(instruction0)
+
+                    #ASM_Instructions.append(AllocateStackInstruction(stackPadding))
+
                     pass
                 
                 for i, arg in enumerate(registerArgs):
@@ -528,7 +536,12 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
 
                 bytesToRemove = stackPadding + 8 * len(stackArgs)
                 if bytesToRemove:
-                    ASM_Instructions.append(DeallocateStackInstruction(bytesToRemove))
+
+                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Add), AssemblySize(AssemblyType.QUADWORD), ImmediateOperand(bytesToRemove), RegisterOperand(Register(RegisterType.SP)))
+                    
+                    ASM_Instructions.append(instruction0)
+
+                    #ASM_Instructions.append(DeallocateStackInstruction(bytesToRemove))
                 
                 type1, alignment1, asmDst = parseValue(dst, symbolTable)
                 
@@ -613,8 +626,23 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                 ASM_Instructions.append(instruction0)
                 ASM_Instructions.append(instruction1)
 
-            case tacGenerator.TAC_signExtendInstruction():
-                pass
+            case tacGenerator.TAC_signExtendInstruction(src = src, dst = dst):
+                type1, alignment1, src = parseValue(src, symbolTable)
+                type2, alignment2, dst = parseValue(dst, symbolTable)
+
+                instruction0 = MovSXInstruction(src, dst)
+
+                ASM_Instructions.append(instruction0)
+
+            case tacGenerator.TAC_truncateInstruction(src = src, dst = dst):
+                type1, alignment1, src = parseValue(src, symbolTable)
+                type2, alignment2, dst = parseValue(dst, symbolTable)
+
+                instruction0 = MovInstruction(AssemblySize(AssemblyType.LONGWORD), src, dst)
+
+                ASM_Instructions.append(instruction0)
+
+                pass                
 
             case tacGenerator.TAC_JumpIfNotZeroInst(condition=cond, label=label):
                 type1, alignment1, c = parseValue(cond, symbolTable)
