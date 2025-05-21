@@ -491,7 +491,15 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                                 ASM_Instructions.append(instruction1)
 
             case tacGenerator.TAC_FunCallInstruction(funName = funName, arguments = arguments, dst = dst):
-                
+
+                paramTypes = symbolTable[funName].type.paramTypes
+
+                registerTypes = paramTypes[:6]
+                stackTypes = paramTypes[6:]
+
+                print("Register Types: ", registerTypes)
+                print("Stack Types: ", stackTypes)
+
                 registerArgs = arguments[:6]
                 stackArgs = arguments[6:]
 
@@ -514,20 +522,50 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
 
                     pass
                 
-                for i, arg in enumerate(registerArgs):
-                    #print(type(arg))
+                for i, (arg, type_) in enumerate(zip(registerArgs, registerTypes)):
+                    
+                    print(type(type_))
+                    realType = None
+                    match type_:
+                        case parser.IntType():
+                            pass
+                            realType = AssemblySize(AssemblyType.LONGWORD)
+                            
+                        case parser.LongType():
+                            realType = AssemblySize(AssemblyType.QUADWORD)
+
+                        case _:
+                            print("Invalid argument type.")
+                            sys.exit(1)
+                            
+
                     type1, alignment1, asmArg = parseValue(arg, symbolTable)
 
-                    ASM_Instructions.append(MovInstruction(type1, asmArg, RegisterOperand(Register(list(RegisterType)[i]))))
-                    
-                stackArgs.reverse()
+                    ASM_Instructions.append(MovInstruction(realType, asmArg, RegisterOperand(Register(list(RegisterType)[i]))))
 
+                   
+                stackArgs.reverse()
+                stackTypes.reverse()
                 #print(stackArgs)
 
-                for arg in stackArgs:
+                for arg, type_ in zip(stackArgs, stackTypes):
+
                     type1, alignment1, asmArg = parseValue(arg, symbolTable)
 
-                    if type(asmArg) == ImmediateOperand or type(asmArg) == RegisterOperand or type1.type == AssemblyType.QUADWORD:
+                    realType = None
+                    match type_:
+                        case parser.IntType():
+                            pass
+                            realType = AssemblySize(AssemblyType.LONGWORD)
+                            
+                        case parser.LongType():
+                            realType = AssemblySize(AssemblyType.QUADWORD)
+
+                        case _:
+                            print("Invalid argument type.")
+                            sys.exit(1)
+
+                    if type(asmArg) == ImmediateOperand or type(asmArg) == RegisterOperand or realType.type == AssemblyType.QUADWORD:
 
                         ASM_Instructions.append(PushInstruction(asmArg))
                         
