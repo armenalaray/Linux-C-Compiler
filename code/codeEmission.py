@@ -255,6 +255,16 @@ def printStaticInit(staticInit, output):
             pass
     return output
 
+def printInstructionSuffix(type, output):
+    match type:
+        case assemblyGenerator.AssemblyType.LONGWORD:
+            output += 'l'
+            
+        case assemblyGenerator.AssemblyType.QUADWORD:
+            output += 'q'
+
+    return output
+
 def printTopLevel(topLevel, output, symbolTable):
     match topLevel:
         case assemblyGenerator.StaticVariable(identifier = identifier, global_ = global_, alignment = alignment, staticInit = staticInit):
@@ -279,6 +289,7 @@ def printTopLevel(topLevel, output, symbolTable):
 
                 
             pass
+        
         case assemblyGenerator.Function(identifier = identifier, global_ = global_, insList = insList, stackOffset = stackOffset):
             if global_ == True:
                 output += '\t.globl {0}\n'.format(identifier)
@@ -287,11 +298,26 @@ def printTopLevel(topLevel, output, symbolTable):
             
             for i in insList:
                 match i:
-                    case assemblyGenerator.MovSXInstruction():
-                        pass
-                    case assemblyGenerator.MovInstruction(sourceO=src, destO=dst):
-                        output += '\n\tmovl '
+                    case assemblyGenerator.MovSXInstruction(sourceO = sourceO, destO = destO):
+                        output += '\n\tmovslq '
+
+                        output = matchOperand(sourceO, output)
                         
+                        output += ', '
+
+                        output = matchOperand(destO, output) 
+
+                        
+
+                    case assemblyGenerator.MovInstruction(assType=assType, sourceO=src, destO=dst):
+                        output += '\n\tmov'
+
+                        #print(type(assType.type))
+
+                        output = printInstructionSuffix(assType.type, output)
+                                
+                        output += ' '
+
                         output = matchOperand(src, output)
                         
                         output += ', '
@@ -309,17 +335,20 @@ def printTopLevel(topLevel, output, symbolTable):
                     #    output += ', %rsp'
                         
                         
-                    case assemblyGenerator.UnaryInstruction(operator=o, dest=dst):
-                        #print(o)
+                    case assemblyGenerator.UnaryInstruction(operator=o, assType = assType, dest=dst):
+                        
                         match o:
                             case assemblyGenerator.UnaryOperator(operator=op):
                                 match op:
                                     case assemblyGenerator.UnopType.Not:
-                                        output += '\n\tnotl '
-                                        
+                                        output += '\n\tnot'
+
                                     case assemblyGenerator.UnopType.Neg:
-                                        output += '\n\tnegl '
-                                        
+                                        output += '\n\tneg'
+
+                        output = printInstructionSuffix(assType.type, output)
+
+                        output += ' '                
 
                         output = matchOperand(dst, output)
 

@@ -1,7 +1,7 @@
 int a = 4294967299;
 
 long sign_extend(int i, long expected) {
-    long extended = (long) i;
+    long extended = (long) -i;
     return (extended == expected);
 }
 
