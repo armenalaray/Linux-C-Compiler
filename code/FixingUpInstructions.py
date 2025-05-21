@@ -1,4 +1,5 @@
 import sys
+import numpy
 import assemblyGenerator
 
 def FixUpFuncDef(funcDef):
@@ -108,7 +109,7 @@ def FixingUpTopLevel(topLevel):
 
 
             newList = []
-            #newList.insert(0,assemblyGenerator.AllocateStackInstruction(-offset))
+            newList.insert(0,assemblyGenerator.BinaryInstruction(assemblyGenerator.BinaryOperator(assemblyGenerator.BinopType.Sub), assemblyGenerator.AssemblySize(assemblyGenerator.AssemblyType.QUADWORD), assemblyGenerator.ImmediateOperand(-offset), assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.SP))))
 
             oldSize = len(newList)
 
@@ -170,6 +171,10 @@ def FixingUpTopLevel(topLevel):
                             newList.append(i)
                             newList.append(instruction)
                         
+                        elif type(src) == assemblyGenerator.ImmediateOperand and src.imm > pow(2, 31) - 1:
+                            #truncate immediate
+                            tru = numpy.int32(src.imm)
+                            i.sourceO = assemblyGenerator.ImmediateOperand(tru)
                     
                     case assemblyGenerator.IDivInstruction(assType=assType, divisor=div):
                         match div:
