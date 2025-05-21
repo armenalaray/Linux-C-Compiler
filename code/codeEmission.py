@@ -8,7 +8,7 @@ class OperandSize(Enum):
     BYTE_4 = 2
     BYTE_1 = 3
 
-def matchOperand(operand, output, operandSize = OperandSize.BYTE_4):
+def matchOperand(operand, output, operandSize):
 
     match operand:
         case assemblyGenerator.StackOperand(offset=off):
@@ -131,116 +131,6 @@ def matchOperand(operand, output, operandSize = OperandSize.BYTE_4):
             #print(output)
     return output
 
-def printFunction(function, output, symbolTable):
-    output += '\t.globl {0}\n{0}:\n\tpushq %rbp\n\tmovq %rsp, %rbp'.format(function.identifier)
-    
-    for i in function.insList:
-        match i:
-            case assemblyGenerator.MovInstruction(sourceO=src, destO=dst):
-                output += '\n\tmovl '
-                
-                output = matchOperand(src, output)
-                
-                output += ', '
-
-                output = matchOperand(dst, output)
-
-                
-
-            case assemblyGenerator.ReturnInstruction():
-                output += '\n\tmovq %rbp, %rsp\n\tpopq %rbp\n\tret'
-                
-            case assemblyGenerator.AllocateStackInstruction(offset=off):
-                output += '\n\tsubq ${0}'.format(off)
-
-                output += ', %rsp'
-                
-                
-            case assemblyGenerator.UnaryInstruction(operator=o, dest=dst):
-                #print(o)
-                match o:
-                    case assemblyGenerator.UnaryOperator(operator=op):
-                        match op:
-                            case assemblyGenerator.UnopType.Not:
-                                output += '\n\tnotl '
-                                
-                            case assemblyGenerator.UnopType.Neg:
-                                output += '\n\tnegl '
-                                
-
-                output = matchOperand(dst, output)
-
-            case assemblyGenerator.BinaryInstruction(operator=op, src=src, dest=dst):
-                match op:
-                    case assemblyGenerator.BinaryOperator(operator=o):
-                        match o:
-                            case assemblyGenerator.BinopType.Add:
-                                output += '\n\taddl '
-                                pass
-                            case assemblyGenerator.BinopType.Sub:
-                                output += '\n\tsubl '
-                                pass
-                            case assemblyGenerator.BinopType.Mult:
-                                output += '\n\timull '
-                                pass
-                
-                output = matchOperand(src, output)
-                output += ', '
-                output = matchOperand(dst, output)
-
-            case assemblyGenerator.IDivInstruction(divisor=divisor):
-                output += '\n\tidivl '
-                output = matchOperand(divisor, output)
-                
-            case assemblyGenerator.CDQInstruction():
-                output += '\n\tcdq'
-            
-            case assemblyGenerator.CompInst(operand0=op0, operand1=op1):
-                
-                output += '\n\tcmpl '
-                output = matchOperand(op0, output)
-
-                output += ', '
-
-                output = matchOperand(op1, output)
-            
-            case assemblyGenerator.JumpInst(identifier=id):
-                output += '\n\tjmp .L{0}'.format(id)
-
-            case assemblyGenerator.JumpCCInst(conc_code=code, identifier=id):
-                output += '\n\tj{0} .L{1}'.format(code.name, id)
-                
-            
-            case assemblyGenerator.SetCCInst(conc_code=code, operand=op):
-                output += '\n\tset{0} '.format(code.name)
-                output = matchOperand(op, output, OperandSize.BYTE_1)
-
-            case assemblyGenerator.LabelInst(identifier=id):
-                output += '\n.L{0}:'.format(id)
-                
-            case assemblyGenerator.PushInstruction(operand = operand):
-                output += "\n\tpushq "
-
-                output = matchOperand(operand, output, OperandSize.BYTE_8)
-            
-            case assemblyGenerator.CallInstruction(identifier = identifier):
-                if identifier in symbolTable:
-                    #print(symbolTable)
-                    output += "\n\tcall {0}".format(identifier)
-                else:
-                    output += "\n\tcall {0}@PLT".format(identifier)
-
-            case assemblyGenerator.DeallocateStackInstruction(offset = offset):
-                output += "\n\taddq ${0}, %rsp".format(offset)
-
-            case _:
-                print("Instruction {0} not added into code emission!".format(i))
-                sys.exit(1)
-        #output += '\n\t{0}'.format(i)
-        
-    output += '\n'
-    return output
-
 def printStaticInit(staticInit, output):
     match staticInit:
         case typeChecker.IntInit(int=int):
@@ -271,6 +161,21 @@ def printInstructionSuffix(type, output):
             sys.exit(1)
 
     return output
+
+def getOperandSize(type):
+    operandSize = None
+    match type:
+        case assemblyGenerator.AssemblyType.LONGWORD:
+            operandSize = OperandSize.BYTE_4
+            
+        case assemblyGenerator.AssemblyType.QUADWORD:
+            operandSize = OperandSize.BYTE_8
+        
+        case _:
+            print("Invalid Operand Size")
+            sys.exit(1)
+
+    return operandSize
 
 def printTopLevel(topLevel, output, symbolTable):
     match topLevel:
@@ -305,14 +210,15 @@ def printTopLevel(topLevel, output, symbolTable):
             
             for i in insList:
                 match i:
+                    #esq esta es un sign extend
                     case assemblyGenerator.MovSXInstruction(sourceO = sourceO, destO = destO):
                         output += '\n\tmovslq '
 
-                        output = matchOperand(sourceO, output)
+                        output = matchOperand(sourceO, output, OperandSize.BYTE_4)
                         
                         output += ', '
 
-                        output = matchOperand(destO, output) 
+                        output = matchOperand(destO, output, OperandSize.BYTE_8) 
 
                         
 
@@ -324,12 +230,14 @@ def printTopLevel(topLevel, output, symbolTable):
                         output = printInstructionSuffix(assType.type, output)
                                 
                         output += ' '
+                                
+                        operandSize = getOperandSize(assType.type)
 
-                        output = matchOperand(src, output)
+                        output = matchOperand(src, output, operandSize)
                         
                         output += ', '
 
-                        output = matchOperand(dst, output)
+                        output = matchOperand(dst, output, operandSize)
 
                         
 
@@ -357,7 +265,8 @@ def printTopLevel(topLevel, output, symbolTable):
 
                         output += ' '                
 
-                        output = matchOperand(dst, output)
+                        operandSize = getOperandSize(assType.type)
+                        output = matchOperand(dst, output, operandSize)
 
                     case assemblyGenerator.BinaryInstruction(operator=op, assType = assType, src=src, dest=dst):
                         match op:
@@ -377,9 +286,11 @@ def printTopLevel(topLevel, output, symbolTable):
 
                         output += ' '                
 
-                        output = matchOperand(src, output)
+                        operandSize = getOperandSize(assType.type)
+
+                        output = matchOperand(src, output, operandSize)
                         output += ', '
-                        output = matchOperand(dst, output)
+                        output = matchOperand(dst, output, operandSize)
 
                     case assemblyGenerator.IDivInstruction(assType = assType, divisor=divisor):
                         output += '\n\tidiv'
@@ -388,7 +299,8 @@ def printTopLevel(topLevel, output, symbolTable):
 
                         output += ' '                
                         
-                        output = matchOperand(divisor, output)
+                        operandSize = getOperandSize(assType.type)
+                        output = matchOperand(divisor, output, operandSize)
                         
                     case assemblyGenerator.CDQInstruction(assType = assType):
                         match assType.type:
@@ -408,11 +320,13 @@ def printTopLevel(topLevel, output, symbolTable):
 
                         output += ' '                
 
-                        output = matchOperand(op0, output)
+                        operandSize = getOperandSize(assType.type)
+
+                        output = matchOperand(op0, output, operandSize)
 
                         output += ', '
 
-                        output = matchOperand(op1, output)
+                        output = matchOperand(op1, output, operandSize)
                     
                     case assemblyGenerator.JumpInst(identifier=id):
                         output += '\n\tjmp .L{0}'.format(id)
@@ -430,7 +344,6 @@ def printTopLevel(topLevel, output, symbolTable):
                         
                     case assemblyGenerator.PushInstruction(operand = operand):
                         output += "\n\tpushq "
-
                         output = matchOperand(operand, output, OperandSize.BYTE_8)
                     
                     case assemblyGenerator.CallInstruction(identifier = identifier):

@@ -172,9 +172,18 @@ def FixingUpTopLevel(topLevel):
                             newList.append(instruction)
                         
                         elif type(src) == assemblyGenerator.ImmediateOperand and src.imm > pow(2, 31) - 1:
+
+                            instructionImm = assemblyGenerator.MovInstruction(assType, src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+
+                            i.sourceO = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+
+                            newList.append(instructionImm)
+                            newList.append(i)
+
+                        #elif assType.type == assemblyGenerator.AssemblyType.LONGWORD and type(src) == assemblyGenerator.ImmediateOperand and src.imm > pow(2, 31) - 1:
                             #truncate immediate
-                            tru = numpy.int32(src.imm)
-                            i.sourceO = assemblyGenerator.ImmediateOperand(tru)
+                        #    tru = numpy.int32(src.imm)
+                        #    i.sourceO = assemblyGenerator.ImmediateOperand(tru)
                     
                     case assemblyGenerator.IDivInstruction(assType=assType, divisor=div):
                         match div:

@@ -1,28 +1,131 @@
-	.globl sign_extend
+	.globl foo
 	.text
-sign_extend:
+foo:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $64, %rsp
-	movl %edi, -4(%rbp)
-	movq %esi, -16(%rbp)
-	movslq -4(%rbp), %r11d
-	movq %r11d, -24(%rbp)
-	movq -16(%rbp), %r10d
-	cmpq %r10d, -24(%rbp)
-	movl $0, -28(%rbp)
-	setG -28(%rbp)
-	movslq -28(%rbp), %r11d
-	movq %r11d, -40(%rbp)
-	movq -40(%rbp), %r10d
-	movq %r10d, -48(%rbp)
-	movq -16(%rbp), %r10d
-	cmpq %r10d, -48(%rbp)
-	movl $0, -52(%rbp)
-	setE -52(%rbp)
-	movslq -52(%rbp), %r11d
-	movq %r11d, -64(%rbp)
-	movq -64(%rbp), %eax
+	subq $160, %rsp
+	movq %rdi, -8(%rbp)
+	movl %esi, -12(%rbp)
+	movl %edx, -16(%rbp)
+	movl %ecx, -20(%rbp)
+	movq %r8, -32(%rbp)
+	movl %r9d, -36(%rbp)
+	movq 16(%rbp), %r10
+	movq %r10, -48(%rbp)
+	movl 24(%rbp), %r10d
+	movl %r10d, -52(%rbp)
+	movq $1, -64(%rbp)
+	negq -64(%rbp)
+	movq -64(%rbp), %r10
+	cmpq %r10, -8(%rbp)
+	movl $0, -68(%rbp)
+	setNE -68(%rbp)
+	movl -68(%rbp), %r10d
+	movl %r10d, -72(%rbp)
+	cmpl $0, -72(%rbp)
+	jE .Ltmp.19
+	movl $1, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.19:
+	cmpl $2, -12(%rbp)
+	movl $0, -76(%rbp)
+	setNE -76(%rbp)
+	movl -76(%rbp), %r10d
+	movl %r10d, -80(%rbp)
+	cmpl $0, -80(%rbp)
+	jE .Ltmp.22
+	movl $2, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.22:
+	cmpl $0, -16(%rbp)
+	movl $0, -84(%rbp)
+	setNE -84(%rbp)
+	movl -84(%rbp), %r10d
+	movl %r10d, -88(%rbp)
+	cmpl $0, -88(%rbp)
+	jE .Ltmp.25
+	movl $3, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.25:
+	movl $5, -92(%rbp)
+	negl -92(%rbp)
+	movl -92(%rbp), %r10d
+	cmpl %r10d, -20(%rbp)
+	movl $0, -96(%rbp)
+	setNE -96(%rbp)
+	movl -96(%rbp), %r10d
+	movl %r10d, -100(%rbp)
+	cmpl $0, -100(%rbp)
+	jE .Ltmp.29
+	movl $4, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.29:
+	movq $101, -112(%rbp)
+	negq -112(%rbp)
+	movq -112(%rbp), %r10
+	cmpq %r10, -32(%rbp)
+	movl $0, -116(%rbp)
+	setNE -116(%rbp)
+	movl -116(%rbp), %r10d
+	movl %r10d, -120(%rbp)
+	cmpl $0, -120(%rbp)
+	jE .Ltmp.33
+	movl $5, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.33:
+	movl $123, -124(%rbp)
+	negl -124(%rbp)
+	movl -124(%rbp), %r10d
+	cmpl %r10d, -36(%rbp)
+	movl $0, -128(%rbp)
+	setNE -128(%rbp)
+	movl -128(%rbp), %r10d
+	movl %r10d, -132(%rbp)
+	cmpl $0, -132(%rbp)
+	jE .Ltmp.37
+	movl $6, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.37:
+	movq $10, -144(%rbp)
+	negq -144(%rbp)
+	movq -144(%rbp), %r10
+	cmpq %r10, -48(%rbp)
+	movl $0, -148(%rbp)
+	setNE -148(%rbp)
+	movl -148(%rbp), %r10d
+	movl %r10d, -152(%rbp)
+	cmpl $0, -152(%rbp)
+	jE .Ltmp.41
+	movl $7, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.41:
+	cmpl $1234, -52(%rbp)
+	movl $0, -156(%rbp)
+	setNE -156(%rbp)
+	movl -156(%rbp), %r10d
+	movl %r10d, -160(%rbp)
+	cmpl $0, -160(%rbp)
+	jE .Ltmp.44
+	movl $8, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.44:
+	movl $0, %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
@@ -35,77 +138,90 @@ sign_extend:
 main:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $112, %rsp
-	movl $10, -8(%rbp)
-	movq $10, -16(%rbp)
-	movq -8(%rbp), %edi
-	movq -16(%rbp), %esi
-	call sign_extend
-	movq %eax, -24(%rbp)
-	cmpq $0, -24(%rbp)
-	movl $0, -28(%rbp)
-	setE -28(%rbp)
-	movl -28(%rbp), %r10d
-	movl %r10d, -32(%rbp)
-	cmpl $0, -32(%rbp)
-	jE .Ltmp.14
-	movl $1, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.14:
-	movl $10, -36(%rbp)
-	negl -36(%rbp)
-	movl -36(%rbp), %r10d
+	subq $192, %rsp
+	movl $1, -4(%rbp)
+	negl -4(%rbp)
+	movl -4(%rbp), %r10d
+	movl %r10d, -8(%rbp)
+	movq $4294967298, %r10
+	movq %r10, -16(%rbp)
+	movq $4294967296, %r10
+	movq %r10, -24(%rbp)
+	negq -24(%rbp)
+	movq -24(%rbp), %r10
+	movq %r10, -32(%rbp)
+	movq $21474836475, %r10
+	movq %r10, -40(%rbp)
+	movl $101, -44(%rbp)
+	negl -44(%rbp)
+	movl -44(%rbp), %r10d
 	movl %r10d, -48(%rbp)
-	movq $10, -56(%rbp)
-	negq -56(%rbp)
-	movq -56(%rbp), %r10d
-	movq %r10d, -64(%rbp)
-	movq -48(%rbp), %edi
-	movq -64(%rbp), %esi
-	call sign_extend
-	movq %eax, -72(%rbp)
-	cmpq $0, -72(%rbp)
-	movl $0, -76(%rbp)
-	setE -76(%rbp)
+	movl $123, -52(%rbp)
+	negl -52(%rbp)
+	movslq -52(%rbp), %r11
+	movq %r11, -64(%rbp)
+	movq -64(%rbp), %r10
+	movq %r10, -72(%rbp)
+	movl $10, -76(%rbp)
+	negl -76(%rbp)
 	movl -76(%rbp), %r10d
 	movl %r10d, -80(%rbp)
-	cmpl $0, -80(%rbp)
-	jE .Ltmp.22
-	movl $2, %eax
+	movq $9223372036854774574, %r10
+	movq %r10, -88(%rbp)
+	negq -88(%rbp)
+	movq -88(%rbp), %r10
+	movq %r10, -96(%rbp)
+	movslq -8(%rbp), %r11
+	movq %r11, -104(%rbp)
+	movq -104(%rbp), %r10
+	movq %r10, -108(%rbp)
+	movl -16(%rbp), %r10d
+	movl %r10d, -112(%rbp)
+	movl -112(%rbp), %r10d
+	movl %r10d, -116(%rbp)
+	movl -32(%rbp), %r10d
+	movl %r10d, -120(%rbp)
+	movl -120(%rbp), %r10d
+	movl %r10d, -124(%rbp)
+	movl -40(%rbp), %r10d
+	movl %r10d, -128(%rbp)
+	movl -128(%rbp), %r10d
+	movl %r10d, -132(%rbp)
+	movslq -48(%rbp), %r11
+	movq %r11, -144(%rbp)
+	movq -144(%rbp), %r10
+	movq %r10, -148(%rbp)
+	movl -72(%rbp), %r10d
+	movl %r10d, -152(%rbp)
+	movl -152(%rbp), %r10d
+	movl %r10d, -156(%rbp)
+	movslq -80(%rbp), %r11
+	movq %r11, -168(%rbp)
+	movq -168(%rbp), %r10
+	movq %r10, -172(%rbp)
+	movl -96(%rbp), %r10d
+	movl %r10d, -176(%rbp)
+	movl -176(%rbp), %r10d
+	movl %r10d, -180(%rbp)
+	movl -108(%rbp), %edi
+	movl -116(%rbp), %esi
+	movl -124(%rbp), %edx
+	movl -132(%rbp), %ecx
+	movl -148(%rbp), %r8d
+	movl -156(%rbp), %r9d
+	movl -180(%rbp), %eax
+	pushq %rax
+	movl -172(%rbp), %eax
+	pushq %rax
+	call foo
+	addq $16, %rsp
+	movl %eax, -184(%rbp)
+	movl -184(%rbp), %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-.Ltmp.22:
-	movl $100, %r10d
-	movslq %r10d, %r11d
-	movq %r11d, -88(%rbp)
-	movq -88(%rbp), %r10d
-	movq %r10d, -96(%rbp)
-	cmpq $100, -96(%rbp)
-	movl $0, -100(%rbp)
-	setNE -100(%rbp)
-	movl -100(%rbp), %r10d
-	movl %r10d, -104(%rbp)
-	cmpl $0, -104(%rbp)
-	jE .Ltmp.26
-	movl $3, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.26:
 	movl $0, %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl a
-	.data
-	.align 4
-a:
-	.long 3
 	.section	.note.GNU-stack,"",@progbits
