@@ -4,7 +4,7 @@
 # My compiler
 
 
-#lastStage="--codegen"
+#lastStage="--tacky"
 #noLink="-c"
 
 

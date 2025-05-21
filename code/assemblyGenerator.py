@@ -523,26 +523,11 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                     pass
                 
                 for i, (arg, type_) in enumerate(zip(registerArgs, registerTypes)):
-                    
-                    print(type(type_))
-                    realType = None
-                    match type_:
-                        case parser.IntType():
-                            pass
-                            realType = AssemblySize(AssemblyType.LONGWORD)
-                            
-                        case parser.LongType():
-                            realType = AssemblySize(AssemblyType.QUADWORD)
-
-                        case _:
-                            print("Invalid argument type.")
-                            sys.exit(1)
-                            
 
                     type1, alignment1, asmArg = parseValue(arg, symbolTable)
 
                     ASM_Instructions.append(MovInstruction(type1, asmArg, RegisterOperand(Register(list(RegisterType)[i]))))
-                    #ASM_Instructions.append(MovInstruction(realType, asmArg, RegisterOperand(Register(list(RegisterType)[i]))))
+                    
                    
                 stackArgs.reverse()
                 stackTypes.reverse()
@@ -552,19 +537,6 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                 for arg, type_ in zip(stackArgs, stackTypes):
 
                     type1, alignment1, asmArg = parseValue(arg, symbolTable)
-
-                    realType = None
-                    match type_:
-                        case parser.IntType():
-                            pass
-                            realType = AssemblySize(AssemblyType.LONGWORD)
-                            
-                        case parser.LongType():
-                            realType = AssemblySize(AssemblyType.QUADWORD)
-
-                        case _:
-                            print("Invalid argument type.")
-                            sys.exit(1)
 
                     if type(asmArg) == ImmediateOperand or type(asmArg) == RegisterOperand or type1.type == AssemblyType.QUADWORD:
 

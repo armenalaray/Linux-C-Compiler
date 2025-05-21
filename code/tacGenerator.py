@@ -437,11 +437,29 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                 for exp in argumentList:
                     src = TAC_parseInstructions(exp, instructions, symbolTable)
                     #src.retType
-                    realType = symbolTable[src.identifier].type
-                    print("parameter retType: ", type(realType))
-                    print("exp retType: ", type(expression.retType))
+                    
+                    
+                    realType = None
+
+                    match src:
+                        case TAC_ConstantValue(const=const):
+                            print(type(const))
+                            match const:
+                                case parser.ConstInt():
+                                    realType = parser.IntType() 
+                                    
+                                case parser.ConstLong():
+                                    realType = parser.LongType()
+                                            
+                        case TAC_VariableValue(identifier=iden):
+                            realType = symbolTable[iden].type
+                    
 
                     dst = makeTempVariable(realType, symbolTable)
+                            
+                    #print("parameter retType: ", type(realType))
+                    #print("exp retType: ", type(expression.retType))
+
 
                     instructions.append(TAC_CopyInstruction(src, dst))
                     a.append(dst)
