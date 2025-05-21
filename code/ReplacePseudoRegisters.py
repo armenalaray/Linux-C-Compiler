@@ -246,9 +246,9 @@ def ReplaceTopLevel(topLevel, symbolTable):
                             i.operand = object
                         
 
-                    case _:
-                        print("Invalid Assembly Instruction. {0}".format(type(i)))
-                        sys.exit(1)
+                    #case _:
+                    #    print("Invalid Assembly Instruction. {0}".format(type(i)))
+                    #    sys.exit(1)
                     
 
             topLevel.stackOffset = offset

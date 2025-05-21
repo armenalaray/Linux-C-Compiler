@@ -22,6 +22,9 @@ def matchOperand(operand, output, operandSize = OperandSize.BYTE_4):
             match reg:
                 case assemblyGenerator.Register(register=regi):
                     match regi:
+                        case assemblyGenerator.RegisterType.SP:
+                            output += '%rsp'
+                            
                         case assemblyGenerator.RegisterType.AX:
                             match operandSize:
                                 case OperandSize.BYTE_8:
@@ -263,6 +266,10 @@ def printInstructionSuffix(type, output):
         case assemblyGenerator.AssemblyType.QUADWORD:
             output += 'q'
 
+        case _:
+            print("Invalid assembly type.")
+            sys.exit(1)
+
     return output
 
 def printTopLevel(topLevel, output, symbolTable):
@@ -352,34 +359,55 @@ def printTopLevel(topLevel, output, symbolTable):
 
                         output = matchOperand(dst, output)
 
-                    case assemblyGenerator.BinaryInstruction(operator=op, src=src, dest=dst):
+                    case assemblyGenerator.BinaryInstruction(operator=op, assType = assType, src=src, dest=dst):
                         match op:
                             case assemblyGenerator.BinaryOperator(operator=o):
                                 match o:
                                     case assemblyGenerator.BinopType.Add:
-                                        output += '\n\taddl '
+                                        output += '\n\tadd'
                                         pass
                                     case assemblyGenerator.BinopType.Sub:
-                                        output += '\n\tsubl '
+                                        output += '\n\tsub'
                                         pass
                                     case assemblyGenerator.BinopType.Mult:
-                                        output += '\n\timull '
+                                        output += '\n\timul'
                                         pass
                         
+                        output = printInstructionSuffix(assType.type, output)
+
+                        output += ' '                
+
                         output = matchOperand(src, output)
                         output += ', '
                         output = matchOperand(dst, output)
 
-                    case assemblyGenerator.IDivInstruction(divisor=divisor):
-                        output += '\n\tidivl '
+                    case assemblyGenerator.IDivInstruction(assType = assType, divisor=divisor):
+                        output += '\n\tidiv'
+
+                        output = printInstructionSuffix(assType.type, output)
+
+                        output += ' '                
+                        
                         output = matchOperand(divisor, output)
                         
-                    case assemblyGenerator.CDQInstruction():
-                        output += '\n\tcdq'
+                    case assemblyGenerator.CDQInstruction(assType = assType):
+                        match assType.type:
+                            case assemblyGenerator.AssemblyType.LONGWORD:
+                                output += '\n\tcdq'
+                            case assemblyGenerator.AssemblyType.QUADWORD:
+                                output += '\n\tcqo'
+                            
                     
-                    case assemblyGenerator.CompInst(operand0=op0, operand1=op1):
+                    case assemblyGenerator.CompInst(assType = assType, operand0=op0, operand1=op1):
                         
-                        output += '\n\tcmpl '
+                        #print("Ale")
+
+                        output += '\n\tcmp'
+
+                        output = printInstructionSuffix(assType.type, output)
+
+                        output += ' '                
+
                         output = matchOperand(op0, output)
 
                         output += ', '
@@ -418,6 +446,7 @@ def printTopLevel(topLevel, output, symbolTable):
                     case _:
                         print("Instruction {0} not added into code emission!".format(i))
                         sys.exit(1)
+
                 #output += '\n\t{0}'.format(i)
                 
             output += '\n'
