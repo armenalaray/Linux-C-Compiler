@@ -181,6 +181,7 @@ def FixingUpTopLevel(topLevel):
                                 newList.append(instruction)
                                 newList.append(i)
                     
+
                     case assemblyGenerator.CompInst(assType=assType, operand0=op0, operand1=op1):
                         if (type(op0) == assemblyGenerator.StackOperand and type(op1) == assemblyGenerator.StackOperand) or (type(op0) == assemblyGenerator.DataOperand and type(op1) == assemblyGenerator.DataOperand) or (type(op0) == assemblyGenerator.DataOperand and type(op1) == assemblyGenerator.StackOperand) or (type(op0) == assemblyGenerator.StackOperand and type(op1) == assemblyGenerator.DataOperand):
                             
@@ -191,14 +192,48 @@ def FixingUpTopLevel(topLevel):
                             newList.append(instruction)
                             newList.append(i)
 
-                        elif type(op1) == assemblyGenerator.ImmediateOperand:
-                            instruction = assemblyGenerator.MovInstruction(assType, i.operand1, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)))
-
-                            i.operand1 = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11))
-
-                            newList.append(instruction)
-                            newList.append(i)
+                        else:
                             
+                            instruction0 = None
+                            if type(op1) == assemblyGenerator.ImmediateOperand:
+                                #mov dst, reg11
+                                #mov src, reg10
+                                #cmp r10, reg11
+
+                                instruction0 = assemblyGenerator.MovInstruction(assType, i.operand1, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)))
+
+                                i.operand1 = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11))
+
+                                #newList.append(instruction)
+                                #newList.append(i)
+
+                            instructionImm = None
+                            
+                            if type(op0) == assemblyGenerator.ImmediateOperand  and op0.imm > pow(2, 31) - 1:
+                                print(op0.imm)
+                                instructionImm = assemblyGenerator.MovInstruction(assType, op0, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+
+                                i.operand0 = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+
+
+
+                            if instruction0:
+                                newList.append(instruction0)
+
+                            if instructionImm:
+                                newList.append(instructionImm)
+
+                            newList.append(i)                                
+
+                    case assemblyGenerator.PushInstruction(operand = operand):
+                        if type(operand) == assemblyGenerator.ImmediateOperand and operand.imm > pow(2, 31) - 1:
+                            #print(op0.imm)
+                            instructionImm = assemblyGenerator.MovInstruction(assType, operand, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+
+                            i.operand = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+
+                            newList.append(instructionImm)
+                            newList.append(i)
 
                     case assemblyGenerator.BinaryInstruction(assType=assType, operator=op, src=src, dest=dst):
                         

@@ -240,10 +240,15 @@ def ReplaceTopLevel(topLevel, symbolTable):
                     case assemblyGenerator.LabelInst():
                         pass
                     
-                    
-                    #case _:
-                    #    print("Invalid Assembly Instruction. {0}".format(type(i)))
-                    #    sys.exit(1)
+                    case assemblyGenerator.PushInstruction(operand=operand):
+                        offset, object = ReplaceOperand(operand, table, offset, symbolTable)
+                        if object:
+                            i.operand = object
+                        
+
+                    case _:
+                        print("Invalid Assembly Instruction. {0}".format(type(i)))
+                        sys.exit(1)
                     
 
             topLevel.stackOffset = offset
