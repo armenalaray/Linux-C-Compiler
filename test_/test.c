@@ -1,7 +1,7 @@
 /* Test that function arguments, including arguments put on the stack,
  * are converted to the corresponding parameter type */
 
-long foo(long a, int b, int c, int d, long e, int f, long g, int h) {
+int foo(long a, int b, int c, int d, long e, int f, long g, int h) {
     if (a != -1l)
         return 1;
 
@@ -26,7 +26,7 @@ long foo(long a, int b, int c, int d, long e, int f, long g, int h) {
     if (h != 1234)
         return 8;
 
-    return a;
+    return 0;
 }
 
 int main(void) {

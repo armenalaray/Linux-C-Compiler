@@ -432,10 +432,16 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
         case parser.FunctionCall_Exp(identifier=id, argumentList = argumentList):
             a = []
 
+            #retType fun()
             if argumentList:
                 for exp in argumentList:
                     src = TAC_parseInstructions(exp, instructions, symbolTable)
-                    dst = makeTempVariable(expression.retType, symbolTable)
+                    #src.retType
+                    realType = symbolTable[src.identifier].type
+                    print("parameter retType: ", type(realType))
+                    print("exp retType: ", type(expression.retType))
+
+                    dst = makeTempVariable(realType, symbolTable)
 
                     instructions.append(TAC_CopyInstruction(src, dst))
                     a.append(dst)

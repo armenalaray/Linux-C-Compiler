@@ -1,3 +1,13 @@
+tmp.67
+        LONGWORD
+
+
+
+
+
+
+
+
 ASM Program: [Function main stackOffset: -24 global: True instructions:[AssType: AssemblyType.LONGWORD Mov(Imm(2), Reg(R10d)), MovSX(Reg(R10d), Reg(R11d)), AssType: AssemblyType.QUADWORD Mov(Reg(R11d), Stack(-8)), AssType: AssemblyType.QUADWORD Mov(Stack(-8), Reg(R10d)), AssType: AssemblyType.QUADWORD Mov(Reg(R10d), Stack(-16)), AssType: AssemblyType.QUADWORD Mov(Stack(-16), Reg(R11d)), AssType: AssemblyType.QUADWORD Mov(Imm(4294967295), Reg(R10d)), AssType: AssemblyType.QUADWORD Binary(Mult, Reg(R10d), Reg(R11d)), AssType: AssemblyType.QUADWORD Mov(Reg(R11d), Stack(-16)), AssType: AssemblyType.LONGWORD Mov(Stack(-16), Reg(R10d)), AssType: AssemblyType.LONGWORD Mov(Reg(R10d), Stack(-20)), AssType: AssemblyType.LONGWORD Mov(Stack(-20), Reg(R10d)), AssType: AssemblyType.LONGWORD Mov(Reg(R10d), Stack(-24)), AssType: AssemblyType.LONGWORD Mov(Imm(0), Reg(AX)), ret, AssType: AssemblyType.LONGWORD Mov(Imm(0), Reg(AX)), ret]]
 
 AST Program:

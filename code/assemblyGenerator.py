@@ -541,12 +541,13 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
 
                     type1, alignment1, asmArg = parseValue(arg, symbolTable)
 
-                    ASM_Instructions.append(MovInstruction(realType, asmArg, RegisterOperand(Register(list(RegisterType)[i]))))
-
+                    ASM_Instructions.append(MovInstruction(type1, asmArg, RegisterOperand(Register(list(RegisterType)[i]))))
+                    #ASM_Instructions.append(MovInstruction(realType, asmArg, RegisterOperand(Register(list(RegisterType)[i]))))
                    
                 stackArgs.reverse()
                 stackTypes.reverse()
-                #print(stackArgs)
+
+                print(stackArgs)
 
                 for arg, type_ in zip(stackArgs, stackTypes):
 
@@ -565,7 +566,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                             print("Invalid argument type.")
                             sys.exit(1)
 
-                    if type(asmArg) == ImmediateOperand or type(asmArg) == RegisterOperand or realType.type == AssemblyType.QUADWORD:
+                    if type(asmArg) == ImmediateOperand or type(asmArg) == RegisterOperand or type1.type == AssemblyType.QUADWORD:
 
                         ASM_Instructions.append(PushInstruction(asmArg))
                         
