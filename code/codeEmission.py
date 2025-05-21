@@ -1,6 +1,7 @@
 import sys
 import assemblyGenerator
 from enum import Enum
+import typeChecker
 
 class OperandSize(Enum):
     BYTE_8 = 1
@@ -237,20 +238,44 @@ def printFunction(function, output, symbolTable):
     output += '\n'
     return output
 
+def printStaticInit(staticInit, output):
+    match staticInit:
+        case typeChecker.IntInit(int=int):
+            if int == 0:
+                output += '\t.zero 4\n'
+            else:
+                output += '\t.long {0}\n'.format(int)
+
+            
+        case typeChecker.LongInit(int=int):
+            if int == 0:
+                output += '\t.zero 8\n'
+            else:
+                output += '\t.quad {0}\n'.format(int)
+            pass
+    return output
+
 def printTopLevel(topLevel, output, symbolTable):
     match topLevel:
-        case assemblyGenerator.StaticVariable(identifier = identifier, global_ = global_, init = init):
-            print(type(init))
-            if init == '0':
+        case assemblyGenerator.StaticVariable(identifier = identifier, global_ = global_, alignment = alignment, staticInit = staticInit):
+            print(type(staticInit))
+            
+            if staticInit.int == 0:
                 if global_ == True:
                     output += '\t.globl {0}\n'.format(identifier)
 
-                output += '\t.bss\n\t.align 4\n{0}:\n\t.zero 4\n'.format(identifier)
+                output += '\t.bss\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
+
+                output = printStaticInit(staticInit, output)
+
             else:
                 if global_ == True:
                     output += '\t.globl {0}\n'.format(identifier)
 
-                output += '\t.data\n\t.align 4\n{0}:\n\t.long {1}\n'.format(identifier, init)
+                output += '\t.data\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
+
+                output = printStaticInit(staticInit, output)
+
 
                 
             pass
@@ -262,6 +287,8 @@ def printTopLevel(topLevel, output, symbolTable):
             
             for i in insList:
                 match i:
+                    case assemblyGenerator.MovSXInstruction():
+                        pass
                     case assemblyGenerator.MovInstruction(sourceO=src, destO=dst):
                         output += '\n\tmovl '
                         
@@ -275,11 +302,11 @@ def printTopLevel(topLevel, output, symbolTable):
 
                     case assemblyGenerator.ReturnInstruction():
                         output += '\n\tmovq %rbp, %rsp\n\tpopq %rbp\n\tret'
-                        
-                    case assemblyGenerator.AllocateStackInstruction(offset=off):
-                        output += '\n\tsubq ${0}'.format(off)
 
-                        output += ', %rsp'
+
+                    #case assemblyGenerator.AllocateStackInstruction(offset=off):
+                    #    output += '\n\tsubq ${0}'.format(off)
+                    #    output += ', %rsp'
                         
                         
                     case assemblyGenerator.UnaryInstruction(operator=o, dest=dst):
@@ -356,8 +383,8 @@ def printTopLevel(topLevel, output, symbolTable):
                         else:
                             output += "\n\tcall {0}@PLT".format(identifier)
 
-                    case assemblyGenerator.DeallocateStackInstruction(offset = offset):
-                        output += "\n\taddq ${0}, %rsp".format(offset)
+                    #case assemblyGenerator.DeallocateStackInstruction(offset = offset):
+                    #    output += "\n\taddq ${0}, %rsp".format(offset)
 
                     case _:
                         print("Instruction {0} not added into code emission!".format(i))
@@ -365,7 +392,11 @@ def printTopLevel(topLevel, output, symbolTable):
                 #output += '\n\t{0}'.format(i)
                 
             output += '\n'
-            
+        
+        case _:
+            print("Invalid Top Level {0}".format(topLevel))
+            sys.exit(1)
+
     return output
     
 
