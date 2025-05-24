@@ -842,7 +842,7 @@ def parseConstant(tokenList):
 
         
     v = int(digitString)
-    print(v)
+    #print(v)
 
     match token[1]:
         case TokenType.INT_CONSTANT:
