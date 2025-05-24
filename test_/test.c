@@ -1,27 +1,47 @@
-/* The order in which multiple casts are applied matters */
+/* Test conversions from narrower to wider types */
 
-// start with a global variable so we can't optimize away casts in Part III
-unsigned int ui = 4294967200u; // 2^32 - 96
+unsigned long int_to_ulong(int i, unsigned long expected) {
+    unsigned long result = (unsigned long) i;
+    return result == expected;
+}
+
+int uint_to_long(unsigned int ui, long expected) {
+    long result = (long) ui;
+    return result == expected;
+}
+
+int uint_to_ulong(unsigned ui, unsigned long expected){
+    return (unsigned long) ui == expected;
+}
 
 int main(void) {
-
-
-    /* In this case we
-     * 1. convert ui to a signed int by computing ui - 2^32, producing -96
-     * 2. signed-extend the result, which preserves the value of -96
-     * Note that if we cast ui directly to a signed long, its value wouldn't change
-     */
-    if ((long) (signed) ui != -96l)
+    /* Converting a positive int to an unsigned long preserves its value */
+    if (!int_to_ulong(10, 10ul)) {
         return 1;
+    }
 
-    /* In this case we
-     * 1. convert ui to a signed int by computing ui - 2^32, producing -96
-     * 2. convert this signed int to an unsigned long by computing -96 + 2^64
-     * Note that if we converted ui directly to an unsigned long, its value
-     * wouldn't change
+    /* When you convert a negative int to an unsigned long,
+     * add 2^64 until it's positive
      */
-    if ((unsigned long) (signed) ui!=18446744073709551520lu)
+    if (!int_to_ulong(-10, 18446744073709551606ul)) {
         return 2;
+    }
 
+    /* Extending an unsigned int to a signed long preserves its value */
+    if (!uint_to_long(4294967200u, 4294967200l)) {
+        return 3;
+    }
+
+    /* Extending an unsigned int to an unsigned long preserves its value */
+    if (!uint_to_ulong(4294967200u, 4294967200ul)) {
+        return 4;
+    }
+    /* Zero-extend constant 4294967200
+     * from an unsigned int to an unsigned long
+     * to test the assembly rewrite rule for MovZeroExtend
+     */
+    if ((unsigned long) 4294967200u != 4294967200ul) {
+        return 5;
+    }
     return 0;
 }

@@ -211,6 +211,15 @@ class LongType(Type, Node):
     
     def printNode(self, level):
         return "long"
+    
+class UIntType(Type, Node):    
+    def printNode(self, level):
+        return "uint"
+
+class ULongType(Type, Node):
+    def printNode(self, level):
+        return "ulong"
+
 
 class FunType(Type, Node):
     def __init__(self, paramTypes, retType):
@@ -684,6 +693,27 @@ class ConstLong(Const, Node):
     
     def printNode(self, level):
         return "{}".format(self.int)
+    
+class ConstUInt(Const, Node):
+    def __init__(self, int):
+        self.int = int
+
+    def __str__(self):
+        return "{self.int}".format(self=self)
+    
+    def printNode(self, level):
+        return "{}".format(self.int)
+    
+
+class ConstULong(Const, Node):
+    def __init__(self, int):
+        self.int = int
+    
+    def __str__(self):
+        return "{self.int}L".format(self=self)
+    
+    def printNode(self, level):
+        return "{}".format(self.int)
 
 class UnopType(Enum):
     NEGATE = 1
@@ -773,6 +803,27 @@ def parseInt(tokenList):
     print("Syntax Error Expected an int value but there are no more tokens.")
     sys.exit(1)
 
+def parseSignedInteger(token, v):
+    if v > pow(2, 63) - 1:
+        print("Constant is too large to represent as an int or long")
+        sys.exit(1)
+        pass
+
+    if token[1] == TokenType.INT_CONSTANT and v <= pow(2, 31) - 1:
+        return ConstInt(v)
+    
+    return ConstLong(v)
+
+def parseUnsignedInteger(token, v):
+    if v > pow(2, 64) - 1:
+        print("Constant is too large to represent as an uint or ulong")
+        sys.exit(1)
+        
+
+    if token[1] == TokenType.UINT_CONSTANT and v <= pow(2, 32) - 1:
+        return ConstUInt(v)
+    
+    return ConstULong(v)
 
 def parseConstant(tokenList):
     token = takeToken(tokenList)
@@ -782,29 +833,30 @@ def parseConstant(tokenList):
         case TokenType.INT_CONSTANT:
             digitString = token[0]
         
-        case TokenType.LONG_CONSTANT:
+        case _:
             #Se quita el Ll
             regex = "[0-9]+"
             result = re.match(regex, token[0])
             if result:
                 digitString = result.group()
 
-        case _:
-            print("Invalid Constant type. {0}".format(token[1]))
-            sys.exit(1)
         
     v = int(digitString)
-    #print(v)
+    print(v)
 
-    if v > pow(2, 63) - 1:
-        print("Constant is too large to represent as an int or long")
-        sys.exit(1)
-        pass
-
-    if token[1] == TokenType.INT_CONSTANT and v <= pow(2, 31) - 1:
-        return ConstInt(v)
-
-    return ConstLong(v)
+    match token[1]:
+        case TokenType.INT_CONSTANT:
+            return parseSignedInteger(token, v)
+             
+        case TokenType.LONG_CONSTANT:
+            return parseSignedInteger(token, v)
+             
+        case TokenType.UINT_CONSTANT:
+            return parseUnsignedInteger(token, v)
+             
+        case TokenType.ULONG_CONSTANT:
+            return parseUnsignedInteger(token, v)
+            
     
 
 def parseUnop(tokenList):
@@ -878,7 +930,7 @@ def parseArgumentList(tokenList):
     return expList
 
 def isConstant(token):
-    if token[1] == TokenType.INT_CONSTANT or token[1] == TokenType.LONG_CONSTANT: 
+    if token[1] == TokenType.INT_CONSTANT or token[1] == TokenType.LONG_CONSTANT or token[1] == TokenType.UINT_CONSTANT or token[1] == TokenType.ULONG_CONSTANT: 
         return True
     return False
     
@@ -1169,31 +1221,45 @@ def parseStatement(tokenList):
         expect(TokenType.SEMICOLON, tokenList)
         return ExpressionStmt(retVal)
 
-def parseTypes(types):
+def parseTypes(rawTypes):
+    types = [x[1] for x in rawTypes]
+
     #print(types)
 
-    if len(types) == 1 and types[0][1] == TokenType.INT_KW:
-        return IntType()
+    if types == []:
+        print("Invalid Type Specifier.")
+        sys.exit(1)
+
+    setTypes = set(types)
+
+    if len(setTypes) != len(types):
+        print("Invalid Type Specifier.")
+        sys.exit(1)
+
+    if TokenType.UNSIGNED_KW in setTypes and TokenType.SIGNED_KW in setTypes:
+        print("Invalid Type Specifier.")
+        sys.exit(1)
+
+    if TokenType.UNSIGNED_KW in setTypes and TokenType.LONG_KW in setTypes:
+        return ULongType()
+        
+    if TokenType.UNSIGNED_KW in setTypes:
+        return UIntType()
     
-    if len(types) == 2 and types[0][1] == TokenType.INT_KW and types[1][1] == TokenType.LONG_KW:
+    if TokenType.LONG_KW in setTypes:
         return LongType()
     
-    if len(types) == 2 and types[0][1] == TokenType.LONG_KW and types[1][1] == TokenType.INT_KW:
-        return LongType()
-    
-    if len(types) == 1 and types[0][1] == TokenType.LONG_KW:
-        return LongType()
-    
-    print("Invalid Type Specifier.")
-    sys.exit(1)
+    return IntType()
     
 
 def parseTypeAndStorageClass(specifierList):
     types = []
     storageClasses = []
     for specifier in specifierList:
-        if specifier[1] ==  TokenType.INT_KW or specifier[1] == TokenType.LONG_KW:
+        if isTypeSpecifier(specifier):
             types.append(specifier)
+
+        #if specifier[1] ==  TokenType.INT_KW or specifier[1] == TokenType.LONG_KW:
         else:
             storageClasses.append(specifier)
             
@@ -1289,7 +1355,7 @@ def parseBlock(tokenList):
     return Block(BlockItemList)
 
 def isTypeSpecifier(token):
-    if token[1] == TokenType.INT_KW or token[1] == TokenType.LONG_KW: 
+    if token[1] == TokenType.INT_KW or token[1] == TokenType.LONG_KW or token[1] == TokenType.SIGNED_KW or token[1] == TokenType.UNSIGNED_KW: 
         return True
     return False
 
@@ -1328,6 +1394,7 @@ def parseParamList(tokenList):
         while isTypeSpecifier(token):
             types.append(takeToken(tokenList))
             token = peek(tokenList)
+
 
         type = parseTypes(types)
         paramTypes.append(type)
