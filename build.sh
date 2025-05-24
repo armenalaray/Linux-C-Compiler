@@ -4,7 +4,7 @@
 # My compiler
 
 
-#lastStage="--tacky"
+lastStage="--lex"
 #noLink="-c"
 
 

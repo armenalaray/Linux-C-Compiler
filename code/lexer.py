@@ -1,3 +1,4 @@
+import sys
 import os
 import re
 from enum import Enum
@@ -45,8 +46,12 @@ class TokenType(Enum):
     EXTERN_KW = 40
     LONG_KW = 41
     LONG_CONSTANT = 42
+    SIGNED_KW = 43
+    UNSIGNED_KW = 44
+    UINT_CONSTANT = 45
+    ULONG_CONSTANT = 46
 
-def Lex(buffer):
+def Lex(buffer, iFile):
     tokenList = []
     LineNumber = 1
 
@@ -65,20 +70,26 @@ def Lex(buffer):
             
             #print(LineNumber)
             buffer = wspace.string[wspace.span()[1]:]
-
-        #print(buffer)
-
         
-        is_not = r"[0-9]+[a-zA-Z][a-zA-Z]"
-        is_not_valid = re.match(is_not, buffer)
-        if is_not_valid:
-            #raise Exception("Error invalid token: {0}".format(buffer))
-            print("Error invalid token: {0} at Line: {1}".format(buffer, LineNumber))
-            #aqui se remueve pero yo lo tengo abierto
-            os.remove(iFile)
-            sys.exit(1)
         
-        is_long = "[0-9]+[lL]"
+        is_unsignedLong = r"[0-9]+([uU][lL]|[lL][uU])\b"
+        unsignedLong = re.match(is_unsignedLong, buffer)
+        if unsignedLong:
+            tokenList.append((unsignedLong.group(), TokenType.ULONG_CONSTANT, LineNumber))
+
+            buffer = unsignedLong.string[unsignedLong.span()[1]:]
+            continue
+        
+        is_unsigned = r"[0-9]+[uU]\b"
+        unsigned = re.match(is_unsigned, buffer)
+        if unsigned:
+            tokenList.append((unsigned.group(), TokenType.UINT_CONSTANT, LineNumber))
+
+            buffer = unsigned.string[unsigned.span()[1]:]
+            continue
+        
+
+        is_long = r"[0-9]+[lL]\b"
         long = re.match(is_long, buffer)
         if long:
             tokenList.append((long.group(), TokenType.LONG_CONSTANT, LineNumber))
@@ -87,7 +98,7 @@ def Lex(buffer):
             continue
             #print(buffer)
 
-        is_int = "[0-9]+"
+        is_int = r"([0-9]+)\b"
         int = re.match(is_int, buffer)
         if int:
             tokenList.append((int.group(), TokenType.INT_CONSTANT, LineNumber))
@@ -121,12 +132,18 @@ def Lex(buffer):
         if dd:
             continue
 
-        is_alphanumeric = r"[a-zA-Z_]\w*"
+        is_alphanumeric = r"[a-zA-Z_]\w*\b"
         alphanumeric = re.match(is_alphanumeric, buffer)
         if alphanumeric:
             
             match alphanumeric.group():
                 
+                case "unsigned":
+                    tokenList.append(("unsigned", TokenType.UNSIGNED_KW, LineNumber))
+
+                case "signed":
+                    tokenList.append(("signed", TokenType.SIGNED_KW, LineNumber))
+
                 case "long":
                     tokenList.append(("long", TokenType.LONG_KW, LineNumber))
 

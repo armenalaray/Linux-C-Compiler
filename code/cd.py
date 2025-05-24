@@ -132,9 +132,10 @@ if __name__ == "__main__":
 
 			buffer = preprocessedfile.read()
 	
-			tokenList = Lex(buffer)
+			tokenList = Lex(buffer, iFile)
 
 			os.remove(iFile)
+
 			if LastStage == 'lex':
 				sys.exit(0)
 
