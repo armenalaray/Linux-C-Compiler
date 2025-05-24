@@ -938,12 +938,13 @@ def isConstant(token):
 def parseFactor(tokenList):
 
     token = peek(tokenList, 1)
+    token_ = peek(tokenList)
 
     #print(token)
 
-    if isTypeSpecifier(token):
-
-        expect(TokenType.OPEN_PAREN, tokenList)
+    if isTypeSpecifier(token) and token_[1] == TokenType.OPEN_PAREN:
+        takeToken(tokenList)
+        #expect(TokenType.OPEN_PAREN, tokenList)
 
         token = peek(tokenList)
 
@@ -960,8 +961,8 @@ def parseFactor(tokenList):
 
         return Cast_Expression(type, exp)
         
-
-    if token[1] == TokenType.OPEN_PAREN:
+    #esta pensando q es una funcion!
+    if token_[1] == TokenType.IDENTIFIER and token[1] == TokenType.OPEN_PAREN:
         iden = parseIdentifier(tokenList)
         expect(TokenType.OPEN_PAREN, tokenList)
 
