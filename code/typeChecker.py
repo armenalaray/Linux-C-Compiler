@@ -79,12 +79,41 @@ class LongInit(StaticInit):
     def __str__(self):
         return "{self.int}".format(self=self)
 
+class UIntInit(StaticInit):
+    def __init__(self, int):
+        self.int = numpy.uint32(int)
+    
+    def __str__(self):
+        return "{self.int}".format(self=self)
+
+
+class ULongInit(StaticInit):
+    def __init__(self, int):
+        self.int = numpy.uint64(int)
+    
+    def __str__(self):
+        return "{self.int}".format(self=self)
+
+
 
 def getCommonType(type1, type2):
     if type(type1) == type(type2):
         return type1
+    
+    print("Type 1:\n\tIs Signed:", type1.isSigned, "Size:", type1.size)
+    print("Type 2:\n\tIs Signed:", type2.isSigned, "Size:", type2.size)
+
+    if type1.size == type2.size:
+        if type1.isSigned:
+            return type2
+        else:
+            return type1
+    
+    if type1.size > type2.size:
+        return type1
     else:
-        return parser.LongType()
+        return type2
+
 
 def convertTo(exp, resultType):
     if type(exp.retType) == type(resultType):
@@ -155,6 +184,16 @@ def typeCheckExpression(exp, symbolTable):
                 ##NOTE: Lo vas a hacer despues!
                 case parser.ConstLong():
                     return parser.Constant_Expression(const, parser.LongType())
+                
+                case parser.ConstUInt():
+                    return parser.Constant_Expression(const, parser.UIntType())
+                
+                case parser.ConstULong():
+                    return parser.Constant_Expression(const, parser.ULongType())
+                
+                case _:
+                    print("Invalid Constant Type. {0}".format(type(const)))
+                    sys.exit(1)
 
         case parser.Unary_Expression(operator=op, expression=exp):
             e = typeCheckExpression(exp, symbolTable)

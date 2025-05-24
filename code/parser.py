@@ -195,10 +195,22 @@ class FunctionDecl(Node):
         
 
 class Type:
+    def __init__(self):
+        self.size = 0
+
+    def getSize():
+        return self.size
+
     def __repr__(self):
         return self.__str__()
+    
 
 class IntType(Type, Node):
+    def __init__(self):
+        super().__init__()
+        self.size = 4
+        self.isSigned = True
+
     def __str__(self):
         return "int"
     
@@ -206,6 +218,11 @@ class IntType(Type, Node):
         return "int"
 
 class LongType(Type, Node):
+    def __init__(self):
+        super().__init__()
+        self.size = 8
+        self.isSigned = True
+
     def __str__(self):
         return "long"
     
@@ -213,10 +230,26 @@ class LongType(Type, Node):
         return "long"
     
 class UIntType(Type, Node):    
+    def __init__(self):
+        super().__init__()
+        self.size = 4
+        self.isSigned = False
+    
+    def __str__(self):
+        return "uint"
+    
     def printNode(self, level):
         return "uint"
 
 class ULongType(Type, Node):
+    def __init__(self):
+        super().__init__()
+        self.size = 8
+        self.isSigned = False
+    
+    def __str__(self):
+        return "ulong"
+    
     def printNode(self, level):
         return "ulong"
 
