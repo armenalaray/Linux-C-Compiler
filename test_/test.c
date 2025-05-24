@@ -1,14 +1,10 @@
-/* Test truncating wider to narrow types */
-int ulong_to_int(unsigned long ul, int expected) {
-    unsigned long result = ul + 4UL;
-    return (result == expected);
+/* Can't declare the same function with two return types: unsignd int and unsigned long */
+unsigned int foo(long a);
+
+unsigned int foo(int a) {
+    return 0;
 }
 
-int ulong_to_uint(unsigned long ul, unsigned expected) {
-    return (ul == expected);
+int main(void) {
+    return 0;
 }
-
-int long_to_uint(long l, unsigned int expected) {
-    return l == expected;
-}
-
