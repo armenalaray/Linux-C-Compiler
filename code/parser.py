@@ -732,7 +732,7 @@ class ConstUInt(Const, Node):
         self.int = int
 
     def __str__(self):
-        return "{self.int}".format(self=self)
+        return "{self.int}U".format(self=self)
     
     def printNode(self, level):
         return "{}".format(self.int)
@@ -743,7 +743,7 @@ class ConstULong(Const, Node):
         self.int = int
     
     def __str__(self):
-        return "{self.int}L".format(self=self)
+        return "{self.int}UL".format(self=self)
     
     def printNode(self, level):
         return "{}".format(self.int)

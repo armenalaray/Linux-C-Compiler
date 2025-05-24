@@ -63,6 +63,17 @@ class TAC_signExtendInstruction(instruction):
     
     def __repr__(self):
         return self.__str__()
+    
+class TAC_zeroExtendInstruction(instruction):
+    def __init__(self, src, dst):
+        self.src = src
+        self.dst = dst
+    
+    def __str__(self):
+        return "ZeroExtend {self.dst} = {self.src}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
 
 class TAC_truncateInstruction(instruction):
     def __init__(self, src, dst):
@@ -94,7 +105,7 @@ class TAC_CopyInstruction(instruction):
         self.dst = dst   
     
     def __str__(self):
-        return "{self.dst} = {self.src}".format(self=self)
+        return "Copy {self.dst} = {self.src}".format(self=self)
     
     def __repr__(self):
         return self.__str__()
@@ -324,10 +335,27 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
             
             dst = makeTempVariable(targetType, symbolTable)
 
+            print("Target Size:", targetType.size)
+            print("RetType Size:", exp.retType.size)
+            #print(dst)
+            print(dst, "=", result)
+
+            if targetType.size == exp.retType.size:
+                instructions.append(TAC_CopyInstruction(result, dst))
+            elif targetType.size < exp.retType.size:
+                instructions.append(TAC_truncateInstruction(result, dst))
+            elif exp.retType.isSigned:
+                instructions.append(TAC_signExtendInstruction(result, dst))
+            else:
+                instructions.append(TAC_zeroExtendInstruction(result, dst))
+
+            
+            """
             if type(targetType) == parser.LongType:
                 instructions.append(TAC_signExtendInstruction(result, dst))
             else:
                 instructions.append(TAC_truncateInstruction(result, dst))
+            """
 
             return dst
 
