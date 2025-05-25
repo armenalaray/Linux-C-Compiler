@@ -386,9 +386,9 @@ def FixingUpTopLevel(topLevel):
                     case assemblyGenerator.CallInstruction():
                         pass
 
-                    case _:
-                        print("Invalid Instruction fixup. {0}".format(type(i)))
-                        sys.exit(1)                                        
+                    #case _:
+                    #    print("Invalid Instruction fixup. {0}".format(type(i)))
+                    #    sys.exit(1)                                        
                     
                                     
                 if len(newList) == oldSize:

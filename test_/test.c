@@ -12,5 +12,6 @@ unsigned ale(unsigned long a, unsigned int b)
 int main(void)
 {
     unsigned int b;
-    unsigned long a = 4U % 2U;
+    unsigned long a = 4U > 2U;
+    unsigned long c = 4U % 2U;
 }

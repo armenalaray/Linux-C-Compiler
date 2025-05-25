@@ -139,13 +139,27 @@ def printStaticInit(staticInit, output):
             else:
                 output += '\t.long {0}\n'.format(int)
 
-            
         case typeChecker.LongInit(int=int):
             if int == 0:
                 output += '\t.zero 8\n'
             else:
                 output += '\t.quad {0}\n'.format(int)
-            pass
+
+        case typeChecker.UIntInit(int=int):
+            if int == 0:
+                output += '\t.zero 4\n'
+            else:
+                output += '\t.long {0}\n'.format(int)
+            
+        case typeChecker.ULongInit(int=int):
+            if int == 0:
+                output += '\t.zero 8\n'
+            else:
+                output += '\t.quad {0}\n'.format(int)
+
+        case _:
+            print("Error:")
+            sys.exit(1)
     return output
 
 def printInstructionSuffix(type, output):
@@ -198,9 +212,6 @@ def printTopLevel(topLevel, output, symbolTable):
 
                 output = printStaticInit(staticInit, output)
 
-
-                
-            pass
         
         case assemblyGenerator.Function(identifier = identifier, global_ = global_, insList = insList, stackOffset = stackOffset):
             if global_ == True:
@@ -301,6 +312,17 @@ def printTopLevel(topLevel, output, symbolTable):
                         
                         operandSize = getOperandSize(assType.type)
                         output = matchOperand(divisor, output, operandSize)
+
+                    case assemblyGenerator.DivInstruction(assType = assType, divisor=divisor):
+                        output += '\n\tdiv'
+
+                        output = printInstructionSuffix(assType.type, output)
+
+                        output += ' '                
+                        
+                        operandSize = getOperandSize(assType.type)
+                        output = matchOperand(divisor, output, operandSize)
+                    
                         
                     case assemblyGenerator.CDQInstruction(assType = assType):
                         match assType.type:
@@ -336,6 +358,7 @@ def printTopLevel(topLevel, output, symbolTable):
                         
                     
                     case assemblyGenerator.SetCCInst(conc_code=code, operand=op):
+                        print(type(code))
                         output += '\n\tset{0} '.format(code.name)
                         output = matchOperand(op, output, OperandSize.BYTE_1)
 
