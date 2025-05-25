@@ -349,14 +349,6 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
             else:
                 instructions.append(TAC_zeroExtendInstruction(result, dst))
 
-            
-            """
-            if type(targetType) == parser.LongType:
-                instructions.append(TAC_signExtendInstruction(result, dst))
-            else:
-                instructions.append(TAC_truncateInstruction(result, dst))
-            """
-
             return dst
 
             
@@ -464,8 +456,6 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
             if argumentList:
                 for exp in argumentList:
                     src = TAC_parseInstructions(exp, instructions, symbolTable)
-                    #src.retType
-                    
                     
                     realType = None
 
@@ -478,17 +468,28 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                                     
                                 case parser.ConstLong():
                                     realType = parser.LongType()
+
+                                case parser.ConstULong():
+                                    realType = parser.ULongType()
+
+                                case parser.ConstUInt():
+                                    realType = parser.UIntType()
+                                    
+                                case _:
+                                    print("Invalid TAC argument type. {0}".format(type(const)))
+                                    sys.exit(1)
                                             
                         case TAC_VariableValue(identifier=iden):
                             realType = symbolTable[iden].type
+
+                        case _:
+                            print("Invalid TAC Value.")
+                            sys.exit(1)
                     
+
 
                     dst = makeTempVariable(realType, symbolTable)
                             
-                    #print("parameter retType: ", type(realType))
-                    #print("exp retType: ", type(expression.retType))
-
-
                     instructions.append(TAC_CopyInstruction(src, dst))
                     a.append(dst)
                 
@@ -772,9 +773,10 @@ def TAC_convertSymbolsToTAC(symbolTable):
         match entry.attrs:
             case typeChecker.StaticAttributes(initialVal = initialVal, global_ = global_):
                 #print(type(initialVal))
+                #TODO: Check this
                 match initialVal:
                     case typeChecker.Tentative():
-                        print(type(entry.type))
+                        #print(type(entry.type))
                         
                         init = None
                         match entry.type:
@@ -783,6 +785,16 @@ def TAC_convertSymbolsToTAC(symbolTable):
                                 
                             case parser.LongType():
                                 init = typeChecker.LongInit(0)
+                            
+                            case parser.UIntType():
+                                init = typeChecker.UIntInit(0)
+                            
+                            case parser.ULongType():
+                                init = typeChecker.ULongInit(0)
+                                
+                            case _:
+                                print("Error: Invalid Tentative Initializer. {0}".format(entry.type))
+                                sys.exit(1)
                                 
                                     
                         tacDefs.append(StaticVariable(name, global_, entry.type, init))
