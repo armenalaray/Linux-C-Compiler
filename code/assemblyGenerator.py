@@ -96,6 +96,19 @@ class MovSXInstruction:
 
     def __repr__(self):
         return self.__str__()    
+    
+class MovZeroExtendIns:
+
+    def __init__(self, sourceO, destO):
+        self.sourceO = sourceO
+        self.destO = destO
+
+    def __str__(self):
+        return "MovZeroExtend({self.sourceO}, {self.destO})".format(self=self)
+
+    def __repr__(self):
+        return self.__str__()    
+    
 
 class UnaryInstruction:
     def __init__(self, operator, assType, dest):
@@ -138,6 +151,14 @@ class ConcCodeType(Enum):
     GE = 4
     L = 5
     LE = 6
+
+class ConcCodeTypeUnsigned(Enum):
+    E = 1
+    NE = 2
+    A = 3
+    AE = 4
+    B = 5
+    BE = 6
 
 class JumpCCInst:
     def __init__(self, conc_code, identifier):
@@ -197,7 +218,18 @@ class IDivInstruction:
     
     def __repr__(self):
         return self.__str__()
+
+class DivInstruction:
+    def __init__(self, assType, divisor):
+        self.assType = assType
+        self.divisor = divisor
     
+    def __str__(self):
+        return "AssType: {self.assType} Div({self.divisor})".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+        
 
 class CDQInstruction:
     def __init__(self, assType):
@@ -380,7 +412,8 @@ class Register:
                 return "SP"
 
 def parseValue(v, symbolTable):
-    type = None
+    asmType = None
+    cType = None
     alignment = 0
 
     match v:
@@ -388,27 +421,35 @@ def parseValue(v, symbolTable):
 
             match const:
                 case parser.ConstInt():
-                    type = AssemblySize(AssemblyType.LONGWORD)
-                    alignment = 4
+                    asmType = AssemblySize(AssemblyType.LONGWORD)
+                    cType = parser.IntType()
                     
                 case parser.ConstLong():
-                    type = AssemblySize(AssemblyType.QUADWORD)
-                    alignment = 8
+                    asmType = AssemblySize(AssemblyType.QUADWORD)
+                    cType = parser.LongType()
 
-            return type, alignment, ImmediateOperand(const.int)
+                case _:
+                    print("Error: Invalid Assembly Constant.")
+                    sys.exit(1)
+
+            return asmType, cType, ImmediateOperand(const.int)
             
         case tacGenerator.TAC_VariableValue(identifier=i):
 
             match symbolTable[i].type:
                 case parser.IntType():
-                    type = AssemblySize(AssemblyType.LONGWORD)
-                    alignment = 4
+                    asmType = AssemblySize(AssemblyType.LONGWORD)
+                    cType = parser.IntType()
 
                 case parser.LongType():
-                    type = AssemblySize(AssemblyType.QUADWORD)
-                    alignment = 8
+                    asmType = AssemblySize(AssemblyType.QUADWORD)
+                    cType = parser.LongType()
+                
+                case _:
+                    print("Error: Invalid Assembly Variable.")
+                    sys.exit(1)
 
-            return type, alignment, PseudoRegisterOperand(i)
+            return asmType, cType, PseudoRegisterOperand(i)
         
         case _:
             print("Error: Invalid Value.")
@@ -568,13 +609,22 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                 
                 if op.operator == tacGenerator.BinopType.EQUAL or op.operator == tacGenerator.BinopType.GREATERTHAN or op.operator == tacGenerator.BinopType.LESSTHAN or op.operator == tacGenerator.BinopType.GREATEROREQUAL or op.operator == tacGenerator.BinopType.LESSOREQUAL or op.operator == tacGenerator.BinopType.NOTEQUAL:
                     #print(op.operator)
-                    type1, alignment1, src1 = parseValue(src1_, symbolTable)
-                    type2, alignment2, src2 = parseValue(src2_, symbolTable)
-                    type3, alignment3, dst = parseValue(dst_, symbolTable)
+                    type1, cType1, src1 = parseValue(src1_, symbolTable)
+                    type2, cType2, src2 = parseValue(src2_, symbolTable)
+                    type3, cType3, dst = parseValue(dst_, symbolTable)
+
+                    print(type(cType1))
 
                     instruction0 = CompInst(type1, src2, src1)
                     instruction1 = MovInstruction(type3, ImmediateOperand(0), dst)
-                    instruction2 = SetCCInst(list(ConcCodeType)[op.operator.value], dst)
+
+                    instruction2 = None
+
+                    if type(cType1) == parser.IntType or type(cType1) == parser.LongType:                     
+                        instruction2 = SetCCInst(list(ConcCodeType)[op.operator.value], dst)
+                    else:
+                        instruction2 = SetCCInst(list(ConcCodeTypeUnsigned)[op.operator.value], dst)
+                        
 
                     ASM_Instructions.append(instruction0)
                     ASM_Instructions.append(instruction1)
@@ -681,6 +731,10 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
             case tacGenerator.TAC_LabelInst(identifier=id):
                 
                 ASM_Instructions.append(LabelInst(id))
+
+            case tacGenerator.TAC_zeroExtendInstruction(src = src, dst = dst):
+                pass
+                #ASM_Instructions.append(MovZeroExtendIns(src, dst))
 
             case _:
                 print("Invalid TAC Instruction. {0}".format(type(i)))

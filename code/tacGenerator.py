@@ -213,6 +213,7 @@ class BinopType(Enum):
     GREATEROREQUAL = 3
     LESSTHAN = 4
     LESSOREQUAL = 5
+    #NOTE this are not serialized
     ADD = 6
     SUBTRACT = 7
     MULTIPLY = 8
