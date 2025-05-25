@@ -1,5 +1,4 @@
 import sys
-import numpy
 import assemblyGenerator
 
 """
@@ -197,10 +196,6 @@ def FixingUpTopLevel(topLevel):
                             newList.append(instructionImm)
                             newList.append(i)
 
-                        #elif assType.type == assemblyGenerator.AssemblyType.LONGWORD and type(src) == assemblyGenerator.ImmediateOperand and src.imm > pow(2, 31) - 1:
-                            #truncate immediate
-                        #    tru = numpy.int32(src.imm)
-                        #    i.sourceO = assemblyGenerator.ImmediateOperand(tru)
                     
                     case assemblyGenerator.IDivInstruction(assType=assType, divisor=div):
                         match div:

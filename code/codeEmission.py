@@ -137,25 +137,25 @@ def printStaticInit(staticInit, output):
             if int == 0:
                 output += '\t.zero 4\n'
             else:
-                output += '\t.long {0}\n'.format(int)
+                output += '\t.long {0}\n'.format(int.value)
 
         case typeChecker.LongInit(int=int):
             if int == 0:
                 output += '\t.zero 8\n'
             else:
-                output += '\t.quad {0}\n'.format(int)
+                output += '\t.quad {0}\n'.format(int.value)
 
         case typeChecker.UIntInit(int=int):
             if int == 0:
                 output += '\t.zero 4\n'
             else:
-                output += '\t.long {0}\n'.format(int)
+                output += '\t.long {0}\n'.format(int.value)
             
         case typeChecker.ULongInit(int=int):
             if int == 0:
                 output += '\t.zero 8\n'
             else:
-                output += '\t.quad {0}\n'.format(int)
+                output += '\t.quad {0}\n'.format(int.value)
 
         case _:
             print("Error:")

@@ -1,7 +1,6 @@
 import sys
 from enum import Enum
-import numpy
-
+import ctypes
 import parser
 
 class Entry:
@@ -67,21 +66,21 @@ class StaticInit:
 
 class IntInit(StaticInit):
     def __init__(self, int):
-        self.int = numpy.int32(int)
+        self.int = ctypes.c_int32(int)
     
     def __str__(self):
         return "{self.int}".format(self=self)
 
 class LongInit(StaticInit):
-    def __init__(self, int):
-        self.int = numpy.int64(int)
+    def __init__(self, int_):
+        self.int = ctypes.c_int64(int_)
 
     def __str__(self):
         return "{self.int}".format(self=self)
 
 class UIntInit(StaticInit):
     def __init__(self, int):
-        self.int = numpy.uint32(int)
+        self.int = ctypes.c_uint32(int)
     
     def __str__(self):
         return "{self.int}".format(self=self)
@@ -89,7 +88,7 @@ class UIntInit(StaticInit):
 
 class ULongInit(StaticInit):
     def __init__(self, int):
-        self.int = numpy.uint64(int)
+        self.int = ctypes.c_uint64(int)
     
     def __str__(self):
         return "{self.int}".format(self=self)
