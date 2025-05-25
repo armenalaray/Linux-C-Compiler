@@ -1,8 +1,5 @@
 import sys
-import numpy
-
 import re
-
 from lexer import TokenType
 from enum import Enum
 
