@@ -284,7 +284,7 @@ def GetStaticInitializer(varType, int):
         case _:
             print("Error: Invalid Variable Type. {0}".format(varType))
             sys.exit(1)
-            
+
 
 def AnnotateExpression(varDecl):
 
@@ -338,70 +338,20 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
     initialValue = None
 
     if varDecl.exp:
-
         initialValue = AnnotateExpression(varDecl)
-        
-        """
-        match varDecl.exp:
-            case parser.Constant_Expression(const = const):
-                match const:
-                    case parser.ConstLong(int = int):
 
-                        varDecl.exp = parser.Constant_Expression(const, parser.LongType())
-                        exp = convertTo(varDecl.exp, varDecl.varType)
-                        varDecl.exp = exp
-
-                        match varDecl.varType:
-                            case parser.IntType():
-                                #Long a int type
-                                initialValue = Initial(IntInit(int))           
-
-                            case parser.LongType():
-                                #long a long type
-                                initialValue = Initial(LongInit(int))
-                                                    
-
-                    case parser.ConstInt(int = int):
-                        
-                        varDecl.exp = parser.Constant_Expression(const, parser.IntType())
-                        exp = convertTo(varDecl.exp, varDecl.varType)
-                        varDecl.exp = exp
-
-                        match varDecl.varType:
-                            case parser.IntType():
-                                #Int a Int type
-                                initialValue = Initial(IntInit(int))
-                                
-                            case parser.LongType():
-                                #Int a Long type
-                                initialValue = Initial(LongInit(int))
-    
-                #NOTE:Esto esta mal
-                #initialValue = Initial(intValue)
-            
-            case _:
-                print("Error: Non constant initializer.")
-                sys.exit(1)
-        """
     else:
         if varDecl.storageClass.storageClass == parser.StorageType.EXTERN:
             initialValue = NoInitializer()
-        
         else:
             initialValue = Tentative()
-            pass
 
-    #print(initialValue)                   
 
     global_ = True
     if varDecl.storageClass.storageClass == parser.StorageType.STATIC:
         global_ = False
-
-
-    #print(global_)
     
     if varDecl.identifier in symbolTable:
-        #print(varDecl.identifier)
 
         oldDecl = symbolTable[varDecl.identifier]    
 
@@ -470,54 +420,7 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
         initialValue = None
         
         if varDecl.exp:
-            
             initialValue = AnnotateExpression(varDecl)
-
-            """
-            match varDecl.exp:
-                case parser.Constant_Expression(const = const):
-                    #print(type(const))
-                    
-                    match const:
-                        case parser.ConstLong(int = int):
-
-                            varDecl.exp = parser.Constant_Expression(const, parser.LongType())
-                            exp = convertTo(varDecl.exp, varDecl.varType)
-                            varDecl.exp = exp
-
-                            match varDecl.varType:
-                                case parser.IntType():
-                                    #Long a int type
-                                    initialValue = Initial(IntInit(int))           
-
-                                case parser.LongType():
-                                    #long a long type
-                                    initialValue = Initial(LongInit(int))
-                                                     
-
-                        case parser.ConstInt(int = int):
-                            
-                            varDecl.exp = parser.Constant_Expression(const, parser.IntType())
-                            exp = convertTo(varDecl.exp, varDecl.varType)
-                            varDecl.exp = exp
-
-                            match varDecl.varType:
-                                case parser.IntType():
-                                    #Int a Int type
-                                    initialValue = Initial(IntInit(int))
-                                    
-                                case parser.LongType():
-                                    #Int a Long type
-                                    initialValue = Initial(LongInit(int))
-                                                     
-                            
-
-                    #initialValue = Initial(intValue)
-                case _:
-                    print("Error: Non constant initializer on local static variable.")
-                    sys.exit(1)
-                    
-            """
         else:
             match varDecl.varType:
                 case parser.IntType():
@@ -527,8 +430,6 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
                 case parser.LongType():
                     #Int a Long type
                     initialValue = Initial(LongInit(0))
-
-            #initialValue = Initial("0")
         
         symbolTable[varDecl.identifier] = Entry(varDecl.identifier, StaticAttributes(initialVal=initialValue, global_=False), varDecl.varType)
 

@@ -773,7 +773,6 @@ def TAC_convertSymbolsToTAC(symbolTable):
         match entry.attrs:
             case typeChecker.StaticAttributes(initialVal = initialVal, global_ = global_):
                 #print(type(initialVal))
-                #TODO: Check this
                 match initialVal:
                     case typeChecker.Tentative():
                         #print(type(entry.type))
