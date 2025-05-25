@@ -428,8 +428,16 @@ def parseValue(v, symbolTable):
                     asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.LongType()
 
+                case parser.ConstUInt():
+                    asmType = AssemblySize(AssemblyType.LONGWORD)
+                    cType = parser.UIntType()
+                
+                case parser.ConstULong():
+                    asmType = AssemblySize(AssemblyType.QUADWORD)
+                    cType = parser.ULongType()
+
                 case _:
-                    print("Error: Invalid Assembly Constant.")
+                    print("Error: Invalid Assembly Constant. {0}".format(type(const)))
                     sys.exit(1)
 
             return asmType, cType, ImmediateOperand(const.int)
@@ -445,6 +453,14 @@ def parseValue(v, symbolTable):
                     asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.LongType()
                 
+                case parser.UIntType():
+                    asmType = AssemblySize(AssemblyType.LONGWORD)
+                    cType = parser.UIntType()
+                
+                case parser.ULongType():
+                    asmType = AssemblySize(AssemblyType.QUADWORD)
+                    cType = parser.ULongType()
+
                 case _:
                     print("Error: Invalid Assembly Variable.")
                     sys.exit(1)

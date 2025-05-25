@@ -5,5 +5,5 @@
 
 int main(void)
 {
-    unsigned int a = 4UL > 5;
+    unsigned long a = 4U > 5U;
 }
