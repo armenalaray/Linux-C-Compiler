@@ -787,6 +787,8 @@ def ASM_parseTopLevel(topLevel, symbolTable):
     match topLevel:
         case tacGenerator.StaticVariable(identifier = identifier, global_ = global_, type = type, init = init):
             print(identifier)
+            alignment, other = matchCType(type)
+            """
             alignment = 0
             match type:
                 case parser.IntType():
@@ -795,9 +797,16 @@ def ASM_parseTopLevel(topLevel, symbolTable):
                 case parser.LongType():
                     alignment = 8
                 
+                case parser.UIntType():
+                    alignment = 4
+                
+                case parser.ULongType():
+                    alignment = 8
+                    
                 case _:
                     print("Invalid Type.")
                     sys.exit(1)
+            """
 
             return StaticVariable(identifier, global_, alignment, init)
         
@@ -806,18 +815,9 @@ def ASM_parseTopLevel(topLevel, symbolTable):
 
             offset = 16 
             for i, param in enumerate(params):
-                type = None
-                match symbolTable[param].type:
-                    case parser.IntType():
-                        type = AssemblySize(AssemblyType.LONGWORD)
-
-                    case parser.LongType():
-                        type = AssemblySize(AssemblyType.QUADWORD)
-
-                if type == None:
-                    print("Error")
-                    sys.exit(1)
-
+                
+                alignment, type = matchCType(symbolTable[param].type)
+  
                 a = None
                 if i > 5:
                     a = MovInstruction(type, StackOperand(offset), PseudoRegisterOperand(param))
@@ -854,6 +854,24 @@ class FunEntry(asm_symtab_entry):
     def __repr__(self):
         return self.__str__()
 
+def matchCType(type):
+    match type:
+        case parser.IntType():
+            return 4, AssemblySize(AssemblyType.LONGWORD)
+
+        case parser.LongType():
+            return 8, AssemblySize(AssemblyType.QUADWORD)
+
+        case parser.UIntType():
+            return 4, AssemblySize(AssemblyType.LONGWORD)
+        
+        case parser.ULongType():
+            return 8, AssemblySize(AssemblyType.QUADWORD)
+
+        case _:
+            print("Error: Invalid C Type to Assebly Conversion. {0}".format(type))
+            sys.exit(1)
+
 def ASM_parseAST(ast, symbolTable):
     funcDefList = []
     for topLevel in ast.topLevelList:
@@ -865,6 +883,8 @@ def ASM_parseAST(ast, symbolTable):
     for name, entry in symbolTable.items():
         #print(type(entry.attrs))
 
+        
+        """
         type_ = None
         match entry.type:
             case parser.IntType():
@@ -872,15 +892,18 @@ def ASM_parseAST(ast, symbolTable):
 
             case parser.LongType():
                 type_ = AssemblySize(AssemblyType.QUADWORD)
+        """
 
         match entry.attrs:
             case typeChecker.FunAttributes(defined = defined, global_ = global_):
                 backendSymbolTable[name] = FunEntry(defined=defined)
              
             case typeChecker.LocalAttributes():
+                alignment, type_ = matchCType(entry.type)
                 backendSymbolTable[name] = ObjEntry(assType=type_, isStatic=False)
                 
             case typeChecker.StaticAttributes():
+                alignment, type_ = matchCType(entry.type)
                 backendSymbolTable[name] = ObjEntry(assType=type_, isStatic=True)
                 
     

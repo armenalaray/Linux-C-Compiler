@@ -183,7 +183,7 @@ if __name__ == "__main__":
 
 			print(ass)
 
-			#print(backSymbolTable)
+			print(backSymbolTable)
 			
 			#ReplacePseudoRegisters.ReplacePseudoRegisters(ass, backSymbolTable)
 

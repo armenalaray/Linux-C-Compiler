@@ -1,7 +1,13 @@
 
 
-//static unsigned int i;
-//static unsigned long j;
+static unsigned int i;
+static unsigned long j;
+
+
+long ale(unsigned long a, unsigned int b)
+{
+    return b;
+}
 
 int main(void)
 {
