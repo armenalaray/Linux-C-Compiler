@@ -185,13 +185,13 @@ if __name__ == "__main__":
 
 			print(backSymbolTable)
 			
-			#ReplacePseudoRegisters.ReplacePseudoRegisters(ass, backSymbolTable)
+			ReplacePseudoRegisters.ReplacePseudoRegisters(ass, backSymbolTable)
 
-			#print(ass)
+			print(ass)
 
-			#FixingUpInstructions.FixingUpInstructions(ass)
+			FixingUpInstructions.FixingUpInstructions(ass)
 
-			#print(ass)
+			print(ass)
 		
 
 			if LastStage == 'assemblyGeneration':
@@ -218,42 +218,8 @@ if __name__ == "__main__":
 				assC = "gcc " + asmFile + " -o " + os.path.dirname(file) + "/" + os.path.basename(file).split('.')[0]
 				os.system(assC)
 			
-			
-			
-		"""
-		print(pro.function.iden)
-		print(pro.function.statement)
-		print(pro.function.statement.expression.intValue)
-		"""
 
 	sys.exit(0)
 					
 
-			
-			
-"""
-
-#NOTE Here I am looking at the beggining of a word
-b = re.search(r"\bid", a)
-
-
-
-compC = "gcc -S -O -fno-asynchronous-unwind-tables -fcf-protection=none " + iFile + " -o " 
-
-aFile = os.path.dirname(sys.argv[1]) + "/" + os.path.basename(sys.argv[1]).split('.')[0] + ".s"
-
-print(aFile)
-compC = compC + aFile
-print(compC)
-
-if os.system(compC) == 0:
-
-	#assembly file
-	assC = "gcc " + aFile + " -o " + os.path.dirname(sys.argv[1]) + "/" + os.path.basename(sys.argv[1]).split('.')[0]
 	
-	print(assC)
-
-	os.system(assC)
-
-	os.remove(aFile)
-"""

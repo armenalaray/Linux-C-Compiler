@@ -2,6 +2,7 @@ import sys
 import numpy
 import assemblyGenerator
 
+"""
 def FixUpFuncDef(funcDef):
 
     offset = funcDef.stackOffset
@@ -95,6 +96,7 @@ def FixUpFuncDef(funcDef):
         oldSize = len(newList)
 
     funcDef.insList = newList
+"""
 
 
 def FixingUpTopLevel(topLevel):
@@ -151,7 +153,22 @@ def FixingUpTopLevel(topLevel):
                         if instruction2:
                             newList.append(instruction2)
 
+                    case assemblyGenerator.MovZeroExtendIns(sourceO = sourceO, destO = destO):
                         
+                        if type(destO) == assemblyGenerator.RegisterOperand:
+                            instruction0 = assemblyGenerator.MovInstruction(assemblyGenerator.AssemblySize(assemblyGenerator.AssemblyType.LONGWORD), sourceO, destO)
+
+                            newList.append(instruction0)
+                        elif type(destO) == assemblyGenerator.StackOperand or type(destO) == assemblyGenerator.DataOperand:
+                            instruction0 = assemblyGenerator.MovInstruction(assemblyGenerator.AssemblySize(assemblyGenerator.AssemblyType.LONGWORD), sourceO, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)))
+
+                            instruction1 = assemblyGenerator.MovInstruction(assemblyGenerator.AssemblySize(assemblyGenerator.AssemblyType.QUADWORD), assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)), destO)
+
+                            newList.append(instruction0)
+                            newList.append(instruction1)
+
+
+                                
 
                     case assemblyGenerator.MovInstruction(assType=assType, sourceO=src, destO=dst):
                         #stack - stack
@@ -186,6 +203,18 @@ def FixingUpTopLevel(topLevel):
                         #    i.sourceO = assemblyGenerator.ImmediateOperand(tru)
                     
                     case assemblyGenerator.IDivInstruction(assType=assType, divisor=div):
+                        match div:
+                            case assemblyGenerator.ImmediateOperand():
+                                i.divisor = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+
+                                instruction = assemblyGenerator.MovInstruction(assType, div, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+
+                                newList.append(instruction)
+                                newList.append(i)
+                    
+                    case assemblyGenerator.DivInstruction(assType=assType, divisor=div):
+                        #mov imm(2), r10
+                        #div r10
                         match div:
                             case assemblyGenerator.ImmediateOperand():
                                 i.divisor = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
@@ -298,6 +327,7 @@ def FixingUpTopLevel(topLevel):
 
                                 if instruction1:
                                     newList.append(instruction1)
+
                             case assemblyGenerator.BinopType.Add:
                                 
                                 if (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.DataOperand):
@@ -337,7 +367,10 @@ def FixingUpTopLevel(topLevel):
                                     newList.append(instructionImm)
                                     newList.append(i)
 
-                        
+                            #case _:
+                            #    print("Ale")
+                            #    sys.exit(1)
+                
                             
 
                         #aqui estas checando que si los dos estan en memoria
@@ -347,11 +380,15 @@ def FixingUpTopLevel(topLevel):
                         #data data
                         #stack stack
 
-                        
-                    
-                    #case _:
-                    #    print("Invalid Instruction fixup. {0}".format(type(i)))
-                    #    sys.exit(1)                                        
+                    case assemblyGenerator.ReturnInstruction():
+                        pass
+
+                    case assemblyGenerator.CallInstruction():
+                        pass
+
+                    case _:
+                        print("Invalid Instruction fixup. {0}".format(type(i)))
+                        sys.exit(1)                                        
                     
                                     
                 if len(newList) == oldSize:
