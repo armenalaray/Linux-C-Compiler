@@ -51,6 +51,8 @@ class TokenType(Enum):
     UNSIGNED_KW = 44
     UINT_CONSTANT = 45
     ULONG_CONSTANT = 46
+    DOUBLE_CONSTANT = 47
+    DOUBLE_KW = 48
 
 def Lex(buffer, iFile):
     tokenList = []
@@ -72,41 +74,61 @@ def Lex(buffer, iFile):
             #print(LineNumber)
             buffer = wspace.string[wspace.span()[1]:]
         
+        is_floatingPoint = r"(([0-9]*\.[0-9]+|[0-9]+\.?)[Ee][+-]?[0-9]+|[0-9]*\.[0-9]+|[0-9]+\.)[^\w.]"
+        floatingPoint = re.match(is_floatingPoint, buffer)
+        if floatingPoint:
+            is_floatingPoint = r"(([0-9]*\.[0-9]+|[0-9]+\.?)[Ee][+-]?[0-9]+|[0-9]*\.[0-9]+|[0-9]+\.)"
+            floatingPoint = re.match(is_floatingPoint, buffer)
+            if floatingPoint:
+                print(floatingPoint.group())
+                tokenList.append((floatingPoint.group(), TokenType.DOUBLE_CONSTANT, LineNumber))
+                buffer = floatingPoint.string[floatingPoint.span()[1]:]
+                continue
         
-        is_unsignedLong = r"[0-9]+([uU][lL]|[lL][uU])\b"
+        is_unsignedLong = r"([0-9]+([uU][lL]|[lL][uU]))[^\w.]"
         unsignedLong = re.match(is_unsignedLong, buffer)
         if unsignedLong:
-            tokenList.append((unsignedLong.group(), TokenType.ULONG_CONSTANT, LineNumber))
 
-            buffer = unsignedLong.string[unsignedLong.span()[1]:]
-            continue
+            is_unsignedLong = r"([0-9]+([uU][lL]|[lL][uU]))"
+            unsignedLong = re.match(is_unsignedLong, buffer)
+            if unsignedLong:
+                tokenList.append((unsignedLong.group(), TokenType.ULONG_CONSTANT, LineNumber))
+
+                buffer = unsignedLong.string[unsignedLong.span()[1]:]
+                continue
         
-        is_unsigned = r"[0-9]+[uU]\b"
+        is_unsigned = r"([0-9]+[uU])[^\w.]"
         unsigned = re.match(is_unsigned, buffer)
         if unsigned:
-            tokenList.append((unsigned.group(), TokenType.UINT_CONSTANT, LineNumber))
+            is_unsigned = r"([0-9]+[uU])"
+            unsigned = re.match(is_unsigned, buffer)
+            if unsigned:
+                tokenList.append((unsigned.group(), TokenType.UINT_CONSTANT, LineNumber))
 
-            buffer = unsigned.string[unsigned.span()[1]:]
-            continue
+                buffer = unsigned.string[unsigned.span()[1]:]
+                continue
         
 
-        is_long = r"[0-9]+[lL]\b"
+        is_long = r"([0-9]+[lL])[^\w.]"
         long = re.match(is_long, buffer)
         if long:
-            tokenList.append((long.group(), TokenType.LONG_CONSTANT, LineNumber))
+            is_long = r"([0-9]+[lL])"
+            long = re.match(is_long, buffer)
+            if long:
+                tokenList.append((long.group(), TokenType.LONG_CONSTANT, LineNumber))
+                buffer = long.string[long.span()[1]:]
+                continue
 
-            buffer = long.string[long.span()[1]:]
-            continue
-            #print(buffer)
-
-        is_int = r"([0-9]+)\b"
+        is_int = r"([0-9]+)[^\w.]"
         int = re.match(is_int, buffer)
         if int:
-            tokenList.append((int.group(), TokenType.INT_CONSTANT, LineNumber))
+            is_int = r"([0-9]+)"
+            int = re.match(is_int, buffer)
+            if int:
+                tokenList.append((int.group(), TokenType.INT_CONSTANT, LineNumber))
 
-            buffer = int.string[int.span()[1]:]
-            continue
-            #print(buffer)
+                buffer = int.string[int.span()[1]:]
+                continue
         
 
         mList = [

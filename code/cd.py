@@ -15,16 +15,47 @@ import ReplacePseudoRegisters
 import FixingUpInstructions
 import ASTDebug
 
-printDebugInfo = False
-			
-if __name__ == "__main__":	
-	#a = parser.ConstInt(2147483648)
-	#print(a)
+printDebugInfo = True
 
-	file = ''
-	LastStage = "codeEmission"
-	NoLink = False
-	library = None
+file = ''
+LastStage = "codeEmission"
+NoLink = False
+library = None
+
+def matchCommands(argument):
+
+	global LastStage
+	global library
+	global NoLink
+
+	cCommand = argument
+	isLibary = r"-l"
+	lMatch = re.match(isLibary, cCommand)
+	if lMatch:
+		cCommand = lMatch.string[lMatch.span()[1]:]
+		#print(cCommand)
+		library = cCommand
+	else:
+		match argument:
+			case "--lex":
+				LastStage = "lex"
+			case "--parse":
+				LastStage = "parse"
+			case "--validate":
+				LastStage = "validate"
+			case "--tacky":
+				LastStage = "tac"
+			case "--codegen":
+				LastStage = "assemblyGeneration"
+			case "-c":
+				NoLink = True
+			case _:
+				print("Error Invalid command option.")
+				sys.exit(1)
+
+
+if __name__ == "__main__":	
+	
 
 	match len(sys.argv):
 		case 1:
@@ -34,88 +65,31 @@ if __name__ == "__main__":
 			file = sys.argv[1]	
 			
 		case 3:
-			file = sys.argv[2]
-			print(type(sys.argv[1]))
-
-			cCommand = sys.argv[1]
-
-			isLibary = r"-l"
-			lMatch = re.match(isLibary, cCommand)
-			if lMatch:
-				cCommand = lMatch.string[lMatch.span()[1]:]
-				print(cCommand)
-
-				library = cCommand
-			else:
-				match sys.argv[1]:
-					case "--lex":
-						LastStage = "lex"
-					case "--parse":
-						LastStage = "parse"
-					case "--validate":
-						LastStage = "validate"
-					case "--tacky":
-						LastStage = "tac"
-					case "--codegen":
-						LastStage = "assemblyGeneration"
-					case "-c":
-						NoLink = True
-					case _:
-						print("Error Invalid command option.")
-						sys.exit(1)
+			file = sys.argv[2]			
+			matchCommands(sys.argv[1])
 
 		case 4:
 			file = sys.argv[3]
-			#como sabes que no modificaste el mismo
+			matchCommands(sys.argv[1])
+			matchCommands(sys.argv[2])
 
-			#if sys.argv[2] == sys.argv[1]:
-
-
-			match sys.argv[1]:
-				case "--lex":
-					LastStage = "lex"
-				case "--parse":
-					LastStage = "parse"
-				case "--validate":
-					LastStage = "validate"
-				case "--tacky":
-					LastStage = "tac"
-				case "--codegen":
-					LastStage = "assemblyGeneration"
-				case "-c":
-					NoLink = True
-					pass
-				case _:
-					print("Error Invalid command option.")
-					sys.exit(1)
-
-			match sys.argv[2]:
-				case "--lex":
-					LastStage = "lex"
-				case "--parse":
-					LastStage = "parse"
-				case "--validate":
-					LastStage = "validate"
-				case "--tacky":
-					LastStage = "tac"
-				case "--codegen":
-					LastStage = "assemblyGeneration"
-				case "-c":
-					NoLink = True
-					pass
-				case _:
-					print("Error Invalid command option.")
-					sys.exit(1)
-
+		case 5:
+			file = sys.argv[4]
+			matchCommands(sys.argv[1])
+			matchCommands(sys.argv[2])
+			matchCommands(sys.argv[3])
+			
+			pass
 		case _:
 			print("Error Invalid command option.")
 			sys.exit(1)
 
 	#lexonly
 	
-	print("File: ", file)
-	print("Last Stage: ", LastStage)
-	print("NoLink: ", NoLink)
+	print("File:", file)
+	print("Last Stage:", LastStage)
+	print("NoLink:", NoLink)
+	print("Libary:", library)
 
 	#NOTE: you have an archive
 	prepC = "gcc -E -P " + file + " -o "
@@ -226,6 +200,12 @@ if __name__ == "__main__":
 				pass
 			else:	
 				assC = "gcc " + asmFile + " -o " + os.path.dirname(file) + "/" + os.path.basename(file).split('.')[0]
+
+				if library:
+					assC += ' -lm'
+				
+				#print(assC)
+
 				os.system(assC)
 			
 

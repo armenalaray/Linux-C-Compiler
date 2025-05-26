@@ -3,8 +3,7 @@
 
 # My compiler
 
-
-#lastStage="--codegen"
+lastStage="--lex"
 #noLink="-c"
 library="-lmath.h"
 
