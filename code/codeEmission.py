@@ -403,5 +403,5 @@ def outputAsmFile(ass, symbolTable):
 
     output += '\t.section	.note.GNU-stack,"",@progbits\n'
 
-    print(output)
+    #print(output)
     return output

@@ -11,7 +11,7 @@ class Program(Node):
 
     def __init__(self, declList=None):
         self.declList = declList
-    
+
     def __str__(self):
         return "AST Program: {self.declList}".format(self=self)
     

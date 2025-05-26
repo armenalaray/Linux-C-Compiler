@@ -1,7 +1,9 @@
 import os
 import sys
-from lexer import *
+import re
+#from lexer import *
 
+import lexer
 import parser
 import assemblyGenerator
 import codeEmission
@@ -13,21 +15,7 @@ import ReplacePseudoRegisters
 import FixingUpInstructions
 import ASTDebug
 
-"""
-def lex(file):
-	pass
-
-
-a = sys.argv[1]
-
-if a[:2] == "--":
-	match a[2:]:
-		case "lex":
-			lex(sys.argv[2])
-		case "parse":
-			lex(sys.argv[2])
-			parse(sys.argv[2])
-"""
+printDebugInfo = False
 			
 if __name__ == "__main__":	
 	#a = parser.ConstInt(2147483648)
@@ -36,6 +24,7 @@ if __name__ == "__main__":
 	file = ''
 	LastStage = "codeEmission"
 	NoLink = False
+	library = None
 
 	match len(sys.argv):
 		case 1:
@@ -46,23 +35,34 @@ if __name__ == "__main__":
 			
 		case 3:
 			file = sys.argv[2]
+			print(type(sys.argv[1]))
 
-			match sys.argv[1]:
-				case "--lex":
-					LastStage = "lex"
-				case "--parse":
-					LastStage = "parse"
-				case "--validate":
-					LastStage = "validate"
-				case "--tacky":
-					LastStage = "tac"
-				case "--codegen":
-					LastStage = "assemblyGeneration"
-				case "-c":
-					NoLink = True
-				case _:
-					print("Error Invalid command option.")
-					sys.exit(1)
+			cCommand = sys.argv[1]
+
+			isLibary = r"-l"
+			lMatch = re.match(isLibary, cCommand)
+			if lMatch:
+				cCommand = lMatch.string[lMatch.span()[1]:]
+				print(cCommand)
+
+				library = cCommand
+			else:
+				match sys.argv[1]:
+					case "--lex":
+						LastStage = "lex"
+					case "--parse":
+						LastStage = "parse"
+					case "--validate":
+						LastStage = "validate"
+					case "--tacky":
+						LastStage = "tac"
+					case "--codegen":
+						LastStage = "assemblyGeneration"
+					case "-c":
+						NoLink = True
+					case _:
+						print("Error Invalid command option.")
+						sys.exit(1)
 
 		case 4:
 			file = sys.argv[3]
@@ -132,7 +132,10 @@ if __name__ == "__main__":
 
 			buffer = preprocessedfile.read()
 	
-			tokenList = Lex(buffer, iFile)
+			tokenList = lexer.Lex(buffer, iFile)
+
+			if printDebugInfo:
+				print(tokenList)
 
 			os.remove(iFile)
 
@@ -146,52 +149,56 @@ if __name__ == "__main__":
 				print("Syntax Error Extra code inside program. {0}".format(tokenList))
 				sys.exit(1)
 
-			print(pro.printNode(0))
+			if printDebugInfo:
+				print(pro.printNode(0))
 
 			if LastStage == 'parse':
 				sys.exit(0)
 
 			res = semanticAnalysis.IdentifierResolution(pro)
 
-			print(res.printNode(0))
+			if printDebugInfo:
+				print(res.printNode(0))
 			
 
 			typeChekedProgram, symbolTable = typeChecker.typeCheckProgram(res)
 
-			print(typeChekedProgram.printNode(0))
-
-			print(symbolTable)
+			if printDebugInfo:
+				print(typeChekedProgram.printNode(0))
+				print(symbolTable)
 
 			loo = loopLabeling.labelProgram(typeChekedProgram)
 
-			print(loo.printNode(0))
-			#print(loo)
+			if printDebugInfo:
+				print(loo.printNode(0))
 
 			if LastStage == 'validate':
 				sys.exit(0)
 
 			tac = tacGenerator.TAC_parseProgram(loo, symbolTable)
 
-			print(tac)
-
-			print(symbolTable)
+			if printDebugInfo:
+				print(tac)
+				print(symbolTable)
 
 			if LastStage == 'tac':
 				sys.exit(0)
 
 			ass, backSymbolTable = assemblyGenerator.ASM_parseAST(tac, symbolTable)
 
-			print(ass)
-
-			print(backSymbolTable)
+			if printDebugInfo:
+				print(ass)
+				print(backSymbolTable)
 			
 			ReplacePseudoRegisters.ReplacePseudoRegisters(ass, backSymbolTable)
 
-			print(ass)
+			if printDebugInfo:
+				print(ass)
 
 			FixingUpInstructions.FixingUpInstructions(ass)
 
-			print(ass)
+			if printDebugInfo:
+				print(ass)
 		
 
 			if LastStage == 'assemblyGeneration':
@@ -199,6 +206,9 @@ if __name__ == "__main__":
 
 
 			output = codeEmission.outputAsmFile(ass, symbolTable)
+
+			if printDebugInfo:
+				print(output)
 
 			asmFile = os.path.dirname(file) + "/" + os.path.basename(file).split('.')[0] + '.s'
 			#print(asmFile)

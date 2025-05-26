@@ -6,9 +6,9 @@
 
 #lastStage="--codegen"
 #noLink="-c"
+library="-lmath.h"
 
-
-python3 "$(pwd)"/code/cd.py $lastStage $noLink "$(pwd)"/test_/test.c
+python3 "$(pwd)"/code/cd.py $lastStage $noLink $library "$(pwd)"/test_/test.c
 echo $?
 
 

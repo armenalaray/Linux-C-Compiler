@@ -2,6 +2,7 @@ import sys
 import os
 import re
 from enum import Enum
+#from cd import printDebugInfo
 
 class TokenType(Enum):
     NULL = 1
@@ -259,6 +260,7 @@ def Lex(buffer, iFile):
             sys.exit(1)
 
     #aqui termina el while con la lista
-    print(tokenList)
+    #if printDebugInfo: 
+    #    print(tokenList)
 
     return tokenList
