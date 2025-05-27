@@ -80,7 +80,7 @@ def Lex(buffer, iFile):
             is_floatingPoint = r"(([0-9]*\.[0-9]+|[0-9]+\.?)[Ee][+-]?[0-9]+|[0-9]*\.[0-9]+|[0-9]+\.)"
             floatingPoint = re.match(is_floatingPoint, buffer)
             if floatingPoint:
-                print(floatingPoint.group())
+                #print(floatingPoint.group())
                 tokenList.append((floatingPoint.group(), TokenType.DOUBLE_CONSTANT, LineNumber))
                 buffer = floatingPoint.string[floatingPoint.span()[1]:]
                 continue
@@ -161,6 +161,9 @@ def Lex(buffer, iFile):
             
             match alphanumeric.group():
                 
+                case "double":
+                    tokenList.append(("double", TokenType.DOUBLE_KW, LineNumber))
+
                 case "unsigned":
                     tokenList.append(("unsigned", TokenType.UNSIGNED_KW, LineNumber))
 
