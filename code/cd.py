@@ -55,7 +55,7 @@ def matchCommands(argument):
 
 
 if __name__ == "__main__":	
-	
+	print(sys.float_info)
 
 	match len(sys.argv):
 		case 1:

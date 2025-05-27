@@ -3,7 +3,9 @@
 
 # My compiler
 
-lastStage="--lex"
+
+
+lastStage="--parse"
 #noLink="-c"
 library="-lmath.h"
 
@@ -15,6 +17,7 @@ if test -f test_/test; then
     ./test_/test
     echo "from test: "$?
 fi
+
 
 
 

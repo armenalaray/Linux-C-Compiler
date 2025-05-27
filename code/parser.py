@@ -250,6 +250,13 @@ class ULongType(Type, Node):
     def printNode(self, level):
         return "ulong"
 
+class DoubleType(Type, Node):
+    def __str__(self):
+        return "double"
+    
+    def printNode(self, level):
+        return "double"
+    
 
 class FunType(Type, Node):
     def __init__(self, paramTypes, retType):
@@ -745,6 +752,18 @@ class ConstULong(Const, Node):
     def printNode(self, level):
         return "{}".format(self.int)
 
+
+class ConstDouble(Const, Node):
+    def __init__(self, double):
+        self.double = double
+    
+    def __str__(self):
+        return "{self.double}".format(self=self)
+    
+    def printNode(self, level):
+        return "{}".format(self.double)
+    
+
 class UnopType(Enum):
     NEGATE = 1
     COMPLEMENT = 2
@@ -860,6 +879,9 @@ def parseConstant(tokenList):
 
     digitString = ""
     match token[1]:
+        case TokenType.DOUBLE_CONSTANT:
+            digitString = token[0]
+
         case TokenType.INT_CONSTANT:
             digitString = token[0]
         
@@ -870,22 +892,27 @@ def parseConstant(tokenList):
             if result:
                 digitString = result.group()
 
-        
-    v = int(digitString)
-    #print(v)
-
     match token[1]:
-        case TokenType.INT_CONSTANT:
-            return parseSignedInteger(token, v)
-             
-        case TokenType.LONG_CONSTANT:
-            return parseSignedInteger(token, v)
-             
-        case TokenType.UINT_CONSTANT:
-            return parseUnsignedInteger(token, v)
-             
-        case TokenType.ULONG_CONSTANT:
-            return parseUnsignedInteger(token, v)
+        case TokenType.DOUBLE_CONSTANT:
+            v = float(digitString)
+            print(v)
+            return ConstDouble(v)
+
+        case _:
+            v = int(digitString)
+
+            match token[1]:
+                case TokenType.INT_CONSTANT:
+                    return parseSignedInteger(token, v)
+                    
+                case TokenType.LONG_CONSTANT:
+                    return parseSignedInteger(token, v)
+                    
+                case TokenType.UINT_CONSTANT:
+                    return parseUnsignedInteger(token, v)
+                    
+                case TokenType.ULONG_CONSTANT:
+                    return parseUnsignedInteger(token, v)
             
     
 
@@ -960,8 +987,9 @@ def parseArgumentList(tokenList):
     return expList
 
 def isConstant(token):
-    if token[1] == TokenType.INT_CONSTANT or token[1] == TokenType.LONG_CONSTANT or token[1] == TokenType.UINT_CONSTANT or token[1] == TokenType.ULONG_CONSTANT: 
+    if token[1] == TokenType.INT_CONSTANT or token[1] == TokenType.LONG_CONSTANT or token[1] == TokenType.UINT_CONSTANT or token[1] == TokenType.ULONG_CONSTANT or token[1] == TokenType.DOUBLE_CONSTANT: 
         return True
+    
     return False
     
 
@@ -1255,10 +1283,17 @@ def parseStatement(tokenList):
 def parseTypes(rawTypes):
     types = [x[1] for x in rawTypes]
 
-    #print(types)
+    print(types)
 
     if types == []:
         print("Invalid Type Specifier.")
+        sys.exit(1)
+
+    if types == [TokenType.DOUBLE_KW]:
+        return DoubleType()
+
+    if TokenType.DOUBLE_KW in types:
+        print("Error: Can't combine double with other type specifiers.")
         sys.exit(1)
 
     setTypes = set(types)
@@ -1386,8 +1421,9 @@ def parseBlock(tokenList):
     return Block(BlockItemList)
 
 def isTypeSpecifier(token):
-    if token[1] == TokenType.INT_KW or token[1] == TokenType.LONG_KW or token[1] == TokenType.SIGNED_KW or token[1] == TokenType.UNSIGNED_KW: 
+    if token[1] == TokenType.INT_KW or token[1] == TokenType.LONG_KW or token[1] == TokenType.SIGNED_KW or token[1] == TokenType.UNSIGNED_KW or token[1] == TokenType.DOUBLE_KW: 
         return True
+    
     return False
 
 def parseParamList(tokenList):
