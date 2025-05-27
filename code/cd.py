@@ -15,7 +15,7 @@ import ReplacePseudoRegisters
 import FixingUpInstructions
 import ASTDebug
 
-printDebugInfo = True
+printDebugInfo = False
 
 file = ''
 LastStage = "codeEmission"

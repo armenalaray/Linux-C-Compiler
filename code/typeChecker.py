@@ -99,6 +99,11 @@ def getCommonType(type1, type2):
     if type(type1) == type(type2):
         return type1
     
+    print("Ale")
+
+    if type(type1) == parser.DoubleType or type(type2) == parser.DoubleType:
+        return parser.DoubleType()
+    
     print("Type 1:\n\tIs Signed:", type1.isSigned, "Size:", type1.size)
     print("Type 2:\n\tIs Signed:", type2.isSigned, "Size:", type2.size)
 
@@ -190,14 +195,24 @@ def typeCheckExpression(exp, symbolTable):
                 case parser.ConstULong():
                     return parser.Constant_Expression(const, parser.ULongType())
                 
+                case parser.ConstDouble():
+                    return parser.Constant_Expression(const, parser.DoubleType())
+
                 case _:
                     print("Invalid Constant Type. {0}".format(type(const)))
                     sys.exit(1)
 
         case parser.Unary_Expression(operator=op, expression=exp):
             e = typeCheckExpression(exp, symbolTable)
-            #print(op)
+            
             match op.operator:
+                case parser.UnopType.COMPLEMENT:
+                    if type(e.retType) == parser.DoubleType:
+                        print("Error: Can't take the bitwise complement of a double.")
+                        sys.exit(1)
+                    
+                    return parser.Unary_Expression(op, e, e.retType)
+
                 case parser.UnopType.NOT:
                     return parser.Unary_Expression(op, e, parser.IntType())
                     
@@ -210,15 +225,17 @@ def typeCheckExpression(exp, symbolTable):
             r = typeCheckExpression(right, symbolTable)
 
             match op.operator:
+                case parser.BinopType.MODULO:
+                    if type(l.retType) == parser.DoubleType or type(r.retType) == parser.DoubleType:
+                        print("Error: Can't take the modulo of a double.")
+                        sys.exit(1)
+
                 case parser.BinopType.AND:
                     return parser.Binary_Expression(op, l, r, parser.IntType())
                 case parser.BinopType.OR:
                     return parser.Binary_Expression(op, l, r, parser.IntType())
             
-            #print("left: ", type(l.retType), "right: ", type(r.retType))
             commonType = getCommonType(l.retType, r.retType)
-
-            #print(commonType)
 
             l = convertTo(l, commonType)
             r = convertTo(r, commonType)
