@@ -1,71 +1,36 @@
-double twelveE30 = 12e30;
-/* Test addition, subtraction, multiplication, division, and negation with doubles */
-
-double point_one = 0.1;
-double point_two = 0.2;
-double point_three = 0.3;
-
-double two = 2.0;
-double three = 3.0;
-double four = 4.0;
-
-int addition(void) {
-    return (point_one + point_two == 0.30000000000000004);
-}
-
-int subtraction(void) {
-    return (four - 1.0 == 3.0);
-}
-
-int multiplication(void) {
-    return (0.01 * point_three == 0.003);
-}
-
-int division(void) {
-    return (7.0 / two == 3.5);
-}
-
-int negation(void) {
-    double neg = -twelveE30;
-    return !(12e30 + neg);
-}
-
-int complex_expression(void) {
-    /* Test a more complex expression.
-     * Note: all intermediate results in this expression
-     * can be represented exactly, so we don't need to
-     * consider the impact of rounding intermediate results.
+int main(void) {
+    /* Define constant doubles in a few different formats,
+     * and make sure we can lex all of them.
+     * Note that these can all be represented exactly,
+     * without rounding.
      */
 
-    double complex_expression = (two + three) - 127.5 * four;
-    return complex_expression == -505.0;
-}
+    
+    /* Several ways to define 1 */
+    double a = 1.0;
+    static double ale;
+    double b = 1.;
+    double c = 1E0;
+    double d = .01e+2;
 
-int main(void) {
-
-    if (!addition()) {
+    /* Make sure they all have the correct value */
+    if (! (a == b && a == c && a == d) )
         return 1;
-    }
-
-    if (!subtraction()){
+    if (a + b + c + d != 4.0)
         return 2;
-    }
 
-    if (!multiplication()) {
+    /* Several ways to define .125 */
+    double e = .125;
+    double f = 12.5e-2;
+    double g = 125.E-3;
+    double h = 1250000000e-10;
+
+    /* Make sure they all have the correct value */
+    if (! (e == f && e == g && e == h) )
         return 3;
-    }
-
-    if (!division()) {
+    if (e + f + g + h != 0.5)
         return 4;
-    }
-
-    if (!negation()) {
-        return 5;
-    }
-
-    if (!complex_expression()) {
-        return 5;
-    }
 
     return 0;
+
 }

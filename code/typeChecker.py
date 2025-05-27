@@ -289,11 +289,9 @@ def typeCheckExpression(exp, symbolTable):
 def GetStaticInitializer(varType, int):
     match varType:
         case parser.IntType():
-            #Long a int type
             return Initial(IntInit(int))           
 
         case parser.LongType():
-            #long a long type
             return Initial(LongInit(int))
         
         case parser.UIntType():
@@ -452,14 +450,7 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
         if varDecl.exp:
             initialValue = AnnotateExpression(varDecl)
         else:
-            match varDecl.varType:
-                case parser.IntType():
-                    #Int a Int type
-                    initialValue = Initial(IntInit(0))
-                    
-                case parser.LongType():
-                    #Int a Long type
-                    initialValue = Initial(LongInit(0))
+            initialValue = GetStaticInitializer(varDecl.varType, 0)
         
         symbolTable[varDecl.identifier] = Entry(varDecl.identifier, StaticAttributes(initialVal=initialValue, global_=False), varDecl.varType)
 
