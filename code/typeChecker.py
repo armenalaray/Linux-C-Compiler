@@ -65,35 +65,40 @@ class StaticInit:
     pass
 
 class IntInit(StaticInit):
-    def __init__(self, int):
-        self.int = ctypes.c_int32(int)
+    def __init__(self, int_):
+        self.int = ctypes.c_int32(int(int_))
     
     def __str__(self):
         return "{self.int}".format(self=self)
 
 class LongInit(StaticInit):
     def __init__(self, int_):
-        self.int = ctypes.c_int64(int_)
+        self.int = ctypes.c_int64(int(int_))
 
     def __str__(self):
         return "{self.int}".format(self=self)
 
 class UIntInit(StaticInit):
-    def __init__(self, int):
-        self.int = ctypes.c_uint32(int)
+    def __init__(self, int_):
+        self.int = ctypes.c_uint32(int(int_))
     
     def __str__(self):
         return "{self.int}".format(self=self)
 
 
 class ULongInit(StaticInit):
-    def __init__(self, int):
-        self.int = ctypes.c_uint64(int)
+    def __init__(self, int_):
+        self.int = ctypes.c_uint64(int(int_))
     
     def __str__(self):
         return "{self.int}".format(self=self)
 
-
+class DoubleInit(StaticInit):
+    def __init__(self, double):
+        self.double = ctypes.c_double(double)
+    
+    def __str__(self):
+        return "{self.double}".format(self=self)
 
 def getCommonType(type1, type2):
     if type(type1) == type(type2):
@@ -297,6 +302,9 @@ def GetStaticInitializer(varType, int):
         case parser.ULongType():
             return Initial(ULongInit(int))
 
+        case parser.DoubleType():
+            return Initial(DoubleInit(int))
+
         case _:
             print("Error: Invalid Variable Type. {0}".format(varType))
             sys.exit(1)
@@ -338,11 +346,17 @@ def AnnotateExpression(varDecl):
                     varDecl.exp = exp
 
                     return GetStaticInitializer(varDecl.varType, int)
+                
+                case parser.ConstDouble(double=double):
+                    varDecl.exp = parser.Constant_Expression(const, parser.DoubleType())
+                    exp = convertTo(varDecl.exp, varDecl.varType)
+                    varDecl.exp = exp
+
+                    return GetStaticInitializer(varDecl.varType, double)
                     
-                
-                
+
                 case _:
-                    print("Error: Invalid Constant")
+                    print("Error: Invalid Constant. {0}".format(type(const)))
                     sys.exit(1)
         
         case _:
