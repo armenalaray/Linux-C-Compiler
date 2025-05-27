@@ -75,6 +75,51 @@ class TAC_zeroExtendInstruction(instruction):
     def __repr__(self):
         return self.__str__()
 
+class TAC_DoubleToInt(instruction):
+    def __init__(self, src, dst):
+        self.src = src
+        self.dst = dst
+    
+    def __str__(self):
+        return "DoubleToInt {self.dst} = {self.src}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+
+class TAC_DoubleToUInt(instruction):
+    def __init__(self, src, dst):
+        self.src = src
+        self.dst = dst
+    
+    def __str__(self):
+        return "DoubleToUInt {self.dst} = {self.src}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+
+class TAC_IntToDouble(instruction):
+    def __init__(self, src, dst):
+        self.src = src
+        self.dst = dst
+    
+    def __str__(self):
+        return "IntToDouble {self.dst} = {self.src}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+
+class TAC_UIntToDouble(instruction):
+    def __init__(self, src, dst):
+        self.src = src
+        self.dst = dst
+    
+    def __str__(self):
+        return "UIntToDouble {self.dst} = {self.src}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+
+
 class TAC_truncateInstruction(instruction):
     def __init__(self, src, dst):
         self.src = src
@@ -322,6 +367,16 @@ def makeTempVariable(type, symbolTable):
     symbolTable[dstName] = typeChecker.Entry(dstName, typeChecker.LocalAttributes(), type)
     return TAC_VariableValue(dstName)
 
+def CastBetweenIntegers(targetType, sourceType, result, dst, instructions):
+    if targetType.size == sourceType.size:
+        instructions.append(TAC_CopyInstruction(result, dst))
+    elif targetType.size < sourceType.size:
+        instructions.append(TAC_truncateInstruction(result, dst))
+    elif sourceType.isSigned:
+        instructions.append(TAC_signExtendInstruction(result, dst))
+    else:
+        instructions.append(TAC_zeroExtendInstruction(result, dst))
+
 def TAC_parseInstructions(expression, instructions, symbolTable):
     
     match expression:
@@ -336,11 +391,65 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
             
             dst = makeTempVariable(targetType, symbolTable)
 
-            print("Target Size:", targetType.size)
-            print("RetType Size:", exp.retType.size)
-            #print(dst)
-            print(dst, "=", result)
+            print("RetType:", type(exp.retType))
+            
+            match exp.retType:
+                case parser.DoubleType():
+                    match targetType:
+                        case parser.IntType():
+                            instructions.append(TAC_DoubleToInt(result, dst))
 
+                        case parser.LongType():
+                            instructions.append(TAC_DoubleToInt(result, dst))
+
+                        case parser.UIntType():
+                            instructions.append(TAC_DoubleToUInt(result, dst))
+
+                        case parser.ULongType():
+                            instructions.append(TAC_DoubleToUInt(result, dst))
+                            
+                    
+                case parser.IntType():
+                    match targetType:
+                        case parser.DoubleType():
+                            instructions.append(TAC_IntToDouble(result, dst))
+
+                        case _:
+                            #aqui metes a 
+                            CastBetweenIntegers(targetType, exp.retType, result, dst, instructions)
+                            
+                
+                case parser.LongType():
+                    match targetType:
+                        case parser.DoubleType():
+                            instructions.append(TAC_IntToDouble(result, dst))
+                            
+                        case _:
+                            #aqui metes a 
+                            CastBetweenIntegers(targetType, exp.retType, result, dst, instructions)
+                            
+
+                case parser.UIntType():
+                    match targetType:
+                        case parser.DoubleType():
+                            instructions.append(TAC_UIntToDouble(result, dst))
+
+                        case _:
+                            #aqui metes a 
+                            CastBetweenIntegers(targetType, exp.retType, result, dst, instructions)
+                            
+
+                case parser.ULongType():
+                    match targetType:
+                        case parser.DoubleType():
+                            instructions.append(TAC_UIntToDouble(result, dst))
+                            
+                        case _:
+                            #aqui metes a 
+                            CastBetweenIntegers(targetType, exp.retType, result, dst, instructions)
+                            
+
+            """
             if targetType.size == exp.retType.size:
                 instructions.append(TAC_CopyInstruction(result, dst))
             elif targetType.size < exp.retType.size:
@@ -349,10 +458,9 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                 instructions.append(TAC_signExtendInstruction(result, dst))
             else:
                 instructions.append(TAC_zeroExtendInstruction(result, dst))
+            """
 
             return dst
-
-            
             
         case parser.Unary_Expression(operator=op, expression=inner):
             src = TAC_parseInstructions(inner, instructions, symbolTable)
@@ -475,7 +583,10 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
 
                                 case parser.ConstUInt():
                                     realType = parser.UIntType()
-                                    
+                                
+                                case parser.ConstDouble():
+                                    realType = parser.DoubleType()
+
                                 case _:
                                     print("Invalid TAC argument type. {0}".format(type(const)))
                                     sys.exit(1)
@@ -791,6 +902,9 @@ def TAC_convertSymbolsToTAC(symbolTable):
                             
                             case parser.ULongType():
                                 init = typeChecker.ULongInit(0)
+
+                            case parser.DoubleType():
+                                init = typeChecker.DoubleInit(0)
                                 
                             case _:
                                 print("Error: Invalid Tentative Initializer. {0}".format(entry.type))

@@ -436,6 +436,9 @@ def parseValue(v, symbolTable):
                     asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.ULongType()
 
+                case parser.ConstDouble():
+                    return asmType, cType, ImmediateOperand(const.double)
+
                 case _:
                     print("Error: Invalid Assembly Constant. {0}".format(type(const)))
                     sys.exit(1)
@@ -461,8 +464,11 @@ def parseValue(v, symbolTable):
                     asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.ULongType()
 
+                case parser.DoubleType():
+                    pass
+
                 case _:
-                    print("Error: Invalid Assembly Variable.")
+                    print("Error: Invalid Assembly Variable. {0}".format(symbolTable[i].type))
                     sys.exit(1)
 
             return asmType, cType, PseudoRegisterOperand(i)
@@ -549,13 +555,19 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
 
             case tacGenerator.TAC_FunCallInstruction(funName = funName, arguments = arguments, dst = dst):
 
-                paramTypes = symbolTable[funName].type.paramTypes
+                #paramTypes = symbolTable[funName].type.paramTypes
 
-                registerTypes = paramTypes[:6]
-                stackTypes = paramTypes[6:]
+                #registerTypes = paramTypes[:6]
+                #stackTypes = paramTypes[6:]
 
-                print("Register Types: ", registerTypes)
-                print("Stack Types: ", stackTypes)
+                #print("Register Types: ", registerTypes)
+                #print("Stack Types: ", stackTypes)
+
+                #NOTE: Esta cosa esta mal!
+                
+                for arg in arguments:
+
+                    pass
 
                 registerArgs = arguments[:6]
                 stackArgs = arguments[6:]
@@ -569,22 +581,19 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                     #is odd
                     stackPadding = 8
                 
-                #print("stackPadding", stackPadding)
                 if stackPadding != 0:
-                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Sub), AssemblySize(AssemblyType.QUADWORD), ImmediateOperand(stackPadding), RegisterOperand(Register(RegisterType.SP)))
-                    
+                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Sub), AssemblySize(AssemblyType.QUADWORD), ImmediateOperand(stackPadding), RegisterOperand(Register(RegisterType.SP)))                    
                     ASM_Instructions.append(instruction0)
 
-                    #ASM_Instructions.append(AllocateStackInstruction(stackPadding))
-
-                    pass
                 
                 for i, (arg, type_) in enumerate(zip(registerArgs, registerTypes)):
 
-                    type1, alignment1, asmArg = parseValue(arg, symbolTable)
+                    type1, cType1, asmArg = parseValue(arg, symbolTable)
+
 
                     ASM_Instructions.append(MovInstruction(type1, asmArg, RegisterOperand(Register(list(RegisterType)[i]))))
                     
+                
                    
                 stackArgs.reverse()
                 stackTypes.reverse()
@@ -778,6 +787,18 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                 type2, cType2, dst = parseValue(dst_, symbolTable)
                 ASM_Instructions.append(MovZeroExtendIns(src, dst))
 
+            case tacGenerator.TAC_DoubleToInt():
+                pass
+
+            case tacGenerator.TAC_DoubleToUInt():
+                pass
+
+            case tacGenerator.TAC_UIntToDouble():
+                pass
+
+            case tacGenerator.TAC_IntToDouble():
+                pass
+
             case _:
                 print("Invalid TAC Instruction. {0}".format(type(i)))
                 sys.exit(1)
@@ -866,6 +887,9 @@ def matchCType(type):
             return 4, AssemblySize(AssemblyType.LONGWORD)
         
         case parser.ULongType():
+            return 8, AssemblySize(AssemblyType.QUADWORD)
+
+        case parser.DoubleType():
             return 8, AssemblySize(AssemblyType.QUADWORD)
 
         case _:

@@ -5,7 +5,7 @@
 
 
 
-lastStage="--validate"
+lastStage="--codegen"
 #noLink="-c"
 library="-lmath.h"
 
