@@ -448,7 +448,7 @@ class RegisterType(Enum):
     SP = 9
 
 class SSERegisterType(Enum):
-    XMMO = 0
+    XMM0 = 0
     XMM1 = 1
     XMM2 = 2
     XMM3 = 3
@@ -487,6 +487,27 @@ class Register:
                 return "R11d"
             case RegisterType.SP:
                 return "SP"
+            
+            case SSERegisterType.XMM0:
+                return "XMM0"
+            case SSERegisterType.XMM1:
+                return "XMM1"
+            case SSERegisterType.XMM2:
+                return "XMM2"
+            case SSERegisterType.XMM3:
+                return "XMM3"
+            case SSERegisterType.XMM4:
+                return "XMM4"
+            case SSERegisterType.XMM5:
+                return "XMM5"
+            case SSERegisterType.XMM6:
+                return "XMM6"
+            case SSERegisterType.XMM7:
+                return "XMM7"
+            case SSERegisterType.XMM14:
+                return "XMM14"
+            case SSERegisterType.XMM15:
+                return "XMM15"
             
             case _:
                 return "_"
@@ -616,21 +637,44 @@ def isIntegerType(type_):
         return True 
     return False
 
+def parseUnaryInstructionGeneral(src_, dst_, o, symbolTable, ASM_Instructions, topLevelList):
+    type1, alignment1, src = parseValue(src_, symbolTable, topLevelList)
+    type2, alignment2, dst = parseValue(dst_, symbolTable, topLevelList)
+
+    operator = parseOperator(o)
+
+    instruction0 = MovInstruction(type1, src, dst)
+    instruction1 = UnaryInstruction(operator, type1, dst)
+    
+    ASM_Instructions.append(instruction0)
+    ASM_Instructions.append(instruction1)
+    
+
 def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLevelList):
 
     for i in TAC_Instructions:
         match i:
             
             case tacGenerator.TAC_returnInstruction(Value=v):
-                type1, alignment1, src = parseValue(v, symbolTable, topLevelList)
+                type1, cType1, src = parseValue(v, symbolTable, topLevelList)
 
-                dst = RegisterOperand(Register(RegisterType.AX))
+                if isIntegerType(cType1):
+                    instruction0 = MovInstruction(type1, src, RegisterOperand(Register(RegisterType.AX)))
 
-                instruction0 = MovInstruction(type1, src, dst)
-                instruction1 = ReturnInstruction()
-                
-                ASM_Instructions.append(instruction0)
-                ASM_Instructions.append(instruction1)
+                    instruction1 = ReturnInstruction()
+                    
+                    ASM_Instructions.append(instruction0)
+                    ASM_Instructions.append(instruction1)
+                else:
+
+                    instruction0 = MovInstruction(AssemblySize(AssemblyType.DOUBLE), src, RegisterOperand(Register(SSERegisterType.XMM0)))
+
+                    instruction1 = ReturnInstruction()
+                    
+                    ASM_Instructions.append(instruction0)
+                    ASM_Instructions.append(instruction1)
+
+                    pass
                  
             case tacGenerator.TAC_UnaryInstruction(operator=o, src=src_, dst=dst_):
                 
@@ -664,8 +708,30 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                                     ASM_Instructions.append(instruction1)
                                     ASM_Instructions.append(instruction2)
                                     ASM_Instructions.append(instruction3)
+
+                            case tacGenerator.UnopType.NEGATE:
+                                type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
+                                type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
+
+                                if isIntegerType(cType1):
+                                    parseUnaryInstructionGeneral(src_, dst_, o, symbolTable, ASM_Instructions, topLevelList)
+                                    
+                                else:
+                                    name = makeTemp()
+                                    topLevelList.append(StaticConstant(name, 16, typeChecker.DoubleInit(-0.0)))
+                                    
+                                    instruction0 = MovInstruction(AssemblySize(AssemblyType.DOUBLE), src, dst)
+
+                                    instruction1 = BinaryInstruction(BinaryOperator(BinopType.Xor), AssemblySize(AssemblyType.DOUBLE), DataOperand(name), dst)
+
+                                    ASM_Instructions.append(instruction0)
+                                    ASM_Instructions.append(instruction1)
+
                                 
                             case _:
+                                parseUnaryInstructionGeneral(src_, dst_, o, symbolTable, ASM_Instructions, topLevelList)
+
+                                """
                                 type1, alignment1, src = parseValue(src_, symbolTable, topLevelList)
                                 type2, alignment2, dst = parseValue(dst_, symbolTable, topLevelList)
 
@@ -676,6 +742,8 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                                 
                                 ASM_Instructions.append(instruction0)
                                 ASM_Instructions.append(instruction1)
+                                """
+
 
             case tacGenerator.TAC_FunCallInstruction(funName = funName, arguments = arguments, dst = dst):
 
