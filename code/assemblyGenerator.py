@@ -965,13 +965,46 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 ASM_Instructions.append(JumpInst(label))
 
             case tacGenerator.TAC_JumpIfZeroInst(condition=cond, label=label):
-                type1, alignment1, c = parseValue(cond, symbolTable, topLevelList)
+                type1, cType1, c = parseValue(cond, symbolTable, topLevelList)
 
-                instruction0 = CompInst(type1, ImmediateOperand(0), c)
-                instruction1 = JumpCCInst(ConcCodeType.E, label)
-                
-                ASM_Instructions.append(instruction0)
-                ASM_Instructions.append(instruction1)
+                if isIntegerType(cType1):
+                    instruction0 = CompInst(type1, ImmediateOperand(0), c)
+                    instruction1 = JumpCCInst(ConcCodeType.E, label)
+                    
+                    ASM_Instructions.append(instruction0)
+                    ASM_Instructions.append(instruction1)
+                else:
+                    
+                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Xor), AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(SSERegisterType.XMM14)), RegisterOperand(Register(SSERegisterType.XMM14)))
+
+                    instruction1 = CompInst(AssemblySize(AssemblyType.DOUBLE), c, RegisterOperand(Register(SSERegisterType.XMM14)))
+
+                    instruction2 = JumpCCInst(ConcCodeType.E, label)
+                    
+                    ASM_Instructions.append(instruction0)
+                    ASM_Instructions.append(instruction1)
+                    ASM_Instructions.append(instruction2)
+
+            case tacGenerator.TAC_JumpIfNotZeroInst(condition=cond, label=label):
+                type1, cType1, c = parseValue(cond, symbolTable, topLevelList)
+
+                if isIntegerType(cType1):
+                    instruction0 = CompInst(type1, ImmediateOperand(0), c)
+                    instruction1 = JumpCCInst(ConcCodeType.NE, label)
+                    
+                    ASM_Instructions.append(instruction0)
+                    ASM_Instructions.append(instruction1)        
+                else:
+                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Xor), AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(SSERegisterType.XMM14)), RegisterOperand(Register(SSERegisterType.XMM14)))
+
+                    instruction1 = CompInst(AssemblySize(AssemblyType.DOUBLE), c, RegisterOperand(Register(SSERegisterType.XMM14)))
+
+                    instruction2 = JumpCCInst(ConcCodeType.NE, label)
+                    
+                    ASM_Instructions.append(instruction0)
+                    ASM_Instructions.append(instruction1)
+                    ASM_Instructions.append(instruction2)
+                    
 
             case tacGenerator.TAC_signExtendInstruction(src = src, dst = dst):
                 type1, alignment1, src = parseValue(src, symbolTable, topLevelList)
@@ -991,14 +1024,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
 
                 pass                
 
-            case tacGenerator.TAC_JumpIfNotZeroInst(condition=cond, label=label):
-                type1, alignment1, c = parseValue(cond, symbolTable, topLevelList)
-
-                instruction0 = CompInst(type1, ImmediateOperand(0), c)
-                instruction1 = JumpCCInst(ConcCodeType.NE, label)
-                
-                ASM_Instructions.append(instruction0)
-                ASM_Instructions.append(instruction1)
+            
 
             case tacGenerator.TAC_CopyInstruction(src=src_, dst=dst_):
                 type1, alignment1, src = parseValue(src_, symbolTable, topLevelList)
@@ -1018,7 +1044,17 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 ASM_Instructions.append(MovZeroExtendIns(src, dst))
 
             case tacGenerator.TAC_DoubleToInt():
-                pass
+                type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
+                type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
+                
+                ASM_Instructions.append(Cvtsi2sd(type1, src, dst))
+
+            case tacGenerator.TAC_IntToDouble(src = src_, dst = dst_):
+                type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
+                type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
+                
+                ASM_Instructions.append(Cvtsi2sd(type1, src, dst))
+                
 
             case tacGenerator.TAC_DoubleToUInt():
                 pass
@@ -1026,8 +1062,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
             case tacGenerator.TAC_UIntToDouble():
                 pass
 
-            case tacGenerator.TAC_IntToDouble():
-                pass
+            
 
             case _:
                 print("Invalid TAC Instruction. {0}".format(type(i)))
