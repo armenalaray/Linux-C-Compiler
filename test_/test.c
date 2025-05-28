@@ -11,5 +11,8 @@ int pass_parameters_3(double d1, double d2, int i1, double d3, double d4,
 
 
 int main(void) {
-    return pass_parameters_3(1.0, 2.0, 101, 3.0, 4.0, 5.0, 6.0, 104, 202, 6.0, 7.0, 105, 8.0, 120, 9.0, 121, 122, 10.0, 123, 124);
+    double a = 2.0;
+    double b = 3.0;
+    
+    return pass_parameters_3(!a, 2.0, 101, 3.0, 4.0, 5.0, 6.0, 104, 202, 6.0, 7.0, 105, 8.0, 120, 9.0, 121, 122, 10.0, 123, 124);
 }
