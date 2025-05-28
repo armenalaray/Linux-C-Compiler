@@ -1073,9 +1073,38 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
 
                     pass
                 elif type(cType2) == parser.ULongType:
-                    pass
+                    
+                    upperBound = makeTemp()
+                    topLevelList.append(StaticConstant(upperBound, 8, typeChecker.DoubleInit(9223372036854775808.0)))
 
-                pass
+
+                    CompInst(AssemblySize(AssemblyType.DOUBLE), DataOperand(upperBound), src)
+                    
+                    label1 = makeTemp()
+                    
+                    label2 = makeTemp()
+                    
+                    JumpCCInst(ConcCodeTypeUnsigned.AE, label1)
+                    
+                    Cvttsd2si(AssemblySize(AssemblyType.QUADWORD), src, dst)
+                    
+                    JumpInst(label2)
+                    
+                    LabelInst(label1)
+                    
+
+                    MovInstruction(AssemblySize(AssemblyType.DOUBLE), src, RegisterOperand(Register(SSERegisterType.XMM1)))
+
+                    BinaryInstruction(BinaryOperator(BinopType.Sub), AssemblySize(AssemblyType.DOUBLE), DataOperand(upperBound), RegisterOperand(Register(SSERegisterType.XMM1)))
+                    
+                    Cvttsd2si(AssemblySize(AssemblyType.QUADWORD), RegisterOperand(Register(SSERegisterType.XMM1)), dst)
+
+                    MovInstruction(AssemblySize(AssemblyType.QUADWORD), ImmediateOperand(9223372036854775808), RegisterOperand(Register(RegisterType.DX)))
+
+                    BinaryInstruction(BinaryOperator(BinopType.Add), AssemblySize(AssemblyType.QUADWORD), RegisterOperand(Register(RegisterType.DX)), dst)
+
+                    LabelInst(label2)
+
 
             case tacGenerator.TAC_signExtendInstruction(src = src, dst = dst):
                 type1, alignment1, src = parseValue(src, symbolTable, topLevelList)
