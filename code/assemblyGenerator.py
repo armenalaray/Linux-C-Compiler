@@ -583,8 +583,32 @@ def parseValue(v, symbolTable, topLevelList):
             return asmType, cType, PseudoRegisterOperand(i)
         
         case _:
-            print("Error: Invalid Value.")
-            sys.exit(1)
+            match symbolTable[v].type:
+                case parser.IntType():
+                    asmType = AssemblySize(AssemblyType.LONGWORD)
+                    cType = parser.IntType()
+
+                case parser.LongType():
+                    asmType = AssemblySize(AssemblyType.QUADWORD)
+                    cType = parser.LongType()
+                
+                case parser.UIntType():
+                    asmType = AssemblySize(AssemblyType.LONGWORD)
+                    cType = parser.UIntType()
+                
+                case parser.ULongType():
+                    asmType = AssemblySize(AssemblyType.QUADWORD)
+                    cType = parser.ULongType()
+
+                case parser.DoubleType():
+                    asmType = AssemblySize(AssemblyType.DOUBLE)
+                    cType = parser.DoubleType()
+
+                case _:
+                    print("Error: Invalid Assembly Variable. {0}".format(symbolTable[i].type))
+                    sys.exit(1)
+            return asmType, cType, PseudoRegisterOperand(v)
+
 
 
 def parseOperator(op):
@@ -648,6 +672,54 @@ def parseUnaryInstructionGeneral(src_, dst_, o, symbolTable, ASM_Instructions, t
     
     ASM_Instructions.append(instruction0)
     ASM_Instructions.append(instruction1)
+
+#expresiones
+def classifyParameters(values, symbolTable, topLevelList):
+    intRegArgs = []
+    doubleRegArgs = []
+    stackArgs = []
+
+    for arg in values:
+        t, cType1, operand = parseValue(arg, symbolTable, topLevelList)
+        typedOperand = (operand, t)
+
+        if type(cType1) == parser.DoubleType:
+            if len(doubleRegArgs) < 8:
+                doubleRegArgs.append(operand)
+            else:
+                stackArgs.append(typedOperand)
+        else:
+            if len(intRegArgs) < 6:
+                intRegArgs.append(typedOperand)
+            else:
+                stackArgs.append(typedOperand)
+                
+    return intRegArgs, doubleRegArgs, stackArgs
+
+"""
+def classifyParametersWithoutParsing(values, symbolTable, topLevelList):
+    intRegArgs = []
+    doubleRegArgs = []
+    stackArgs = []
+
+    for arg in values:
+        t, cType1, operand = parseValue(arg, symbolTable, topLevelList)
+
+        typedOperand = (operand, t)
+
+        if type(cType1) == parser.DoubleType:
+            if len(doubleRegArgs) < 8:
+                doubleRegArgs.append(operand)
+            else:
+                stackArgs.append(typedOperand)
+        else:
+            if len(intRegArgs) < 6:
+                intRegArgs.append(typedOperand)
+            else:
+                stackArgs.append(typedOperand)
+                
+    return intRegArgs, doubleRegArgs, stackArgs
+"""
     
 
 def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLevelList):
@@ -757,6 +829,14 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
 
                 #NOTE: Esta cosa esta mal!
                 
+                intArgs, doubleArgs, stackArgs = classifyParameters(arguments, symbolTable, topLevelList)
+
+                print("IntArgs:", intArgs)
+                print("DoubleArgs:", doubleArgs)
+                print("StackArgs:", stackArgs)
+
+
+                """
                 argumentTypes = []
 
                 for arg in arguments:
@@ -795,6 +875,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
 
                 print(intRegisterArgs)
                 print(doubleRegisterArgs)
+                """
 
                 stackPadding = 0
                 if len(stackArgs) % 2:
@@ -1049,17 +1130,6 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     LabelInst(label2)
 
 
-
-
-
-
-
-
-
-                    
-                    
-
-
             case tacGenerator.TAC_DoubleToUInt(src = src_, dst = dst_):
                 type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
                 type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
@@ -1076,7 +1146,6 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     
                     upperBound = makeTemp()
                     topLevelList.append(StaticConstant(upperBound, 8, typeChecker.DoubleInit(9223372036854775808.0)))
-
 
                     CompInst(AssemblySize(AssemblyType.DOUBLE), DataOperand(upperBound), src)
                     
@@ -1176,7 +1245,22 @@ def ASM_parseTopLevel(topLevel, symbolTable, topLevelList):
             return StaticVariable(identifier, global_, alignment, init)
         
         case tacGenerator.TAC_FunctionDef(identifier = identifier, global_ = global_, params = params, instructions = instructions):
+            
+            intParams, doubleParams, stackParams = classifyParameters(params, symbolTable, topLevelList)
+
             ASM_Instructions = []
+            
+            for i, (paramType, param) in enumerate(intParams):
+                print(paramType, param)
+                i0 = MovInstruction(paramType, RegisterOperand(Register(list(RegisterType)[i])), param)
+                ASM_Instructions.append(i0)
+            
+            for i, param in enumerate(doubleParams):
+                print(param)
+                i0 = MovInstruction(AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(list(SSERegisterType)[i])), param)
+                ASM_Instructions.append(i0)
+            
+            
 
             offset = 16 
             for i, param in enumerate(params):

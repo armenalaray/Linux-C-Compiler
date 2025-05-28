@@ -1,3 +1,14 @@
+IntArgs: [(Pseudo(i1.2), AssemblyType.LONGWORD), (Pseudo(i2.7), AssemblyType.LONGWORD), (Pseudo(i3.8), AssemblyType.QUADWORD), (Pseudo(i4.11), AssemblyType.QUADWORD), (Pseudo(i5.13), AssemblyType.LONGWORD), (Pseudo(i6.15), AssemblyType.LONGWORD)]
+
+DoubleArgs: [Pseudo(d1.0), Pseudo(d2.1), Pseudo(d3.3), Pseudo(d4.4), Pseudo(d5.5), Pseudo(d6.6), Pseudo(d7.9), Pseudo(d8.10)]
+
+StackArgs: [(Pseudo(d9.12), AssemblyType.DOUBLE), (Pseudo(d10.14), AssemblyType.DOUBLE), (Pseudo(i7.16), AssemblyType.LONGWORD), (Pseudo(d11.17), AssemblyType.DOUBLE), (Pseudo(i8.18), AssemblyType.LONGWORD), (Pseudo(i9.19), AssemblyType.LONGWORD)]
+
+
+
+
+
+
 Int -> unsigned int
 
 positivo cuando no cambian valor
