@@ -5,6 +5,7 @@ import parser
 import typeChecker
 
 from tacGenerator import makeTemp
+from tacGenerator import makeStaticConstant
 
 class Program:
     
@@ -516,10 +517,10 @@ def parseValue(v, symbolTable, topLevelList):
                 case parser.ConstDouble():
                     name = makeTemp()
                     topLevelList.append(StaticConstant(name, 8, typeChecker.DoubleInit(const.double)))
-
+                    
                     asmType = AssemblySize(AssemblyType.DOUBLE)
                     cType = parser.DoubleType()
-                    return asmType, cType, ImmediateOperand(const.double)
+                    return asmType, cType, DataOperand(name)
 
                 case _:
                     print("Error: Invalid Assembly Constant. {0}".format(type(const)))
@@ -945,12 +946,13 @@ class asm_symtab_entry:
     pass
 
 class ObjEntry(asm_symtab_entry):
-    def __init__(self, assType, isStatic):
+    def __init__(self, assType, isStatic, isConstant):
         self.assType = assType
         self.isStatic = isStatic
+        self.isConstant = isConstant
 
     def __str__(self):
-        return "AssType: {self.assType} IsStatic: {self.isStatic}".format(self=self)
+        return "AssType: {self.assType} IsStatic: {self.isStatic} IsConstant: {self.isConstant}".format(self=self)
     
     def __repr__(self):
         return self.__str__()
@@ -980,7 +982,7 @@ def matchCType(type):
             return 8, AssemblySize(AssemblyType.QUADWORD)
 
         case parser.DoubleType():
-            return 8, AssemblySize(AssemblyType.QUADWORD)
+            return 8, AssemblySize(AssemblyType.DOUBLE)
 
         case _:
             print("Error: Invalid C Type to Assebly Conversion. {0}".format(type))
@@ -994,33 +996,32 @@ def ASM_parseAST(ast, symbolTable):
 
     backendSymbolTable = {}
 
+    for i in funcDefList:
+        match i:
+            case StaticConstant(identifier = identifier, alignment = alignment, staticInit = staticInit):
+                print("StaticInit:", type(staticInit))
+                match staticInit:
+                    case typeChecker.DoubleInit():
+                        backendSymbolTable[identifier] = ObjEntry(AssemblySize(AssemblyType.DOUBLE), isStatic=True, isConstant=True)
+
+                    case _:
+                        print("Invalid Static Constant.")
+                        sys.exit(1)
+                        
+
     for name, entry in symbolTable.items():
-        #print(type(entry.attrs))
-
-        
-        """
-        type_ = None
-        match entry.type:
-            case parser.IntType():
-                type_ = AssemblySize(AssemblyType.LONGWORD)
-
-            case parser.LongType():
-                type_ = AssemblySize(AssemblyType.QUADWORD)
-        """
-
         match entry.attrs:
             case typeChecker.FunAttributes(defined = defined, global_ = global_):
                 backendSymbolTable[name] = FunEntry(defined=defined)
              
             case typeChecker.LocalAttributes():
                 alignment, type_ = matchCType(entry.type)
-                backendSymbolTable[name] = ObjEntry(assType=type_, isStatic=False)
+                backendSymbolTable[name] = ObjEntry(assType=type_, isStatic=False, isConstant=False)
                 
             case typeChecker.StaticAttributes():
                 alignment, type_ = matchCType(entry.type)
-                backendSymbolTable[name] = ObjEntry(assType=type_, isStatic=True)
+                backendSymbolTable[name] = ObjEntry(assType=type_, isStatic=True, isConstant=False)
                 
-    
 
     return Program(funcDefList), backendSymbolTable
 
