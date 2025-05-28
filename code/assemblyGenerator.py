@@ -696,9 +696,9 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                                     ASM_Instructions.append(instruction2)
                                 else:
 
-                                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Xor), AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(SSERegisterType.XMM14)), RegisterOperand(Register(SSERegisterType.XMM14)))
+                                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Xor), AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(SSERegisterType.XMM0)), RegisterOperand(Register(SSERegisterType.XMM0)))
                                     
-                                    instruction1 = CompInst(AssemblySize(AssemblyType.DOUBLE), src, RegisterOperand(Register(SSERegisterType.XMM14)))
+                                    instruction1 = CompInst(AssemblySize(AssemblyType.DOUBLE), src, RegisterOperand(Register(SSERegisterType.XMM0)))
 
                                     instruction2 = MovInstruction(type2, ImmediateOperand(0), dst)
 
@@ -975,9 +975,9 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     ASM_Instructions.append(instruction1)
                 else:
                     
-                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Xor), AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(SSERegisterType.XMM14)), RegisterOperand(Register(SSERegisterType.XMM14)))
+                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Xor), AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(SSERegisterType.XMM0)), RegisterOperand(Register(SSERegisterType.XMM0)))
 
-                    instruction1 = CompInst(AssemblySize(AssemblyType.DOUBLE), c, RegisterOperand(Register(SSERegisterType.XMM14)))
+                    instruction1 = CompInst(AssemblySize(AssemblyType.DOUBLE), c, RegisterOperand(Register(SSERegisterType.XMM0)))
 
                     instruction2 = JumpCCInst(ConcCodeType.E, label)
                     
@@ -995,9 +995,9 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     ASM_Instructions.append(instruction0)
                     ASM_Instructions.append(instruction1)        
                 else:
-                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Xor), AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(SSERegisterType.XMM14)), RegisterOperand(Register(SSERegisterType.XMM14)))
+                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Xor), AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(SSERegisterType.XMM0)), RegisterOperand(Register(SSERegisterType.XMM0)))
 
-                    instruction1 = CompInst(AssemblySize(AssemblyType.DOUBLE), c, RegisterOperand(Register(SSERegisterType.XMM14)))
+                    instruction1 = CompInst(AssemblySize(AssemblyType.DOUBLE), c, RegisterOperand(Register(SSERegisterType.XMM0)))
 
                     instruction2 = JumpCCInst(ConcCodeType.NE, label)
                     
@@ -1005,6 +1005,77 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     ASM_Instructions.append(instruction1)
                     ASM_Instructions.append(instruction2)
                     
+            case tacGenerator.TAC_UIntToDouble(src = src_, dst = dst_):
+                type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
+                type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
+
+                if type(cType1) == parser.UIntType:
+                    i0 = MovZeroExtendIns(src, RegisterOperand(Register(RegisterType.AX)))
+                    i1 = Cvtsi2sd(AssemblySize(AssemblyType.QUADWORD), RegisterOperand(Register(RegisterType.AX)), dst)
+
+                    ASM_Instructions.append(i0)
+                    ASM_Instructions.append(i1)
+
+                elif type(cType1) == parser.ULongType:
+                    
+                    CompInst(AssemblySize(AssemblyType.QUADWORD), ImmediateOperand(0), src)
+                    
+                    label1 = makeTemp()
+                    
+                    label2 = makeTemp()
+                    
+                    JumpCCInst(ConcCodeType.L, label1)
+                    
+                    Cvtsi2sd(AssemblySize(AssemblyType.QUADWORD), src, dst)
+                    
+                    JumpInst(label2)
+                    
+                    LabelInst(label1)
+                    
+                    MovInstruction(AssemblySize(AssemblyType.QUADWORD), src, RegisterOperand(Register(RegisterType.AX)))
+                    
+                    MovInstruction(AssemblySize(AssemblyType.QUADWORD), RegisterOperand(Register(RegisterType.AX)), RegisterOperand(Register(RegisterType.DX)))
+                    
+                    UnaryInstruction(UnaryOperator(UnopType.Shr), AssemblySize(AssemblyType.QUADWORD), RegisterOperand(Register(RegisterType.DX)))
+
+                    BinaryInstruction(BinaryOperator(BinopType.And), AssemblySize(AssemblyType.QUADWORD), ImmediateOperand(1), RegisterOperand(Register(RegisterType.AX)))
+
+                    BinaryInstruction(BinaryOperator(BinopType.Or), AssemblySize(AssemblyType.QUADWORD), RegisterOperand(Register(RegisterType.AX)), RegisterOperand(Register(RegisterType.DX)))
+
+                    Cvtsi2sd(AssemblySize(AssemblyType.QUADWORD), RegisterOperand(Register(RegisterType.DX)), dst)
+
+                    BinaryInstruction(BinaryOperator(BinopType.Add), AssemblySize(AssemblyType.DOUBLE), dst, dst)
+
+                    LabelInst(label2)
+
+
+
+
+
+
+
+
+
+                    
+                    
+
+
+            case tacGenerator.TAC_DoubleToUInt(src = src_, dst = dst_):
+                type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
+                type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
+
+                if type(cType2) == parser.UIntType:
+                    i0 = Cvttsd2si(AssemblySize(AssemblyType.QUADWORD), src, RegisterOperand(Register(RegisterType.AX)))
+                    i1 = MovInstruction(AssemblySize(AssemblyType.LONGWORD), RegisterOperand(Register(RegisterType.AX)), dst)
+
+                    ASM_Instructions.append(i0)
+                    ASM_Instructions.append(i1)
+
+                    pass
+                elif type(cType2) == parser.ULongType:
+                    pass
+
+                pass
 
             case tacGenerator.TAC_signExtendInstruction(src = src, dst = dst):
                 type1, alignment1, src = parseValue(src, symbolTable, topLevelList)
@@ -1047,7 +1118,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
                 type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
                 
-                ASM_Instructions.append(Cvtsi2sd(type1, src, dst))
+                ASM_Instructions.append(Cvttsd2si(type2, src, dst))
 
             case tacGenerator.TAC_IntToDouble(src = src_, dst = dst_):
                 type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
@@ -1056,11 +1127,10 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 ASM_Instructions.append(Cvtsi2sd(type1, src, dst))
                 
 
-            case tacGenerator.TAC_DoubleToUInt():
-                pass
 
-            case tacGenerator.TAC_UIntToDouble():
-                pass
+            
+
+            
 
             
 
