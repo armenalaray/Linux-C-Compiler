@@ -16,6 +16,7 @@ class Program:
 class AssemblyType(Enum):
     LONGWORD = 1
     QUADWORD = 2
+    DOUBLE = 3
     
 
 class AssemblySize:
@@ -24,9 +25,24 @@ class AssemblySize:
     
     def __str__(self):
         return "{self.type}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
 
 class TopLevel:
     pass
+
+class StaticConstant(TopLevel):
+    def __init__(self, identifier, alignment, staticInit):
+        self.identifier = identifier
+        self.alignment = alignment
+        self.staticInit = staticInit
+
+    def __str__(self):
+        return "Static Variable: Global = {self.global_} Alignment = {self.alignment} : {self.identifier} = {self.staticInit}".format(self=self)
+
+    def __repr__(self):
+        return self.__str__()
 
 class StaticVariable(TopLevel):
 
@@ -69,7 +85,36 @@ class ReturnInstruction:
     
     def __repr__(self):
         return self.__str__()
+
+class Cvttsd2si:
+
+    def __init__(self, assType, sourceO, destO):
+        self.assType = assType
+        self.sourceO = sourceO
+        self.destO = destO
+        
+    def __str__(self):
+        return "AssType: {self.assType} Cvttsd2si({self.sourceO}, {self.destO})".format(self=self)
     
+    
+    def __repr__(self):
+        return self.__str__()
+
+
+class Cvtsi2sd:
+
+    def __init__(self, assType, sourceO, destO):
+        self.assType = assType
+        self.sourceO = sourceO
+        self.destO = destO
+        
+    def __str__(self):
+        return "AssType: {self.assType} Cvtsi2sd({self.sourceO}, {self.destO})".format(self=self)
+    
+    
+    def __repr__(self):
+        return self.__str__()
+
 
 class MovInstruction:
 
@@ -299,6 +344,9 @@ class PseudoRegisterOperand:
     def __str__(self):
         return r"Pseudo({self.pseudo})".format(self=self)
 
+    def __repr__(self):
+        return self.__str__()
+
 class StackOperand:
     def __init__(self, offset):
         self.offset = offset
@@ -337,14 +385,21 @@ class ImmediateOperand:
     def __repr__(self):
         return self.__str__()
     """
+    
 class UnopType(Enum):
     Not = 1
     Neg = 2
+    Shr = 3
     
 class BinopType(Enum):
     Add = 1
     Sub = 2
     Mult = 3
+    DivDouble = 4
+    And = 5
+    Or = 6
+    Xor = 7
+
 
 class UnaryOperator:
     def __init__(self, operator):
@@ -383,6 +438,19 @@ class RegisterType(Enum):
     R11 = 8
     SP = 9
 
+class SSERegisterType(Enum):
+    XMMO = 0
+    XMM1 = 1
+    XMM2 = 2
+    XMM3 = 3
+    XMM4 = 4
+    XMM5 = 5
+    XMM6 = 6
+    XMM7 = 7
+    XMM14 = 8
+    XMM15 = 9
+
+
 
 class Register:
     def __init__(self, register):
@@ -410,6 +478,9 @@ class Register:
                 return "R11d"
             case RegisterType.SP:
                 return "SP"
+            
+            case _:
+                return "_"
 
 def parseValue(v, symbolTable):
     asmType = None
@@ -423,28 +494,32 @@ def parseValue(v, symbolTable):
                 case parser.ConstInt():
                     asmType = AssemblySize(AssemblyType.LONGWORD)
                     cType = parser.IntType()
+                    return asmType, cType, ImmediateOperand(const.int)
                     
                 case parser.ConstLong():
                     asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.LongType()
+                    return asmType, cType, ImmediateOperand(const.int)
 
                 case parser.ConstUInt():
                     asmType = AssemblySize(AssemblyType.LONGWORD)
                     cType = parser.UIntType()
+                    return asmType, cType, ImmediateOperand(const.int)
                 
                 case parser.ConstULong():
                     asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.ULongType()
+                    return asmType, cType, ImmediateOperand(const.int)
 
                 case parser.ConstDouble():
+                    asmType = AssemblySize(AssemblyType.DOUBLE)
+                    cType = parser.DoubleType()
                     return asmType, cType, ImmediateOperand(const.double)
 
                 case _:
                     print("Error: Invalid Assembly Constant. {0}".format(type(const)))
                     sys.exit(1)
 
-            return asmType, cType, ImmediateOperand(const.int)
-            
         case tacGenerator.TAC_VariableValue(identifier=i):
 
             match symbolTable[i].type:
@@ -465,7 +540,8 @@ def parseValue(v, symbolTable):
                     cType = parser.ULongType()
 
                 case parser.DoubleType():
-                    pass
+                    asmType = AssemblySize(AssemblyType.DOUBLE)
+                    cType = parser.DoubleType()
 
                 case _:
                     print("Error: Invalid Assembly Variable. {0}".format(symbolTable[i].type))
@@ -565,44 +641,72 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
 
                 #NOTE: Esta cosa esta mal!
                 
+                argumentTypes = []
+
                 for arg in arguments:
+                    type1, cType1, asmArg = parseValue(arg, symbolTable)
+                    argumentTypes.append((cType1, asmArg, type1))
 
-                    pass
+                print(argumentTypes)
 
-                registerArgs = arguments[:6]
-                stackArgs = arguments[6:]
+                intTypes = [(i, j) for i, j in enumerate(argumentTypes) if type(j[0]) != parser.DoubleType]
 
-                print(registerArgs)
-                print(stackArgs)
+                doubleTypes = [(i, j) for i, j in enumerate(argumentTypes) if type(j[0]) == parser.DoubleType]
 
-                #Alignement
+
+                #tienes que juntar los stack de los dos y ordenarlos de ultimo primero al primero el ultimo
+
+                #print(intTypes)
+                #print(doubleTypes)
+
+
+                intRegisterArgs = intTypes[:6]
+                intStackArgs = intTypes[6:]
+
+                doubleRegisterArgs = doubleTypes[:8]
+                doubleStackArgs = doubleTypes[8:]
+
+                stackArgs = doubleStackArgs + intStackArgs
+
+                #print("stackArgs:", stackArgs)
+
+                def orderStackArgs(e):
+                    return e[0]
+
+                stackArgs.sort(reverse=True, key=orderStackArgs)
+
+                print("stackArgs:", stackArgs)
+
+                print(intRegisterArgs)
+                print(doubleRegisterArgs)
+
                 stackPadding = 0
                 if len(stackArgs) % 2:
-                    #is odd
                     stackPadding = 8
                 
                 if stackPadding != 0:
                     instruction0 = BinaryInstruction(BinaryOperator(BinopType.Sub), AssemblySize(AssemblyType.QUADWORD), ImmediateOperand(stackPadding), RegisterOperand(Register(RegisterType.SP)))                    
                     ASM_Instructions.append(instruction0)
 
+                for i, arg in enumerate(intRegisterArgs):
+                    #print(arg[1][2])
+                    ASM_Instructions.append(MovInstruction(arg[1][2], arg[1][1], RegisterOperand(Register(list(RegisterType)[i]))))
                 
-                for i, (arg, type_) in enumerate(zip(registerArgs, registerTypes)):
-
-                    type1, cType1, asmArg = parseValue(arg, symbolTable)
-
-
-                    ASM_Instructions.append(MovInstruction(type1, asmArg, RegisterOperand(Register(list(RegisterType)[i]))))
-                    
+                for i, arg in enumerate(doubleRegisterArgs):
+                    print(arg[1][1])
+                    ASM_Instructions.append(MovInstruction(arg[1][2], arg[1][1], RegisterOperand(Register(list(SSERegisterType)[i]))))
                 
-                   
-                stackArgs.reverse()
-                stackTypes.reverse()
+                #stackArgs.reverse()
+                #stackTypes.reverse()
 
-                print(stackArgs)
+                #print(stackArgs)
 
-                for arg, type_ in zip(stackArgs, stackTypes):
-
-                    type1, alignment1, asmArg = parseValue(arg, symbolTable)
+                """
+                for arg in stackArgs:
+                    print(arg[1])
+                    #type1, alignment1, asmArg = parseValue(arg, symbolTable)
+                    type1 = arg[1][2]
+                    asmArg = arg[1][1]
 
                     if type(asmArg) == ImmediateOperand or type(asmArg) == RegisterOperand or type1.type == AssemblyType.QUADWORD:
 
@@ -613,6 +717,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable):
                         
                         ASM_Instructions.append(i0)
                         ASM_Instructions.append(PushInstruction(RegisterOperand(Register(RegisterType.AX))))
+                """
                         
 
                 ASM_Instructions.append(CallInstruction(funName))
