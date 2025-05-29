@@ -208,6 +208,7 @@ def printInstructionSuffix(type, output):
             output += 'q'
 
         case assemblyGenerator.AssemblyType.DOUBLE:
+            output += 'sd'
             pass
 
         case _:
@@ -341,28 +342,98 @@ def printTopLevel(topLevel, output, symbolTable):
                         output = matchOperand(dst, output, operandSize)
 
                     case assemblyGenerator.BinaryInstruction(operator=op, assType = assType, src=src, dest=dst):
-                        match op:
-                            case assemblyGenerator.BinaryOperator(operator=o):
-                                match o:
-                                    case assemblyGenerator.BinopType.Add:
-                                        output += '\n\tadd'
-                                        pass
-                                    case assemblyGenerator.BinopType.Sub:
-                                        output += '\n\tsub'
-                                        pass
-                                    case assemblyGenerator.BinopType.Mult:
-                                        output += '\n\timul'
-                                        pass
+
+                        print("Ale:", assType.type)
+                        match assType.type:
+                            case assemblyGenerator.AssemblyType.DOUBLE:
+
+                                match op:
+                                    case assemblyGenerator.BinaryOperator(operator=o):
+                                        match o:
+                                            case assemblyGenerator.BinopType.Add:
+                                                output += '\n\tadd'
+                                                output = printInstructionSuffix(assType.type, output)
+                                                pass
+
+                                            case assemblyGenerator.BinopType.Sub:
+                                                output += '\n\tsub'
+                                                output = printInstructionSuffix(assType.type, output)
+                                            
+                                            case assemblyGenerator.BinopType.And:
+                                                output += '\n\and'
+                                                output = printInstructionSuffix(assType.type, output)
+                                                pass
+
+                                            case assemblyGenerator.BinopType.Or:
+                                                output += '\n\or'
+                                                output = printInstructionSuffix(assType.type, output)
+                                                pass
+
+                                            case assemblyGenerator.BinopType.DivDouble:
+                                                output += '\n\tdiv'
+                                                output = printInstructionSuffix(assType.type, output)
+                                                pass
+
+                                            case assemblyGenerator.BinopType.Mult:
+                                                output += '\n\tmulsd'
+
+                                            case assemblyGenerator.BinopType.Xor:
+                                                output += '\n\txorpd'
+
+                                            case _:
+                                                print("Error: Invalid Binary Instruction for doubles.")
+                                                sys.exit(1)
+
+                                
+                                output += ' '                
+
+                                operandSize = getOperandSize(assType.type)
+
+                                output = matchOperand(src, output, operandSize)
+                                output += ', '
+                                output = matchOperand(dst, output, operandSize)
+
+                                
+                            case _:
+
+                                match op:
+                                    case assemblyGenerator.BinaryOperator(operator=o):
+                                        match o:
+                                            case assemblyGenerator.BinopType.Add:
+                                                output += '\n\tadd'
+                                                output = printInstructionSuffix(assType.type, output)
+                                                
+                                            case assemblyGenerator.BinopType.Sub:
+                                                output += '\n\tsub'
+                                                output = printInstructionSuffix(assType.type, output)
+
+                                            case assemblyGenerator.BinopType.And:
+                                                output += '\n\tand'
+                                                output = printInstructionSuffix(assType.type, output)
+
+                                            case assemblyGenerator.BinopType.Or:
+                                                output += '\n\tor'
+                                                output = printInstructionSuffix(assType.type, output)
+
+                                            case assemblyGenerator.BinopType.Mult:
+                                                output += '\n\timul'
+                                                pass
+
+                                            case _:
+                                                print("Error: Invalid Binary Instruction for integers. {0}".format(o))
+                                                sys.exit(1)
+                                
+
+                                output += ' '                
+
+                                operandSize = getOperandSize(assType.type)
+
+                                output = matchOperand(src, output, operandSize)
+                                output += ', '
+                                output = matchOperand(dst, output, operandSize)
+                                pass
                         
-                        output = printInstructionSuffix(assType.type, output)
-
-                        output += ' '                
-
-                        operandSize = getOperandSize(assType.type)
-
-                        output = matchOperand(src, output, operandSize)
-                        output += ', '
-                        output = matchOperand(dst, output, operandSize)
+                        
 
 
                     case assemblyGenerator.Cvtsi2sd(assType = assType, sourceO = sourceO, destO = destO):
@@ -378,8 +449,21 @@ def printTopLevel(topLevel, output, symbolTable):
                         output += ', '
                         output = matchOperand(dst, output, operandSize)
 
-                    case assemblyGenerator.Cvttsd2si():
-                        pass
+                    
+
+                    case assemblyGenerator.Cvttsd2si(assType = assType, sourceO = sourceO, destO = destO):
+                        output += "\n\tcvttsd2si"
+
+                        output = printInstructionSuffix(assType.type, output)
+
+                        output += ' '                
+
+                        operandSize = getOperandSize(assType.type)
+
+                        output = matchOperand(src, output, operandSize)
+                        output += ', '
+                        output = matchOperand(dst, output, operandSize)
+                        
 
                     case assemblyGenerator.IDivInstruction(assType = assType, divisor=divisor):
                         output += '\n\tidiv'
@@ -392,8 +476,6 @@ def printTopLevel(topLevel, output, symbolTable):
                         output = matchOperand(divisor, output, operandSize)
 
                     
-
-
                     case assemblyGenerator.DivInstruction(assType = assType, divisor=divisor):
                         output += '\n\tdiv'
 
