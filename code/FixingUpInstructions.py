@@ -1,103 +1,6 @@
 import sys
 import assemblyGenerator
 
-"""
-def FixUpFuncDef(funcDef):
-
-    offset = funcDef.stackOffset
-
-    offset = offset - offset % 16
-    print(offset)
-
-    funcDef.insList.insert(0,AllocateStackInstruction(-offset))
-
-    newList = []
-    oldSize = len(newList)
-
-    for index, i in enumerate(funcDef.insList):
-        
-        match i:
-            case MovInstruction(sourceO=src, destO=dst):
-                if type(src) == StackOperand and type(dst) == StackOperand:
-                    
-                    i.destO = RegisterOperand(Register(RegisterType.R10))
-
-                    instruction = MovInstruction(RegisterOperand(Register(RegisterType.R10)),dst)
-
-                    newList.append(i)
-                    newList.append(instruction)
-                
-            
-            case IDivInstruction(divisor=div):
-                match div:
-                    case ImmediateOperand():
-                        i.divisor = RegisterOperand(Register(RegisterType.R10))
-                        instruction = MovInstruction(div, RegisterOperand(Register(RegisterType.R10)))
-
-                        newList.append(instruction)
-                        newList.append(i)
-            
-            case CompInst(operand0=op0, operand1=op1):
-                if type(op0) == StackOperand and type(op1) == StackOperand:
-                    
-                    instruction = MovInstruction(i.operand0, RegisterOperand(Register(RegisterType.R10)))
-
-                    i.operand0 = RegisterOperand(Register(RegisterType.R10))
-
-                    newList.append(instruction)
-                    newList.append(i)
-                elif type(op1) == ImmediateOperand:
-                    instruction = MovInstruction(i.operand1, RegisterOperand(Register(RegisterType.R11)))
-
-                    i.operand1 = RegisterOperand(Register(RegisterType.R11))
-
-                    newList.append(instruction)
-                    newList.append(i)
-                    
-
-            case BinaryInstruction(operator=op, src=src, dest=dst):
-                
-                if type(dst) == StackOperand:
-                    match op:
-                            case BinaryOperator(operator=o):
-                                #print(o)
-                                if o == BinopType.Mult:
-                                    instruction0 = MovInstruction(i.dest, RegisterOperand(Register(RegisterType.R11)))
-
-                                    instruction1 = MovInstruction(RegisterOperand(Register(RegisterType.R11)), i.dest)
-
-                                    i.dest = RegisterOperand(Register(RegisterType.R11))
-
-
-
-                                    newList.append(instruction0)
-                                    newList.append(i)
-                                    newList.append(instruction1)
-
-
-                if type(src) == StackOperand and type(dst) == StackOperand:
-                    match op:
-                        case BinaryOperator(operator=o):
-                            #print(o)
-                            if o == BinopType.Sub or o == BinopType.Add:
-
-                                instruction = MovInstruction(i.src, RegisterOperand(Register(RegisterType.R10)))
-
-                                i.src = RegisterOperand(Register(RegisterType.R10))
-
-                                newList.append(instruction)
-                                newList.append(i)
-                                
-                            
-        if len(newList) == oldSize:
-            newList.append(i)
-
-        oldSize = len(newList)
-
-    funcDef.insList = newList
-"""
-
-
 def FixingUpTopLevel(topLevel):
     match topLevel:
         case assemblyGenerator.StaticVariable():
@@ -273,6 +176,21 @@ def FixingUpTopLevel(topLevel):
                             newList.append(instructionImm)
                             newList.append(i)
 
+                    case assemblyGenerator.Cvtsi2sd(assType = assType, sourceO = sourceO, destO = destO):
+                        pass
+
+                    case assemblyGenerator.Cvttsd2si(assType = assType, sourceO = sourceO, destO = destO):
+                        
+                        if type(destO) == assemblyGenerator.StackOperand or type(destO) == assemblyGenerator.DataOperand:
+                            
+                            i.destO = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11))
+
+                            i0 = assemblyGenerator.MovInstruction(assType, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)), destO)
+                            
+                            newList.append(i)
+                            newList.append(i0)
+                         
+
                     case assemblyGenerator.BinaryInstruction(assType=assType, operator=op, src=src, dest=dst):
                         
                         #if add mult subq cmpq pushq cannot immediate 
@@ -381,9 +299,14 @@ def FixingUpTopLevel(topLevel):
                     case assemblyGenerator.CallInstruction():
                         pass
 
-                    #case _:
-                    #    print("Invalid Instruction fixup. {0}".format(type(i)))
-                    #    sys.exit(1)                                        
+                    case assemblyGenerator.SetCCInst():
+                        pass
+                    
+                    
+
+                    case _:
+                        print("Invalid Instruction fixup. {0}".format(type(i)))
+                        sys.exit(1)                                        
                     
                                     
                 if len(newList) == oldSize:
