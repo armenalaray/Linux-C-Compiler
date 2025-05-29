@@ -6,12 +6,12 @@ double pass_parameters_3(double d1, double d2, int i1, double d3, double d4,
  int i5, double d10, int i6, int i7, double d11,
  int i8, int i9)
  {
-    return 1.0;
+    return 1.0; 
  }
 
 
 int main(void) {
-    double a = 2.0;
+    unsigned long a = 0.1;
     double b = 3.0;
     
     return pass_parameters_3(a + b, 2.0, 101, 3.0, 4.0, 5.0, 6.0, 104, 202, 6.0, 7.0, 105, 8.0, 120, 9.0, 121, 122, 10.0, 123, 124);

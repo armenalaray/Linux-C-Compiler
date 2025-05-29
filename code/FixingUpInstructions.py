@@ -377,9 +377,9 @@ def FixingUpTopLevel(topLevel):
                     
                     
 
-                    case _:
-                        print("Invalid Instruction fixup. {0}".format(type(i)))
-                        sys.exit(1)                                        
+                    #case _:
+                    #    print("Invalid Instruction fixup. {0}".format(type(i)))
+                    #    sys.exit(1)                                        
                     
                                     
                 if len(newList) == oldSize:

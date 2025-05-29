@@ -22,6 +22,37 @@ def matchOperand(operand, output, operandSize):
             match reg:
                 case assemblyGenerator.Register(register=regi):
                     match regi:
+
+                        case assemblyGenerator.SSERegisterType.XMM0:
+                            output += '%xmm0'
+                        
+                        case assemblyGenerator.SSERegisterType.XMM1:
+                            output += '%xmm1'
+
+                        case assemblyGenerator.SSERegisterType.XMM2:
+                            output += '%xmm2'
+                        
+                        case assemblyGenerator.SSERegisterType.XMM3:
+                            output += '%xmm3'
+                        
+                        case assemblyGenerator.SSERegisterType.XMM4:
+                            output += '%xmm4'
+                        
+                        case assemblyGenerator.SSERegisterType.XMM5:
+                            output += '%xmm5'
+
+                        case assemblyGenerator.SSERegisterType.XMM6:
+                            output += '%xmm6'
+
+                        case assemblyGenerator.SSERegisterType.XMM7:
+                            output += '%xmm7'
+
+                        case assemblyGenerator.SSERegisterType.XMM14:
+                            output += '%xmm14'
+
+                        case assemblyGenerator.SSERegisterType.XMM15:
+                            output += '%xmm15'
+
                         case assemblyGenerator.RegisterType.SP:
                             output += '%rsp'
                             
@@ -124,6 +155,8 @@ def matchOperand(operand, output, operandSize):
 
                                 case OperandSize.BYTE_1:
                                     output += '%r11b'
+
+                        
                         
                         
         case assemblyGenerator.ImmediateOperand(imm=im):
@@ -156,6 +189,10 @@ def printStaticInit(staticInit, output):
                 output += '\t.zero 8\n'
             else:
                 output += '\t.quad {0}\n'.format(int.value)
+        
+        case typeChecker.DoubleInit(double=double):
+            output += '\t.double {0}\n'.format(double.value)
+            pass
 
         case _:
             print("Error:")
@@ -169,6 +206,9 @@ def printInstructionSuffix(type, output):
             
         case assemblyGenerator.AssemblyType.QUADWORD:
             output += 'q'
+
+        case assemblyGenerator.AssemblyType.DOUBLE:
+            pass
 
         case _:
             print("Invalid assembly type.")
@@ -184,6 +224,9 @@ def getOperandSize(type):
             
         case assemblyGenerator.AssemblyType.QUADWORD:
             operandSize = OperandSize.BYTE_8
+
+        case assemblyGenerator.AssemblyType.DOUBLE:
+            pass
         
         case _:
             print("Invalid Operand Size")
@@ -194,23 +237,41 @@ def getOperandSize(type):
 def printTopLevel(topLevel, output, symbolTable):
     match topLevel:
         case assemblyGenerator.StaticVariable(identifier = identifier, global_ = global_, alignment = alignment, staticInit = staticInit):
-            print(type(staticInit))
             
-            if staticInit.int == 0:
-                if global_ == True:
-                    output += '\t.globl {0}\n'.format(identifier)
+            match staticInit:
+                case typeChecker.DoubleInit():
+                    print("Ale:", type(staticInit))
+                    if global_ == True:
+                        output += '\t.globl {0}\n'.format(identifier)
 
-                output += '\t.bss\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
+                    output += '\t.data\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
 
-                output = printStaticInit(staticInit, output)
+                    output = printStaticInit(staticInit, output)
 
-            else:
-                if global_ == True:
-                    output += '\t.globl {0}\n'.format(identifier)
+                case _:
+                    print("Ale:", type(staticInit))
 
-                output += '\t.data\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
+                    if staticInit.int == 0:
+                        if global_ == True:
+                            output += '\t.globl {0}\n'.format(identifier)
 
-                output = printStaticInit(staticInit, output)
+                        output += '\t.bss\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
+
+                        output = printStaticInit(staticInit, output)
+
+                    else:
+                        if global_ == True:
+                            output += '\t.globl {0}\n'.format(identifier)
+
+                        output += '\t.data\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
+
+                        output = printStaticInit(staticInit, output)
+            
+        case assemblyGenerator.StaticConstant(identifier = identifier, alignment = alignment, staticInit = staticInit):
+
+            output += '\t.section .rodata\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
+            
+            output = printStaticInit(staticInit, output)
 
         
         case assemblyGenerator.Function(identifier = identifier, global_ = global_, insList = insList, stackOffset = stackOffset):
@@ -303,6 +364,23 @@ def printTopLevel(topLevel, output, symbolTable):
                         output += ', '
                         output = matchOperand(dst, output, operandSize)
 
+
+                    case assemblyGenerator.Cvtsi2sd(assType = assType, sourceO = sourceO, destO = destO):
+                        output += "\n\tcvtsi2sd"
+
+                        output = printInstructionSuffix(assType.type, output)
+
+                        output += ' '                
+
+                        operandSize = getOperandSize(assType.type)
+
+                        output = matchOperand(src, output, operandSize)
+                        output += ', '
+                        output = matchOperand(dst, output, operandSize)
+
+                    case assemblyGenerator.Cvttsd2si():
+                        pass
+
                     case assemblyGenerator.IDivInstruction(assType = assType, divisor=divisor):
                         output += '\n\tidiv'
 
@@ -312,6 +390,9 @@ def printTopLevel(topLevel, output, symbolTable):
                         
                         operandSize = getOperandSize(assType.type)
                         output = matchOperand(divisor, output, operandSize)
+
+                    
+
 
                     case assemblyGenerator.DivInstruction(assType = assType, divisor=divisor):
                         output += '\n\tdiv'
@@ -379,6 +460,9 @@ def printTopLevel(topLevel, output, symbolTable):
                     #case assemblyGenerator.DeallocateStackInstruction(offset = offset):
                     #    output += "\n\taddq ${0}, %rsp".format(offset)
 
+                    
+                    
+
                     case _:
                         print("Instruction {0} not added into code emission!".format(i))
                         sys.exit(1)
@@ -387,6 +471,9 @@ def printTopLevel(topLevel, output, symbolTable):
                 
             output += '\n'
         
+        
+        
+
         case _:
             print("Invalid Top Level {0}".format(topLevel))
             sys.exit(1)

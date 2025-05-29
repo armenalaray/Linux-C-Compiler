@@ -1,18 +1,40 @@
-	.globl addition
+	.section .rodata
+	.align 8
+tmp.50:
+	.double 1.0
+	.globl pass_parameters_3
 	.text
-addition:
+pass_parameters_3:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $16, %rsp
-	movl ui_a(%rip), %r10d
-	movl %r10d, -4(%rbp)
-	movl $2147483653, %r10d
-	addl %r10d, -4(%rbp)
-	movl $2147483663, %r10d
-	cmpl %r10d, -4(%rbp)
-	movl $0, -8(%rbp)
-	setE -8(%rbp)
-	movl -8(%rbp), %eax
+	subq $144, %rsp
+	movl %edi, -4(%rbp)
+	movl %esi, -8(%rbp)
+	movq %rdx, -16(%rbp)
+	movq %rcx, -24(%rbp)
+	movl %r8d, -28(%rbp)
+	movl %r9d, -32(%rbp)
+	mov %xmm0, -40(%rbp)
+	mov %xmm1, -48(%rbp)
+	mov %xmm2, -56(%rbp)
+	mov %xmm3, -64(%rbp)
+	mov %xmm4, -72(%rbp)
+	mov %xmm5, -80(%rbp)
+	mov %xmm6, -88(%rbp)
+	mov %xmm7, -96(%rbp)
+	mov 16(%rbp), %xmm14
+	mov %xmm14, -104(%rbp)
+	mov 24(%rbp), %xmm14
+	mov %xmm14, -112(%rbp)
+	movl 32(%rbp), %r10d
+	movl %r10d, -116(%rbp)
+	mov 40(%rbp), %xmm14
+	mov %xmm14, -128(%rbp)
+	movl 48(%rbp), %r10d
+	movl %r10d, -132(%rbp)
+	movl 56(%rbp), %r10d
+	movl %r10d, -136(%rbp)
+	mov tmp.50(%rip), %xmm0
 	movq %rbp, %rsp
 	popq %rbp
 	ret
@@ -20,301 +42,167 @@ addition:
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-	.globl subtraction
-	.text
-subtraction:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movq ul_a(%rip), %r10
-	movq %r10, -8(%rbp)
-	movq ul_b(%rip), %r10
-	subq %r10, -8(%rbp)
-	movq $18446744072635808792, %r10
-	cmpq %r10, -8(%rbp)
-	movl $0, -12(%rbp)
-	setE -12(%rbp)
-	movl -12(%rbp), %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl multiplication
-	.text
-multiplication:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movl ui_a(%rip), %r10d
-	movl %r10d, -4(%rbp)
-	movl -4(%rbp), %r11d
-	imull ui_b(%rip), %r11d
-	movl %r11d, -4(%rbp)
-	movl $3221225472, %r10d
-	cmpl %r10d, -4(%rbp)
-	movl $0, -8(%rbp)
-	setE -8(%rbp)
-	movl -8(%rbp), %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl division
-	.text
-division:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movl ui_a(%rip), %eax
-	movl $0, %edx
-	divl ui_b(%rip)
-	movl %eax, -4(%rbp)
-	movl $0, -8(%rbp)
-	movl -8(%rbp), %r10d
-	cmpl %r10d, -4(%rbp)
-	movl $0, -12(%rbp)
-	setE -12(%rbp)
-	movl -12(%rbp), %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl division_large_dividend
-	.text
-division_large_dividend:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movl ui_a(%rip), %eax
-	movl $0, %edx
-	divl ui_b(%rip)
-	movl %eax, -4(%rbp)
-	movl $2, -8(%rbp)
-	movl -8(%rbp), %r10d
-	cmpl %r10d, -4(%rbp)
-	movl $0, -12(%rbp)
-	setE -12(%rbp)
-	movl -12(%rbp), %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl division_by_literal
-	.text
-division_by_literal:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movq ul_a(%rip), %rax
-	movq $0, %rdx
-	movq $5, %r10
-	divq %r10
-	movq %rax, -8(%rbp)
-	movq $219902325555, %r10
-	cmpq %r10, -8(%rbp)
-	movl $0, -12(%rbp)
-	setE -12(%rbp)
-	movl -12(%rbp), %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl remaind
-	.text
-remaind:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movq ul_b(%rip), %rax
-	movq $0, %rdx
-	divq ul_a(%rip)
-	movq %rdx, -8(%rbp)
-	cmpq $5, -8(%rbp)
-	movl $0, -12(%rbp)
-	setE -12(%rbp)
-	movl -12(%rbp), %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl complement
-	.text
-complement:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movl ui_a(%rip), %r10d
-	movl %r10d, -4(%rbp)
-	notl -4(%rbp)
-	movl $0, -8(%rbp)
-	movl -8(%rbp), %r10d
-	cmpl %r10d, -4(%rbp)
-	movl $0, -12(%rbp)
-	setE -12(%rbp)
-	movl -12(%rbp), %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
+	.section .rodata
+	.align 8
+tmp.51:
+	.double 0.1
+	.section .rodata
+	.align 8
+tmp.52:
+	.double 9.223372036854776e+18
+	.section .rodata
+	.align 8
+tmp.55:
+	.double 3.0
+	.section .rodata
+	.align 8
+tmp.58:
+	.double 2.0
+	.section .rodata
+	.align 8
+tmp.59:
+	.double 3.0
+	.section .rodata
+	.align 8
+tmp.60:
+	.double 4.0
+	.section .rodata
+	.align 8
+tmp.61:
+	.double 5.0
+	.section .rodata
+	.align 8
+tmp.62:
+	.double 6.0
+	.section .rodata
+	.align 8
+tmp.63:
+	.double 6.0
+	.section .rodata
+	.align 8
+tmp.64:
+	.double 7.0
+	.section .rodata
+	.align 8
+tmp.65:
+	.double 8.0
+	.section .rodata
+	.align 8
+tmp.66:
+	.double 9.0
+	.section .rodata
+	.align 8
+tmp.67:
+	.double 10.0
 	.globl main
 	.text
 main:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $96, %rsp
-	movl $10, ui_a(%rip)
-	call addition
-	movl %eax, -4(%rbp)
-	cmpl $0, -4(%rbp)
-	movl $0, -8(%rbp)
-	setE -8(%rbp)
-	movl -8(%rbp), %r10d
-	movl %r10d, -12(%rbp)
-	cmpl $0, -12(%rbp)
-	jE .Ltmp.22
-	movl $1, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.22:
-	movq $18446744072635809792, %r10
-	movq %r10, ul_a(%rip)
-	movq $1000, ul_b(%rip)
-	call subtraction
-	movl %eax, -16(%rbp)
-	cmpl $0, -16(%rbp)
-	movl $0, -20(%rbp)
-	setE -20(%rbp)
-	movl -20(%rbp), %r10d
-	movl %r10d, -24(%rbp)
-	cmpl $0, -24(%rbp)
-	jE .Ltmp.26
-	movl $2, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.26:
-	movl $1073741824, ui_a(%rip)
-	movl $3, ui_b(%rip)
-	call multiplication
-	movl %eax, -28(%rbp)
-	cmpl $0, -28(%rbp)
-	movl $0, -32(%rbp)
-	setE -32(%rbp)
-	movl -32(%rbp), %r10d
-	movl %r10d, -36(%rbp)
-	cmpl $0, -36(%rbp)
-	jE .Ltmp.30
-	movl $3, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.30:
-	movl $100, ui_a(%rip)
-	movl $4294967294, %r10d
-	movl %r10d, ui_b(%rip)
-	call division
-	movl %eax, -40(%rbp)
-	cmpl $0, -40(%rbp)
-	movl $0, -44(%rbp)
-	setE -44(%rbp)
-	movl -44(%rbp), %r10d
-	movl %r10d, -48(%rbp)
-	cmpl $0, -48(%rbp)
-	jE .Ltmp.34
-	movl $4, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.34:
-	movl $4294967294, %r10d
-	movl %r10d, ui_a(%rip)
-	movl $2147483647, ui_b(%rip)
-	call division_large_dividend
-	movl %eax, -52(%rbp)
-	cmpl $0, -52(%rbp)
-	movl $0, -56(%rbp)
-	setE -56(%rbp)
-	movl -56(%rbp), %r10d
-	movl %r10d, -60(%rbp)
-	cmpl $0, -60(%rbp)
-	jE .Ltmp.38
-	movl $5, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.38:
-	movq $1099511627775, %r10
-	movq %r10, ul_a(%rip)
-	call division_by_literal
-	movl %eax, -64(%rbp)
-	cmpl $0, -64(%rbp)
-	movl $0, -68(%rbp)
-	setE -68(%rbp)
-	movl -68(%rbp), %r10d
-	movl %r10d, -72(%rbp)
-	cmpl $0, -72(%rbp)
-	jE .Ltmp.42
-	movl $6, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.42:
-	movq $100, ul_a(%rip)
-	movq $18446744073709551605, %r10
-	movq %r10, ul_b(%rip)
-	call remaind
-	movl %eax, -76(%rbp)
-	cmpl $0, -76(%rbp)
-	movl $0, -80(%rbp)
-	setE -80(%rbp)
-	movl -80(%rbp), %r10d
-	movl %r10d, -84(%rbp)
-	cmpl $0, -84(%rbp)
-	jE .Ltmp.46
-	movl $7, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.46:
-	movl $4294967295, %r10d
-	movl %r10d, ui_a(%rip)
-	call complement
-	movl %eax, -88(%rbp)
-	cmpl $0, -88(%rbp)
-	movl $0, -92(%rbp)
-	setE -92(%rbp)
-	movl -92(%rbp), %r10d
-	movl %r10d, -96(%rbp)
-	cmpl $0, -96(%rbp)
-	jE .Ltmp.50
-	movl $8, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.50:
-	movl $0, %eax
+	subq $224, %rsp
+	mov tmp.51(%rip), %xmm15
+	cmp tmp.52(%rip), %xmm15
+	jAE .Ltmp.53
+	movq %r11, -8(%rbp)
+	jmp .Ltmp.54
+.Ltmp.53:
+	mov tmp.51(%rip), %xmm1
+	sub tmp.52(%rip), %xmm1
+	movq %r11, -8(%rbp)
+	movq $9223372036854775808, %r10
+	movq %r10, %rdx
+	addq %rdx, -8(%rbp)
+.Ltmp.54:
+	movq -8(%rbp), %r10
+	movq %r10, -16(%rbp)
+	mov tmp.55(%rip), %xmm14
+	mov %xmm14, -24(%rbp)
+	cmpq $0, -16(%rbp)
+	jL .Ltmp.56
+	cvtsi2sdq %xmm14, -24(%rbp)
+	mov %xmm15, -32(%rbp)
+	jmp .Ltmp.57
+.Ltmp.56:
+	movq -16(%rbp), %rax
+	movq %rax, %rdxq %rdxq $1, %raxq %rax, %rdx
+	cvtsi2sdq %rax, %rdx
+	mov %xmm15, -32(%rbp)
+	mov -32(%rbp), %xmm15
+	add -32(%rbp), %xmm15
+.Ltmp.57:
+	mov -32(%rbp), %xmm14
+	mov %xmm14, -40(%rbp)
+	mov -40(%rbp), %xmm15
+	add -24(%rbp), %xmm15
+	mov -40(%rbp), %xmm14
+	mov %xmm14, -48(%rbp)
+	mov tmp.58(%rip), %xmm14
+	mov %xmm14, -56(%rbp)
+	movl $101, -60(%rbp)
+	mov tmp.59(%rip), %xmm14
+	mov %xmm14, -72(%rbp)
+	mov tmp.60(%rip), %xmm14
+	mov %xmm14, -80(%rbp)
+	mov tmp.61(%rip), %xmm14
+	mov %xmm14, -88(%rbp)
+	mov tmp.62(%rip), %xmm14
+	mov %xmm14, -96(%rbp)
+	movl $104, -100(%rbp)
+	movl -100(%rbp), %r10d
+	movl %r10d, -104(%rbp)
+	movl $202, %r10d
+	movslq %r10d, %r11
+	movq %r11, -112(%rbp)
+	movq -112(%rbp), %r10
+	movq %r10, -120(%rbp)
+	mov tmp.63(%rip), %xmm14
+	mov %xmm14, -128(%rbp)
+	mov tmp.64(%rip), %xmm14
+	mov %xmm14, -136(%rbp)
+	movl $105, %r10d
+	movslq %r10d, %r11
+	movq %r11, -144(%rbp)
+	movq -144(%rbp), %r10
+	movq %r10, -152(%rbp)
+	mov tmp.65(%rip), %xmm14
+	mov %xmm14, -160(%rbp)
+	movl $120, -164(%rbp)
+	mov tmp.66(%rip), %xmm14
+	mov %xmm14, -176(%rbp)
+	movl $121, -180(%rbp)
+	movl $122, -184(%rbp)
+	mov tmp.67(%rip), %xmm14
+	mov %xmm14, -192(%rbp)
+	movl $123, -196(%rbp)
+	movl $124, -200(%rbp)
+	movl -60(%rbp), %edi
+	movl -104(%rbp), %esi
+	movq -120(%rbp), %rdx
+	movq -152(%rbp), %rcx
+	movl -164(%rbp), %r8d
+	movl -180(%rbp), %r9d
+	mov -48(%rbp), %xmm0
+	mov -56(%rbp), %xmm1
+	mov -72(%rbp), %xmm2
+	mov -80(%rbp), %xmm3
+	mov -88(%rbp), %xmm4
+	mov -96(%rbp), %xmm5
+	mov -128(%rbp), %xmm6
+	mov -136(%rbp), %xmm7
+	movl -200(%rbp), %eax
+	pushq %rax
+	movl -196(%rbp), %eax
+	pushq %rax
+	pushq -192(%rbp)
+	movl -184(%rbp), %eax
+	pushq %rax
+	pushq -176(%rbp)
+	pushq -160(%rbp)
+	call pass_parameters_3
+	addq $48, %rsp
+	mov %xmm0, -208(%rbp)
+	movl %r11d, -212(%rbp)
+	movl -212(%rbp), %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
@@ -322,24 +210,8 @@ main:
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-	.globl ui_a
-	.data
-	.align 4
-ui_a:
-	.long 0
-	.globl ui_b
-	.data
-	.align 4
-ui_b:
-	.long 0
-	.globl ul_a
 	.data
 	.align 8
-ul_a:
-	.quad 0
-	.globl ul_b
-	.data
-	.align 8
-ul_b:
-	.quad 0
+ale:
+	.double 0.0
 	.section	.note.GNU-stack,"",@progbits
