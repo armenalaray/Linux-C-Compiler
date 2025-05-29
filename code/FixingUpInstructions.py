@@ -121,50 +121,7 @@ def FixingUpTopLevel(topLevel):
 
                                 newList.append(instruction)
                                 newList.append(i)
-                    
-
-                    case assemblyGenerator.CompInst(assType=assType, operand0=op0, operand1=op1):
-                        if (type(op0) == assemblyGenerator.StackOperand and type(op1) == assemblyGenerator.StackOperand) or (type(op0) == assemblyGenerator.DataOperand and type(op1) == assemblyGenerator.DataOperand) or (type(op0) == assemblyGenerator.DataOperand and type(op1) == assemblyGenerator.StackOperand) or (type(op0) == assemblyGenerator.StackOperand and type(op1) == assemblyGenerator.DataOperand):
-                            
-                            instruction = assemblyGenerator.MovInstruction(assType, i.operand0, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
-
-                            i.operand0 = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
-
-                            newList.append(instruction)
-                            newList.append(i)
-
-                        else:
-                            
-                            instruction0 = None
-                            if type(op1) == assemblyGenerator.ImmediateOperand:
-                                #mov dst, reg11
-                                #mov src, reg10
-                                #cmp r10, reg11
-
-                                instruction0 = assemblyGenerator.MovInstruction(assType, i.operand1, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)))
-
-                                i.operand1 = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11))
-
-                                #newList.append(instruction)
-                                #newList.append(i)
-
-                            instructionImm = None
-                            
-                            if type(op0) == assemblyGenerator.ImmediateOperand  and op0.imm > pow(2, 31) - 1:
-                                print(op0.imm)
-                                instructionImm = assemblyGenerator.MovInstruction(assType, op0, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
-
-                                i.operand0 = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
-
-
-
-                            if instruction0:
-                                newList.append(instruction0)
-
-                            if instructionImm:
-                                newList.append(instructionImm)
-
-                            newList.append(i)                                
+                        
 
                     case assemblyGenerator.PushInstruction(operand = operand):
                         if type(operand) == assemblyGenerator.ImmediateOperand and operand.imm > pow(2, 31) - 1:
@@ -216,109 +173,173 @@ def FixingUpTopLevel(topLevel):
                             
                             newList.append(i)
                             newList.append(i0)
-                         
+                    
+                    
+                    case assemblyGenerator.CompInst(assType=assType, operand0=op0, operand1=op1):
+                        
+                        match assType.type:
+                            case assemblyGenerator.AssemblyType.DOUBLE:
+                                #It must be a register
+                                #comisd
+
+                                if type(op1) != assemblyGenerator.RegisterOperand:
+                                    print("Ale:", assType.type)
+                                    
+                                    instruction0 = assemblyGenerator.MovInstruction(assType, i.operand1, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.SSERegisterType.XMM15)))
+
+                                    i.operand1 = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.SSERegisterType.XMM15))
+
+                                    newList.append(instruction0)
+                                    newList.append(i)
+
+
+                            case _:
+                                print("Ale:", assType.type)
+
+                                if (type(op0) == assemblyGenerator.StackOperand and type(op1) == assemblyGenerator.StackOperand) or (type(op0) == assemblyGenerator.DataOperand and type(op1) == assemblyGenerator.DataOperand) or (type(op0) == assemblyGenerator.DataOperand and type(op1) == assemblyGenerator.StackOperand) or (type(op0) == assemblyGenerator.StackOperand and type(op1) == assemblyGenerator.DataOperand):
+                            
+                                    instruction = assemblyGenerator.MovInstruction(assType, i.operand0, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+
+                                    i.operand0 = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+
+                                    newList.append(instruction)
+                                    newList.append(i)
+
+                                else:
+
+                                    #aqui se checa si los dos son immediates
+                                    instruction0 = None
+                                    if type(op1) == assemblyGenerator.ImmediateOperand:
+                                        #mov dst, reg11
+                                        #mov src, reg10
+                                        #cmp r10, reg11
+
+                                        instruction0 = assemblyGenerator.MovInstruction(assType, i.operand1, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)))
+
+                                        i.operand1 = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11))
+
+                                        #newList.append(instruction)
+                                        #newList.append(i)
+
+                                    instructionImm = None
+                                    
+                                    if type(op0) == assemblyGenerator.ImmediateOperand and op0.imm > pow(2, 31) - 1:
+                                        print(op0.imm)
+                                        instructionImm = assemblyGenerator.MovInstruction(assType, op0, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+
+                                        i.operand0 = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+
+
+
+                                    if instruction0:
+                                        newList.append(instruction0)
+
+                                    if instructionImm:
+                                        newList.append(instructionImm)
+
+                                    newList.append(i)                                
+
 
                     case assemblyGenerator.BinaryInstruction(assType=assType, operator=op, src=src, dest=dst):
-                        
-                        #if add mult subq cmpq pushq cannot immediate 
-
-                        #if mult and dst is memory
-                        # mov dst, reg11
-                        # mov src, reg10
-                        # mult reg10, r11 <- este no puede ser immediate
-                        # mov r11, dst
-
-                        # mov src, reg10
-                        # mult reg10, dst reg
-
-                        match op.operator:
-
-                            case assemblyGenerator.BinopType.Mult:
-                    
-                                instruction0 = None
-                                instruction1 = None
+                        match assType.type:
+                            case assemblyGenerator.AssemblyType.DOUBLE:
                                 
-                                if type(dst) == assemblyGenerator.StackOperand or type(dst) == assemblyGenerator.DataOperand:
+                                #print(op.operator)
 
-                                    instruction0 = assemblyGenerator.MovInstruction(assType, i.dest, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)))
+                                if op.operator == assemblyGenerator.BinopType.Add or op.operator == assemblyGenerator.BinopType.Sub or op.operator == assemblyGenerator.BinopType.Mult or op.operator == assemblyGenerator.BinopType.DivDouble or op.operator == assemblyGenerator.BinopType.Xor:   
 
-                                    instruction1 = assemblyGenerator.MovInstruction(assType, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)), i.dest)
+                                    if type(dst) != assemblyGenerator.RegisterOperand:
+                                        print("Ale:", assType.type)
+                                        
+                                        instruction0 = assemblyGenerator.MovInstruction(assType, i.dest, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.SSERegisterType.XMM15)))
 
-                                    i.dest = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11))
+                                        i.dest = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.SSERegisterType.XMM15))
 
-                                #newList.append(instruction0)
-                                #newList.append(i)
-                                #newList.append(instruction1)
+                                        newList.append(instruction0)
+                                        newList.append(i)
+                                pass
 
-                                instructionImm = None
-                                if type(src) == assemblyGenerator.ImmediateOperand and src.imm > pow(2, 31) - 1:
+                            case _:
+                                print("Ale:", assType.type)
+                                match op.operator:
 
-                                    instructionImm = assemblyGenerator.MovInstruction(assType, src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
-
-                                    i.src = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
-
-                                if instruction0:
-                                    newList.append(instruction0)
-
-                                if instructionImm:
-                                    newList.append(instructionImm)
-
-                                newList.append(i)
-
-                                if instruction1:
-                                    newList.append(instruction1)
-
-                            case assemblyGenerator.BinopType.Add:
-                                
-                                if (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.DataOperand):
-                                    instruction = assemblyGenerator.MovInstruction(assType, i.src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
-
-                                    i.src = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
-
-                                    newList.append(instruction)
-                                    newList.append(i)
-
-                                elif type(src) == assemblyGenerator.ImmediateOperand and src.imm > pow(2, 31) - 1:
-
-                                    instructionImm = assemblyGenerator.MovInstruction(assType, src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
-
-                                    i.src = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
-
-                                    newList.append(instructionImm)
-                                    newList.append(i)
-
-                                
-                            case assemblyGenerator.BinopType.Sub:
-
-                                if (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.DataOperand):
-                                    instruction = assemblyGenerator.MovInstruction(assType, i.src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
-
-                                    i.src = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
-
-                                    newList.append(instruction)
-                                    newList.append(i)
-
-                                elif type(src) == assemblyGenerator.ImmediateOperand and src.imm > pow(2, 31) - 1:
-
-                                    instructionImm = assemblyGenerator.MovInstruction(assType, src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
-
-                                    i.src = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
-
-                                    newList.append(instructionImm)
-                                    newList.append(i)
-
-                            #case _:
-                            #    print("Ale")
-                            #    sys.exit(1)
-                
+                                    case assemblyGenerator.BinopType.Mult:
                             
+                                        instruction0 = None
+                                        instruction1 = None
+                                        
+                                        if type(dst) == assemblyGenerator.StackOperand or type(dst) == assemblyGenerator.DataOperand:
 
-                        #aqui estas checando que si los dos estan en memoria
+                                            instruction0 = assemblyGenerator.MovInstruction(assType, i.dest, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)))
 
-                        #data stack
-                        #stack data
-                        #data data
-                        #stack stack
+                                            instruction1 = assemblyGenerator.MovInstruction(assType, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)), i.dest)
+
+                                            i.dest = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11))
+
+                                        #newList.append(instruction0)
+                                        #newList.append(i)
+                                        #newList.append(instruction1)
+
+                                        instructionImm = None
+                                        if type(src) == assemblyGenerator.ImmediateOperand and src.imm > pow(2, 31) - 1:
+
+                                            instructionImm = assemblyGenerator.MovInstruction(assType, src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+
+                                            i.src = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+
+                                        if instruction0:
+                                            newList.append(instruction0)
+
+                                        if instructionImm:
+                                            newList.append(instructionImm)
+
+                                        newList.append(i)
+
+                                        if instruction1:
+                                            newList.append(instruction1)
+
+                                    case assemblyGenerator.BinopType.Add:
+                                        
+                                        if (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.DataOperand):
+                                            instruction = assemblyGenerator.MovInstruction(assType, i.src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+
+                                            i.src = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+
+                                            newList.append(instruction)
+                                            newList.append(i)
+
+                                        elif type(src) == assemblyGenerator.ImmediateOperand and src.imm > pow(2, 31) - 1:
+
+                                            instructionImm = assemblyGenerator.MovInstruction(assType, src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+
+                                            i.src = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+
+                                            newList.append(instructionImm)
+                                            newList.append(i)
+
+                                    case assemblyGenerator.BinopType.Sub:
+
+                                        if (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.DataOperand):
+                                            instruction = assemblyGenerator.MovInstruction(assType, i.src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+
+                                            i.src = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+
+                                            newList.append(instruction)
+                                            newList.append(i)
+
+                                        elif type(src) == assemblyGenerator.ImmediateOperand and src.imm > pow(2, 31) - 1:
+
+                                            instructionImm = assemblyGenerator.MovInstruction(assType, src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+
+                                            i.src = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+
+                                            newList.append(instructionImm)
+                                            newList.append(i)
+                                        pass
+
+                        
+
+                            
 
                     case assemblyGenerator.ReturnInstruction():
                         pass
