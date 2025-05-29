@@ -819,65 +819,11 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
 
             case tacGenerator.TAC_FunCallInstruction(funName = funName, arguments = arguments, dst = dst):
 
-                #paramTypes = symbolTable[funName].type.paramTypes
-
-                #registerTypes = paramTypes[:6]
-                #stackTypes = paramTypes[6:]
-
-                #print("Register Types: ", registerTypes)
-                #print("Stack Types: ", stackTypes)
-
-                #NOTE: Esta cosa esta mal!
-                
                 intArgs, doubleArgs, stackArgs = classifyParameters(arguments, symbolTable, topLevelList)
 
                 print("IntArgs:", intArgs)
                 print("DoubleArgs:", doubleArgs)
                 print("StackArgs:", stackArgs)
-
-                intRegisterArgs = []
-                doubleRegisterArgs = []
-
-                """
-                argumentTypes = []
-
-                for arg in arguments:
-                    type1, cType1, asmArg = parseValue(arg, symbolTable, topLevelList)
-                    argumentTypes.append((cType1, asmArg, type1))
-
-                print(argumentTypes)
-
-                intTypes = [(i, j) for i, j in enumerate(argumentTypes) if type(j[0]) != parser.DoubleType]
-
-                doubleTypes = [(i, j) for i, j in enumerate(argumentTypes) if type(j[0]) == parser.DoubleType]
-
-
-                #tienes que juntar los stack de los dos y ordenarlos de ultimo primero al primero el ultimo
-
-                #print(intTypes)
-                #print(doubleTypes)
-
-
-                intRegisterArgs = intTypes[:6]
-                intStackArgs = intTypes[6:]
-
-                doubleRegisterArgs = doubleTypes[:8]
-                doubleStackArgs = doubleTypes[8:]
-
-                stackArgs = doubleStackArgs + intStackArgs
-
-                #print("stackArgs:", stackArgs)
-
-                def orderStackArgs(e):
-                    return e[0]
-
-                stackArgs.sort(reverse=True, key=orderStackArgs)
-
-                print("stackArgs:", stackArgs)
-
-                print(intRegisterArgs)
-                print(doubleRegisterArgs)
-                """
 
                 stackPadding = 0
                 if len(stackArgs) % 2:
@@ -887,38 +833,30 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     instruction0 = BinaryInstruction(BinaryOperator(BinopType.Sub), AssemblySize(AssemblyType.QUADWORD), ImmediateOperand(stackPadding), RegisterOperand(Register(RegisterType.SP)))                    
                     ASM_Instructions.append(instruction0)
 
-                for i, arg in enumerate(intRegisterArgs):
-                    #print(arg[1][2])
-                    ASM_Instructions.append(MovInstruction(arg[1][2], arg[1][1], RegisterOperand(Register(list(RegisterType)[i]))))
+                for i, (assType, assArg) in enumerate(intArgs):
+                    #estas cosas tienen los tipos de los parametros
+                    ASM_Instructions.append(MovInstruction(assType, assArg, RegisterOperand(Register(list(RegisterType)[i]))))
                 
-                for i, arg in enumerate(doubleRegisterArgs):
-                    print(arg[1][1])
-                    ASM_Instructions.append(MovInstruction(arg[1][2], arg[1][1], RegisterOperand(Register(list(SSERegisterType)[i]))))
+                for i, assArg in enumerate(doubleArgs):
+                    ASM_Instructions.append(MovInstruction(AssemblySize(AssemblyType.DOUBLE), assArg, RegisterOperand(Register(list(SSERegisterType)[i]))))
+
                 
-                #stackArgs.reverse()
-                #stackTypes.reverse()
-
-                #print(stackArgs)
-
-                """
-                for arg in stackArgs:
-                    print(arg[1])
-                    #type1, alignment1, asmArg = parseValue(arg, symbolTable)
-                    type1 = arg[1][2]
-                    asmArg = arg[1][1]
-
-                    if type(asmArg) == ImmediateOperand or type(asmArg) == RegisterOperand or type1.type == AssemblyType.QUADWORD:
+                stackArgs.reverse()
+                
+                for assType, asmArg in stackArgs:
+                    
+                    if type(asmArg) == ImmediateOperand or type(asmArg) == RegisterOperand or assType.type == AssemblyType.QUADWORD or assType.type == AssemblyType.DOUBLE:
 
                         ASM_Instructions.append(PushInstruction(asmArg))
                         
                     else:
-                        i0 = MovInstruction(AssemblySize(AssemblyType.LONGWORD), asmArg, RegisterOperand(Register(RegisterType.AX)))
+
+                        i0 = MovInstruction(assType, asmArg, RegisterOperand(Register(RegisterType.AX)))
                         
                         ASM_Instructions.append(i0)
                         ASM_Instructions.append(PushInstruction(RegisterOperand(Register(RegisterType.AX))))
-                """
+                
                         
-
                 ASM_Instructions.append(CallInstruction(funName))
 
                 bytesToRemove = stackPadding + 8 * len(stackArgs)
@@ -928,11 +866,14 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     
                     ASM_Instructions.append(instruction0)
 
-                    #ASM_Instructions.append(DeallocateStackInstruction(bytesToRemove))
                 
-                type1, alignment1, asmDst = parseValue(dst, symbolTable, topLevelList)
-                
-                ASM_Instructions.append(MovInstruction(type1, RegisterOperand(Register(RegisterType.AX)), asmDst))
+                type1, cType1, asmDst = parseValue(dst, symbolTable, topLevelList)
+
+                if type(cType1) == parser.DoubleType:
+                    ASM_Instructions.append(MovInstruction(AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(SSERegisterType.XMM0)), asmDst))
+                    
+                else:
+                    ASM_Instructions.append(MovInstruction(type1, RegisterOperand(Register(RegisterType.AX)), asmDst))
 
             case tacGenerator.TAC_BinaryInstruction(operator=op, src1=src1_, src2=src2_, dst=dst_):
                 
@@ -955,7 +896,6 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     else:
                         instruction2 = SetCCInst(list(ConcCodeTypeUnsigned)[op.operator.value], dst)
                         
-
                     ASM_Instructions.append(instruction0)
                     ASM_Instructions.append(instruction1)
                     ASM_Instructions.append(instruction2)
@@ -1214,7 +1154,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
                 ASM_Instructions.append(MovZeroExtendIns(src, dst))
 
-            case tacGenerator.TAC_DoubleToInt():
+            case tacGenerator.TAC_DoubleToInt(src = src_, dst = dst_):
                 type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
                 type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
                 
