@@ -681,7 +681,7 @@ def classifyParameters(values, symbolTable, topLevelList):
 
     for arg in values:
         t, cType1, operand = parseValue(arg, symbolTable, topLevelList)
-        typedOperand = (operand, t)
+        typedOperand = (t, operand)
 
         if type(cType1) == parser.DoubleType:
             if len(doubleRegArgs) < 8:
@@ -835,6 +835,8 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 print("DoubleArgs:", doubleArgs)
                 print("StackArgs:", stackArgs)
 
+                intRegisterArgs = []
+                doubleRegisterArgs = []
 
                 """
                 argumentTypes = []
@@ -1260,9 +1262,16 @@ def ASM_parseTopLevel(topLevel, symbolTable, topLevelList):
                 i0 = MovInstruction(AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(list(SSERegisterType)[i])), param)
                 ASM_Instructions.append(i0)
             
-            
 
             offset = 16 
+
+            for i, (paramType, param) in enumerate(stackParams):
+                print(paramType, param)
+                i0 = MovInstruction(paramType, StackOperand(offset), param)
+                ASM_Instructions.append(i0)
+                offset += 8
+
+            """
             for i, param in enumerate(params):
                 
                 alignment, type = matchCType(symbolTable[param].type)
@@ -1275,6 +1284,7 @@ def ASM_parseTopLevel(topLevel, symbolTable, topLevelList):
                     a = MovInstruction(type, RegisterOperand(Register(list(RegisterType)[i])), PseudoRegisterOperand(param))
 
                 ASM_Instructions.append(a)
+            """
                 
             ASM_parseInstructions(instructions, ASM_Instructions, symbolTable, topLevelList)
             return Function(identifier, global_, ASM_Instructions)
