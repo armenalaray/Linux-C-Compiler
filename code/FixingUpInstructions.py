@@ -177,6 +177,33 @@ def FixingUpTopLevel(topLevel):
                             newList.append(i)
 
                     case assemblyGenerator.Cvtsi2sd(assType = assType, sourceO = sourceO, destO = destO):
+                        #the source cant be a constant and the destination must be a register
+
+                        instruction0 = None
+                        if type(sourceO) == assemblyGenerator.ImmediateOperand:
+                            regr10 = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+
+                            instruction0 = assemblyGenerator.MovInstruction(assType, sourceO, regr10)
+
+                            i.sourceO = regr10
+
+
+                        instruction2 = None
+                        if type(destO) == assemblyGenerator.StackOperand or type(destO) == assemblyGenerator.DataOperand:
+                            regr11 = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.SSERegisterType.XMM15))
+                            
+                            i.destO = regr11
+
+                            instruction2 = assemblyGenerator.MovInstruction(assemblyGenerator.AssemblySize(assemblyGenerator.AssemblyType.DOUBLE), regr11, destO)
+
+                            
+                        if instruction0:
+                            newList.append(instruction0)
+
+                        newList.append(i)
+
+                        if instruction2:
+                            newList.append(instruction2)
                         pass
 
                     case assemblyGenerator.Cvttsd2si(assType = assType, sourceO = sourceO, destO = destO):
