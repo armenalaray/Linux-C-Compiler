@@ -73,33 +73,40 @@ def FixingUpTopLevel(topLevel):
                                 
 
                     case assemblyGenerator.MovInstruction(assType=assType, sourceO=src, destO=dst):
-                        #stack - stack
-                        #data - stack
-                        #data - data
-                        #stack - data
-
-                        if (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.DataOperand):
+                        match assType.type:
+                            case assemblyGenerator.AssemblyType.DOUBLE:
+                                print("Mov:", assType.type)
+                                if (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.DataOperand):
                             
-                            i.destO = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+                                    i.destO = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.SSERegisterType.XMM15))
 
-                            instruction = assemblyGenerator.MovInstruction(assType, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)), dst)
+                                    instruction = assemblyGenerator.MovInstruction(assType, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.SSERegisterType.XMM15)), dst)
 
+                                    newList.append(i)
+                                    newList.append(instruction)
+                                
+                            case _:
+                                print("Mov:", assType.type)
+                                
+                                if (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.DataOperand):
+                            
+                                    i.destO = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
 
-                            #mov src, reg
-                            #mov reg, dst
-                            newList.append(i)
-                            newList.append(instruction)
-                        
-                        elif type(src) == assemblyGenerator.ImmediateOperand and src.imm > pow(2, 31) - 1:
+                                    instruction = assemblyGenerator.MovInstruction(assType, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)), dst)
 
-                            instructionImm = assemblyGenerator.MovInstruction(assType, src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
+                                    newList.append(i)
+                                    newList.append(instruction)
+                                
+                                elif type(src) == assemblyGenerator.ImmediateOperand and src.imm > pow(2, 31) - 1:
 
-                            i.sourceO = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
+                                    instructionImm = assemblyGenerator.MovInstruction(assType, src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
 
-                            newList.append(instructionImm)
-                            newList.append(i)
+                                    i.sourceO = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
 
-                    
+                                    newList.append(instructionImm)
+                                    newList.append(i)
+                                        
+
                     case assemblyGenerator.IDivInstruction(assType=assType, divisor=div):
                         match div:
                             case assemblyGenerator.ImmediateOperand():
@@ -338,9 +345,6 @@ def FixingUpTopLevel(topLevel):
                                         pass
 
                         
-
-                            
-
                     case assemblyGenerator.ReturnInstruction():
                         pass
 
