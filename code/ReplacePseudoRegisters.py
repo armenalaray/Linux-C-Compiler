@@ -10,8 +10,6 @@ def ReplaceOperand(operand, table, offset, symbolTable):
             if table.get(id) == None:
 
                 if id in symbolTable:
-
-                    #print(type(symbolTable[id].attrs))
                     match symbolTable[id]:
                         case assemblyGenerator.FunEntry():
                             pass
@@ -31,6 +29,12 @@ def ReplaceOperand(operand, table, offset, symbolTable):
                             case assemblyGenerator.AssemblyType.QUADWORD:
                                 allocateSize = 8
                                 offset -= allocateSize
+                                offset = offset - offset % 8
+
+                            case assemblyGenerator.AssemblyType.DOUBLE:
+                                allocateSize = 8
+                                offset -= allocateSize
+                                #esto es para alinearlo a 8 
                                 offset = offset - offset % 8
                                 
 
@@ -136,6 +140,27 @@ def ReplaceTopLevel(topLevel, symbolTable):
                         if object:
                             i.divisor = object
 
+
+                    case assemblyGenerator.Cvtsi2sd(assType = assType, sourceO = sourceO, destO = destO):
+                        offset, object = ReplaceOperand(sourceO, table, offset, symbolTable)
+                        if object:
+                            i.sourceO = object
+
+                        offset, object = ReplaceOperand(destO, table, offset, symbolTable)
+                        if object:
+                            i.destO = object
+                        
+
+                    case assemblyGenerator.Cvttsd2si(assType = assType, sourceO = sourceO, destO = destO):
+                        offset, object = ReplaceOperand(sourceO, table, offset, symbolTable)
+                        if object:
+                            i.sourceO = object
+
+                        offset, object = ReplaceOperand(destO, table, offset, symbolTable)
+                        if object:
+                            i.destO = object
+
+
                     #These are not changed
                     case assemblyGenerator.ReturnInstruction():
                         pass
@@ -151,9 +176,9 @@ def ReplaceTopLevel(topLevel, symbolTable):
                     
                     
 
-                    #case _:
-                    #    print("Invalid Assembly Instruction. {0}".format(type(i)))
-                    #    sys.exit(1)
+                    case _:
+                        print("Invalid Assembly Instruction. {0}".format(type(i)))
+                        sys.exit(1)
                     
 
             topLevel.stackOffset = offset
