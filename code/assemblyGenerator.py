@@ -414,6 +414,8 @@ class UnaryOperator:
                 return "Not"
             case UnopType.Neg:
                 return "Neg"
+            case UnopType.Shr:
+                return "Shr"
             case _:
                 return "_"
 
@@ -429,8 +431,15 @@ class BinaryOperator:
                 return "Sub"
             case BinopType.Mult:
                 return "Mult"
+            case BinopType.And:
+                return "And"
+            case BinopType.Or:
+                return "Or"
             case BinopType.Xor:
                 return "Xor"
+            case BinopType.DivDouble:
+                return "DivDouble"
+            
             case _:
                 return "_"
 
@@ -640,6 +649,7 @@ def Expect(*args):
                 sys.exit(1)
         other = i
 
+"""
 def parseBinaryInstructionGeneral(src1_, src2_, dst_, op, symbolTable, ASM_Instructions, topLevelList):
 
     type1, alignment1, src1 = parseValue(src1_, symbolTable, topLevelList)
@@ -655,6 +665,7 @@ def parseBinaryInstructionGeneral(src1_, src2_, dst_, op, symbolTable, ASM_Instr
     
     ASM_Instructions.append(instruction0)
     ASM_Instructions.append(instruction1)
+"""
 
 def isIntegerType(type_):
     if type(type_) == parser.UIntType or type(type_) == parser.ULongType or type(type_) == parser.IntType or type(type_) == parser.LongType:
@@ -892,8 +903,11 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
 
                     #HERE I check for signed and unsigned
                     if type(cType1) == parser.IntType or type(cType1) == parser.LongType:                     
+                    
                         instruction2 = SetCCInst(list(ConcCodeType)[op.operator.value], dst)
-                    else:
+                    
+                    elif type(cType1) == parser.UIntType or type(cType1) == parser.ULongType or type(cType1) == parser.DoubleType:
+
                         instruction2 = SetCCInst(list(ConcCodeTypeUnsigned)[op.operator.value], dst)
                         
                     ASM_Instructions.append(instruction0)
@@ -932,7 +946,17 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                                 ASM_Instructions.append(instruction3)
                                 pass
                             elif type(cType1) == parser.DoubleType:
-                                parseBinaryInstructionGeneral(src1_, src2_, dst_, op, symbolTable, ASM_Instructions, topLevelList)
+                                
+                                Expect(type1, type2, type3)
+
+                                instruction0 = MovInstruction(type1, src1, dst)
+                                instruction1 = BinaryInstruction(BinaryOperator(BinopType.DivDouble), type1, src2, dst)
+                                
+                                ASM_Instructions.append(instruction0)
+                                ASM_Instructions.append(instruction1)
+
+
+
                             
                         case tacGenerator.BinopType.REMAINDER:
                             type1, cType1, src1 = parseValue(src1_, symbolTable, topLevelList)
@@ -962,15 +986,10 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                                 
 
                         case _:
-                            parseBinaryInstructionGeneral(src1_, src2_, dst_, op, symbolTable, ASM_Instructions, topLevelList)
+                            #parseBinaryInstructionGeneral(src1_, src2_, dst_, op, symbolTable, ASM_Instructions, topLevelList)
 
-                            """
                             type1, alignment1, src1 = parseValue(src1_, symbolTable, topLevelList)
-
-                            #print(type1, alignment1, src1)
-
                             type2, alignment2, src2 = parseValue(src2_, symbolTable, topLevelList)
-
                             type3, alignment3, dst = parseValue(dst_, symbolTable, topLevelList)
                             
                             Expect(type1, type2, type3)
@@ -982,7 +1001,8 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                             
                             ASM_Instructions.append(instruction0)
                             ASM_Instructions.append(instruction1)
-                            """
+
+
             
             case tacGenerator.TAC_JumpInst(label=label):
                 ASM_Instructions.append(JumpInst(label))
