@@ -227,7 +227,7 @@ def getOperandSize(type):
             operandSize = OperandSize.BYTE_8
 
         case assemblyGenerator.AssemblyType.DOUBLE:
-            pass
+            operandSize = OperandSize.BYTE_8
         
         case _:
             print("Invalid Operand Size")
@@ -333,6 +333,9 @@ def printTopLevel(topLevel, output, symbolTable):
 
                                     case assemblyGenerator.UnopType.Neg:
                                         output += '\n\tneg'
+                                    
+                                    case assemblyGenerator.UnopType.Shr:
+                                        output += '\n\tshr'
 
                         output = printInstructionSuffix(assType.type, output)
 
@@ -343,7 +346,7 @@ def printTopLevel(topLevel, output, symbolTable):
 
                     case assemblyGenerator.BinaryInstruction(operator=op, assType = assType, src=src, dest=dst):
 
-                        print("Ale:", assType.type)
+                        #print("Ale:", assType.type)
                         match assType.type:
                             case assemblyGenerator.AssemblyType.DOUBLE:
 
@@ -445,9 +448,9 @@ def printTopLevel(topLevel, output, symbolTable):
 
                         operandSize = getOperandSize(assType.type)
 
-                        output = matchOperand(src, output, operandSize)
+                        output = matchOperand(sourceO, output, operandSize)
                         output += ', '
-                        output = matchOperand(dst, output, operandSize)
+                        output = matchOperand(destO, output, operandSize)
 
                     
 
@@ -460,9 +463,9 @@ def printTopLevel(topLevel, output, symbolTable):
 
                         operandSize = getOperandSize(assType.type)
 
-                        output = matchOperand(src, output, operandSize)
+                        output = matchOperand(sourceO, output, operandSize)
                         output += ', '
-                        output = matchOperand(dst, output, operandSize)
+                        output = matchOperand(destO, output, operandSize)
                         
 
                     case assemblyGenerator.IDivInstruction(assType = assType, divisor=divisor):
@@ -497,22 +500,42 @@ def printTopLevel(topLevel, output, symbolTable):
                     
                     case assemblyGenerator.CompInst(assType = assType, operand0=op0, operand1=op1):
                         
-                        #print("Ale")
+                        match assType.type:
+                            case assemblyGenerator.AssemblyType.DOUBLE:
+                                #print("Ale:", assType.type)
 
-                        output += '\n\tcmp'
+                                output += '\n\tcomisd'
 
-                        output = printInstructionSuffix(assType.type, output)
+                                output += ' '                
 
-                        output += ' '                
+                                operandSize = getOperandSize(assType.type)
 
-                        operandSize = getOperandSize(assType.type)
+                                output = matchOperand(op0, output, operandSize)
 
-                        output = matchOperand(op0, output, operandSize)
+                                output += ', '
 
-                        output += ', '
+                                output = matchOperand(op1, output, operandSize)
 
-                        output = matchOperand(op1, output, operandSize)
-                    
+                                
+                            case _:
+                                #print("Ale:", assType.type)
+                                
+                                output += '\n\tcmp'
+
+                                output = printInstructionSuffix(assType.type, output)
+
+                                output += ' '                
+
+                                operandSize = getOperandSize(assType.type)
+
+                                output = matchOperand(op0, output, operandSize)
+
+                                output += ', '
+
+                                output = matchOperand(op1, output, operandSize)
+                                
+
+                                            
                     case assemblyGenerator.JumpInst(identifier=id):
                         output += '\n\tjmp .L{0}'.format(id)
 

@@ -1,18 +1,35 @@
-static double ale;
-
-double pass_parameters_3(double d1, double d2, int i1, double d3, double d4,
- double d5, double d6, unsigned int i2, long i3,
- double d7, double d8, unsigned long i4, double d9,
- int i5, double d10, int i6, int i7, double d11,
- int i8, int i9)
- {
-    return 1.0; 
- }
-
-
 int main(void) {
-    double a = 2UL;
-    double b = 3.0;
+    /* Define constant doubles in a few different formats,
+     * and make sure we can lex all of them.
+     * Note that these can all be represented exactly,
+     * without rounding.
+     */
+
+    /* Several ways to define 1 */
+    double a = 1.0;
+    double b = 1.;
+    double c = 1E0;
+    double d = .01e+2;
+
+    /* Make sure they all have the correct value */
+    if (! (a == b && a == c && a == d) )
+        return 1;
+
+    if (a + b + c + d != 4.0)
+        return 2;
+
+    /* Several ways to define .125 */
+    double e = .125;
+    double f = 12.5e-2;
+    double g = 125.E-3;
+    double h = 1250000000e-10;
+
+    /* Make sure they all have the correct value */
+    if (! (e == f && e == g && e == h) )
+        return 3;
+    if (e + f + g + h != 0.5)
+        return 4;
+
+    return 0;
     
-    return pass_parameters_3(a / b, 2.0, 101, 3.0, 4.0, 5.0, 6.0, 104, 202, 6.0, 7.0, 105, 8.0, 120, 9.0, 121, 122, 10.0, 123, 124);
 }

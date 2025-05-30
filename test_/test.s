@@ -1,192 +1,206 @@
 	.section .rodata
 	.align 8
-tmp.49:
+tmp.44:
 	.double 1.0
-	.globl pass_parameters_3
-	.text
-pass_parameters_3:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $144, %rsp
-	movl %edi, -4(%rbp)
-	movl %esi, -8(%rbp)
-	movq %rdx, -16(%rbp)
-	movq %rcx, -24(%rbp)
-	movl %r8d, -28(%rbp)
-	movl %r9d, -32(%rbp)
-	movsd %xmm0, -40(%rbp)
-	movsd %xmm1, -48(%rbp)
-	movsd %xmm2, -56(%rbp)
-	movsd %xmm3, -64(%rbp)
-	movsd %xmm4, -72(%rbp)
-	movsd %xmm5, -80(%rbp)
-	movsd %xmm6, -88(%rbp)
-	movsd %xmm7, -96(%rbp)
-	movsd 16(%rbp), %xmm14
-	movsd %xmm14, -104(%rbp)
-	movsd 24(%rbp), %xmm14
-	movsd %xmm14, -112(%rbp)
-	movl 32(%rbp), %r10d
-	movl %r10d, -116(%rbp)
-	movsd 40(%rbp), %xmm14
-	movsd %xmm14, -128(%rbp)
-	movl 48(%rbp), %r10d
-	movl %r10d, -132(%rbp)
-	movl 56(%rbp), %r10d
-	movl %r10d, -136(%rbp)
-	movsd tmp.49(%rip), %xmm0
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
 	.section .rodata
 	.align 8
-tmp.52:
-	.double 3.0
+tmp.45:
+	.double 1.0
 	.section .rodata
 	.align 8
-tmp.53:
-	.double 2.0
+tmp.46:
+	.double 1.0
 	.section .rodata
 	.align 8
-tmp.54:
-	.double 3.0
+tmp.47:
+	.double 1.0
 	.section .rodata
 	.align 8
-tmp.55:
+tmp.48:
 	.double 4.0
 	.section .rodata
 	.align 8
-tmp.56:
-	.double 5.0
+tmp.49:
+	.double 0.125
 	.section .rodata
 	.align 8
-tmp.57:
-	.double 6.0
+tmp.50:
+	.double 0.125
 	.section .rodata
 	.align 8
-tmp.58:
-	.double 6.0
+tmp.51:
+	.double 0.125
 	.section .rodata
 	.align 8
-tmp.59:
-	.double 7.0
+tmp.52:
+	.double 0.125
 	.section .rodata
 	.align 8
-tmp.60:
-	.double 8.0
-	.section .rodata
-	.align 8
-tmp.61:
-	.double 9.0
-	.section .rodata
-	.align 8
-tmp.62:
-	.double 10.0
+tmp.53:
+	.double 0.5
 	.globl main
 	.text
 main:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $208, %rsp
-	movq $2, %r11
-	cmpq $0, %r11
-	jL .Ltmp.50
-	movq $2, %r10
-	cvtsi2sdq $2, %r10
-	movsd %xmm15, -8(%rbp)
-	jmp .Ltmp.51
-.Ltmp.50:
-	movq $2, %rax
-	movq %rax, %rdxq %rdx
-	andq $1, %rax
-	orq %rax, %rdx
-	cvtsi2sdq %rax, %rdx
-	movsd %xmm15, -8(%rbp)
-	movsd -8(%rbp), %xmm15
-	addsd -8(%rbp), %xmm15
-.Ltmp.51:
-	movsd -8(%rbp), %xmm14
+	subq $192, %rsp
+	movsd tmp.44(%rip), %xmm14
+	movsd %xmm14, -8(%rbp)
+	movsd tmp.45(%rip), %xmm14
 	movsd %xmm14, -16(%rbp)
-	movsd tmp.52(%rip), %xmm14
+	movsd tmp.46(%rip), %xmm14
 	movsd %xmm14, -24(%rbp)
-	movsd -16(%rbp), %xmm14
+	movsd tmp.47(%rip), %xmm14
 	movsd %xmm14, -32(%rbp)
-	movsd -32(%rbp), %xmm15
-	divsd -24(%rbp), %xmm15
-	movsd -32(%rbp), %xmm14
-	movsd %xmm14, -40(%rbp)
-	movsd tmp.53(%rip), %xmm14
-	movsd %xmm14, -48(%rbp)
-	movl $101, -52(%rbp)
-	movsd tmp.54(%rip), %xmm14
-	movsd %xmm14, -64(%rbp)
-	movsd tmp.55(%rip), %xmm14
+	movsd -8(%rbp), %xmm15
+	comisd -16(%rbp), %xmm15
+	movl $0, -36(%rbp)
+	setE -36(%rbp)
+	cmpl $0, -36(%rbp)
+	jE .Ltmp.9
+	movsd -8(%rbp), %xmm15
+	comisd -24(%rbp), %xmm15
+	movl $0, -40(%rbp)
+	setE -40(%rbp)
+	cmpl $0, -40(%rbp)
+	jE .Ltmp.9
+	movl $1, -44(%rbp)
+	jmp .Ltmp.12
+.Ltmp.9:
+	movl $0, -44(%rbp)
+.Ltmp.12:
+	cmpl $0, -44(%rbp)
+	jE .Ltmp.13
+	movsd -8(%rbp), %xmm15
+	comisd -32(%rbp), %xmm15
+	movl $0, -48(%rbp)
+	setE -48(%rbp)
+	cmpl $0, -48(%rbp)
+	jE .Ltmp.13
+	movl $1, -52(%rbp)
+	jmp .Ltmp.16
+.Ltmp.13:
+	movl $0, -52(%rbp)
+.Ltmp.16:
+	cmpl $0, -52(%rbp)
+	movl $0, -56(%rbp)
+	setE -56(%rbp)
+	movl -56(%rbp), %r10d
+	movl %r10d, -60(%rbp)
+	cmpl $0, -60(%rbp)
+	jE .Ltmp.19
+	movl $1, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.19:
+	movsd -8(%rbp), %xmm14
 	movsd %xmm14, -72(%rbp)
-	movsd tmp.56(%rip), %xmm14
+	movsd -72(%rbp), %xmm15
+	addsd -16(%rbp), %xmm15
+	movsd %xmm15, -72(%rbp)
+	movsd -72(%rbp), %xmm14
 	movsd %xmm14, -80(%rbp)
-	movsd tmp.57(%rip), %xmm14
+	movsd -80(%rbp), %xmm15
+	addsd -24(%rbp), %xmm15
+	movsd %xmm15, -80(%rbp)
+	movsd -80(%rbp), %xmm14
 	movsd %xmm14, -88(%rbp)
-	movl $104, -92(%rbp)
+	movsd -88(%rbp), %xmm15
+	addsd -32(%rbp), %xmm15
+	movsd %xmm15, -88(%rbp)
+	movsd -88(%rbp), %xmm15
+	comisd tmp.48(%rip), %xmm15
+	movl $0, -92(%rbp)
+	setNE -92(%rbp)
 	movl -92(%rbp), %r10d
 	movl %r10d, -96(%rbp)
-	movl $202, %r10d
-	movslq %r10d, %r11
-	movq %r11, -104(%rbp)
-	movq -104(%rbp), %r10
-	movq %r10, -112(%rbp)
-	movsd tmp.58(%rip), %xmm14
+	cmpl $0, -96(%rbp)
+	jE .Ltmp.25
+	movl $2, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.25:
+	movsd tmp.49(%rip), %xmm14
+	movsd %xmm14, -104(%rbp)
+	movsd tmp.50(%rip), %xmm14
+	movsd %xmm14, -112(%rbp)
+	movsd tmp.51(%rip), %xmm14
 	movsd %xmm14, -120(%rbp)
-	movsd tmp.59(%rip), %xmm14
+	movsd tmp.52(%rip), %xmm14
 	movsd %xmm14, -128(%rbp)
-	movl $105, %r10d
-	movslq %r10d, %r11
-	movq %r11, -136(%rbp)
-	movq -136(%rbp), %r10
-	movq %r10, -144(%rbp)
-	movsd tmp.60(%rip), %xmm14
-	movsd %xmm14, -152(%rbp)
-	movl $120, -156(%rbp)
-	movsd tmp.61(%rip), %xmm14
+	movsd -104(%rbp), %xmm15
+	comisd -112(%rbp), %xmm15
+	movl $0, -132(%rbp)
+	setE -132(%rbp)
+	cmpl $0, -132(%rbp)
+	jE .Ltmp.27
+	movsd -104(%rbp), %xmm15
+	comisd -120(%rbp), %xmm15
+	movl $0, -136(%rbp)
+	setE -136(%rbp)
+	cmpl $0, -136(%rbp)
+	jE .Ltmp.27
+	movl $1, -140(%rbp)
+	jmp .Ltmp.30
+.Ltmp.27:
+	movl $0, -140(%rbp)
+.Ltmp.30:
+	cmpl $0, -140(%rbp)
+	jE .Ltmp.31
+	movsd -104(%rbp), %xmm15
+	comisd -128(%rbp), %xmm15
+	movl $0, -144(%rbp)
+	setE -144(%rbp)
+	cmpl $0, -144(%rbp)
+	jE .Ltmp.31
+	movl $1, -148(%rbp)
+	jmp .Ltmp.34
+.Ltmp.31:
+	movl $0, -148(%rbp)
+.Ltmp.34:
+	cmpl $0, -148(%rbp)
+	movl $0, -152(%rbp)
+	setE -152(%rbp)
+	movl -152(%rbp), %r10d
+	movl %r10d, -156(%rbp)
+	cmpl $0, -156(%rbp)
+	jE .Ltmp.37
+	movl $3, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.37:
+	movsd -104(%rbp), %xmm14
 	movsd %xmm14, -168(%rbp)
-	movl $121, -172(%rbp)
-	movl $122, -176(%rbp)
-	movsd tmp.62(%rip), %xmm14
+	movsd -168(%rbp), %xmm15
+	addsd -112(%rbp), %xmm15
+	movsd %xmm15, -168(%rbp)
+	movsd -168(%rbp), %xmm14
+	movsd %xmm14, -176(%rbp)
+	movsd -176(%rbp), %xmm15
+	addsd -120(%rbp), %xmm15
+	movsd %xmm15, -176(%rbp)
+	movsd -176(%rbp), %xmm14
 	movsd %xmm14, -184(%rbp)
-	movl $123, -188(%rbp)
-	movl $124, -192(%rbp)
-	movl -52(%rbp), %edi
-	movl -96(%rbp), %esi
-	movq -112(%rbp), %rdx
-	movq -144(%rbp), %rcx
-	movl -156(%rbp), %r8d
-	movl -172(%rbp), %r9d
-	movsd -40(%rbp), %xmm0
-	movsd -48(%rbp), %xmm1
-	movsd -64(%rbp), %xmm2
-	movsd -72(%rbp), %xmm3
-	movsd -80(%rbp), %xmm4
-	movsd -88(%rbp), %xmm5
-	movsd -120(%rbp), %xmm6
-	movsd -128(%rbp), %xmm7
-	movl -192(%rbp), %eax
-	pushq %rax
-	movl -188(%rbp), %eax
-	pushq %rax
-	pushq -184(%rbp)
-	movl -176(%rbp), %eax
-	pushq %rax
-	pushq -168(%rbp)
-	pushq -152(%rbp)
-	call pass_parameters_3
-	addq $48, %rsp
-	movsd %xmm0, -200(%rbp)
-	cvttsd2sil %xmm0, -200(%rbp)
-	movl %r11d, -204(%rbp)
-	movl -204(%rbp), %eax
+	movsd -184(%rbp), %xmm15
+	addsd -128(%rbp), %xmm15
+	movsd %xmm15, -184(%rbp)
+	movsd -184(%rbp), %xmm15
+	comisd tmp.53(%rip), %xmm15
+	movl $0, -188(%rbp)
+	setNE -188(%rbp)
+	movl -188(%rbp), %r10d
+	movl %r10d, -192(%rbp)
+	cmpl $0, -192(%rbp)
+	jE .Ltmp.43
+	movl $4, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.43:
+	movl $0, %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
@@ -194,8 +208,4 @@ main:
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-	.data
-	.align 8
-ale:
-	.double 0.0
 	.section	.note.GNU-stack,"",@progbits

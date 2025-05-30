@@ -1,3 +1,36 @@
+ASM Program: [Static Constant: Alignment = 8 : tmp.14 = c_double(1.0), Static Constant: Alignment = 8 : tmp.15 = c_double(1.0), Static Constant: Alignment = 8 : tmp.16 = c_double(1.0), Static Constant: Alignment = 8 : tmp.17 = c_double(1.0), Static Constant: Alignment = 8 : tmp.18 = c_double(4.0), Function main stackOffset: -92 global: True 
+
+instructions:[AssType: 
+AssemblyType.DOUBLE Mov(Data(tmp.14), Stack(-8)), 
+AssType: AssemblyType.DOUBLE Mov(Data(tmp.15), Stack(-16)), 
+AssType: AssemblyType.DOUBLE Mov(Data(tmp.16), Stack(-24)), 
+AssType: AssemblyType.DOUBLE Mov(Data(tmp.17), Stack(-32)),
+
+AssType: AssemblyType.DOUBLE Mov(Stack(-8), Stack(-40)), 
+
+AssType: AssemblyType.DOUBLE Binary(Add, Stack(-16), Stack(-40)), 
+
+AssType: AssemblyType.DOUBLE Mov(Stack(-40), Stack(-48)), AssType: 
+AssemblyType.DOUBLE Binary(Add, Stack(-24), Stack(-48)), 
+
+AssType: AssemblyType.DOUBLE Mov(Stack(-48), Stack(-56)), 
+AssType: AssemblyType.DOUBLE Binary(Add, Stack(-32), Stack(-56)), 
+
+AssType: AssemblyType.DOUBLE Cmp(Data(tmp.18), Stack(-56)), AssType: AssemblyType.LONGWORD Mov(Imm(0), Stack(-60)), SetCC(ConcCodeTypeUnsigned.NE, Stack(-60)), AssType: AssemblyType.LONGWORD Mov(Stack(-60), Stack(-64)), AssType: AssemblyType.LONGWORD Cmp(Imm(0), Stack(-64)), JmpCC(ConcCodeType.E, tmp.9), AssType: AssemblyType.DOUBLE Mov(Stack(-8), Stack(-72)), AssType: AssemblyType.DOUBLE Binary(Add, Stack(-16), Stack(-72)), AssType: AssemblyType.DOUBLE Mov(Stack(-72), Stack(-80)), AssType: AssemblyType.DOUBLE Binary(Add, Stack(-24), Stack(-80)), AssType: AssemblyType.DOUBLE Mov(Stack(-80), Stack(-88)), AssType: AssemblyType.DOUBLE Binary(Add, Stack(-32), Stack(-88)), AssType: AssemblyType.LONGWORD Cvttsd2si(Stack(-88), Stack(-92)), AssType: AssemblyType.LONGWORD Mov(Stack(-92), Reg(AX)), ret, Label(tmp.9), AssType: AssemblyType.LONGWORD Mov(Imm(0), Reg(AX)), ret]]
+
+
+
+
+
+
+
+
+
+ASM Program: [Static Constant: Alignment = 8 : tmp.50 = c_double(1.0), Function pass_parameters_3 stackOffset: -136 global: True instructions:[AssType: AssemblyType.QUADWORD Binary(Sub, Imm(144), Reg(SP)), AssType: AssemblyType.LONGWORD Mov(Reg(DI), Stack(-4)), AssType: AssemblyType.LONGWORD Mov(Reg(SI), Stack(-8)), AssType: AssemblyType.QUADWORD Mov(Reg(DX), Stack(-16)), AssType: AssemblyType.QUADWORD Mov(Reg(CX), Stack(-24)), AssType: AssemblyType.LONGWORD Mov(Reg(R8d), Stack(-28)), AssType: AssemblyType.LONGWORD Mov(Reg(R9d), Stack(-32)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM0), Stack(-40)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM1), Stack(-48)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM2), Stack(-56)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM3), Stack(-64)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM4), Stack(-72)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM5), Stack(-80)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM6), Stack(-88)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM7), Stack(-96)), AssType: AssemblyType.DOUBLE Mov(Stack(16), Reg(XMM14)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM14), Stack(-104)), AssType: AssemblyType.DOUBLE Mov(Stack(24), Reg(XMM14)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM14), Stack(-112)), AssType: AssemblyType.LONGWORD Mov(Stack(32), Reg(R10d)), AssType: AssemblyType.LONGWORD Mov(Reg(R10d), Stack(-116)), AssType: AssemblyType.DOUBLE Mov(Stack(40), Reg(XMM14)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM14), Stack(-128)), AssType: AssemblyType.LONGWORD Mov(Stack(48), Reg(R10d)), AssType: AssemblyType.LONGWORD Mov(Reg(R10d), Stack(-132)), AssType: AssemblyType.LONGWORD Mov(Stack(56), Reg(R10d)), AssType: AssemblyType.LONGWORD Mov(Reg(R10d), Stack(-136)), AssType: AssemblyType.DOUBLE Mov(Data(tmp.50), Reg(XMM0)), ret, AssType: AssemblyType.LONGWORD Mov(Imm(0), Reg(AX)), ret], Static Constant: Alignment = 8 : tmp.53 = c_double(3.0), Static Constant: Alignment = 8 : tmp.54 = c_double(2.0), Static Constant: Alignment = 8 : tmp.55 = c_double(3.0), Static Constant: Alignment = 8 : tmp.56 = c_double(4.0), Static Constant: Alignment = 8 : tmp.57 = c_double(5.0), Static Constant: Alignment = 8 : tmp.58 = c_double(6.0), Static Constant: Alignment = 8 : tmp.59 = c_double(6.0), Static Constant: Alignment = 8 : tmp.60 = c_double(7.0), Static Constant: Alignment = 8 : tmp.61 = c_double(8.0), Static Constant: Alignment = 8 : tmp.62 = c_double(9.0), Static Constant: Alignment = 8 : tmp.63 = c_double(10.0), Function main stackOffset: -212 global: True instructions:[AssType: AssemblyType.QUADWORD Binary(Sub, Imm(224), Reg(SP)), AssType: AssemblyType.QUADWORD Mov(Imm(2), Reg(R11d)), AssType: AssemblyType.QUADWORD Cmp(Imm(0), Reg(R11d)), JmpCC(ConcCodeType.L, tmp.51), AssType: AssemblyType.QUADWORD Mov(Imm(2), Reg(R10d)), AssType: AssemblyType.QUADWORD Cvtsi2sd(Reg(R10d), Reg(XMM15)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM15), Stack(-8)), Jmp(tmp.52), Label(tmp.51), AssType: AssemblyType.QUADWORD Mov(Imm(2), Reg(AX)), AssType: AssemblyType.QUADWORD Mov(Reg(AX), Reg(DX)), AssType: AssemblyType.QUADWORD Unary(Shr, Reg(DX)), AssType: AssemblyType.QUADWORD Binary(And, Imm(1), Reg(AX)), AssType: AssemblyType.QUADWORD Binary(Or, Reg(AX), Reg(DX)), AssType: AssemblyType.QUADWORD Cvtsi2sd(Reg(DX), Reg(XMM15)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM15), Stack(-8)), AssType: AssemblyType.DOUBLE Mov(Stack(-8), Reg(XMM15)), AssType: AssemblyType.DOUBLE Binary(Add, Stack(-8), Reg(XMM15)), Label(tmp.52), AssType: AssemblyType.DOUBLE Mov(Stack(-8), Reg(XMM14)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM14), Stack(-16)), AssType: AssemblyType.DOUBLE Mov(Data(tmp.53), Reg(XMM14)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM14), Stack(-24)), AssType: AssemblyType.DOUBLE Mov(Stack(-16), Reg(XMM15)), AssType: AssemblyType.DOUBLE Cmp(Stack(-24), Reg(XMM15)), AssType: AssemblyType.LONGWORD Mov(Imm(0), Stack(-28)), SetCC(ConcCodeTypeUnsigned.A, Stack(-28)), AssType: AssemblyType.LONGWORD Cvtsi2sd(Stack(-28), Reg(XMM15)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM15), Stack(-40)), AssType: AssemblyType.DOUBLE Mov(Stack(-40), Reg(XMM14)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM14), Stack(-48)), AssType: AssemblyType.DOUBLE Mov(Data(tmp.54), Reg(XMM14)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM14), Stack(-56)), AssType: AssemblyType.LONGWORD Mov(Imm(101), Stack(-60)), AssType: AssemblyType.DOUBLE Mov(Data(tmp.55), Reg(XMM14)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM14), Stack(-72)), AssType: AssemblyType.DOUBLE Mov(Data(tmp.56), Reg(XMM14)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM14), Stack(-80)), AssType: AssemblyType.DOUBLE Mov(Data(tmp.57), Reg(XMM14)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM14), Stack(-88)), AssType: AssemblyType.DOUBLE Mov(Data(tmp.58), Reg(XMM14)), AssType: AssemblyType.DOUBLE Mov(Reg(XMM14), Stack(-96)), AssType: AssemblyType.LONGWORD Mov(Imm(104), Stack(-100)), AssType: AssemblyType.LONGWORD Mov(Stack(-100), Reg(R10d)), AssType: AssemblyType.LONGWORD Mov(Reg(R10d), Stack(-104)), AssType: AssemblyType.LONGWORD Mov(Imm(202), Reg(R10d)), MovSX(Reg(R10d), Reg(R11d)),
+
+
+
+
 IntArgs: [(Pseudo(i1.2), AssemblyType.LONGWORD), (Pseudo(i2.7), AssemblyType.LONGWORD), (Pseudo(i3.8), AssemblyType.QUADWORD), (Pseudo(i4.11), AssemblyType.QUADWORD), (Pseudo(i5.13), AssemblyType.LONGWORD), (Pseudo(i6.15), AssemblyType.LONGWORD)]
 
 DoubleArgs: [Pseudo(d1.0), Pseudo(d2.1), Pseudo(d3.3), Pseudo(d4.4), Pseudo(d5.5), Pseudo(d6.6), Pseudo(d7.9), Pseudo(d8.10)]

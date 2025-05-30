@@ -254,19 +254,26 @@ def FixingUpTopLevel(topLevel):
                                 if op.operator == assemblyGenerator.BinopType.Add or op.operator == assemblyGenerator.BinopType.Sub or op.operator == assemblyGenerator.BinopType.Mult or op.operator == assemblyGenerator.BinopType.DivDouble or op.operator == assemblyGenerator.BinopType.Xor:   
 
                                     if type(dst) != assemblyGenerator.RegisterOperand:
-                                        print("Ale:", assType.type)
+                                        #print("Ale:", assType.type)
                                         
                                         instruction0 = assemblyGenerator.MovInstruction(assType, i.dest, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.SSERegisterType.XMM15)))
 
                                         i.dest = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.SSERegisterType.XMM15))
 
+                                        instruction1 = assemblyGenerator.MovInstruction(assType, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.SSERegisterType.XMM15)), dst)
+
+
                                         newList.append(instruction0)
                                         newList.append(i)
+                                        newList.append(instruction1)
 
                                 elif op.operator == assemblyGenerator.BinopType.And or op.operator == assemblyGenerator.BinopType.Or:
 
                                     if (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.DataOperand):
-                                            
+                                        
+                                        #Mov src, reg
+                                        #and  reg, dst
+                                        
                                         instruction = assemblyGenerator.MovInstruction(assType, i.src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.SSERegisterType.XMM14)))
 
                                         i.src = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.SSERegisterType.XMM14))
