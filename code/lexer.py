@@ -53,6 +53,8 @@ class TokenType(Enum):
     ULONG_CONSTANT = 46
     DOUBLE_CONSTANT = 47
     DOUBLE_KW = 48
+    AMPERSAND = 49
+
 
 def Lex(buffer, iFile):
     tokenList = []
@@ -217,11 +219,15 @@ def Lex(buffer, iFile):
             continue
             #print(buffer)
         
-        is_char = r"[,?:=><!%/*+(){};~-]"
+        is_char = r"[&,?:=><!%/*+(){};~-]"
         char = re.match(is_char, buffer)
         if char:
             #print(char)
             match char.group():
+                
+                case "&":
+                    tokenList.append(("&", TokenType.AMPERSAND, LineNumber))
+
                 case ",":
                     tokenList.append((",", TokenType.COMMA, LineNumber))
                 case "?":

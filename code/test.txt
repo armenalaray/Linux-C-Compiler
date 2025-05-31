@@ -1,3 +1,11 @@
+Type derivations
+
+
+
+
+
+
+
 ASM Program: [Static Constant: Alignment = 8 : tmp.14 = c_double(1.0), Static Constant: Alignment = 8 : tmp.15 = c_double(1.0), Static Constant: Alignment = 8 : tmp.16 = c_double(1.0), Static Constant: Alignment = 8 : tmp.17 = c_double(1.0), Static Constant: Alignment = 8 : tmp.18 = c_double(4.0), Function main stackOffset: -92 global: True 
 
 instructions:[AssType: 

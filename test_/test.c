@@ -1,21 +1,40 @@
-int non_zero(double d) {
-    return !d;
-}
+int main(void)
+{
+    //this is an array of pointers
+    //int *(arr[3]);
 
-double multiply_by_large_num(double d) {
-    return d * 2e20;
-}
+    //this is a pointer to an array
+    //int (*arr)[3];
 
-int main(void) {
 
-    /* Make sure subnormal numbers are not rounded to zero */
-    double subnormal = 2.5e-320;
+    int *null_ptr = 0;
+    int *ptr2 = &*null_ptr;
 
-    /* Perform an operation on a subnormal number to produce a normal number */
-    if (multiply_by_large_num(subnormal) != 4.99994433591341498562e-300) {
-        return 2;
-    }
 
-    // subnormal is non-zero, so !subnormal should be zero
-    return non_zero(subnormal);
+    int *ptr = &var;
+    int *ptr2 = &*ptr;
+
+
+    double negative_zero = -0.0;
+    double *d = &negative_zero;
+    unsigned long *l = (unsigned long *)d;
+
+    int x = 0;
+    int *ptr = x;
+
+    //int *ptr2 = (int *)0x7ffeee67b938;
+
+    int *null = -1;
+
+    double b = *null;
+
+    int x = 0;
+
+    // 0x7ffeee67b938
+    // 0x7ffeee67b938
+    int *ptr = &x;
+
+    *ptr = 4;
+
+    return *ptr;
 }

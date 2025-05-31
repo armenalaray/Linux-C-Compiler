@@ -256,6 +256,10 @@ class DoubleType(Type, Node):
     
     def printNode(self, level):
         return "double"
+
+class PointerType(Type, Node):
+    def __init__(self, referenceType):
+        self.referenceType = referenceType
     
 
 class FunType(Type, Node):
@@ -514,6 +518,16 @@ class Expression:
     def __repr__(self):
         return self.__str__()
     
+class Dereference(Expression, Node):
+    def __init__(self, exp):
+        self.exp = exp
+    
+
+#&
+class AddrOf(Expression, Node):
+    def __init__(self, exp):
+        self.exp = exp
+        
 
 class Null_Expression(Expression):
     pass
@@ -926,6 +940,8 @@ def parseUnop(tokenList):
                 return UnaryOperator(UnopType.COMPLEMENT)
             case TokenType.EXCLAMATION:
                 return UnaryOperator(UnopType.NOT)
+            #case TokenType.AMPERSAND:
+            #    return UnaryOperator(UnopType.)
             case _:
                 print("Syntax Error Expected an Unary Operator but: {0} at Line {1}".format(actual[0], actual[2]))
                 sys.exit(1)            
@@ -1035,7 +1051,7 @@ def parseFactor(tokenList):
         return FunctionCall_Exp(iden, expList)
 
 
-
+    #Aqui se usa el primero
     token = peek(tokenList)
 
     if isConstant(token):
@@ -1046,6 +1062,16 @@ def parseFactor(tokenList):
     elif token[1] == TokenType.IDENTIFIER:
         id = parseIdentifier(tokenList)
         return Var_Expression(id)
+
+    elif token[1] == TokenType.ASTERISK:
+        takeToken(tokenList)
+        inner_exp = parseFactor(tokenList)
+        return Dereference(inner_exp)
+    
+    elif token[1] == TokenType.AMPERSAND:
+        takeToken(tokenList)
+        inner_exp = parseFactor(tokenList)
+        return AddrOf(inner_exp)
 
     elif token[1] == TokenType.TILDE or token[1] == TokenType.HYPHEN or token[1] == TokenType.EXCLAMATION:
         operator = parseUnop(tokenList)
@@ -1355,6 +1381,47 @@ def isSpecifier(token):
         return True
     return False
 
+def parseSimpleDeclarator(tokenList):
+    token = peek(tokenList)
+
+    if token[1] == TokenType.IDENTIFIER:
+        token = takeToken(tokenList)
+        return Ident(token[0])
+        
+    if token[1] == TokenType.OPEN_PAREN:
+        token = takeToken(tokenList)
+        declarator = parseDeclarator(tokenList)
+        expect(TokenType.CLOSE_PAREN, tokenList)
+        return declarator
+        
+    print("Error: Invalid Simple Declarator.")
+    sys.exit(1)
+
+def parseDirectDeclarator(tokenList):
+
+    sDeclarator = parseSimpleDeclarator(tokenList)
+    
+    token = peek(tokenList)
+
+    if token[1] == TokenType.OPEN_PAREN:
+        paramInfos = parseParamList(tokenList) 
+        return FunDeclarator(paramInfos, sDeclarator)
+    
+    return sDeclarator
+
+    
+
+def parseDeclarator(tokenList):
+    token = peek(tokenList)
+
+    if token[1] == TokenType.ASTERISK:
+        takeToken(tokenList)
+        declarator = parseDeclarator(tokenList)
+        return PointerDeclarator(declarator)
+    
+    return parseDirectDeclarator(tokenList)
+
+
 def parseDeclaration(tokenList):
     #we are not parsing the type
 
@@ -1369,6 +1436,12 @@ def parseDeclaration(tokenList):
         
     #print(specifierList)
     type, storageClass = parseTypeAndStorageClass(specifierList)
+
+    declarator = parseDeclarator(tokenList)
+
+    print(declarator)
+    
+    name, declType, params = processDeclarator(declarator, type)
 
     token = peek(tokenList, 1)
 
@@ -1426,7 +1499,7 @@ def isTypeSpecifier(token):
     
     return False
 
-def parseParamList(tokenList):
+def parseParamList_(tokenList):
     paramNames = []
     paramTypes = []
 
@@ -1472,9 +1545,52 @@ def parseParamList(tokenList):
 
         token = peek(tokenList)
 
-    #print(paramTypes)
+    
 
     return paramTypes, paramNames
+
+def parseParam(tokenList):
+    types = []
+    while isTypeSpecifier(token):
+        types.append(takeToken(tokenList))
+        token = peek(tokenList)
+
+    type = parseTypes(types)
+    paramTypes.append(type)
+
+    declarator = parseDeclarator(tokenList)
+
+    return Param(type, declarator)
+    
+
+def parseParamList(tokenList):
+    paramList = []
+
+    expect(TokenType.OPEN_PAREN, tokenList)
+
+    token = peek(tokenList)
+
+    if token[1] == TokenType.VOID_KW:
+        takeToken(tokenList)
+        expect(TokenType.CLOSE_PAREN, tokenList)
+        return paramList
+
+    param = parseParam(tokenList)    
+    paramList.append(param)
+
+    token = peek(tokenList)
+
+    while token[1] == TokenType.COMMA:
+        takeToken(tokenList)
+        
+        param = parseParam(tokenList)
+        paramList.append(param)
+        token = peek(tokenList)
+
+    expect(TokenType.CLOSE_PAREN, tokenList)
+
+    return paramTypes, paramNames
+
     
 def parseVarDecl(tokenList, type, storageClass):
 
@@ -1518,6 +1634,32 @@ def parseFunctionDecl(tokenList, retType, storageClass):
 
     funType = FunType(paramTypes, retType)
     return FunctionDecl(iden, funType, paramNames, block, storageClass)
+
+class Declarator:
+    pass
+
+class Ident(Declarator):
+    def __init__(self, identifier):
+        self.identifier = identifier
+
+class PointerDeclarator(Declarator):
+    def __init__(self, declarator):
+        self.declarator = declarator
+
+class FunDeclarator(Declarator):
+    def __init__(self, paramInfoList, declarator):
+        self.paramInfoList = paramInfoList
+        self.declarator = declarator
+
+class ParamInfo():
+    pass
+
+class Param(ParamInfo):
+    def __init__(self, type, declarator):
+        self.type = type
+        self.declarator = declarator
+    
+
 
 def parseProgram(tokenList):
     

@@ -1,86 +1,82 @@
-	.globl non_zero
-	.text
-non_zero:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movsd %xmm0, -8(%rbp)
-	xorpd %xmm0, %xmm0
-	comisd -8(%rbp), %xmm0
-	movl $0, -12(%rbp)
-	setE -12(%rbp)
-	movl -12(%rbp), %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
 	.section .rodata
 	.align 8
-tmp.12:
-	.double 2e+20
-	.globl multiply_by_large_num
-	.text
-multiply_by_large_num:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movsd %xmm0, -8(%rbp)
-	movsd -8(%rbp), %xmm14
-	movsd %xmm14, -16(%rbp)
-	movsd -16(%rbp), %xmm15
-	mulsd tmp.12(%rip), %xmm15
-	movsd %xmm15, -16(%rbp)
-	movsd -16(%rbp), %xmm0
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
+tmp.20:
+	.double 5.0
 	.section .rodata
 	.align 8
-tmp.13:
-	.double 2.5e-320
+tmp.21:
+	.double 1e+22
 	.section .rodata
 	.align 8
-tmp.14:
-	.double 4.999944335913415e-300
+tmp.22:
+	.double 4000000.0
+	.section .rodata
+	.align 8
+tmp.23:
+	.double 9.2e+74
+	.section .rodata
+	.align 8
+tmp.24:
+	.double 5.0000000000000004e+22
+	.section .rodata
+	.align 8
+tmp.25:
+	.double 2.944e+76
 	.globl main
 	.text
 main:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $48, %rsp
-	movsd tmp.13(%rip), %xmm14
+	subq $96, %rsp
+	movsd tmp.20(%rip), %xmm14
 	movsd %xmm14, -8(%rbp)
-	movsd -8(%rbp), %xmm14
+	movsd tmp.21(%rip), %xmm14
 	movsd %xmm14, -16(%rbp)
-	movsd -16(%rbp), %xmm0
-	call multiply_by_large_num
-	movsd %xmm0, -24(%rbp)
-	movsd -24(%rbp), %xmm15
-	comisd tmp.14(%rip), %xmm15
-	movl $0, -28(%rbp)
-	setNE -28(%rbp)
-	movl -28(%rbp), %r10d
-	movl %r10d, -32(%rbp)
-	cmpl $0, -32(%rbp)
-	jE .Ltmp.9
+	movsd tmp.22(%rip), %xmm14
+	movsd %xmm14, -24(%rbp)
+	movsd -8(%rbp), %xmm0
+	movsd -16(%rbp), %xmm1
+	movsd -24(%rbp), %xmm2
+	call fma
+	movsd %xmm0, -32(%rbp)
+	movsd -32(%rbp), %xmm14
+	movsd %xmm14, -40(%rbp)
+	movsd tmp.23(%rip), %xmm14
+	movsd %xmm14, -48(%rbp)
+	movl $5, -52(%rbp)
+	movl -52(%rbp), %edi
+	movsd -48(%rbp), %xmm0
+	call ldexp
+	movsd %xmm0, -64(%rbp)
+	movsd -64(%rbp), %xmm14
+	movsd %xmm14, -72(%rbp)
+	movsd -40(%rbp), %xmm15
+	comisd tmp.24(%rip), %xmm15
+	movl $0, -76(%rbp)
+	setNE -76(%rbp)
+	movl -76(%rbp), %r10d
+	movl %r10d, -80(%rbp)
+	cmpl $0, -80(%rbp)
+	jE .Ltmp.16
+	movl $1, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.16:
+	movsd -72(%rbp), %xmm15
+	comisd tmp.25(%rip), %xmm15
+	movl $0, -84(%rbp)
+	setNE -84(%rbp)
+	movl -84(%rbp), %r10d
+	movl %r10d, -88(%rbp)
+	cmpl $0, -88(%rbp)
+	jE .Ltmp.19
 	movl $2, %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-.Ltmp.9:
-	movsd -8(%rbp), %xmm14
-	movsd %xmm14, -40(%rbp)
-	movsd -40(%rbp), %xmm0
-	call non_zero
-	movl %eax, -44(%rbp)
-	movl -44(%rbp), %eax
+.Ltmp.19:
+	movl $0, %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
