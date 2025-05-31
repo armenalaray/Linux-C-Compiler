@@ -1,4 +1,4 @@
-int main(void)
+int ** main(int ** a, double ***** b)
 {
     //this is an array of pointers
     //int *(arr[3]);

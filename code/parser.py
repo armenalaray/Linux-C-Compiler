@@ -1439,8 +1439,8 @@ def parseDeclaration(tokenList):
 
     declarator = parseDeclarator(tokenList)
 
-    print(declarator)
-    
+    print(type, declarator)
+
     name, declType, params = processDeclarator(declarator, type)
 
     token = peek(tokenList, 1)
@@ -1551,13 +1551,13 @@ def parseParamList_(tokenList):
 
 def parseParam(tokenList):
     types = []
+    
+    token = peek(tokenList)
     while isTypeSpecifier(token):
         types.append(takeToken(tokenList))
         token = peek(tokenList)
 
     type = parseTypes(types)
-    paramTypes.append(type)
-
     declarator = parseDeclarator(tokenList)
 
     return Param(type, declarator)
@@ -1589,7 +1589,7 @@ def parseParamList(tokenList):
 
     expect(TokenType.CLOSE_PAREN, tokenList)
 
-    return paramTypes, paramNames
+    return paramList
 
     
 def parseVarDecl(tokenList, type, storageClass):
@@ -1641,15 +1641,24 @@ class Declarator:
 class Ident(Declarator):
     def __init__(self, identifier):
         self.identifier = identifier
+    
+    def __str__(self):
+        return "(IdenDeclarator: {self.identifier})".format(self=self)
 
 class PointerDeclarator(Declarator):
     def __init__(self, declarator):
         self.declarator = declarator
 
+    def __str__(self):
+        return "(PointerDeclarator: {self.declarator})".format(self=self)
+
 class FunDeclarator(Declarator):
     def __init__(self, paramInfoList, declarator):
         self.paramInfoList = paramInfoList
         self.declarator = declarator
+    
+    def __str__(self):
+        return "(FunDeclarator: {self.declarator} {self.paramInfoList})".format(self=self)
 
 class ParamInfo():
     pass
@@ -1658,6 +1667,12 @@ class Param(ParamInfo):
     def __init__(self, type, declarator):
         self.type = type
         self.declarator = declarator
+    
+    def __str__(self):
+        return "{self.type} {self.declarator}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
     
 
 
