@@ -17,24 +17,26 @@ int ** main(int ** a, double ***** b)
 
     double negative_zero = -0.0;
     double *d = &negative_zero;
+    /*
     unsigned long *l = (unsigned long *)d;
-
+    
     int x = 0;
     int *ptr = x;
-
+    
     //int *ptr2 = (int *)0x7ffeee67b938;
-
+    
     int *null = -1;
-
+    
     double b = *null;
-
+    
     int x = 0;
-
+    
     // 0x7ffeee67b938
     // 0x7ffeee67b938
     int *ptr = &x;
-
+    
     *ptr = 4;
-
+    
     return *ptr;
+    */
 }

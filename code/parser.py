@@ -261,6 +261,14 @@ class PointerType(Type, Node):
     def __init__(self, referenceType):
         self.referenceType = referenceType
     
+    def __str__(self):
+        return "pointer to {self.referenceType}".format(self=self)
+    
+    def printNode(self, level):
+        output = "pointer to "
+        output += self.referenceType.printNode(level)
+        return output
+        
 
 class FunType(Type, Node):
     def __init__(self, paramTypes, retType):
@@ -1422,8 +1430,39 @@ def parseDeclarator(tokenList):
     return parseDirectDeclarator(tokenList)
 
 
+def processDeclarator(declarator, baseType):
+    match declarator:
+        case Ident(identifier=id):
+            return id, baseType, []
+        
+        case PointerDeclarator(declarator = declarator):
+            derivedType = PointerType(baseType)
+            return processDeclarator(declarator, derivedType)
+            
+        case FunDeclarator(paramInfoList = paramInfoList, declarator = declarator):
+            
+            match declarator:
+                case Ident(identifier=id):
+                    paramNames = []
+                    paramTypes = []
+                    for param in paramInfoList:
+                        paramName, paramType, _ = processDeclarator(param.declarator, param.type)
+                        if type(paramType) == FunType:
+                            print("Error: Function pointers in parameters are not supported.")
+                            sys.exit(1)
+
+                        paramTypes.append(paramType)
+                        paramNames.append(paramName)
+                    
+                    fType = FunType(paramTypes, baseType)
+                    return id, fType, paramNames
+
+                case _:
+                    print("Error: Can't apply additional type derivations to a function type.")
+                    sys.exit(1)
+            
+
 def parseDeclaration(tokenList):
-    #we are not parsing the type
 
     token = peek(tokenList)
     if isSpecifier(token) == False:
@@ -1434,22 +1473,19 @@ def parseDeclaration(tokenList):
         specifierList.append(takeToken(tokenList))
         token = peek(tokenList)
         
-    #print(specifierList)
-    type, storageClass = parseTypeAndStorageClass(specifierList)
+    baseType, storageClass = parseTypeAndStorageClass(specifierList)
 
     declarator = parseDeclarator(tokenList)
 
     print(type, declarator)
 
-    name, declType, params = processDeclarator(declarator, type)
+    name, declType, params = processDeclarator(declarator, baseType)
 
-    token = peek(tokenList, 1)
-
-    if token[1] == TokenType.OPEN_PAREN:
-        f = parseFunctionDecl(tokenList, type, storageClass)
+    if type(declType) == FunType:
+        f = parseFunctionDecl(tokenList, name, declType, params, storageClass)
         return True, FunDecl(f)
     else:
-        v = parseVarDecl(tokenList, type, storageClass)
+        v = parseVarDecl(tokenList, name, declType, storageClass)
         return True, VarDecl(v)
     
 
@@ -1592,11 +1628,11 @@ def parseParamList(tokenList):
     return paramList
 
     
-def parseVarDecl(tokenList, type, storageClass):
+def parseVarDecl(tokenList, name, type, storageClass):
 
     #expect(TokenType.INT_KW, tokenList)
 
-    id = parseIdentifier(tokenList)
+    #id = parseIdentifier(tokenList)
     
     token = peek(tokenList)
 
@@ -1606,22 +1642,10 @@ def parseVarDecl(tokenList, type, storageClass):
         exp = parseExp(tokenList, 0)
 
     expect(TokenType.SEMICOLON, tokenList)
-    return VariableDecl(id, type, exp, storageClass) 
+    return VariableDecl(name, type, exp, storageClass) 
 
 
-def parseFunctionDecl(tokenList, retType, storageClass):
-    
-    #expect(TokenType.INT_KW, tokenList)
-    
-    iden = parseIdentifier(tokenList)
-
-    expect(TokenType.OPEN_PAREN, tokenList)
-
-    paramTypes, paramNames = parseParamList(tokenList)
-
-    #print(paramTypes)
-    
-    expect(TokenType.CLOSE_PAREN, tokenList)
+def parseFunctionDecl(tokenList, name, type, params, storageClass):
 
     token = peek(tokenList)
 
@@ -1632,8 +1656,7 @@ def parseFunctionDecl(tokenList, retType, storageClass):
     else:
         block = parseBlock(tokenList)
 
-    funType = FunType(paramTypes, retType)
-    return FunctionDecl(iden, funType, paramNames, block, storageClass)
+    return FunctionDecl(name, type, params, block, storageClass)
 
 class Declarator:
     pass
