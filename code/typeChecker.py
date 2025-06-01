@@ -123,13 +123,77 @@ def getCommonType(type1, type2):
     else:
         return type2
 
-
+#se hace explicito!
 def convertTo(exp, resultType):
     if type(exp.retType) == type(resultType):
         return exp
     
     #print("Ale")
     return parser.Cast_Expression(resultType, exp, resultType)
+
+def isNullPointerConstant(exp):
+    match exp:
+        case parser.Constant_Expression(const = const):
+            match const:
+                case parser.ConstInt(int = int):
+                    if int == 0:
+                        return True
+                    
+                case parser.ConstLong(int = int):
+                    if int == 0:
+                        return True
+                    
+                case parser.ConstUInt(int = int):
+                    if int == 0:
+                        return True
+                    
+                case parser.ConstULong(int = int):
+                    if int == 0:
+                        return True
+        
+    return False
+
+
+def getCommonPointerType(exp1, exp2):
+    #si los dos son punteros regresas puntero
+
+    type1 = exp1.retType
+    type2 = exp2.retType
+
+    if type(type1) == type(type2):
+        return type1
+    elif isNullPointerConstant(exp1):
+        return type2
+    elif isNullPointerConstant(exp2):
+        return type1
+    
+    print("Error: Expressions have incompatible types.")
+    sys.exit(1)
+    
+
+def isArithmeticType(targetType):
+    if type(targetType) == parser.IntType or type(targetType) == parser.LongType or type(targetType) == parser.UIntType or type(targetType) == parser.ULongType or type(targetType) == parser.DoubleType:
+        return True
+    
+    return False
+    
+
+def convertByAssignment(exp, targetType):
+    expType = type(exp.retType)
+    
+    if expType == type(targetType):
+        return exp
+
+    if isArithmeticType(exp.retType) and isArithmeticType(targetType):
+        return convertTo(exp, targetType)
+
+    if isNullPointerConstant(exp) and type(targetType) == parser.PointerType:
+        return convertTo(exp, targetType)
+    
+    print("Error: Cannot convert type for assignment.")
+    sys.exit(1)
+
+    
 
 def typeCheckExpression(exp, symbolTable):
     match exp:
@@ -153,7 +217,9 @@ def typeCheckExpression(exp, symbolTable):
                         convertedArgs = []
                         for exp, targetType in zip(argumentList, paramTypes):
                             exp = typeCheckExpression(exp, symbolTable)
-                            exp = convertTo(exp, targetType)
+
+                            exp = convertByAssignment(exp, targetType)
+
                             convertedArgs.append(exp)
                         
                         print(convertedArgs)
@@ -201,12 +267,18 @@ def typeCheckExpression(exp, symbolTable):
             return parser.Var_Expression(id, symbolTable[id].type)
         
         case parser.Assignment_Expression(lvalue=lvalue, exp=exp):
-            l = typeCheckExpression(lvalue, symbolTable)
-            r = typeCheckExpression(exp, symbolTable)
+            if type(lvalue) == parser.Var_Expression or type(lvalue) == parser.Dereference:
 
-            r = convertTo(r, l.retType)
+                l = typeCheckExpression(lvalue, symbolTable)
+                r = typeCheckExpression(exp, symbolTable)
 
-            return parser.Assignment_Expression(l, r, l.retType)
+                r = convertByAssignment(r, l.retType)
+
+                return parser.Assignment_Expression(l, r, l.retType)
+            
+            else:
+                print("Error: Can't take the address of a non-lvalue.")
+                sys.exit(1)
 
         case parser.Constant_Expression(const=const):
             #print(type(const))
@@ -264,7 +336,12 @@ def typeCheckExpression(exp, symbolTable):
                 case parser.BinopType.OR:
                     return parser.Binary_Expression(op, l, r, parser.IntType())
             
-            commonType = getCommonType(l.retType, r.retType)
+            commonType = None
+
+            if type(l.retType) == parser.PointerType or type(r.retType) == parser.PointerType:
+                commonType = getCommonPointerType(l, r)
+            else:
+                commonType = getCommonType(l.retType, r.retType)
 
             l = convertTo(l, commonType)
             r = convertTo(r, commonType)
@@ -295,9 +372,12 @@ def typeCheckExpression(exp, symbolTable):
             thenExp = typeCheckExpression(thenExp, symbolTable)
             elseExp = typeCheckExpression(elseExp, symbolTable)
 
-            #print("thenExp: ", type(thenExp.retType), "elseExp: ", type(elseExp.retType))
+            commonType = None
 
-            commonType = getCommonType(thenExp.retType, elseExp.retType)
+            if type(thenExp.retType) == parser.PointerType or type(elseExp.retType) == parser.PointerType:
+                commonType = getCommonPointerType(thenExp, elseExp)
+            else:
+                commonType = getCommonType(thenExp.retType, elseExp.retType)
 
             thenExp = convertTo(thenExp, commonType)
             elseExp = convertTo(elseExp, commonType)
@@ -342,7 +422,11 @@ def AnnotateExpression(varDecl):
                 case parser.ConstLong(int = int):
 
                     varDecl.exp = parser.Constant_Expression(const, parser.LongType())
-                    exp = convertTo(varDecl.exp, varDecl.varType)
+                    
+                    exp = convertByAssignment(varDecl.exp, varDecl.varType)
+
+                    #exp = convertTo(varDecl.exp, varDecl.varType)
+
                     varDecl.exp = exp
                     
                     return GetStaticInitializer(varDecl.varType, int)                            
@@ -351,14 +435,18 @@ def AnnotateExpression(varDecl):
                     
                     #No lo tiene entonces lo agrega
                     varDecl.exp = parser.Constant_Expression(const, parser.IntType())
-                    exp = convertTo(varDecl.exp, varDecl.varType)
+
+                    exp = convertByAssignment(varDecl.exp, varDecl.varType)
+                    #exp = convertTo(varDecl.exp, varDecl.varType)
+
                     varDecl.exp = exp
 
                     return GetStaticInitializer(varDecl.varType, int)
 
                 case parser.ConstULong(int = int):
                     varDecl.exp = parser.Constant_Expression(const, parser.ULongType())
-                    exp = convertTo(varDecl.exp, varDecl.varType)
+                    exp = convertByAssignment(varDecl.exp, varDecl.varType)
+                    #exp = convertTo(varDecl.exp, varDecl.varType)
                     varDecl.exp = exp
 
                     return GetStaticInitializer(varDecl.varType, int)
@@ -366,14 +454,16 @@ def AnnotateExpression(varDecl):
 
                 case parser.ConstUInt(int = int):
                     varDecl.exp = parser.Constant_Expression(const, parser.UIntType())
-                    exp = convertTo(varDecl.exp, varDecl.varType)
+                    exp = convertByAssignment(varDecl.exp, varDecl.varType)
+                    #exp = convertTo(varDecl.exp, varDecl.varType)
                     varDecl.exp = exp
 
                     return GetStaticInitializer(varDecl.varType, int)
                 
                 case parser.ConstDouble(double=double):
                     varDecl.exp = parser.Constant_Expression(const, parser.DoubleType())
-                    exp = convertTo(varDecl.exp, varDecl.varType)
+                    exp = convertByAssignment(varDecl.exp, varDecl.varType)
+                    #exp = convertTo(varDecl.exp, varDecl.varType)
                     varDecl.exp = exp
 
                     return GetStaticInitializer(varDecl.varType, double)
@@ -488,7 +578,8 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
         
         if varDecl.exp:
             e = typeCheckExpression(varDecl.exp, symbolTable)
-            e = convertTo(e, varDecl.varType)
+            e = convertByAssignment(e, varDecl.varType)
+            #e = convertTo(e, varDecl.varType)
 
             return parser.VariableDecl(varDecl.identifier, varDecl.varType, e, varDecl.storageClass)
         
@@ -571,7 +662,10 @@ def typeCheckStatement(statement, symbolTable, functionParentName):
 
         case parser.ReturnStmt(expression=exp):
             e = typeCheckExpression(exp, symbolTable)
-            e = convertTo(e, symbolTable[functionParentName].type.retType)
+
+            e = convertByAssignment(e, symbolTable[functionParentName].type.retType)
+
+            #e = convertTo(e, symbolTable[functionParentName].type.retType)
 
             return parser.ReturnStmt(e)
             
