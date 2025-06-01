@@ -5,10 +5,11 @@ import parser
 def resolveExpression(exp, idMap):
     match exp:        
         case parser.Assignment_Expression(lvalue=lvalue, exp=exp):
-            #print(type(lvalue))
-            if type(lvalue) != parser.Var_Expression:
-                print("Invalid lvalue!")
-                sys.exit(1)
+            
+            #if type(lvalue) != parser.Var_Expression:
+            #    print("Invalid lvalue!")
+            #    sys.exit(1)
+            
             left = resolveExpression(lvalue, idMap)
             right = resolveExpression(exp, idMap)
             return parser.Assignment_Expression(left, right)
@@ -69,6 +70,14 @@ def resolveExpression(exp, idMap):
             e = resolveExpression(elseExp, idMap)
 
             return parser.Conditional_Expression(c, t, e)
+        
+        case parser.AddrOf(exp = exp):
+            e = resolveExpression(exp, idMap)
+            return parser.AddrOf(e)
+
+        case parser.Dereference(exp = exp):
+            e = resolveExpression(exp, idMap)
+            return parser.Dereference(e)            
 
         case _:
             #print(type(exp))

@@ -5,7 +5,7 @@
 
 
 
-lastStage="--parse"
+lastStage="--validate"
 #noLink="-c"
 library="-lmath.h"
 

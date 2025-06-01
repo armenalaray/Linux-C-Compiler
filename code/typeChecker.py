@@ -133,6 +133,7 @@ def convertTo(exp, resultType):
 
 def typeCheckExpression(exp, symbolTable):
     match exp:
+
         case parser.FunctionCall_Exp(identifier=id, argumentList = argumentList):
             
             ## NEW CODE
@@ -164,7 +165,30 @@ def typeCheckExpression(exp, symbolTable):
                 case _:
                     print("Error: Variable {0} used as function name.".format(id))
                     sys.exit(1)
-                    
+
+        case parser.Dereference(exp = exp):
+            typedInner = typeCheckExpression(exp, symbolTable)
+            
+            match typedInner.retType:
+                case parser.PointerType(referenceType = referenceType):
+                    return parser.Dereference(typedInner, referenceType)
+
+                case _:
+                    print("Error: Cannot derefence a non-pointer.")
+                    sys.exit(1)
+
+        case parser.AddrOf(exp = exp):
+
+            if type(exp) == parser.Var_Expression or type(exp) == parser.Dereference:
+
+                typedInner = typeCheckExpression(exp, symbolTable)
+                retType = parser.PointerType(typedInner.retType)
+                return parser.AddrOf(typedInner, retType)
+
+            else:
+                print("Error: Can't take the address of a non-lvalue.")
+                sys.exit(1)
+
         case parser.Cast_Expression(targetType = targetType, exp = exp):
             e = typeCheckExpression(exp, symbolTable)
             return parser.Cast_Expression(targetType, e, targetType)
@@ -281,8 +305,7 @@ def typeCheckExpression(exp, symbolTable):
             return parser.Conditional_Expression(condExp, thenExp, elseExp, commonType)
 
         case _:
-            print(type(exp))
-            print("Invalid expression type.")
+            print("Invalid expression type. {0}".format(type(exp)))
             sys.exit(1)
 
 
@@ -302,6 +325,9 @@ def GetStaticInitializer(varType, int):
 
         case parser.DoubleType():
             return Initial(DoubleInit(int))
+
+        case parser.PointerType():
+            pass
 
         case _:
             print("Error: Invalid Variable Type. {0}".format(varType))

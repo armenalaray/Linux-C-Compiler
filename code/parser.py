@@ -527,29 +527,39 @@ class Expression:
         return self.__str__()
     
 class Dereference(Expression, Node):
-    def __init__(self, exp):
+    def __init__(self, exp, retType = None):
         self.exp = exp
+        self.retType = retType
     
     def __str__(self):
-        return "*{self.exp}".format(self=self)
+        return "*{self.exp} RetType: {self.retType}".format(self=self)
     
     def printNode(self, level):
         output = "(*"
         output += self.exp.printNode(level)
+
+        if self.retType:
+            output +=  ' : ' + self.retType.printNode(level)
+
         output += ")"
         return output
 
 #&
 class AddrOf(Expression, Node):
-    def __init__(self, exp):
+    def __init__(self, exp, retType = None):
         self.exp = exp
+        self.retType = retType
     
     def __str__(self):
-        return "&{self.exp}".format(self=self)
+        return "&{self.exp} RetType: {self.retType}".format(self=self)
     
     def printNode(self, level):
         output = "(&"
         output += self.exp.printNode(level)
+
+        if self.retType:
+            output +=  ' : ' + self.retType.printNode(level)
+
         output += ")"
         return output
 
