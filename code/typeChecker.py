@@ -443,7 +443,7 @@ def GetStaticInitializer(varType, int):
             return Initial(DoubleInit(int))
 
         case parser.PointerType():
-            pass
+            return Initial(ULongInit(int))
 
         case _:
             print("Error: Invalid Variable Type. {0}".format(varType))
