@@ -530,12 +530,28 @@ class Dereference(Expression, Node):
     def __init__(self, exp):
         self.exp = exp
     
+    def __str__(self):
+        return "*{self.exp}".format(self=self)
+    
+    def printNode(self, level):
+        output = "(*"
+        output += self.exp.printNode(level)
+        output += ")"
+        return output
 
 #&
 class AddrOf(Expression, Node):
     def __init__(self, exp):
         self.exp = exp
-        
+    
+    def __str__(self):
+        return "&{self.exp}".format(self=self)
+    
+    def printNode(self, level):
+        output = "(&"
+        output += self.exp.printNode(level)
+        output += ")"
+        return output
 
 class Null_Expression(Expression):
     pass
@@ -1017,6 +1033,72 @@ def isConstant(token):
     return False
     
 
+class AbstractDeclarator:
+    pass
+
+class AbstractPointer(AbstractDeclarator, Node):
+    def __init__(self, abstractD):
+        self.abstractD = abstractD
+    
+    def __str__(self):
+        return "Pointer to {self.abstractD}".format(self=self)
+
+class AbstractBase(AbstractDeclarator, Node):
+    pass
+
+    def __str__(self):
+        return "".format(self=self)
+
+
+def parseDirectAbstractDeclarator(tokenList):
+    token = peek(tokenList)
+
+    if token[1] == TokenType.OPEN_PAREN:
+        takeToken(tokenList)
+        abstractD = parseAbstractDeclarator(tokenList)
+        expect(TokenType.CLOSE_PAREN, tokenList)
+        return abstractD
+
+    print("Error: Invalid Direct Abstract Declaration.")
+    sys.exit(1)
+    
+        
+
+def parseAbstractDeclarator(tokenList):
+    token = peek(tokenList)
+
+    if token[1] == TokenType.ASTERISK:
+        takeToken(tokenList)
+
+        token = peek(tokenList)
+
+        if token[1] == TokenType.ASTERISK or token[1] == TokenType.OPEN_PAREN:
+            abstractD = parseAbstractDeclarator(tokenList)
+            return AbstractPointer(abstractD)
+        
+        return AbstractPointer(AbstractBase())
+
+    return parseDirectAbstractDeclarator(tokenList)
+
+    #direct abstract declarator
+    if token[1] == TokenType.OPEN_PAREN:
+        takeToken(tokenList)
+        abstractD = parseAbstractDeclarator(tokenList)
+        expect(TokenType.CLOSE_PAREN, tokenList)
+        return abstractD
+
+def processAbstractDeclarator(abstractD, baseType):
+    match abstractD:
+        case AbstractBase():
+            return baseType
+
+        case AbstractPointer(abstractD = abstractD):
+            derivedType = PointerType(baseType)
+            return processAbstractDeclarator(abstractD, derivedType)
+            
+
+    
+
 def parseFactor(tokenList):
 
     token = peek(tokenList, 1)
@@ -1036,6 +1118,17 @@ def parseFactor(tokenList):
             token = peek(tokenList)
 
         type = parseTypes(types)
+
+        token = peek(tokenList)
+
+        if token[1] == TokenType.ASTERISK or token[1] == TokenType.OPEN_PAREN:
+
+            abstractD = parseAbstractDeclarator(tokenList)
+
+            print("{0}{1}".format(abstractD, type))
+
+            type = processAbstractDeclarator(abstractD, type)
+
 
         expect(TokenType.CLOSE_PAREN, tokenList)
 
