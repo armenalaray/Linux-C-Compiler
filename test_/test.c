@@ -6,19 +6,16 @@ int *return_pointer(int *in) {
 
 int main(void) {
 
-    int x = 10UL;
+    
+    //int * a = (double)x; 
+    
+    
+    double *a;
+    double *b;
 
-    double *x_ptr = return_pointer(&x);
+    a+b;
 
-    if (*x_ptr != 10)
-        return 1;
 
-    x = 100;
-    if (*x_ptr != 100)
-        return 2;
+    //double* a = (double*)x;
 
-    if (x_ptr != &x)
-        return 3;
-
-    return 0;
 }

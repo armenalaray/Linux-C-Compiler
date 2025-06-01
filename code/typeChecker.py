@@ -256,7 +256,13 @@ def typeCheckExpression(exp, symbolTable):
                 sys.exit(1)
 
         case parser.Cast_Expression(targetType = targetType, exp = exp):
+
             e = typeCheckExpression(exp, symbolTable)
+
+            if (type(e.retType) == parser.PointerType and type(targetType) == parser.DoubleType) or (type(e.retType) == parser.DoubleType and type(targetType) == parser.PointerType):
+                print("Error: Casting pointer to double or a double to a pointer.")
+                sys.exit(1)
+
             return parser.Cast_Expression(targetType, e, targetType)
 
         case parser.Var_Expression(identifier = id):
@@ -312,6 +318,17 @@ def typeCheckExpression(exp, symbolTable):
                         print("Error: Can't take the bitwise complement of a double.")
                         sys.exit(1)
                     
+                    if type(e.retType) == parser.PointerType:
+                        print("Error: Can't take the bitwise complement of a pointer.")
+                        sys.exit(1)
+                        
+                    return parser.Unary_Expression(op, e, e.retType)
+
+                case parser.UnopType.NEGATE:
+                    if type(e.retType) == parser.PointerType:
+                        print("Error: Can't negate a pointer.")
+                        sys.exit(1)
+
                     return parser.Unary_Expression(op, e, e.retType)
 
                 case parser.UnopType.NOT:
@@ -326,7 +343,26 @@ def typeCheckExpression(exp, symbolTable):
             r = typeCheckExpression(right, symbolTable)
 
             match op.operator:
+                
+                case parser.BinopType.MULTIPLY:
+
+                    if type(l.retType) == parser.PointerType or type(r.retType) == parser.PointerType:
+                        print("Error: Can't multiply a pointer.")
+                        sys.exit(1)
+
+                case parser.BinopType.DIVIDE:
+
+                    if type(l.retType) == parser.PointerType or type(r.retType) == parser.PointerType:
+                        print("Error: Can't divide a pointer.")
+                        sys.exit(1)
+
                 case parser.BinopType.MODULO:
+
+                    if type(l.retType) == parser.PointerType or type(r.retType) == parser.PointerType:
+                        print("Error: Can't take the modulo of a pointer.")
+                        sys.exit(1)
+                        
+
                     if type(l.retType) == parser.DoubleType or type(r.retType) == parser.DoubleType:
                         print("Error: Can't take the modulo of a double.")
                         sys.exit(1)
