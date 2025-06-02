@@ -160,8 +160,9 @@ def getCommonPointerType(exp1, exp2):
     type1 = exp1.retType
     type2 = exp2.retType
 
-    if type(type1) == type(type2):
+    if type1.checkType(type2):
         return type1
+    
     elif isNullPointerConstant(exp1):
         return type2
     elif isNullPointerConstant(exp2):
@@ -179,9 +180,8 @@ def isArithmeticType(targetType):
     
 
 def convertByAssignment(exp, targetType):
-    expType = type(exp.retType)
     
-    if expType == type(targetType):
+    if exp.retType.checkType(targetType):
         return exp
 
     if isArithmeticType(exp.retType) and isArithmeticType(targetType):
@@ -700,8 +700,6 @@ def typeCheckStatement(statement, symbolTable, functionParentName):
             e = typeCheckExpression(exp, symbolTable)
 
             e = convertByAssignment(e, symbolTable[functionParentName].type.retType)
-
-            #e = convertTo(e, symbolTable[functionParentName].type.retType)
 
             return parser.ReturnStmt(e)
             

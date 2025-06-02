@@ -19,7 +19,7 @@ class Program(Node):
         #print("AST Program:")
         output = 'AST Program:\n'
         for i in self.declList:
-            output += i.printNode(level + 1) + "\n"
+            output += i.printNode(level) + "\n"
         
         return output
 
@@ -172,7 +172,7 @@ class FunctionDecl(Node):
         output = ''
 
         if self.storageClass:
-            output += self.storageClass.printNode(level + 1)    
+            output += self.storageClass.printNode(level)    
 
         output += " " + self.iden
 
@@ -181,12 +181,12 @@ class FunctionDecl(Node):
             output += i + ', '
         output += ') '
 
-        output += self.funType.printNode(level + 1)
+        output += self.funType.printNode(level)
 
         output += '\n'
 
         if self.block:
-            output += self.block.printNode(level + 1)
+            output += self.block.printNode(level)
 
         return output
         
@@ -194,6 +194,10 @@ class FunctionDecl(Node):
 class Type:
     def __init__(self):
         self.size = 0
+
+    def checkType(self, other):
+        print("Not Overloaded.")
+        sys.exit(1)
 
     def getSize():
         return self.size
@@ -213,6 +217,13 @@ class IntType(Type, Node):
     
     def printNode(self, level):
         return "int"
+    
+    def checkType(self, other):
+        if type(other) == IntType:
+            return True
+
+        return False
+    
 
 class LongType(Type, Node):
     def __init__(self):
@@ -226,6 +237,12 @@ class LongType(Type, Node):
     def printNode(self, level):
         return "long"
     
+    def checkType(self, other):
+        if type(other) == LongType:
+            return True
+
+        return False
+    
 class UIntType(Type, Node):    
     def __init__(self):
         super().__init__()
@@ -237,6 +254,12 @@ class UIntType(Type, Node):
     
     def printNode(self, level):
         return "uint"
+    
+    def checkType(self, other):
+        if type(other) == UIntType:
+            return True
+
+        return False
 
 class ULongType(Type, Node):
     def __init__(self):
@@ -249,6 +272,12 @@ class ULongType(Type, Node):
     
     def printNode(self, level):
         return "ulong"
+    
+    def checkType(self, other):
+        if type(other) == ULongType:
+            return True
+
+        return False
 
 class DoubleType(Type, Node):
     def __str__(self):
@@ -256,16 +285,31 @@ class DoubleType(Type, Node):
     
     def printNode(self, level):
         return "double"
+    
+    def checkType(self, other):
+        if type(other) == DoubleType:
+            return True
+
+        return False
+        
 
 class PointerType(Type, Node):
     def __init__(self, referenceType):
         self.referenceType = referenceType
     
     def __str__(self):
-        return "pointer to {self.referenceType}".format(self=self)
+        return "P{self.referenceType}".format(self=self)
     
+    def checkType(self, other):
+        
+        if type(other) == PointerType:
+            if self.referenceType.checkType(other.referenceType):
+                return True
+                
+        return False
+
     def printNode(self, level):
-        output = "pointer to "
+        output = "P"
         output += self.referenceType.printNode(level)
         return output
         
