@@ -46,7 +46,8 @@ def ReplaceOperand(operand, table, offset, symbolTable):
 
             value = table[id] 
             
-            return offset, assemblyGenerator.StackOperand(value)
+            return offset, assemblyGenerator.MemoryOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.BP), value) 
+            #assemblyGenerator.StackOperand(value)
     
     return offset, None
 
@@ -161,6 +162,16 @@ def ReplaceTopLevel(topLevel, symbolTable):
                             i.destO = object
 
 
+                    case assemblyGenerator.LeaInstruction(sourceO = sourceO, destO = destO):
+                        offset, object = ReplaceOperand(sourceO, table, offset, symbolTable)
+                        if object:
+                            i.sourceO = object
+
+                        offset, object = ReplaceOperand(destO, table, offset, symbolTable)
+                        if object:
+                            i.destO = object
+                        
+
                     #These are not changed
                     case assemblyGenerator.ReturnInstruction():
                         pass
@@ -176,9 +187,9 @@ def ReplaceTopLevel(topLevel, symbolTable):
                     
                     
 
-                    #case _:
-                    #    print("Invalid Assembly Instruction. {0}".format(type(i)))
-                    #    sys.exit(1)
+                    case _:
+                        print("Invalid Assembly Instruction. {0}".format(type(i)))
+                        sys.exit(1)
                     
 
             topLevel.stackOffset = offset

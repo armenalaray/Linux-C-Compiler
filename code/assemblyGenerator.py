@@ -163,7 +163,12 @@ class LeaInstruction:
         self.sourceO = sourceO
         self.destO = destO
         
+    def __str__(self):
+        return "Lea({self.sourceO}, {self.destO})".format(self=self)
 
+    def __repr__(self):
+        return self.__str__()    
+    
 class UnaryInstruction:
     def __init__(self, operator, assType, dest):
         self.operator = operator
@@ -368,7 +373,9 @@ class MemoryOperand:
     def __init__(self, reg, int):
         self.reg = reg
         self.int = int
-    
+
+    def __str__(self):
+        return "Memory({self.reg}, {self.int})".format(self=self)
 
 class DataOperand:
     def __init__(self, identifier):
@@ -533,6 +540,9 @@ class Register:
             case SSERegisterType.XMM15:
                 return "XMM15"
             
+            case RegisterType.BP:
+                return "BP"
+
             case _:
                 return "_"
 
@@ -1199,8 +1209,17 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
 
 
             
-            case tacGenerator.TAC_Store(src = src, dst = dst):
-                pass
+            case tacGenerator.TAC_Store(src = src_, dst = dst_):
+                type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
+                type2, cType2, ptr = parseValue(dst_, symbolTable, topLevelList)
+                
+                instruction0 = MovInstruction(AssemblySize(AssemblyType.QUADWORD), ptr, RegisterOperand(Register(RegisterType.AX)))
+                
+                instruction1 = MovInstruction(type1, src, MemoryOperand(Register(RegisterType.AX), 0))
+
+                ASM_Instructions.append(instruction0)
+                ASM_Instructions.append(instruction1)
+                
 
             case tacGenerator.TAC_Load(src = src_, dst = dst_):
                 type1, cType1, ptr = parseValue(src_, symbolTable, topLevelList)
