@@ -5,7 +5,7 @@ import parser
 import typeChecker
 
 from tacGenerator import makeTemp
-from tacGenerator import makeStaticConstant
+#from tacGenerator import makeStaticConstant
 
 class Program:
     
