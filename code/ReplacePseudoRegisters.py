@@ -47,7 +47,6 @@ def ReplaceOperand(operand, table, offset, symbolTable):
             value = table[id] 
             
             return offset, assemblyGenerator.MemoryOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.BP), value) 
-            #assemblyGenerator.StackOperand(value)
     
     return offset, None
 
@@ -194,11 +193,6 @@ def ReplaceTopLevel(topLevel, symbolTable):
 
             topLevel.stackOffset = offset
                     
-    
-
-# Replace Pseudos #2
 def ReplacePseudoRegisters(ass, symbolTable):
-
     for topLevel in ass.topLevelList:
         ReplaceTopLevel(topLevel, symbolTable)
-        #funcDef.stackOffset = offset

@@ -169,10 +169,10 @@ if __name__ == "__main__":
 			if printDebugInfo:
 				print(ass)
 
-			#FixingUpInstructions.FixingUpInstructions(ass)
+			FixingUpInstructions.FixingUpInstructions(ass)
 
-			#if printDebugInfo:
-			#	print(ass)
+			if printDebugInfo:
+				print(ass)
 		
 
 			if LastStage == 'assemblyGeneration':

@@ -39,7 +39,7 @@ def FixingUpTopLevel(topLevel):
 
 
                         instruction2 = None
-                        if type(destO) == assemblyGenerator.StackOperand or type(destO) == assemblyGenerator.DataOperand:
+                        if type(destO) == assemblyGenerator.MemoryOperand or type(destO) == assemblyGenerator.DataOperand:
                             regr11 = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11))
                             
                             i.destO = regr11
@@ -61,7 +61,7 @@ def FixingUpTopLevel(topLevel):
                             instruction0 = assemblyGenerator.MovInstruction(assemblyGenerator.AssemblySize(assemblyGenerator.AssemblyType.LONGWORD), sourceO, destO)
 
                             newList.append(instruction0)
-                        elif type(destO) == assemblyGenerator.StackOperand or type(destO) == assemblyGenerator.DataOperand:
+                        elif type(destO) == assemblyGenerator.MemoryOperand or type(destO) == assemblyGenerator.DataOperand:
                             instruction0 = assemblyGenerator.MovInstruction(assemblyGenerator.AssemblySize(assemblyGenerator.AssemblyType.LONGWORD), sourceO, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)))
 
                             instruction1 = assemblyGenerator.MovInstruction(assemblyGenerator.AssemblySize(assemblyGenerator.AssemblyType.QUADWORD), assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)), destO)
@@ -76,7 +76,7 @@ def FixingUpTopLevel(topLevel):
                         match assType.type:
                             case assemblyGenerator.AssemblyType.DOUBLE:
                                 print("Mov:", assType.type)
-                                if (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.DataOperand):
+                                if (type(src) == assemblyGenerator.MemoryOperand and type(dst) == assemblyGenerator.MemoryOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.MemoryOperand) or (type(src) == assemblyGenerator.MemoryOperand and type(dst) == assemblyGenerator.DataOperand):
                             
                                     i.destO = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.SSERegisterType.XMM14))
 
@@ -88,7 +88,7 @@ def FixingUpTopLevel(topLevel):
                             case _:
                                 print("Mov:", assType.type)
                                 
-                                if (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.DataOperand):
+                                if (type(src) == assemblyGenerator.MemoryOperand and type(dst) == assemblyGenerator.MemoryOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.MemoryOperand) or (type(src) == assemblyGenerator.MemoryOperand and type(dst) == assemblyGenerator.DataOperand):
                             
                                     i.destO = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
 
@@ -131,7 +131,19 @@ def FixingUpTopLevel(topLevel):
                         
 
                     case assemblyGenerator.PushInstruction(operand = operand):
-                        if type(operand) == assemblyGenerator.ImmediateOperand and operand.imm > pow(2, 31) - 1:
+                        
+                        if type(operand) == assemblyGenerator.RegisterOperand:
+                            if type(operand.register.register) == assemblyGenerator.SSERegisterType:
+
+                                instruction0 = assemblyGenerator.BinaryInstruction(assemblyGenerator.BinaryOperator(assemblyGenerator.BinopType.Sub), assemblyGenerator.AssemblySize(assemblyGenerator.AssemblyType.QUADWORD), assemblyGenerator.ImmediateOperand(8), assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.SP)))
+
+                                instruction1 = assemblyGenerator.MovInstruction(assemblyGenerator.AssemblySize(assemblyGenerator.AssemblyType.DOUBLE), operand, assemblyGenerator.MemoryOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.SP), 0))
+
+                                newList.append(instruction0)
+                                newList.append(instruction1)
+
+
+                        elif type(operand) == assemblyGenerator.ImmediateOperand and operand.imm > pow(2, 31) - 1:
                             #print(op0.imm)
                             instructionImm = assemblyGenerator.MovInstruction(assType, operand, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
 
@@ -153,7 +165,7 @@ def FixingUpTopLevel(topLevel):
 
 
                         instruction2 = None
-                        if type(destO) == assemblyGenerator.StackOperand or type(destO) == assemblyGenerator.DataOperand:
+                        if type(destO) == assemblyGenerator.MemoryOperand or type(destO) == assemblyGenerator.DataOperand:
                             regr11 = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.SSERegisterType.XMM15))
                             
                             i.destO = regr11
@@ -172,8 +184,22 @@ def FixingUpTopLevel(topLevel):
 
                     case assemblyGenerator.Cvttsd2si(assType = assType, sourceO = sourceO, destO = destO):
                         
-                        if type(destO) == assemblyGenerator.StackOperand or type(destO) == assemblyGenerator.DataOperand:
+                        if type(destO) == assemblyGenerator.MemoryOperand or type(destO) == assemblyGenerator.DataOperand:
                             
+                            i.destO = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11))
+
+                            i0 = assemblyGenerator.MovInstruction(assType, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)), destO)
+                            
+                            newList.append(i)
+                            newList.append(i0)
+
+                    case assemblyGenerator.LeaInstruction(sourceO = sourceO, destO = destO):
+                        
+                        if type(destO) == assemblyGenerator.MemoryOperand or type(destO) == assemblyGenerator.DataOperand:
+                            
+                            #lea src, r11
+                            #mov r11, dst
+
                             i.destO = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11))
 
                             i0 = assemblyGenerator.MovInstruction(assType, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)), destO)
@@ -203,7 +229,7 @@ def FixingUpTopLevel(topLevel):
                             case _:
                                 print("Ale:", assType.type)
 
-                                if (type(op0) == assemblyGenerator.StackOperand and type(op1) == assemblyGenerator.StackOperand) or (type(op0) == assemblyGenerator.DataOperand and type(op1) == assemblyGenerator.DataOperand) or (type(op0) == assemblyGenerator.DataOperand and type(op1) == assemblyGenerator.StackOperand) or (type(op0) == assemblyGenerator.StackOperand and type(op1) == assemblyGenerator.DataOperand):
+                                if (type(op0) == assemblyGenerator.MemoryOperand and type(op1) == assemblyGenerator.MemoryOperand) or (type(op0) == assemblyGenerator.DataOperand and type(op1) == assemblyGenerator.DataOperand) or (type(op0) == assemblyGenerator.DataOperand and type(op1) == assemblyGenerator.MemoryOperand) or (type(op0) == assemblyGenerator.MemoryOperand and type(op1) == assemblyGenerator.DataOperand):
                             
                                     instruction = assemblyGenerator.MovInstruction(assType, i.operand0, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
 
@@ -269,7 +295,7 @@ def FixingUpTopLevel(topLevel):
 
                                 elif op.operator == assemblyGenerator.BinopType.And or op.operator == assemblyGenerator.BinopType.Or:
 
-                                    if (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.DataOperand):
+                                    if (type(src) == assemblyGenerator.MemoryOperand and type(dst) == assemblyGenerator.MemoryOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.MemoryOperand) or (type(src) == assemblyGenerator.MemoryOperand and type(dst) == assemblyGenerator.DataOperand):
                                         
                                         #Mov src, reg
                                         #and  reg, dst
@@ -300,7 +326,7 @@ def FixingUpTopLevel(topLevel):
                                         instruction0 = None
                                         instruction1 = None
                                         
-                                        if type(dst) == assemblyGenerator.StackOperand or type(dst) == assemblyGenerator.DataOperand:
+                                        if type(dst) == assemblyGenerator.MemoryOperand or type(dst) == assemblyGenerator.DataOperand:
 
                                             instruction0 = assemblyGenerator.MovInstruction(assType, i.dest, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)))
 
@@ -334,7 +360,7 @@ def FixingUpTopLevel(topLevel):
                                         
                                         #the operands cant be both memory addresses 
 
-                                        if (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.DataOperand):
+                                        if (type(src) == assemblyGenerator.MemoryOperand and type(dst) == assemblyGenerator.MemoryOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.MemoryOperand) or (type(src) == assemblyGenerator.MemoryOperand and type(dst) == assemblyGenerator.DataOperand):
 
                                             instruction = assemblyGenerator.MovInstruction(assType, i.src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
 
@@ -354,7 +380,7 @@ def FixingUpTopLevel(topLevel):
 
                                     case assemblyGenerator.BinopType.Sub:
 
-                                        if (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.StackOperand) or (type(src) == assemblyGenerator.StackOperand and type(dst) == assemblyGenerator.DataOperand):
+                                        if (type(src) == assemblyGenerator.MemoryOperand and type(dst) == assemblyGenerator.MemoryOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.DataOperand) or (type(src) == assemblyGenerator.DataOperand and type(dst) == assemblyGenerator.MemoryOperand) or (type(src) == assemblyGenerator.MemoryOperand and type(dst) == assemblyGenerator.DataOperand):
                                             instruction = assemblyGenerator.MovInstruction(assType, i.src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
 
                                             i.src = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
@@ -381,12 +407,12 @@ def FixingUpTopLevel(topLevel):
 
                     case assemblyGenerator.SetCCInst():
                         pass
-                    
-                    
 
-                    #case _:
-                    #    print("Invalid Instruction fixup. {0}".format(type(i)))
-                    #    sys.exit(1)                                        
+                    
+                    
+                    case _:
+                        print("Invalid Instruction fixup. {0}".format(type(i)))
+                        sys.exit(1)                                        
                     
                                     
                 if len(newList) == oldSize:
