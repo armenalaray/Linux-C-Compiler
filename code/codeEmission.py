@@ -8,160 +8,175 @@ class OperandSize(Enum):
     BYTE_4 = 2
     BYTE_1 = 3
 
+def matchRegister(reg, output, operandSize):
+    match reg:
+        case assemblyGenerator.Register(register=regi):
+            match regi:
+
+                case assemblyGenerator.SSERegisterType.XMM0:
+                    output += '%xmm0'
+                
+                case assemblyGenerator.SSERegisterType.XMM1:
+                    output += '%xmm1'
+
+                case assemblyGenerator.SSERegisterType.XMM2:
+                    output += '%xmm2'
+                
+                case assemblyGenerator.SSERegisterType.XMM3:
+                    output += '%xmm3'
+                
+                case assemblyGenerator.SSERegisterType.XMM4:
+                    output += '%xmm4'
+                
+                case assemblyGenerator.SSERegisterType.XMM5:
+                    output += '%xmm5'
+
+                case assemblyGenerator.SSERegisterType.XMM6:
+                    output += '%xmm6'
+
+                case assemblyGenerator.SSERegisterType.XMM7:
+                    output += '%xmm7'
+
+                case assemblyGenerator.SSERegisterType.XMM14:
+                    output += '%xmm14'
+
+                case assemblyGenerator.SSERegisterType.XMM15:
+                    output += '%xmm15'
+
+                case assemblyGenerator.RegisterType.SP:
+                    output += '%rsp'
+                
+                case assemblyGenerator.RegisterType.BP:
+                    output += '%rbp'
+                    
+                case assemblyGenerator.RegisterType.AX:
+                    match operandSize:
+                        case OperandSize.BYTE_8:
+                            output += '%rax'
+                        
+                        case OperandSize.BYTE_4:
+                            output += '%eax'
+
+                        case OperandSize.BYTE_1:
+                            output += '%al'
+
+
+                case assemblyGenerator.RegisterType.CX:
+                    match operandSize:
+                        case OperandSize.BYTE_8:
+                            output += '%rcx'
+                        
+                        case OperandSize.BYTE_4:
+                            output += '%ecx'
+
+                        case OperandSize.BYTE_1:
+                            output += '%cl'
+                                            
+                case assemblyGenerator.RegisterType.DX:
+                    match operandSize:
+                        case OperandSize.BYTE_8:
+                            output += '%rdx'
+                        
+                        case OperandSize.BYTE_4:
+                            output += '%edx'
+
+                        case OperandSize.BYTE_1:
+                            output += '%dl'
+
+                case assemblyGenerator.RegisterType.DI:
+                    match operandSize:
+                        case OperandSize.BYTE_8:
+                            output += '%rdi'
+                        
+                        case OperandSize.BYTE_4:
+                            output += '%edi'
+
+                        case OperandSize.BYTE_1:
+                            output += '%dil'
+
+                case assemblyGenerator.RegisterType.SI:
+                    match operandSize:
+                        case OperandSize.BYTE_8:
+                            output += '%rsi'
+                        
+                        case OperandSize.BYTE_4:
+                            output += '%esi'
+
+                        case OperandSize.BYTE_1:
+                            output += '%sil'
+
+                case assemblyGenerator.RegisterType.R8:
+                    match operandSize:
+                        case OperandSize.BYTE_8:
+                            output += '%r8'
+                        
+                        case OperandSize.BYTE_4:
+                            output += '%r8d'
+
+                        case OperandSize.BYTE_1:
+                            output += '%r8b'
+
+                case assemblyGenerator.RegisterType.R9:
+                    match operandSize:
+                        case OperandSize.BYTE_8:
+                            output += '%r9'
+                        
+                        case OperandSize.BYTE_4:
+                            output += '%r9d'
+
+                        case OperandSize.BYTE_1:
+                            output += '%r9b'
+
+                case assemblyGenerator.RegisterType.R10:
+                    match operandSize:
+                        case OperandSize.BYTE_8:
+                            output += '%r10'
+                        
+                        case OperandSize.BYTE_4:
+                            output += '%r10d'
+
+                        case OperandSize.BYTE_1:
+                            output += '%r10b'
+                
+                case assemblyGenerator.RegisterType.R11:
+                    match operandSize:
+                        case OperandSize.BYTE_8:
+                            output += '%r11'
+                        
+                        case OperandSize.BYTE_4:
+                            output += '%r11d'
+
+                        case OperandSize.BYTE_1:
+                            output += '%r11b'
+
+    return output
+
 def matchOperand(operand, output, operandSize):
 
     match operand:
-        case assemblyGenerator.StackOperand(offset=off):
-            output += '{0}(%rbp)'.format(off)
+        #case assemblyGenerator.StackOperand(offset=off):
+        #    output += '{0}(%rbp)'.format(off)
+
+        case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+            print("Ale")
+
+            output += '{0}'.format(int)
+
+            output += '('
+            output = matchRegister(reg, output, OperandSize.BYTE_8)
+            output += ')'
+            
 
         case assemblyGenerator.DataOperand(identifier = identifier):
             output += '{0}(%rip)'.format(identifier)
             pass
             
         case assemblyGenerator.RegisterOperand(register=reg):
-            match reg:
-                case assemblyGenerator.Register(register=regi):
-                    match regi:
-
-                        case assemblyGenerator.SSERegisterType.XMM0:
-                            output += '%xmm0'
-                        
-                        case assemblyGenerator.SSERegisterType.XMM1:
-                            output += '%xmm1'
-
-                        case assemblyGenerator.SSERegisterType.XMM2:
-                            output += '%xmm2'
-                        
-                        case assemblyGenerator.SSERegisterType.XMM3:
-                            output += '%xmm3'
-                        
-                        case assemblyGenerator.SSERegisterType.XMM4:
-                            output += '%xmm4'
-                        
-                        case assemblyGenerator.SSERegisterType.XMM5:
-                            output += '%xmm5'
-
-                        case assemblyGenerator.SSERegisterType.XMM6:
-                            output += '%xmm6'
-
-                        case assemblyGenerator.SSERegisterType.XMM7:
-                            output += '%xmm7'
-
-                        case assemblyGenerator.SSERegisterType.XMM14:
-                            output += '%xmm14'
-
-                        case assemblyGenerator.SSERegisterType.XMM15:
-                            output += '%xmm15'
-
-                        case assemblyGenerator.RegisterType.SP:
-                            output += '%rsp'
-                            
-                        case assemblyGenerator.RegisterType.AX:
-                            match operandSize:
-                                case OperandSize.BYTE_8:
-                                    output += '%rax'
-                                
-                                case OperandSize.BYTE_4:
-                                    output += '%eax'
-
-                                case OperandSize.BYTE_1:
-                                    output += '%al'
-
-
-                        case assemblyGenerator.RegisterType.CX:
-                            match operandSize:
-                                case OperandSize.BYTE_8:
-                                    output += '%rcx'
-                                
-                                case OperandSize.BYTE_4:
-                                    output += '%ecx'
-
-                                case OperandSize.BYTE_1:
-                                    output += '%cl'
-                                                    
-                        case assemblyGenerator.RegisterType.DX:
-                            match operandSize:
-                                case OperandSize.BYTE_8:
-                                    output += '%rdx'
-                                
-                                case OperandSize.BYTE_4:
-                                    output += '%edx'
-
-                                case OperandSize.BYTE_1:
-                                    output += '%dl'
-
-                        case assemblyGenerator.RegisterType.DI:
-                            match operandSize:
-                                case OperandSize.BYTE_8:
-                                    output += '%rdi'
-                                
-                                case OperandSize.BYTE_4:
-                                    output += '%edi'
-
-                                case OperandSize.BYTE_1:
-                                    output += '%dil'
-
-                        case assemblyGenerator.RegisterType.SI:
-                            match operandSize:
-                                case OperandSize.BYTE_8:
-                                    output += '%rsi'
-                                
-                                case OperandSize.BYTE_4:
-                                    output += '%esi'
-
-                                case OperandSize.BYTE_1:
-                                    output += '%sil'
-
-                        case assemblyGenerator.RegisterType.R8:
-                            match operandSize:
-                                case OperandSize.BYTE_8:
-                                    output += '%r8'
-                                
-                                case OperandSize.BYTE_4:
-                                    output += '%r8d'
-
-                                case OperandSize.BYTE_1:
-                                    output += '%r8b'
-
-                        case assemblyGenerator.RegisterType.R9:
-                            match operandSize:
-                                case OperandSize.BYTE_8:
-                                    output += '%r9'
-                                
-                                case OperandSize.BYTE_4:
-                                    output += '%r9d'
-
-                                case OperandSize.BYTE_1:
-                                    output += '%r9b'
-
-                        case assemblyGenerator.RegisterType.R10:
-                            match operandSize:
-                                case OperandSize.BYTE_8:
-                                    output += '%r10'
-                                
-                                case OperandSize.BYTE_4:
-                                    output += '%r10d'
-
-                                case OperandSize.BYTE_1:
-                                    output += '%r10b'
-                        
-                        case assemblyGenerator.RegisterType.R11:
-                            match operandSize:
-                                case OperandSize.BYTE_8:
-                                    output += '%r11'
-                                
-                                case OperandSize.BYTE_4:
-                                    output += '%r11d'
-
-                                case OperandSize.BYTE_1:
-                                    output += '%r11b'
-
-                        
-                        
-                        
+            output = matchRegister(reg, output, operandSize)
+                                  
         case assemblyGenerator.ImmediateOperand(imm=im):
             output += '${0}'.format(im)
-            #print(output)
+
     return output
 
 def printStaticInit(staticInit, output):
@@ -434,9 +449,6 @@ def printTopLevel(topLevel, output, symbolTable):
                                 output = matchOperand(src, output, operandSize)
                                 output += ', '
                                 output = matchOperand(dst, output, operandSize)
-                                pass
-                        
-                        
 
 
                     case assemblyGenerator.Cvtsi2sd(assType = assType, sourceO = sourceO, destO = destO):
@@ -466,7 +478,13 @@ def printTopLevel(topLevel, output, symbolTable):
                         output = matchOperand(sourceO, output, operandSize)
                         output += ', '
                         output = matchOperand(destO, output, operandSize)
+
+                    case assemblyGenerator.LeaInstruction(sourceO = sourceO, destO = destO):
+                        output += '\n\tleaq '
                         
+                        output = matchOperand(sourceO, output, OperandSize.BYTE_8)
+                        output += ', '
+                        output = matchOperand(destO, output, OperandSize.BYTE_8)
 
                     case assemblyGenerator.IDivInstruction(assType = assType, divisor=divisor):
                         output += '\n\tidiv'
@@ -489,7 +507,7 @@ def printTopLevel(topLevel, output, symbolTable):
                         operandSize = getOperandSize(assType.type)
                         output = matchOperand(divisor, output, operandSize)
                     
-                        
+                    
                     case assemblyGenerator.CDQInstruction(assType = assType):
                         match assType.type:
                             case assemblyGenerator.AssemblyType.LONGWORD:

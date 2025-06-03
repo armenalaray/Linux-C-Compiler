@@ -202,7 +202,7 @@ def FixingUpTopLevel(topLevel):
 
                             i.destO = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11))
 
-                            i0 = assemblyGenerator.MovInstruction(assType, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)), destO)
+                            i0 = assemblyGenerator.MovInstruction(assemblyGenerator.AssemblySize(assemblyGenerator.AssemblyType.QUADWORD), assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R11)), destO)
                             
                             newList.append(i)
                             newList.append(i0)
@@ -410,9 +410,9 @@ def FixingUpTopLevel(topLevel):
 
                     
                     
-                    case _:
-                        print("Invalid Instruction fixup. {0}".format(type(i)))
-                        sys.exit(1)                                        
+                    #case _:
+                    #    print("Invalid Instruction fixup. {0}".format(type(i)))
+                    #    sys.exit(1)                                        
                     
                                     
                 if len(newList) == oldSize:
