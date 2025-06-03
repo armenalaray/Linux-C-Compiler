@@ -1,82 +1,68 @@
+/* Test out using pointers in boolean expressions or as controlling conditions,
+ * which implicitly compares them to zero
+ */
+
 #ifdef SUPPRESS_WARNINGS
-#pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
-#pragma GCC diagnostic ignored "-Wpointer-to-int-cast"
+#ifdef __clang__
+#pragma clang diagnostic ignored "-Wliteral-conversion"
 #endif
-/* Test casting between pointers and ints.
- * The behavior we test here is implementation-defined.
- * We follow GCC's behavior, defined here:
- * https://gcc.gnu.org/onlinedocs/gcc/Arrays-and-pointers-implementation.html
- */
+#endif
 
-// NOTE: converting an integer to a pointer is undefined behavior
-// if the resulting pointer is misaligned. These integers' values
-// are divisible by 8, so it's safe to cast them to any pointer type.
-int i = 128;
-long l = 128l;
 
-int int_to_pointer(void) {
-    int *a = (int *) i;
-    int *b = (int *) l;
-    return a == b;
+long *get_null_pointer(void) {
+    return 0;
 }
 
-int pointer_to_int(void) {
-    static long l;
-    long *ptr = &l;
-    unsigned long ptr_as_long = (unsigned long) ptr;
-    /* This will be divisible by eight, since long is eight byte-aligned */
-    return (ptr_as_long % 8 == 0);
-}
+int main(void)
+{
+    long x;
+    long *ptr = &x;
+    long *null_ptr = get_null_pointer();
 
-/* Casts between pointer types and 64-bit integer types should round-trip.
- * Casting a 32-bit int to a pointer and back should also round trip.
- * (Casting a pointer to a 32-bit int usually won't round trip since the
- * upper bits are discarded; we don't cover that case here.)
- */
-
-// long to pointer and back
-int cast_long_round_trip(void) {
-    int *ptr = (int *) l;
-    long l2 = (long) ptr;
-    return (l == l2);
-}
-
-
-// pointer to ulong and back
-int cast_ulong_round_trip(void) {
-    long *ptr = &l;
-    unsigned long ptr_as_ulong = (unsigned long) ptr;
-    long *ptr2 = (long *) ptr_as_ulong;
-    return (ptr == ptr2);
-}
-
-// int to pointer and back
-int cast_int_round_trip(void) {
-    double *a = (double *)i;
-    int i2 = (int) a;
-    return (i2 == 128);
-}
-
-int main(void) {
-
-    if (!int_to_pointer()) {
+    // note that pointers can appear in boolean expressions
+    // with operands of any other type
+    if (5.0 && null_ptr) {
         return 1;
     }
 
-    if (!pointer_to_int()) {
+    int a = 0;
+    if (!(ptr || (a = 10))) {
         return 2;
     }
 
-    if (!cast_long_round_trip()) {
+    // make sure the || expression short-circuited
+    if (a != 0) {
         return 3;
     }
 
-    if (!cast_ulong_round_trip()) {
+    // apply ! to pointer
+    if (!ptr) {
         return 4;
     }
 
-    if (!cast_int_round_trip()) {
+    // use a pointer in a ternary expression
+    int j = ptr ? 1 : 2;
+    int k = null_ptr ? 3 : 4;
+    if (j != 1) {
         return 5;
+    }
+
+    if (k != 4) {
+        return 6;
+    }
+
+    // use a pointer as the controlling condition in a loop
+    int i = 0;
+    while (ptr)
+    {
+        if (i >= 10) {
+            ptr = 0;
+            continue;
+        }
+        i = i + 1;
+    }
+    if (i != 10) {
+        return 7;
     }
 
     return 0;

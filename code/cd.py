@@ -191,7 +191,7 @@ if __name__ == "__main__":
 			aFile.close()
 
 			if NoLink:
-				assC = "gcc -c " + asmFile + " -o " + os.path.dirname(file) + "/" + os.path.basename(file).split('.')[0] + '.o'
+				assC = "gcc -ggdb -c " + asmFile + " -o " + os.path.dirname(file) + "/" + os.path.basename(file).split('.')[0] + '.o'
 
 				print(assC)
 
@@ -199,12 +199,12 @@ if __name__ == "__main__":
 
 				pass
 			else:	
-				assC = "gcc " + asmFile + " -o " + os.path.dirname(file) + "/" + os.path.basename(file).split('.')[0]
+				assC = "gcc -ggdb " + asmFile + " -o " + os.path.dirname(file) + "/" + os.path.basename(file).split('.')[0]
 
 				if library:
 					assC += ' -lm'
 				
-				#print(assC)
+				print(assC)
 
 				os.system(assC)
 			

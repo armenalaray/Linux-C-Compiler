@@ -1,3 +1,85 @@
+ASM Program: [Function get_null_pointer stackOffset: -8 global: True instructions:[MovSX(Imm(0), Memory(BP, -8)), AssType: AssemblyType.QUADWORD Mov(Memory(BP, -8), Reg(AX)), ret, AssType: AssemblyType.LONGWORD Mov(Imm(0), Reg(AX)), ret], Function main stackOffset: -88 global: True instructions:[Lea(Memory(BP, -8), Memory(BP, -16)), AssType: AssemblyType.QUADWORD Mov(Memory(BP, -16), Memory(BP, -24)), Call(get_null_pointer), 
+
+AssType: AssemblyType.QUADWORD Mov(Reg(AX), Memory(BP, -32)), AssType: AssemblyType.QUADWORD Mov(Memory(BP, -32), Memory(BP, -40)), 
+
+AssType: AssemblyType.QUADWORD Mov(Memory(BP, -24), Memory(BP, -44)), 
+
+AssType: AssemblyType.LONGWORD Cmp(Imm(0), Memory(BP, -44)), JmpCC(ConcCodeType.E, tmp.9), AssType: AssemblyType.LONGWORD Mov(Imm(1), Memory(BP, -48)), AssType: AssemblyType.LONGWORD Mov(Memory(BP, -48), Memory(BP, -52)), Jmp(tmp.12), Label(tmp.9), AssType: AssemblyType.LONGWORD Mov(Imm(2), Memory(BP, -56)), AssType: AssemblyType.LONGWORD Mov(Memory(BP, -56), Memory(BP, -52)), Label(tmp.12), AssType: AssemblyType.LONGWORD Mov(Memory(BP, -52), Memory(BP, -60)), AssType: AssemblyType.QUADWORD Mov(Memory(BP, -40), Memory(BP, -64)), AssType: AssemblyType.LONGWORD Cmp(Imm(0), Memory(BP, -64)), JmpCC(ConcCodeType.E, tmp.15), AssType: AssemblyType.LONGWORD Mov(Imm(3), Memory(BP, -68)), AssType: AssemblyType.LONGWORD Mov(Memory(BP, -68), Memory(BP, -72)), Jmp(tmp.18), Label(tmp.15), AssType: AssemblyType.LONGWORD Mov(Imm(4), Memory(BP, -76)), AssType: AssemblyType.LONGWORD Mov(Memory(BP, -76), Memory(BP, -72)), Label(tmp.18), AssType: AssemblyType.LONGWORD Mov(Memory(BP, -72), Memory(BP, -80)), AssType: AssemblyType.LONGWORD Cmp(Imm(1), Memory(BP, -60)), AssType: AssemblyType.LONGWORD Mov(Imm(0), Memory(BP, -84)), SetCC(ConcCodeType.NE, Memory(BP, -84)), AssType: AssemblyType.LONGWORD Mov(Memory(BP, -84), Memory(BP, -88)), AssType: AssemblyType.LONGWORD Cmp(Imm(0), Memory(BP, -88)), JmpCC(ConcCodeType.E, tmp.22), AssType: AssemblyType.LONGWORD Mov(Imm(5), Reg(AX)), ret, Label(tmp.22), AssType: AssemblyType.LONGWORD Mov(Imm(0), Reg(AX)), ret, AssType: AssemblyType.LONGWORD Mov(Imm(0), Reg(AX)), ret]]
+
+
+
+ASM Program: [Function get_null_pointer stackOffset: None global: True instructions:[MovSX(Imm(0), Pseudo(tmp.5)), AssType: AssemblyType.QUADWORD Mov(Pseudo(tmp.5), Reg(AX)), ret, AssType: AssemblyType.LONGWORD Mov(Imm(0), Reg(AX)), ret], Function main stackOffset: None global: True instructions:[Lea(Pseudo(x.0), Pseudo(tmp.6)), AssType: AssemblyType.QUADWORD Mov(Pseudo(tmp.6), Pseudo(ptr.1)), Call(get_null_pointer), 
+
+AssType: AssemblyType.QUADWORD Mov(Reg(AX), Pseudo(tmp.7)), 
+
+AssType: AssemblyType.QUADWORD Mov(Pseudo(tmp.7), Pseudo(null_ptr.2)), 
+
+AssType: AssemblyType.QUADWORD Mov(Pseudo(ptr.1), Pseudo(tmp.8)), 
+
+AssType: AssemblyType.LONGWORD Cmp(Imm(0), Pseudo(tmp.8)), JmpCC(ConcCodeType.E, tmp.9), AssType: AssemblyType.LONGWORD Mov(Imm(1), Pseudo(tmp.10)), AssType: AssemblyType.LONGWORD Mov(Pseudo(tmp.10), Pseudo(tmp.11)), Jmp(tmp.12), Label(tmp.9), AssType: AssemblyType.LONGWORD Mov(Imm(2), Pseudo(tmp.13)), AssType: AssemblyType.LONGWORD Mov(Pseudo(tmp.13), Pseudo(tmp.11)), Label(tmp.12), AssType: AssemblyType.LONGWORD Mov(Pseudo(tmp.11), Pseudo(j.3)), AssType: AssemblyType.QUADWORD Mov(Pseudo(null_ptr.2), Pseudo(tmp.14)), AssType: AssemblyType.LONGWORD Cmp(Imm(0), Pseudo(tmp.14)), JmpCC(ConcCodeType.E, tmp.15), AssType: AssemblyType.LONGWORD Mov(Imm(3), Pseudo(tmp.16)), AssType: AssemblyType.LONGWORD Mov(Pseudo(tmp.16), Pseudo(tmp.17)), Jmp(tmp.18), Label(tmp.15), AssType: AssemblyType.LONGWORD Mov(Imm(4), Pseudo(tmp.19)), AssType: AssemblyType.LONGWORD Mov(Pseudo(tmp.19), Pseudo(tmp.17)), Label(tmp.18), AssType: AssemblyType.LONGWORD Mov(Pseudo(tmp.17), Pseudo(k.4)), AssType: AssemblyType.LONGWORD Cmp(Imm(1), Pseudo(j.3)), AssType: AssemblyType.LONGWORD Mov(Imm(0), Pseudo(tmp.20)), SetCC(ConcCodeType.NE, Pseudo(tmp.20)), AssType: AssemblyType.LONGWORD Mov(Pseudo(tmp.20), Pseudo(tmp.21)), AssType: AssemblyType.LONGWORD Cmp(Imm(0), Pseudo(tmp.21)), JmpCC(ConcCodeType.E, tmp.22), AssType: AssemblyType.LONGWORD Mov(Imm(5), Reg(AX)), ret, Label(tmp.22), AssType: AssemblyType.LONGWORD Mov(Imm(0), Reg(AX)), ret, AssType: AssemblyType.LONGWORD Mov(Imm(0), Reg(AX)), ret]]
+
+
+
+
+TAC Program:[Function: get_null_pointer ([]) instructions:[SignExtend tmp.4 = 0, Return tmp.4, Return 0], Function: main ([]) instructions:[
+    
+    tmp.5 = Get Address x.0 , Copy ptr.1 = tmp.5, tmp.6 = get_null_pointer([]), Copy null_ptr.2 = tmp.6, Copy tmp.7 = ptr.1, JumpIfZero(tmp.7, tmp.8), Copy tmp.9 = 1, Copy tmp.10 = tmp.9, Jump(tmp.11), 
+    
+    Label(tmp.8), Copy tmp.12 = 2, Copy tmp.10 = tmp.12, 
+    
+    Label(tmp.11), Copy j.3 = tmp.10, 
+    
+    tmp.13 = j.3 _ 1, Copy tmp.14 = tmp.13, JumpIfZero(tmp.14, tmp.15), Return 5, Label(tmp.15), Return 0, Return 0]]
+
+
+
+
+ASM Program: [Function get_null_pointer stackOffset: None global: True instructions:[MovSX(Imm(0), Pseudo(tmp.5)), AssType: AssemblyType.QUADWORD Mov(Pseudo(tmp.5), Reg(AX)), ret, AssType: AssemblyType.LONGWORD Mov(Imm(0), Reg(AX)), ret], 
+Function main stackOffset: None global: True instructions:[
+    Lea(Pseudo(x.0), Pseudo(tmp.6)), AssType: AssemblyType.QUADWORD Mov(Pseudo(tmp.6), Pseudo(ptr.1)), Call(get_null_pointer), AssType: AssemblyType.QUADWORD Mov(Reg(AX), Pseudo(tmp.7)), 
+    
+    AssType: AssemblyType.QUADWORD Mov(Pseudo(tmp.7), Pseudo(null_ptr.2)), 
+    
+    AssType: AssemblyType.QUADWORD Mov(Pseudo(ptr.1), Pseudo(tmp.8)), 
+    
+    AssType: AssemblyType.LONGWORD Cmp(Imm(0), Pseudo(tmp.8)), 
+    JmpCC(ConcCodeType.E, tmp.9), 
+    
+    AssType: AssemblyType.LONGWORD Mov(Imm(1), Pseudo(tmp.10)), AssType: AssemblyType.LONGWORD Mov(Pseudo(tmp.10), Pseudo(tmp.11)), Jmp(tmp.12), 
+    
+    Label(tmp.9), AssType: AssemblyType.LONGWORD Mov(Imm(2), Pseudo(tmp.13)), AssType: AssemblyType.LONGWORD Mov(Pseudo(tmp.13), Pseudo(tmp.11)), 
+    
+    Label(tmp.12), AssType: AssemblyType.LONGWORD Mov(Pseudo(tmp.11), Pseudo(j.3)), 
+    
+    AssType: AssemblyType.QUADWORD Mov(Pseudo(null_ptr.2), Pseudo(tmp.14)), 
+    
+    AssType: AssemblyType.LONGWORD Cmp(Imm(0), Pseudo(tmp.14)), 
+    JmpCC(ConcCodeType.E, tmp.15), 
+    
+    AssType: AssemblyType.LONGWORD Mov(Imm(3), Pseudo(tmp.16)), AssType: AssemblyType.LONGWORD Mov(Pseudo(tmp.16), 
+    Pseudo(tmp.17)), Jmp(tmp.18), 
+    
+    Label(tmp.15), AssType: AssemblyType.LONGWORD Mov(Imm(4), Pseudo(tmp.19)), AssType: AssemblyType.LONGWORD Mov(Pseudo(tmp.19), Pseudo(tmp.17)), 
+    
+    Label(tmp.18), AssType: AssemblyType.LONGWORD Mov(Pseudo(tmp.17), Pseudo(k.4)), 
+    
+
+
+    AssType: AssemblyType.LONGWORD Cmp(Imm(1), Pseudo(j.3)), AssType: 
+    AssemblyType.LONGWORD Mov(Imm(0), Pseudo(tmp.20)), 
+    #aqui lo seteas si no es igual
+    SetCC(ConcCodeType.NE, Pseudo(tmp.20)), 
+
+    AssType: AssemblyType.LONGWORD Mov(Pseudo(tmp.20), Pseudo(tmp.21)), 
+    
+    AssType: AssemblyType.LONGWORD Cmp(Imm(0), Pseudo(tmp.21)), 
+    JmpCC(ConcCodeType.E, tmp.22), 
+    
+    AssType: AssemblyType.LONGWORD Mov(Imm(5), Reg(AX)), ret, 
+    
+    Label(tmp.22), AssType: AssemblyType.LONGWORD Mov(Imm(0), Reg(AX)), ret, AssType: AssemblyType.LONGWORD Mov(Imm(0), Reg(AX)), ret]]
+
+
 ASM Program: [Static Constant: Alignment = 8 : tmp.14 = c_double(1.0), Static Constant: Alignment = 8 : tmp.15 = c_double(1.0), Static Constant: Alignment = 8 : tmp.16 = c_double(1.0), Static Constant: Alignment = 8 : tmp.17 = c_double(1.0), Static Constant: Alignment = 8 : tmp.18 = c_double(4.0), Function main stackOffset: -92 global: True 
 
 instructions:[AssType: AssemblyType.QUADWORD Binary(Sub, Imm(96), Reg(SP)), 

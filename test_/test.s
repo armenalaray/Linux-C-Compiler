@@ -1,114 +1,13 @@
-	.globl int_to_pointer
+	.globl get_null_pointer
 	.text
-int_to_pointer:
+get_null_pointer:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $48, %rsp
-	movslq i(%rip), %r11
-	movq %r11, -8(%rbp)
-	movq -8(%rbp), %r10
-	movq %r10, -16(%rbp)
-	movq l(%rip), %r10
-	movq %r10, -24(%rbp)
-	movq -24(%rbp), %r10
-	movq %r10, -32(%rbp)
-	movq -32(%rbp), %r10
-	cmpq %r10, -16(%rbp)
-	movl $0, -36(%rbp)
-	setE -36(%rbp)
-	movl -36(%rbp), %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl pointer_to_int
-	.text
-pointer_to_int:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $64, %rsp
-	leaq l.2(%rip), %r11
-	movq %r11, -8(%rbp)
-	movq -8(%rbp), %r10
-	movq %r10, -16(%rbp)
-	movq -16(%rbp), %r10
-	movq %r10, -24(%rbp)
-	movq -24(%rbp), %r10
-	movq %r10, -32(%rbp)
-	movl $8, %r10d
-	movslq %r10d, %r11
-	movq %r11, -40(%rbp)
-	movq -32(%rbp), %rax
-	movq $0, %rdx
-	divq -40(%rbp)
-	movq %rdx, -48(%rbp)
+	subq $16, %rsp
 	movl $0, %r10d
 	movslq %r10d, %r11
-	movq %r11, -56(%rbp)
-	movq -56(%rbp), %r10
-	cmpq %r10, -48(%rbp)
-	movl $0, -60(%rbp)
-	setE -60(%rbp)
-	movl -60(%rbp), %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl cast_long_round_trip
-	.text
-cast_long_round_trip:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $48, %rsp
-	movq l(%rip), %r10
-	movq %r10, -8(%rbp)
-	movq -8(%rbp), %r10
-	movq %r10, -16(%rbp)
-	movq -16(%rbp), %r10
-	movq %r10, -24(%rbp)
-	movq -24(%rbp), %r10
-	movq %r10, -32(%rbp)
-	movq -32(%rbp), %r10
-	cmpq %r10, l(%rip)
-	movl $0, -36(%rbp)
-	setE -36(%rbp)
-	movl -36(%rbp), %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl cast_ulong_round_trip
-	.text
-cast_ulong_round_trip:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $64, %rsp
-	leaq l(%rip), %r11
 	movq %r11, -8(%rbp)
-	movq -8(%rbp), %r10
-	movq %r10, -16(%rbp)
-	movq -16(%rbp), %r10
-	movq %r10, -24(%rbp)
-	movq -24(%rbp), %r10
-	movq %r10, -32(%rbp)
-	movq -32(%rbp), %r10
-	movq %r10, -40(%rbp)
-	movq -40(%rbp), %r10
-	movq %r10, -48(%rbp)
-	movq -48(%rbp), %r10
-	cmpq %r10, -16(%rbp)
-	movl $0, -52(%rbp)
-	setE -52(%rbp)
-	movl -52(%rbp), %eax
+	movq -8(%rbp), %rax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
@@ -116,107 +15,183 @@ cast_ulong_round_trip:
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-	.globl cast_int_round_trip
-	.text
-cast_int_round_trip:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $32, %rsp
-	movslq i(%rip), %r11
-	movq %r11, -8(%rbp)
-	movq -8(%rbp), %r10
-	movq %r10, -16(%rbp)
-	movl -16(%rbp), %r10d
-	movl %r10d, -20(%rbp)
-	movl -20(%rbp), %r10d
-	movl %r10d, -24(%rbp)
-	cmpl $128, -24(%rbp)
-	movl $0, -28(%rbp)
-	setE -28(%rbp)
-	movl -28(%rbp), %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
+	.section .rodata
+	.align 8
+tmp.55:
+	.double 5.0
 	.globl main
 	.text
 main:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $64, %rsp
-	call int_to_pointer
-	movl %eax, -4(%rbp)
-	cmpl $0, -4(%rbp)
-	movl $0, -8(%rbp)
-	setE -8(%rbp)
-	movl -8(%rbp), %r10d
-	movl %r10d, -12(%rbp)
-	cmpl $0, -12(%rbp)
-	jE .Ltmp.34
+	subq $192, %rsp
+	leaq -8(%rbp), %r11
+	movq %r11, -16(%rbp)
+	movq -16(%rbp), %r10
+	movq %r10, -24(%rbp)
+	call get_null_pointer
+	movq %rax, -32(%rbp)
+	movq -32(%rbp), %r10
+	movq %r10, -40(%rbp)
+	xorpd %xmm0, %xmm0
+	comisd tmp.55(%rip), %xmm0
+	jE .Ltmp.11
+	cmpq $0, -40(%rbp)
+	jE .Ltmp.11
+	movl $1, -44(%rbp)
+	jmp .Ltmp.13
+.Ltmp.11:
+	movl $0, -44(%rbp)
+.Ltmp.13:
+	movl -44(%rbp), %r10d
+	movl %r10d, -48(%rbp)
+	cmpl $0, -48(%rbp)
+	jE .Ltmp.15
 	movl $1, %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-.Ltmp.34:
-	call pointer_to_int
-	movl %eax, -16(%rbp)
-	cmpl $0, -16(%rbp)
-	movl $0, -20(%rbp)
-	setE -20(%rbp)
-	movl -20(%rbp), %r10d
-	movl %r10d, -24(%rbp)
-	cmpl $0, -24(%rbp)
-	jE .Ltmp.38
+.Ltmp.15:
+	movl $0, -52(%rbp)
+	cmpq $0, -24(%rbp)
+	jNE .Ltmp.16
+	movl $10, -52(%rbp)
+	cmpl $0, -52(%rbp)
+	jNE .Ltmp.16
+	movl $0, -56(%rbp)
+	jmp .Ltmp.18
+.Ltmp.16:
+	movl $1, -56(%rbp)
+.Ltmp.18:
+	cmpl $0, -56(%rbp)
+	movl $0, -60(%rbp)
+	setE -60(%rbp)
+	movl -60(%rbp), %r10d
+	movl %r10d, -64(%rbp)
+	cmpl $0, -64(%rbp)
+	jE .Ltmp.21
 	movl $2, %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-.Ltmp.38:
-	call cast_long_round_trip
-	movl %eax, -28(%rbp)
-	cmpl $0, -28(%rbp)
-	movl $0, -32(%rbp)
-	setE -32(%rbp)
-	movl -32(%rbp), %r10d
-	movl %r10d, -36(%rbp)
-	cmpl $0, -36(%rbp)
-	jE .Ltmp.42
+.Ltmp.21:
+	cmpl $0, -52(%rbp)
+	movl $0, -68(%rbp)
+	setNE -68(%rbp)
+	movl -68(%rbp), %r10d
+	movl %r10d, -72(%rbp)
+	cmpl $0, -72(%rbp)
+	jE .Ltmp.24
 	movl $3, %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-.Ltmp.42:
-	call cast_ulong_round_trip
-	movl %eax, -40(%rbp)
-	cmpl $0, -40(%rbp)
-	movl $0, -44(%rbp)
-	setE -44(%rbp)
-	movl -44(%rbp), %r10d
-	movl %r10d, -48(%rbp)
-	cmpl $0, -48(%rbp)
-	jE .Ltmp.46
+.Ltmp.24:
+	cmpq $0, -24(%rbp)
+	movl $0, -76(%rbp)
+	setE -76(%rbp)
+	movl -76(%rbp), %r10d
+	movl %r10d, -80(%rbp)
+	cmpl $0, -80(%rbp)
+	jE .Ltmp.27
 	movl $4, %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-.Ltmp.46:
-	call cast_int_round_trip
-	movl %eax, -52(%rbp)
-	cmpl $0, -52(%rbp)
-	movl $0, -56(%rbp)
-	setE -56(%rbp)
-	movl -56(%rbp), %r10d
-	movl %r10d, -60(%rbp)
-	cmpl $0, -60(%rbp)
-	jE .Ltmp.50
+.Ltmp.27:
+	movq -24(%rbp), %r10
+	movq %r10, -88(%rbp)
+	cmpq $0, -88(%rbp)
+	jE .Ltmp.29
+	movl $1, -92(%rbp)
+	movl -92(%rbp), %r10d
+	movl %r10d, -96(%rbp)
+	jmp .Ltmp.32
+.Ltmp.29:
+	movl $2, -100(%rbp)
+	movl -100(%rbp), %r10d
+	movl %r10d, -96(%rbp)
+.Ltmp.32:
+	movl -96(%rbp), %r10d
+	movl %r10d, -104(%rbp)
+	movq -40(%rbp), %r10
+	movq %r10, -112(%rbp)
+	cmpq $0, -112(%rbp)
+	jE .Ltmp.35
+	movl $3, -116(%rbp)
+	movl -116(%rbp), %r10d
+	movl %r10d, -120(%rbp)
+	jmp .Ltmp.38
+.Ltmp.35:
+	movl $4, -124(%rbp)
+	movl -124(%rbp), %r10d
+	movl %r10d, -120(%rbp)
+.Ltmp.38:
+	movl -120(%rbp), %r10d
+	movl %r10d, -128(%rbp)
+	cmpl $1, -104(%rbp)
+	movl $0, -132(%rbp)
+	setNE -132(%rbp)
+	movl -132(%rbp), %r10d
+	movl %r10d, -136(%rbp)
+	cmpl $0, -136(%rbp)
+	jE .Ltmp.42
 	movl $5, %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-.Ltmp.50:
+.Ltmp.42:
+	cmpl $4, -128(%rbp)
+	movl $0, -140(%rbp)
+	setNE -140(%rbp)
+	movl -140(%rbp), %r10d
+	movl %r10d, -144(%rbp)
+	cmpl $0, -144(%rbp)
+	jE .Ltmp.45
+	movl $6, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.45:
+	movl $0, -148(%rbp)
+.Lcontinue_tmp.7:
+	movq -24(%rbp), %r10
+	movq %r10, -160(%rbp)
+	cmpq $0, -160(%rbp)
+	jE .Lbreak_tmp.7
+	cmpl $10, -148(%rbp)
+	movl $0, -164(%rbp)
+	setGE -164(%rbp)
+	movl -164(%rbp), %r10d
+	movl %r10d, -168(%rbp)
+	cmpl $0, -168(%rbp)
+	jE .Ltmp.49
+	movl $0, %r10d
+	movslq %r10d, %r11
+	movq %r11, -176(%rbp)
+	movq -176(%rbp), %r10
+	movq %r10, -24(%rbp)
+	jmp .Lcontinue_tmp.7
+.Ltmp.49:
+	movl -148(%rbp), %r10d
+	movl %r10d, -180(%rbp)
+	addl $1, -180(%rbp)
+	movl -180(%rbp), %r10d
+	movl %r10d, -148(%rbp)
+	jmp .Lcontinue_tmp.7
+.Lbreak_tmp.7:
+	cmpl $10, -148(%rbp)
+	movl $0, -184(%rbp)
+	setNE -184(%rbp)
+	movl -184(%rbp), %r10d
+	movl %r10d, -188(%rbp)
+	cmpl $0, -188(%rbp)
+	jE .Ltmp.54
+	movl $7, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.54:
 	movl $0, %eax
 	movq %rbp, %rsp
 	popq %rbp
@@ -225,18 +200,4 @@ main:
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-	.globl i
-	.data
-	.align 4
-i:
-	.long 128
-	.globl l
-	.data
-	.align 8
-l:
-	.quad 128
-	.data
-	.align 8
-l.2:
-	.quad 0
 	.section	.note.GNU-stack,"",@progbits

@@ -557,7 +557,7 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
 
                             instructions.append(TAC_JumpIfZeroInst(v2, false_label))
 
-                            result = makeTempVariable(expression.retType,symbolTable)
+                            result = makeTempVariable(expression.retType, symbolTable)
 
                             end = makeTemp()
 
@@ -628,7 +628,6 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
         case parser.Var_Expression(identifier=id):
             return PlainOperand(TAC_VariableValue(id))
             
-
         case parser.Assignment_Expression(lvalue=lvalue, exp=exp):
             lval = TAC_parseInstructions(lvalue, instructions, symbolTable)
             rval = TAC_emitTackyAndConvert(exp, instructions, symbolTable)
@@ -652,6 +651,7 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                     src = TAC_emitTackyAndConvert(exp, instructions, symbolTable)
                     #src = TAC_parseInstructions(exp, instructions, symbolTable)
                     
+                    """
                     realType = None
 
                     match src:
@@ -683,8 +683,10 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                         case _:
                             print("Invalid TAC Value.")
                             sys.exit(1)
+                    """
                     
-                    dst = makeTempVariable(realType, symbolTable)
+                    dst = makeTempVariable(exp.retType, symbolTable)
+                    #dst = makeTempVariable(realType, symbolTable)
                             
                     instructions.append(TAC_CopyInstruction(src, dst))
                     a.append(dst)
@@ -699,7 +701,8 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
             cond = TAC_emitTackyAndConvert(condExp, instructions, symbolTable)
             #cond = TAC_parseInstructions(condExp, instructions, symbolTable)
 
-            c = makeTempVariable(expression.retType, symbolTable)
+            #es aqui!
+            c = makeTempVariable(condExp.retType, symbolTable)
             
             instructions.append(TAC_CopyInstruction(cond, c))
 
@@ -709,7 +712,7 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
             thenE = TAC_emitTackyAndConvert(thenExp, instructions, symbolTable)
             #thenE = TAC_parseInstructions(thenExp, instructions, symbolTable)
 
-            v1 = makeTempVariable(expression.retType, symbolTable)
+            v1 = makeTempVariable(thenExp.retType, symbolTable)
             
             instructions.append(TAC_CopyInstruction(thenE, v1))
 
@@ -725,7 +728,7 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
             elseE = TAC_emitTackyAndConvert(elseExp, instructions, symbolTable)
             #elseE = TAC_parseInstructions(elseExp, instructions, symbolTable)
             
-            v2 = makeTempVariable(expression.retType, symbolTable)
+            v2 = makeTempVariable(elseExp.retType, symbolTable)
             
             instructions.append(TAC_CopyInstruction(elseE, v2))
 
@@ -734,6 +737,7 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
             instructions.append(TAC_LabelInst(end))
 
             return PlainOperand(result)
+        
         
         case parser.AddrOf(exp = exp):
             
@@ -748,7 +752,6 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                 case DereferencedPointer(val=ptr):
                     return PlainOperand(ptr)
                     
-
         case parser.Dereference(exp=exp):
             dst = TAC_emitTackyAndConvert(exp, instructions, symbolTable)
             return DereferencedPointer(dst)
@@ -879,6 +882,7 @@ def TAC_parseStatement(statement, instructions, symbolTable, end=None):
             
 
         case parser.IfStatement(exp=exp, thenS=thenS, elseS=elseS):
+
             val = TAC_emitTackyAndConvert(exp, instructions, symbolTable)
             #val = TAC_parseInstructions(exp, instructions, symbolTable)
 
