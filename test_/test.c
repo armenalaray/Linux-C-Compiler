@@ -4,12 +4,11 @@ int *return_pointer(int *in) {
 }
 
 int main(void) {
+    int b = 2;
+    int * a = 0;
     
-    for (int* a = 0; a != 0;)
-    {
-        a = return_pointer(a);
-        if (a == 0) {
-            break; // Prevent infinite loop
-        }
-    }
+    a = &b;
+    *a = 2;
+
+    b = *a;
 }

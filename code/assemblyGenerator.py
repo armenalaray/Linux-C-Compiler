@@ -157,6 +157,12 @@ class MovZeroExtendIns:
     def __repr__(self):
         return self.__str__()    
     
+class LeaInstruction:
+
+    def __init__(self, sourceO, destO):
+        self.sourceO = sourceO
+        self.destO = destO
+        
 
 class UnaryInstruction:
     def __init__(self, operator, assType, dest):
@@ -349,13 +355,20 @@ class PseudoRegisterOperand:
 
     def __repr__(self):
         return self.__str__()
-
+"""
 class StackOperand:
     def __init__(self, offset):
         self.offset = offset
 
     def __str__(self):
         return r"Stack({self.offset})".format(self=self)
+"""
+
+class MemoryOperand:
+    def __init__(self, reg, int):
+        self.reg = reg
+        self.int = int
+    
 
 class DataOperand:
     def __init__(self, identifier):
@@ -451,10 +464,12 @@ class RegisterType(Enum):
     CX = 3
     R8 = 4
     R9 = 5
+    
     AX = 6
     R10 = 7
     R11 = 8
     SP = 9
+    BP = 10
 
 class SSERegisterType(Enum):
     XMM0 = 0
@@ -584,6 +599,10 @@ def parseValue(v, symbolTable, topLevelList):
                 case parser.DoubleType():
                     asmType = AssemblySize(AssemblyType.DOUBLE)
                     cType = parser.DoubleType()
+                
+                case parser.PointerType(referenceType = referenceType):
+                    asmType = AssemblySize(AssemblyType.QUADWORD)
+                    cType = parser.ULongType()
 
                 case _:
                     print("Error: Invalid Assembly Variable. {0}".format(symbolTable[i].type))
@@ -612,9 +631,13 @@ def parseValue(v, symbolTable, topLevelList):
                 case parser.DoubleType():
                     asmType = AssemblySize(AssemblyType.DOUBLE)
                     cType = parser.DoubleType()
+                
+                case parser.PointerType(referenceType = referenceType):
+                    asmType = AssemblySize(AssemblyType.QUADWORD)
+                    cType = parser.ULongType()
 
                 case _:
-                    print("Error: Invalid Assembly Variable. {0}".format(symbolTable[i].type))
+                    print("Error: Invalid Assembly Variable. {0}".format(symbolTable[v].type))
                     sys.exit(1)
             return asmType, cType, PseudoRegisterOperand(v)
 
@@ -749,7 +772,6 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     ASM_Instructions.append(instruction0)
                     ASM_Instructions.append(instruction1)
                 else:
-
                     instruction0 = MovInstruction(AssemblySize(AssemblyType.DOUBLE), src, RegisterOperand(Register(SSERegisterType.XMM0)))
 
                     instruction1 = ReturnInstruction()
@@ -757,7 +779,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     ASM_Instructions.append(instruction0)
                     ASM_Instructions.append(instruction1)
 
-                    pass
+                    
                  
             case tacGenerator.TAC_UnaryInstruction(operator=o, src=src_, dst=dst_):
                 
@@ -1169,12 +1191,28 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 ASM_Instructions.append(Cvtsi2sd(type1, src, dst))
                 
 
+            case tacGenerator.TAC_GetAddress(src = src_, dst = dst_):
+                type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
+                type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
+
+                ASM_Instructions.append(LeaInstruction(src, dst))
+
 
             
+            case tacGenerator.TAC_Store(src = src, dst = dst):
+                pass
 
-            
+            case tacGenerator.TAC_Load(src = src_, dst = dst_):
+                type1, cType1, ptr = parseValue(src_, symbolTable, topLevelList)
+                type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
+                
+                instruction0 = MovInstruction(AssemblySize(AssemblyType.QUADWORD), ptr, RegisterOperand(Register(RegisterType.AX)))
+                
+                instruction1 = MovInstruction(type2, MemoryOperand(Register(RegisterType.AX), 0), dst)
 
-            
+                ASM_Instructions.append(instruction0)
+                ASM_Instructions.append(instruction1)
+                
 
             case _:
                 print("Invalid TAC Instruction. {0}".format(type(i)))
@@ -1209,24 +1247,9 @@ def ASM_parseTopLevel(topLevel, symbolTable, topLevelList):
 
             for i, (paramType, param) in enumerate(stackParams):
                 print(paramType, param)
-                i0 = MovInstruction(paramType, StackOperand(offset), param)
+                i0 = MovInstruction(paramType, MemoryOperand(Register(RegisterType.BP), offset), param)
                 ASM_Instructions.append(i0)
                 offset += 8
-
-            """
-            for i, param in enumerate(params):
-                
-                alignment, type = matchCType(symbolTable[param].type)
-  
-                a = None
-                if i > 5:
-                    a = MovInstruction(type, StackOperand(offset), PseudoRegisterOperand(param))
-                    offset += 8
-                else:
-                    a = MovInstruction(type, RegisterOperand(Register(list(RegisterType)[i])), PseudoRegisterOperand(param))
-
-                ASM_Instructions.append(a)
-            """
                 
             ASM_parseInstructions(instructions, ASM_Instructions, symbolTable, topLevelList)
             return Function(identifier, global_, ASM_Instructions)
@@ -1272,9 +1295,12 @@ def matchCType(type):
 
         case parser.DoubleType():
             return 8, AssemblySize(AssemblyType.DOUBLE)
+        
+        case parser.PointerType():
+            return 8, AssemblySize(AssemblyType.QUADWORD)
 
         case _:
-            print("Error: Invalid C Type to Assebly Conversion. {0}".format(type))
+            print("Error: Invalid C Type to Assembly Conversion. {0}".format(type))
             sys.exit(1)
 
 def ASM_parseAST(ast, symbolTable):
