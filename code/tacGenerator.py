@@ -450,18 +450,13 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
         case parser.Constant_Expression(const = const):
             return PlainOperand(TAC_ConstantValue(const))
         
-        #plong 
         case parser.Cast_Expression(targetType = targetType, exp = exp):
             result = TAC_emitTackyAndConvert(exp, instructions, symbolTable)
-            #result = TAC_parseInstructions(exp, instructions, symbolTable)
             
-            #PLong y PInt
             if type(targetType) == type(exp.retType):
                 return PlainOperand(result)
             
             dst = makeTempVariable(targetType, symbolTable)
-
-            #print("RetType:", type(exp.retType))
             
             match exp.retType:
                 case parser.DoubleType():
@@ -477,18 +472,16 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
 
                         case parser.ULongType():
                             instructions.append(TAC_DoubleToUInt(result, dst))
-                            
+                        
+                        case parser.PointerType():
+                            pass
                     
                 case parser.IntType():
                     match targetType:
                         case parser.DoubleType():
                             instructions.append(TAC_IntToDouble(result, dst))
                         
-                        #case parser.PointerType():
-                        #    pass
-                        
                         case _:
-                            #aqui metes a 
                             CastBetweenIntegers(targetType, exp.retType, result, dst, instructions)
                             
                 
@@ -496,11 +489,8 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                     match targetType:
                         case parser.DoubleType():
                             instructions.append(TAC_IntToDouble(result, dst))
-                        #case parser.PointerType():
-                        #    pass
 
                         case _:
-                            #aqui metes a 
                             CastBetweenIntegers(targetType, exp.retType, result, dst, instructions)
                             
 
@@ -509,11 +499,7 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                         case parser.DoubleType():
                             instructions.append(TAC_UIntToDouble(result, dst))
 
-                        #case parser.PointerType():
-                        #    pass
-
                         case _:
-                            #aqui metes a 
                             CastBetweenIntegers(targetType, exp.retType, result, dst, instructions)
                             
 
@@ -522,12 +508,21 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                         case parser.DoubleType():
                             instructions.append(TAC_UIntToDouble(result, dst))
                         
-                        #case parser.PointerType():
-                        #    pass
+                        case _:
+                            CastBetweenIntegers(targetType, exp.retType, result, dst, instructions)
+
+                case parser.PointerType():
+                    match targetType:
+                        case parser.DoubleType():
+                            print("Cannot cast pointer to double.")
+                            sys.exit(1)
 
                         case _:
-                            #aqui metes a 
                             CastBetweenIntegers(targetType, exp.retType, result, dst, instructions)
+
+                case _:
+                    print("Invalid Cast Type.")
+                    sys.exit(1)
                             
             return PlainOperand(dst)
             
