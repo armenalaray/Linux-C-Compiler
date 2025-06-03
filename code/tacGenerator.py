@@ -1022,6 +1022,9 @@ def TAC_convertSymbolsToTAC(symbolTable):
 
                             case parser.DoubleType():
                                 init = typeChecker.DoubleInit(0)
+
+                            case parser.PointerType():
+                                init = typeChecker.ULongInit(0)
                                 
                             case _:
                                 print("Error: Invalid Tentative Initializer. {0}".format(entry.type))

@@ -5,7 +5,7 @@
 
 
 
-#lastStage="--codegen"
+#lastStage="--tacky"
 #noLink="-c"
 library="-lmath.h"
 
