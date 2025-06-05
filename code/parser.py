@@ -127,10 +127,10 @@ class FunDecl(Decl, Node):
         return output
 
 class VariableDecl(Node):
-    def __init__(self, identifier, varType, exp=None, storageClass=None):
+    def __init__(self, identifier, varType, initializer=None, storageClass=None):
         self.identifier = identifier
         self.varType = varType 
-        self.exp = exp
+        self.initializer = initializer
         self.storageClass = storageClass    
 
     def __str__(self):
@@ -189,6 +189,28 @@ class FunctionDecl(Node):
             output += self.block.printNode(level)
 
         return output
+
+class Initializer(Node):
+    pass
+
+class SingleInit(Initializer, Node):
+    def __init__(self, exp, retType=None):
+        self.exp = exp
+        self.retType = retType
+    
+    def __str__(self):
+        return "SingleInit: {self.exp}".format(self=self)
+    
+    def printNode(self, level):
+        output = ''
+        output += "SingleInit: " + self.exp.printNode(level)
+        return output
+    
+
+class CompoundInit(Initializer, Node):
+    def __init__(self, initializerList, retType=None):
+        self.initializerList = initializerList 
+        self.retType = retType
         
 
 class Type:
@@ -312,7 +334,21 @@ class PointerType(Type, Node):
         output = "P"
         output += self.referenceType.printNode(level)
         return output
-        
+
+class ArrayType(Type, Node):
+    def __init__(self, elementType, size):
+        self.elementType = elementType
+        self.size = size
+    
+    def __str__(self):
+        return "ArrayType: {self.elementType} Size: {self.size}".format(self=self)
+    
+    def printNode(self, level):
+        output = "ArrayType: "
+        output += self.elementType.printNode(level) + " Size: " + str(self.size)
+        return output
+    
+    
 
 class FunType(Type, Node):
     def __init__(self, paramTypes, retType):
@@ -606,6 +642,13 @@ class AddrOf(Expression, Node):
 
         output += ")"
         return output
+
+class Subscript(Expression, Node):
+    def __init__(self, exp1, exp2, retType = None):
+        self.exp1 = exp1
+        self.exp2 = exp2
+        self.retType = retType
+        
 
 class Null_Expression(Expression):
     pass
