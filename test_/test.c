@@ -1,7 +1,4 @@
-
-int main(void)
-{
-    // this initializes each element in each array to zero
-    int (****(***(**(*arr3)[2])[3])[5]);
-
+/* Test out parsing a range of abstract declarators */
+int main(void) {
+    (int (****(***(**(*)[2])[4])[6]))other_ptr == ptr_arr;
 }

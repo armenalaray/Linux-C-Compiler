@@ -1140,7 +1140,15 @@ class AbstractPointer(AbstractDeclarator, Node):
         self.abstractD = abstractD
     
     def __str__(self):
-        return "Pointer to {self.abstractD}".format(self=self)
+        return "P{self.abstractD}".format(self=self)
+
+class AbstractArray(AbstractDeclarator, Node):
+    def __init__(self, abstractD, size):
+        self.abstractD = abstractD
+        self.size = size
+
+    def __str__(self):
+        return "Array({self.abstractD}, {self.size})".format(self=self)
 
 class AbstractBase(AbstractDeclarator, Node):
     pass
@@ -1156,8 +1164,33 @@ def parseDirectAbstractDeclarator(tokenList):
         takeToken(tokenList)
         abstractD = parseAbstractDeclarator(tokenList)
         expect(TokenType.CLOSE_PAREN, tokenList)
-        return abstractD
 
+        token = peek(tokenList)
+
+        if token[1] == TokenType.OPEN_BRACKET:
+            arrayD = parseAbstractArrayDeclarator(tokenList, abstractD)
+
+            token = peek(tokenList)
+
+            while token[1] == TokenType.OPEN_BRACKET:
+                arrayD = parseAbstractArrayDeclarator(tokenList, arrayD)
+                token = peek(tokenList)
+            
+            return arrayD    
+
+        return abstractD
+    
+    if token[1] == TokenType.OPEN_BRACKET:
+        declarator = parseAbstractArrayDeclarator(tokenList, AbstractBase())
+
+        token = peek(tokenList)
+
+        while token[1] == TokenType.OPEN_BRACKET:
+            declarator = parseAbstractArrayDeclarator(tokenList, declarator)
+            token = peek(tokenList)
+        
+        return declarator
+        
     print("Error: Invalid Direct Abstract Declaration.")
     sys.exit(1)
     
@@ -1171,7 +1204,8 @@ def parseAbstractDeclarator(tokenList):
 
         token = peek(tokenList)
 
-        if token[1] == TokenType.ASTERISK or token[1] == TokenType.OPEN_PAREN:
+        if token[1] == TokenType.ASTERISK or token[1] == TokenType.OPEN_PAREN or token[1] == TokenType.OPEN_BRACKET:
+
             abstractD = parseAbstractDeclarator(tokenList)
             return AbstractPointer(abstractD)
         
@@ -1220,11 +1254,11 @@ def parseFactor(tokenList):
 
         token = peek(tokenList)
 
-        if token[1] == TokenType.ASTERISK or token[1] == TokenType.OPEN_PAREN:
+        if token[1] == TokenType.ASTERISK or token[1] == TokenType.OPEN_PAREN or token[1] == TokenType.OPEN_BRACKET:
 
             abstractD = parseAbstractDeclarator(tokenList)
 
-            print("{0}{1}".format(abstractD, type))
+            print("{0} {1}".format(type, abstractD))
 
             type = processAbstractDeclarator(abstractD, type)
 
@@ -1597,6 +1631,30 @@ def parseSimpleDeclarator(tokenList):
     print("Error: Invalid Simple Declarator.")
     sys.exit(1)
 
+def parseAbstractArrayDeclarator(tokenList, sDeclarator):
+
+    takeToken(tokenList)
+
+    constant = parseExp(tokenList, 0)
+    
+    if type(constant) != Constant_Expression:
+        print("Error: Array size must be a constant expression.")
+        sys.exit(1)
+    
+    constant = constant.const
+
+    if type(constant) == ConstDouble:
+        print("Error: Array size can't be a double constant.")
+        sys.exit(1)
+    
+    if constant.int < 1:
+        print("Error: Array size must be greater than 0.")
+        sys.exit(1)
+
+    expect(TokenType.CLOSE_BRACKET, tokenList)
+
+    return AbstractArray(sDeclarator, constant.int)
+
 def parseArrayDeclarator(tokenList, sDeclarator):
 
     takeToken(tokenList)
@@ -1629,6 +1687,7 @@ def parseDirectDeclarator(tokenList):
 
     if token[1] == TokenType.OPEN_PAREN:
         paramInfos = parseParamList(tokenList) 
+        
         return FunDeclarator(paramInfos, sDeclarator)
 
     #one or many    
