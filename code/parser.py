@@ -145,8 +145,8 @@ class VariableDecl(Node):
         
         output += self.identifier
 
-        if self.exp:
-            output +=  " = " + self.exp.printNode(level)
+        if self.initializer:
+            output +=  " = " + self.initializer.printNode(level)
 
         #output = "{self.storageClass} {self.varType} {self.identifier} = {self.exp}".format(self=self)
 
@@ -344,8 +344,10 @@ class ArrayType(Type, Node):
         return "ArrayType: {self.elementType} Size: {self.size}".format(self=self)
     
     def printNode(self, level):
-        output = "ArrayType: "
-        output += self.elementType.printNode(level) + " Size: " + str(self.size)
+        output = "ArrayType( "
+
+        output += self.elementType.printNode(level) + ", size: " + str(self.size)
+        output += ")"
         return output
     
     
@@ -648,7 +650,7 @@ class Subscript(Expression, Node):
         self.exp1 = exp1
         self.exp2 = exp2
         self.retType = retType
-        
+
 
 class Null_Expression(Expression):
     pass
@@ -1595,6 +1597,30 @@ def parseSimpleDeclarator(tokenList):
     print("Error: Invalid Simple Declarator.")
     sys.exit(1)
 
+def parseArrayDeclarator(tokenList, sDeclarator):
+
+    takeToken(tokenList)
+
+    constant = parseExp(tokenList, 0)
+    
+    if type(constant) != Constant_Expression:
+        print("Error: Array size must be a constant expression.")
+        sys.exit(1)
+    
+    constant = constant.const
+
+    if type(constant) == ConstDouble:
+        print("Error: Array size can't be a double constant.")
+        sys.exit(1)
+    
+    if constant.int < 1:
+        print("Error: Array size must be greater than 0.")
+        sys.exit(1)
+
+    expect(TokenType.CLOSE_BRACKET, tokenList)
+
+    return ArrayDeclarator(sDeclarator, constant.int)
+
 def parseDirectDeclarator(tokenList):
 
     sDeclarator = parseSimpleDeclarator(tokenList)
@@ -1604,7 +1630,20 @@ def parseDirectDeclarator(tokenList):
     if token[1] == TokenType.OPEN_PAREN:
         paramInfos = parseParamList(tokenList) 
         return FunDeclarator(paramInfos, sDeclarator)
-    
+
+    #one or many    
+    if token[1] == TokenType.OPEN_BRACKET:
+        declarator = parseArrayDeclarator(tokenList, sDeclarator)
+        
+        token = peek(tokenList)
+
+        while token[1] == TokenType.OPEN_BRACKET:
+            declarator = parseArrayDeclarator(tokenList, declarator)
+            token = peek(tokenList)
+            
+
+        return declarator
+            
     return sDeclarator
 
     
@@ -1650,7 +1689,14 @@ def processDeclarator(declarator, baseType):
                 case _:
                     print("Error: Can't apply additional type derivations to a function type.")
                     sys.exit(1)
-            
+
+        case ArrayDeclarator(declarator = inner, size = size):
+            aT = ArrayType(baseType, size)
+            return processDeclarator(inner, aT)
+        
+        case _:
+            print("Errror: Invalid Decalarator.")
+            sys.exit(1)
 
 def parseDeclaration(tokenList):
 
@@ -1667,7 +1713,7 @@ def parseDeclaration(tokenList):
 
     declarator = parseDeclarator(tokenList)
 
-    print(type, declarator)
+    print(baseType, declarator)
 
     name, declType, params = processDeclarator(declarator, baseType)
 
@@ -1820,10 +1866,6 @@ def parseParamList(tokenList):
     
 def parseVarDecl(tokenList, name, type, storageClass):
 
-    #expect(TokenType.INT_KW, tokenList)
-
-    #id = parseIdentifier(tokenList)
-    
     token = peek(tokenList)
 
     exp = None
@@ -1864,6 +1906,15 @@ class PointerDeclarator(Declarator):
 
     def __str__(self):
         return "(PointerDeclarator: {self.declarator})".format(self=self)
+
+class ArrayDeclarator(Declarator):
+    def __init__(self, declarator, size):
+        self.declarator = declarator
+        self.size = size
+
+    def __str__(self):
+        return "(ArrayDeclarator: {self.declarator}, {self.size})".format(self=self)
+
 
 class FunDeclarator(Declarator):
     def __init__(self, paramInfoList, declarator):

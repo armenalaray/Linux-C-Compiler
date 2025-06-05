@@ -1,3 +1,18 @@
+name, ArrayType(ArrayType(int, 2), 1), []
+
+
+
+puede ser a(int a, int b) o a[123123]
+
+arrayDeclarator(2,3)
+
+
+
+
+
+
+
+
 	.globl get_null_pointer
 	.text
 get_null_pointer:

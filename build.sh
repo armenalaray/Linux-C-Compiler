@@ -5,7 +5,7 @@
 
 
 
-lastStage="--lex"
+lastStage="--parse"
 #noLink="-c"
 library="-lmath.h"
 
