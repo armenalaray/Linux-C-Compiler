@@ -54,7 +54,8 @@ class TokenType(Enum):
     DOUBLE_CONSTANT = 47
     DOUBLE_KW = 48
     AMPERSAND = 49
-
+    OPEN_BRACKET = 50
+    CLOSE_BRACKET = 51
 
 def Lex(buffer, iFile):
     tokenList = []
@@ -219,12 +220,18 @@ def Lex(buffer, iFile):
             continue
             #print(buffer)
         
-        is_char = r"[&,?:=><!%/*+(){};~-]"
+        is_char = r"[\[\]&,?:=><!%/*+(){};~-]"
         char = re.match(is_char, buffer)
         if char:
             #print(char)
             match char.group():
                 
+                case "[":
+                    tokenList.append(("[", TokenType.OPEN_BRACKET, LineNumber))
+
+                case "]":
+                    tokenList.append(("]", TokenType.CLOSE_BRACKET, LineNumber))
+
                 case "&":
                     tokenList.append(("&", TokenType.AMPERSAND, LineNumber))
 

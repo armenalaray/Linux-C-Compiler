@@ -5,7 +5,7 @@
 
 
 
-#lastStage="--tacky"
+lastStage="--lex"
 #noLink="-c"
 library="-lmath.h"
 

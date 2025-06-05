@@ -1,76 +1,61 @@
-/* Test pointers to static objects, and static pointers to automatic objects */
+/* Test that we allocate enough space for arrays on the stack
+ * and that they're correctly aligned
+ * all three arrays are >= 16 bytes so they must be 16-byte aligned
+ */
 
-unsigned int w = 4294967295U;
-int x = 10;
-unsigned int y = 4294967295U;
-double *dbl_ptr;
-
-long modify_ptr(long *new_ptr) {
-    static long *p;
-    if (new_ptr)
-    {
-        p = new_ptr;
-    }
-    return *p;
+int check_alignment(int *ptr) {
+    unsigned long addr = (unsigned long) ptr;
+    return (addr % 16 == 0);
 }
 
-
-int increment_ptr(void)
+int main(void)
 {
-    *dbl_ptr = *dbl_ptr + 5.0;
-    return 0;
-}
+    // this initializes each element in each array to zero
+    int arr[5] = {0};
+    int arr2[7] = {0};
+    int arr3[2][2] = {{0}};
 
-int main(void) {
-    // get a pointer to a static variable
-
-    int *pointer_to_static = &x;
-    x = 20;
-    // make sure we can read new value through pointer
-    if (*pointer_to_static != 20) {
+    // check alignment of arr
+    if (!check_alignment(arr)) {
         return 1;
     }
 
-    // now update value through pointer
-    *pointer_to_static = 100;
+    // assign values to arr
+    for (int i = 0; i < 5; i = i + 1)
+        arr[i] = i;
 
-    // make sure x and neighboring variables have correct values
-
-    if (x != 100) {
+    // check alignment of arr2
+    if (!check_alignment(arr2)) {
         return 2;
     }
-    if (w != 4294967295U) {
-        return 3;
+
+    // make sure we didn't overwrite arr2
+    for (int i = 0; i < 7; i = i + 1)
+        if (arr2[i])
+            return 3;
+
+    // now update arr2
+    for (int i = 0; i < 7; i = i + 1){
+        arr2[i] = -i;
     }
-    if (y != 4294967295U) {
+
+    // check alignment of arr3
+    if (!check_alignment((int *)arr3)) {
         return 4;
     }
-    if (dbl_ptr) {
-        return 5;
+
+    // check values of arr1 and arr3;
+    // make sure we didn't clobber them when overwriting arr2
+    for (int i = 0; i < 5; i = i + 1) {
+        if (arr[i] != i) {
+            return 5;
+        }
     }
 
-    // now try updating a pointer that is itself static
-    long l = 1000l;
-
-    // make static pointer in modify_ptr point to l
-    if (modify_ptr(&l) != 1000l) {
-        return 6;
-    }
-
-    // update l, make sure sure p in modify_ptr reflects that
-    l = -1;
-    // get value of p - pass null pointer as argument so p doesn't change
-    if (modify_ptr(0) != l) {
-        return 7;
-    }
-
-    // finally, try updating a variable through a global pointer
-    double d = 10.0;
-    dbl_ptr = &d;
-    increment_ptr();
-    if (*dbl_ptr != 15) {
-        return 8;
-    }
+    for (int i = 0; i < 2; i = i + 1)
+        for (int j = 0; j < 2; j = j + 1)
+            if (arr3[i][j] != 0)
+                return 6;
 
     return 0;
 }
