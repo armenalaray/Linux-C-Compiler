@@ -203,15 +203,39 @@ class SingleInit(Initializer, Node):
     
     def printNode(self, level):
         output = ''
-        output += "SingleInit: " + self.exp.printNode(level)
+        output += "SI: " + self.exp.printNode(level)
         return output
+
+def tabLevel(output, level):
+    l = level
+    while l > 0:
+        output += '\t'
+        l -= 1
     
+    return output
 
 class CompoundInit(Initializer, Node):
     def __init__(self, initializerList, retType=None):
         self.initializerList = initializerList 
         self.retType = retType
+
+    def __str__(self):
+        return ": {self.exp}".format(self=self)
+    
+    def printNode(self, level):
+        output = '\n'
         
+        output = tabLevel(output, level)
+
+        output += "CI:["
+
+        #output = tabLevel(output, level + 1)
+        
+        for i in self.initializerList:
+            output += i.printNode(level + 1) + ", "
+        
+        output += "]"
+        return output
 
 class Type:
     def __init__(self):
@@ -1221,6 +1245,7 @@ def parseAbstractDeclarator(tokenList):
         return abstractD
 
 def processAbstractDeclarator(abstractD, baseType):
+
     match abstractD:
         case AbstractBase():
             return baseType
@@ -1228,7 +1253,15 @@ def processAbstractDeclarator(abstractD, baseType):
         case AbstractPointer(abstractD = abstractD):
             derivedType = PointerType(baseType)
             return processAbstractDeclarator(abstractD, derivedType)
-            
+        
+        case AbstractArray(abstractD = abstractD, size = size):
+            aT = ArrayType(baseType, size)
+            return processAbstractDeclarator(abstractD, aT)
+
+        case _:
+            print("Error: Invalid Abstract Declarator.")
+            sys.exit(1)
+
 
     
 
@@ -1922,18 +1955,51 @@ def parseParamList(tokenList):
 
     return paramList
 
+
+def parseInitilizer(tokenList):
+    token = peek(tokenList)
+
+    if token[1] == TokenType.OPEN_BRACE:
+        initList = []
+
+        takeToken(tokenList)
+        init = parseInitilizer(tokenList)
+        initList.append(init)
+
+        token = peek(tokenList)
+
+        while token[1] == TokenType.COMMA:
+            takeToken(tokenList)
+
+            token = peek(tokenList)
+
+            if token[1] == TokenType.CLOSE_BRACE:
+                break
+
+            init = parseInitilizer(tokenList)
+            initList.append(init)
+
+            token = peek(tokenList)
+
+        expect(TokenType.CLOSE_BRACE, tokenList)
+
+        return CompoundInit(initList)
+
+    exp = parseExp(tokenList, 0)    
+    
+    return SingleInit(exp)
     
 def parseVarDecl(tokenList, name, type, storageClass):
 
     token = peek(tokenList)
 
-    exp = None
+    init = None
     if token[1] == TokenType.EQUAL:
         takeToken(tokenList)
-        exp = parseExp(tokenList, 0)
+        init = parseInitilizer(tokenList)
 
     expect(TokenType.SEMICOLON, tokenList)
-    return VariableDecl(name, type, exp, storageClass) 
+    return VariableDecl(name, type, init, storageClass) 
 
 
 def parseFunctionDecl(tokenList, name, type, params, storageClass):

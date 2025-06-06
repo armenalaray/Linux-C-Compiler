@@ -1,4 +1,4 @@
-/* Test out parsing a range of abstract declarators */
-int main(void) {
-    (int (****(***(**(*)[2])[4])[6]))other_ptr == ptr_arr;
-}
+int arr[3][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9},};
+
+int threeDarr[2][2][2] = { {{1, 2}, {3, 4,},},
+                              {{5, 6,}, {7, 8,},}, };
