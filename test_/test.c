@@ -1,4 +1,6 @@
-int arr[3][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9},};
-
-int threeDarr[2][2][2] = { {{1, 2}, {3, 4,},},
-                              {{5, 6,}, {7, 8,},}, };
+// An initializer list must have at least one element
+// NOTE: empty initializer lists are valid as of C23
+int main(void) {
+    int arr[1] = {};
+    return 0;
+}

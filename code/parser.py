@@ -670,10 +670,22 @@ class AddrOf(Expression, Node):
         return output
 
 class Subscript(Expression, Node):
-    def __init__(self, exp1, exp2, retType = None):
-        self.exp1 = exp1
-        self.exp2 = exp2
+    def __init__(self, ptrExp, indexExp, retType = None):
+        self.ptrExp = ptrExp
+        self.indexExp = indexExp
         self.retType = retType
+    
+    def printNode(self, level):
+        output = "("
+        
+        output += self.ptrExp.printNode(level) + "[" + self.indexExp.printNode(level) + "]"
+
+        if self.retType:
+            output +=  ' : ' + self.retType.printNode(level)
+
+        output += ")"
+
+        return output
 
 
 class Null_Expression(Expression):
@@ -929,6 +941,8 @@ class UnopType(Enum):
     NEGATE = 1
     COMPLEMENT = 2
     NOT = 3
+    #DEREFERENCE = 4
+    #ADDRESSOF = 5
 
 class BinopType(Enum):
     SUBTRACT = 1
@@ -1088,7 +1102,9 @@ def parseUnop(tokenList):
             case TokenType.EXCLAMATION:
                 return UnaryOperator(UnopType.NOT)
             #case TokenType.AMPERSAND:
-            #    return UnaryOperator(UnopType.)
+            #    return UnaryOperator(UnopType.ADDRESSOF)
+            #case TokenType.ASTERISK:
+            #    return UnaryOperator(UnopType.DEREFERENCE)
             case _:
                 print("Syntax Error Expected an Unary Operator but: {0} at Line {1}".format(actual[0], actual[2]))
                 sys.exit(1)            
@@ -1263,7 +1279,8 @@ def processAbstractDeclarator(abstractD, baseType):
             sys.exit(1)
 
 
-    
+
+"""
 
 def parseFactor(tokenList):
 
@@ -1355,6 +1372,7 @@ def parseFactor(tokenList):
         print("Malformed expression at Line {0}.".format(token[2]))
         sys.exit(1)
 
+"""
 
 precTable = {
     TokenType.ASTERISK : 50, 
@@ -1382,6 +1400,13 @@ def precedence(token):
     sys.exit(1)
 
 
+def UnaryOperatorToken(token):
+    if token != ():
+        if token[1] == TokenType.TILDE or token[1] == TokenType.HYPHEN or token[1] == TokenType.EXCLAMATION:
+            return True
+
+    return False
+
 def BinaryOperatorToken(token):
     if token != ():
         
@@ -1396,9 +1421,130 @@ def parseConditionalMiddle(tokenList):
     expect(TokenType.COLON, tokenList)
     return middle
 
+def parsePrimaryExp(tokenList):
+
+    nextT = peek(tokenList, 1)
+    token = peek(tokenList)
+
+    if token[1] == TokenType.IDENTIFIER and nextT[1] == TokenType.OPEN_PAREN:
+        iden = parseIdentifier(tokenList)
+        expect(TokenType.OPEN_PAREN, tokenList)
+
+        token = peek(tokenList)
+
+        if token[1] == TokenType.CLOSE_PAREN:
+            expect(TokenType.CLOSE_PAREN, tokenList)
+            return FunctionCall_Exp(iden)
+            
+        expList = parseArgumentList(tokenList)
+
+        expect(TokenType.CLOSE_PAREN, tokenList)
+
+        return FunctionCall_Exp(iden, expList)
+
+    token = peek(tokenList)
+
+    if isConstant(token):
+        const = parseConstant(tokenList)
+        return Constant_Expression(const)
+    
+    elif token[1] == TokenType.IDENTIFIER:
+        id = parseIdentifier(tokenList)
+        return Var_Expression(id)
+
+    elif token[1] == TokenType.ASTERISK:
+        takeToken(tokenList)
+        inner_exp = parseFactor(tokenList)
+        return Dereference(inner_exp)
+    
+    elif token[1] == TokenType.AMPERSAND:
+        takeToken(tokenList)
+        inner_exp = parseFactor(tokenList)
+        return AddrOf(inner_exp)
+        
+    elif token[1] == TokenType.OPEN_PAREN:
+        takeToken(tokenList)
+        inner_exp = parseExp(tokenList, 0)
+        expect(TokenType.CLOSE_PAREN, tokenList)
+        return inner_exp
+        
+    else:
+        print("Malformed expression at Line {0}.".format(token[2]))
+        sys.exit(1)
+
+def parseSubscript(tokenList, ptrExp):
+    takeToken(tokenList)
+    indexExp = parseExp(tokenList, 0)
+    expect(TokenType.CLOSE_BRACKET, tokenList)
+
+    return Subscript(ptrExp, indexExp)
+
+def parsePostfixExp(tokenList):
+
+    primaryExp = parsePrimaryExp(tokenList)
+
+    token = peek(tokenList)
+
+    if token[1] == TokenType.OPEN_BRACKET:
+        sS = parseSubscript(tokenList, primaryExp)
+
+        token = peek(tokenList)
+        while token[1] == TokenType.OPEN_BRACKET:
+            sS = parseSubscript(tokenList, sS)
+            token = peek(tokenList)
+                 
+        return sS
+    
+    return primaryExp
+    
+
+def parseUnaryExp(tokenList):
+    
+    token = peek(tokenList)
+
+    if UnaryOperatorToken(token):
+        unop = parseUnop(tokenList)
+        inner_exp = parseUnaryExp(tokenList)
+        return Unary_Expression(unop, inner_exp)
+
+    nextT = peek(tokenList, 1)
+    token = peek(tokenList)
+
+    if isTypeSpecifier(nextT) and token[1] == TokenType.OPEN_PAREN:
+        takeToken(tokenList)
+
+        token = peek(tokenList)
+
+        types = []
+        while isTypeSpecifier(token):
+            types.append(takeToken(tokenList))
+            token = peek(tokenList)
+
+        type = parseTypes(types)
+
+        token = peek(tokenList)
+
+        if token[1] == TokenType.ASTERISK or token[1] == TokenType.OPEN_PAREN or token[1] == TokenType.OPEN_BRACKET:
+
+            abstractD = parseAbstractDeclarator(tokenList)
+
+            print("{0} {1}".format(type, abstractD))
+
+            type = processAbstractDeclarator(abstractD, type)
+
+
+        expect(TokenType.CLOSE_PAREN, tokenList)
+
+        exp = parseUnaryExp(tokenList)
+
+        return Cast_Expression(type, exp)
+    
+    return parsePostfixExp(tokenList)
+        
+    
+
 def parseExp(tokenList, min_prec):
-    #breakpoint()
-    left = parseFactor(tokenList)
+    left = parseUnaryExp(tokenList)
     next_token = peek(tokenList)
     while BinaryOperatorToken(next_token) and precedence(next_token) >= min_prec:
         if next_token[1] == TokenType.EQUAL:
