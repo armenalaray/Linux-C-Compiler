@@ -168,9 +168,15 @@ def getCommonPointerType(exp1, exp2):
     elif isNullPointerConstant(exp2):
         return type1
     
-    print("Error: Expressions have incompatible types.")
+    print("Error: Expressions have incompatible types. {0} and {1}".format(type1, type2))
     sys.exit(1)
+
+
+def isIntegerType(targetType):
+    if type(targetType) == parser.IntType or type(targetType) == parser.LongType or type(targetType) == parser.UIntType or type(targetType) == parser.ULongType:
+        return True
     
+    return False
 
 def isArithmeticType(targetType):
     if type(targetType) == parser.IntType or type(targetType) == parser.LongType or type(targetType) == parser.UIntType or type(targetType) == parser.ULongType or type(targetType) == parser.DoubleType:
@@ -202,6 +208,12 @@ def typeCheckAndConvert(exp, symbolTable):
         
         case _:
             return typedExp
+
+def isAnLvalue(exp):
+    if type(exp) == parser.Var_Expression or type(exp) == parser.Dereference or type(exp) == parser.Subscript:
+        return True
+    
+    return False
 
 def typeCheckExpression(exp, symbolTable):
     match exp:
@@ -254,17 +266,36 @@ def typeCheckExpression(exp, symbolTable):
                     print("Error: Cannot derefence a non-pointer.")
                     sys.exit(1)
 
-        case parser.AddrOf(exp = exp):
+        case parser.Subscript(ptrExp = e1, indexExp = e2):
+            typedE1 = typeCheckAndConvert(e1, symbolTable)
+            typedE2 = typeCheckAndConvert(e2, symbolTable)
 
-            if type(exp) == parser.Var_Expression or type(exp) == parser.Dereference:
+            ptrType = None
+            if type(typedE1.retType) == parser.PointerType and isIntegerType(typedE2.retType):
+                ptrType = typedE1.retType
+                typedE2 = convertTo(typedE2, parser.LongType())
 
-                typedInner = typeCheckExpression(exp, symbolTable)
-                retType = parser.PointerType(typedInner.retType)
-                return parser.AddrOf(typedInner, retType)
-
+            elif isIntegerType(typedE1.retType) and type(typedE2.retType) == parser.PointerType:
+                ptrType = typedE2.retType
+                typedE1 = convertTo(typedE1, parser.LongType())
+            
             else:
+                print("Error: Invalid subscript operation. {0} and {1}".format(typedE1.retType, typedE2.retType))
+                sys.exit(1)
+
+            return parser.Subscript(typedE1, typedE2, ptrType.referenceType)
+            
+        case parser.AddrOf(exp = exp):
+            
+            if not isAnLvalue(exp):
                 print("Error: Can't take the address of a non-lvalue.")
                 sys.exit(1)
+            
+            typedInner = typeCheckExpression(exp, symbolTable)
+            retType = parser.PointerType(typedInner.retType)
+            return parser.AddrOf(typedInner, retType)
+
+            
 
         case parser.Cast_Expression(targetType = targetType, exp = exp):
 
@@ -285,18 +316,16 @@ def typeCheckExpression(exp, symbolTable):
             return parser.Var_Expression(id, symbolTable[id].type)
         
         case parser.Assignment_Expression(lvalue=lvalue, exp=exp):
-            if type(lvalue) == parser.Var_Expression or type(lvalue) == parser.Dereference:
-
-                l = typeCheckAndConvert(lvalue, symbolTable)
-                r = typeCheckAndConvert(exp, symbolTable)
-
-                r = convertByAssignment(r, l.retType)
-
-                return parser.Assignment_Expression(l, r, l.retType)
+            l = typeCheckAndConvert(lvalue, symbolTable)
             
-            else:
-                print("Error: Can't take the address of a non-lvalue.")
+            if not isAnLvalue(l):
+                print("Error: Tried to assign to a non-lvalue.")
                 sys.exit(1)
+                
+            r = typeCheckAndConvert(exp, symbolTable)
+            r = convertByAssignment(r, l.retType)
+            return parser.Assignment_Expression(l, r, l.retType)
+            
 
         case parser.Constant_Expression(const=const):
             #print(type(const))
@@ -350,68 +379,125 @@ def typeCheckExpression(exp, symbolTable):
                 case _:
                     return parser.Unary_Expression(op, e, e.retType)
                           
-
+        
         case parser.Binary_Expression(operator=op, left=left, right=right):
+            
+            def typeCheckCommonArithmeticBinaryExp(op, l, r):
+                match op.operator:        
+                    case parser.BinopType.MULTIPLY:
+
+                        if type(l.retType) == parser.PointerType or type(r.retType) == parser.PointerType:
+                            print("Error: Can't multiply a pointer.")
+                            sys.exit(1)
+
+                    case parser.BinopType.DIVIDE:
+
+                        if type(l.retType) == parser.PointerType or type(r.retType) == parser.PointerType:
+                            print("Error: Can't divide a pointer.")
+                            sys.exit(1)
+
+                    case parser.BinopType.MODULO:
+
+                        if type(l.retType) == parser.PointerType or type(r.retType) == parser.PointerType:
+                            print("Error: Can't take the modulo of a pointer.")
+                            sys.exit(1)
+                            
+
+                        if type(l.retType) == parser.DoubleType or type(r.retType) == parser.DoubleType:
+                            print("Error: Can't take the modulo of a double.")
+                            sys.exit(1)
+
+                    case parser.BinopType.AND:
+                        return parser.Binary_Expression(op, l, r, parser.IntType())
+                    case parser.BinopType.OR:
+                        return parser.Binary_Expression(op, l, r, parser.IntType())
+                
+                commonType = None
+
+                if type(l.retType) == parser.PointerType or type(r.retType) == parser.PointerType:
+                    commonType = getCommonPointerType(l, r)
+                else:
+                    commonType = getCommonType(l.retType, r.retType)
+
+                l = convertTo(l, commonType)
+                r = convertTo(r, commonType)
+
+                match op.operator:
+                    case parser.BinopType.ADD:
+                        return parser.Binary_Expression(op, l, r, commonType)
+                    case parser.BinopType.SUBTRACT:
+                        return parser.Binary_Expression(op, l, r, commonType)
+                        pass
+                    case parser.BinopType.MULTIPLY:
+                        return parser.Binary_Expression(op, l, r, commonType)
+                        pass
+                    case parser.BinopType.MODULO:
+                        return parser.Binary_Expression(op, l, r, commonType)
+                        pass
+                    case parser.BinopType.DIVIDE:
+                        return parser.Binary_Expression(op, l, r, commonType)
+                        pass
+                    case _:
+                        return parser.Binary_Expression(op, l, r, parser.IntType())
+
+            def matchRelationalOperator(op, l, r):
+                if isArithmeticType(l.retType) and isArithmeticType(r.retType):
+                    return typeCheckCommonArithmeticBinaryExp(op, l, r)
+                
+                elif type(l.retType) == parser.PointerType and l.matchType(r.retType):
+                    return parser.Binary_Expression(op, l, r, parser.IntType())
+                
             l = typeCheckAndConvert(left, symbolTable)
             r = typeCheckAndConvert(right, symbolTable)
 
             match op.operator:
-                
-                case parser.BinopType.MULTIPLY:
-
-                    if type(l.retType) == parser.PointerType or type(r.retType) == parser.PointerType:
-                        print("Error: Can't multiply a pointer.")
-                        sys.exit(1)
-
-                case parser.BinopType.DIVIDE:
-
-                    if type(l.retType) == parser.PointerType or type(r.retType) == parser.PointerType:
-                        print("Error: Can't divide a pointer.")
-                        sys.exit(1)
-
-                case parser.BinopType.MODULO:
-
-                    if type(l.retType) == parser.PointerType or type(r.retType) == parser.PointerType:
-                        print("Error: Can't take the modulo of a pointer.")
-                        sys.exit(1)
-                        
-
-                    if type(l.retType) == parser.DoubleType or type(r.retType) == parser.DoubleType:
-                        print("Error: Can't take the modulo of a double.")
-                        sys.exit(1)
-
-                case parser.BinopType.AND:
-                    return parser.Binary_Expression(op, l, r, parser.IntType())
-                case parser.BinopType.OR:
-                    return parser.Binary_Expression(op, l, r, parser.IntType())
-            
-            commonType = None
-
-            if type(l.retType) == parser.PointerType or type(r.retType) == parser.PointerType:
-                commonType = getCommonPointerType(l, r)
-            else:
-                commonType = getCommonType(l.retType, r.retType)
-
-            l = convertTo(l, commonType)
-            r = convertTo(r, commonType)
-
-            match op.operator:
                 case parser.BinopType.ADD:
-                    return parser.Binary_Expression(op, l, r, commonType)
+                    if isArithmeticType(l.retType) and isArithmeticType(r.retType):
+                        return typeCheckCommonArithmeticBinaryExp(op, l, r)
+
+                    elif type(l.retType) == parser.PointerType and isIntegerType(r.retType):
+                        convertedE2 = convertTo(r, parser.LongType())
+                        return parser.Binary_Expression(op, l, convertedE2, l.retType)
+                        
+                    elif isIntegerType(l.retType) and type(r.retType) == parser.PointerType:
+                        convertedE1 = convertTo(l, parser.LongType())
+                        return parser.Binary_Expression(op, convertedE1, r, r.retType)
+                    
+                    else:
+                        print("Error: Invalid operand types for addition.")
+                        sys.exit(1)
+
                 case parser.BinopType.SUBTRACT:
-                    return parser.Binary_Expression(op, l, r, commonType)
-                    pass
-                case parser.BinopType.MULTIPLY:
-                    return parser.Binary_Expression(op, l, r, commonType)
-                    pass
-                case parser.BinopType.MODULO:
-                    return parser.Binary_Expression(op, l, r, commonType)
-                    pass
-                case parser.BinopType.DIVIDE:
-                    return parser.Binary_Expression(op, l, r, commonType)
-                    pass
-                case _:
-                    return parser.Binary_Expression(op, l, r, parser.IntType())
+                    
+                    if isArithmeticType(l.retType) and isArithmeticType(r.retType):
+                        return typeCheckCommonArithmeticBinaryExp(op, l, r)
+
+                    elif type(l.retType) == parser.PointerType and isIntegerType(r.retType):
+
+                        convertedE2 = convertTo(r, parser.LongType())
+                        return parser.Binary_Expression(op, l, convertedE2, l.retType)
+                        
+                    elif type(l.retType) == parser.PointerType and l.matchType(r.retType):
+                        return parser.Binary_Expression(op, l, r, parser.LongType())
+                    
+                    else:
+                        print("Error: Invalid operand types for subtraction.")
+                        sys.exit(1)
+
+                case parser.BinopType.GREATERTHAN:
+                    return matchRelationalOperator(op, l, r)
+                    
+                case parser.BinopType.GREATEROREQUAL:
+                    return matchRelationalOperator(op, l, r)
+                    
+                case parser.BinopType.LESSTHAN:
+                    return matchRelationalOperator(op, l, r)
+                    
+                case parser.BinopType.LESSOREQUAL:
+                    return matchRelationalOperator(op, l, r)
+                    
+                case _:                    
+                    return typeCheckCommonArithmeticBinaryExp(op, l, r)
 
                     
         case parser.Conditional_Expression(condExp=condExp, thenExp=thenExp, elseExp=elseExp):
