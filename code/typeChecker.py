@@ -193,7 +193,15 @@ def convertByAssignment(exp, targetType):
     print("Error: Cannot convert type for assignment.")
     sys.exit(1)
 
-    
+
+def typeCheckAndConvert(exp, symbolTable):
+    typedExp = typeCheckExpression(exp, symbolTable)
+    match typedExp.retType:
+        case parser.ArrayType(elementType = elementType, size = size):
+            return parser.AddrOf(typedExp, parser.PointerType(elementType))
+        
+        case _:
+            return typedExp
 
 def typeCheckExpression(exp, symbolTable):
     match exp:
@@ -216,7 +224,9 @@ def typeCheckExpression(exp, symbolTable):
 
                         convertedArgs = []
                         for exp, targetType in zip(argumentList, paramTypes):
-                            exp = typeCheckExpression(exp, symbolTable)
+
+                            exp = typeCheckAndConvert(exp, symbolTable)
+                            #exp = typeCheckExpression(exp, symbolTable)
 
                             exp = convertByAssignment(exp, targetType)
 
@@ -233,7 +243,8 @@ def typeCheckExpression(exp, symbolTable):
                     sys.exit(1)
 
         case parser.Dereference(exp = exp):
-            typedInner = typeCheckExpression(exp, symbolTable)
+            typedInner = typeCheckAndConvert(exp, symbolTable)
+            #typedInner = typeCheckExpression(exp, symbolTable)
             
             match typedInner.retType:
                 case parser.PointerType(referenceType = referenceType):
@@ -257,7 +268,8 @@ def typeCheckExpression(exp, symbolTable):
 
         case parser.Cast_Expression(targetType = targetType, exp = exp):
 
-            e = typeCheckExpression(exp, symbolTable)
+            e = typeCheckAndConvert(exp, symbolTable)
+            #e = typeCheckExpression(exp, symbolTable)
 
             if (type(e.retType) == parser.PointerType and type(targetType) == parser.DoubleType) or (type(e.retType) == parser.DoubleType and type(targetType) == parser.PointerType):
                 print("Error: Casting pointer to double or a double to a pointer.")
@@ -275,8 +287,8 @@ def typeCheckExpression(exp, symbolTable):
         case parser.Assignment_Expression(lvalue=lvalue, exp=exp):
             if type(lvalue) == parser.Var_Expression or type(lvalue) == parser.Dereference:
 
-                l = typeCheckExpression(lvalue, symbolTable)
-                r = typeCheckExpression(exp, symbolTable)
+                l = typeCheckAndConvert(lvalue, symbolTable)
+                r = typeCheckAndConvert(exp, symbolTable)
 
                 r = convertByAssignment(r, l.retType)
 
@@ -310,7 +322,8 @@ def typeCheckExpression(exp, symbolTable):
                     sys.exit(1)
 
         case parser.Unary_Expression(operator=op, expression=exp):
-            e = typeCheckExpression(exp, symbolTable)
+            e = typeCheckAndConvert(exp, symbolTable)
+            #e = typeCheckExpression(exp, symbolTable)
             
             match op.operator:
                 case parser.UnopType.COMPLEMENT:
@@ -339,8 +352,8 @@ def typeCheckExpression(exp, symbolTable):
                           
 
         case parser.Binary_Expression(operator=op, left=left, right=right):
-            l = typeCheckExpression(left, symbolTable)
-            r = typeCheckExpression(right, symbolTable)
+            l = typeCheckAndConvert(left, symbolTable)
+            r = typeCheckAndConvert(right, symbolTable)
 
             match op.operator:
                 
@@ -403,10 +416,9 @@ def typeCheckExpression(exp, symbolTable):
                     
         case parser.Conditional_Expression(condExp=condExp, thenExp=thenExp, elseExp=elseExp):
 
-            condExp = typeCheckExpression(condExp, symbolTable)
-            
-            thenExp = typeCheckExpression(thenExp, symbolTable)
-            elseExp = typeCheckExpression(elseExp, symbolTable)
+            condExp = typeCheckAndConvert(condExp, symbolTable)
+            thenExp = typeCheckAndConvert(thenExp, symbolTable)
+            elseExp = typeCheckAndConvert(elseExp, symbolTable)
 
             commonType = None
 
@@ -612,10 +624,9 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
     else:
         symbolTable[varDecl.identifier] = Entry(varDecl.identifier, LocalAttributes(), varDecl.varType)
         
-        if varDecl.exp:
-            e = typeCheckExpression(varDecl.exp, symbolTable)
+        if varDecl.initializer:
+            #e = typeCheckExpression(varDecl.exp, symbolTable)
             e = convertByAssignment(e, varDecl.varType)
-            #e = convertTo(e, varDecl.varType)
 
             return parser.VariableDecl(varDecl.identifier, varDecl.varType, e, varDecl.storageClass)
         
@@ -652,7 +663,8 @@ def typeCheckForInit(forInit, symbolTable):
         
         case parser.InitExp(exp=exp):
             if exp:
-                exp = typeCheckExpression(exp, symbolTable)
+                exp = typeCheckAndConvert(exp, symbolTable)
+                #exp = typeCheckExpression(exp, symbolTable)
                 return parser.InitExp(exp)
             
             return parser.InitExp()
@@ -670,11 +682,13 @@ def typeCheckStatement(statement, symbolTable, functionParentName):
             
             c = None
             if condExp:
-                c = typeCheckExpression(condExp, symbolTable)
+                c = typeCheckAndConvert(condExp, symbolTable)
+                #c = typeCheckExpression(condExp, symbolTable)
 
             p = None
             if postExp:
-                p = typeCheckExpression(postExp, symbolTable)
+                p = typeCheckAndConvert(postExp, symbolTable)
+                #p = typeCheckExpression(postExp, symbolTable)
 
             s = typeCheckStatement(statement, symbolTable, functionParentName)
 
@@ -682,29 +696,38 @@ def typeCheckStatement(statement, symbolTable, functionParentName):
         
         case parser.DoWhileStatement(statement=statement, condExp=condExp):
             statement = typeCheckStatement(statement, symbolTable, functionParentName)
-            condExp = typeCheckExpression(condExp, symbolTable)
+
+            condExp = typeCheckAndConvert(condExp, symbolTable)
+            #condExp = typeCheckExpression(condExp, symbolTable)
 
             return parser.DoWhileStatement(statement, condExp)
 
         case parser.WhileStatement(condExp=condExp, statement=statement):
-            condExp = typeCheckExpression(condExp, symbolTable)
+
+            condExp = typeCheckAndConvert(condExp, symbolTable)
+            #condExp = typeCheckExpression(condExp, symbolTable)
+
             statement = typeCheckStatement(statement, symbolTable, functionParentName)
 
             return parser.WhileStatement(condExp, statement)
 
         case parser.ExpressionStmt(exp=exp):
-            e = typeCheckExpression(exp, symbolTable)
+            e = typeCheckAndConvert(exp, symbolTable)
+            #e = typeCheckExpression(exp, symbolTable)
+
             return parser.ExpressionStmt(e)
 
         case parser.ReturnStmt(expression=exp):
-            e = typeCheckExpression(exp, symbolTable)
+            e = typeCheckAndConvert(exp, symbolTable)
+            #e = typeCheckExpression(exp, symbolTable)
 
             e = convertByAssignment(e, symbolTable[functionParentName].type.retType)
 
             return parser.ReturnStmt(e)
             
         case parser.IfStatement(exp=exp, thenS=thenS, elseS=elseS):
-            exp = typeCheckExpression(exp, symbolTable)
+            exp = typeCheckAndConvert(exp, symbolTable)
+            #exp = typeCheckExpression(exp, symbolTable)
 
             thenS = typeCheckStatement(thenS, symbolTable, functionParentName)
 

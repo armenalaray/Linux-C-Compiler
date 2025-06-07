@@ -364,6 +364,14 @@ class ArrayType(Type, Node):
         self.elementType = elementType
         self.size = size
     
+    def checkType(self, other):
+        
+        if type(other) == ArrayType:
+            if self.elementType.checkType(other.elementType):
+                return True
+        
+        return False
+            
     def __str__(self):
         return "ArrayType: {self.elementType} Size: {self.size}".format(self=self)
     
