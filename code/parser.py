@@ -1402,7 +1402,7 @@ def precedence(token):
 
 def UnaryOperatorToken(token):
     if token != ():
-        if token[1] == TokenType.TILDE or token[1] == TokenType.HYPHEN or token[1] == TokenType.EXCLAMATION:
+        if token[1] == TokenType.TILDE or token[1] == TokenType.HYPHEN or token[1] == TokenType.EXCLAMATION or token[1] == TokenType.ASTERISK or token[1] == TokenType.AMPERSAND:
             return True
 
     return False
@@ -1452,16 +1452,6 @@ def parsePrimaryExp(tokenList):
         id = parseIdentifier(tokenList)
         return Var_Expression(id)
 
-    elif token[1] == TokenType.ASTERISK:
-        takeToken(tokenList)
-        inner_exp = parseFactor(tokenList)
-        return Dereference(inner_exp)
-    
-    elif token[1] == TokenType.AMPERSAND:
-        takeToken(tokenList)
-        inner_exp = parseFactor(tokenList)
-        return AddrOf(inner_exp)
-        
     elif token[1] == TokenType.OPEN_PAREN:
         takeToken(tokenList)
         inner_exp = parseExp(tokenList, 0)
@@ -1503,9 +1493,20 @@ def parseUnaryExp(tokenList):
     token = peek(tokenList)
 
     if UnaryOperatorToken(token):
-        unop = parseUnop(tokenList)
-        inner_exp = parseUnaryExp(tokenList)
-        return Unary_Expression(unop, inner_exp)
+        if token[1] == TokenType.ASTERISK:
+            takeToken(tokenList)
+            inner_exp = parseUnaryExp(tokenList)
+            return Dereference(inner_exp)
+        
+        elif token[1] == TokenType.AMPERSAND:
+            takeToken(tokenList)
+            inner_exp = parseUnaryExp(tokenList)
+            return AddrOf(inner_exp)
+        
+        else:
+            unop = parseUnop(tokenList)
+            inner_exp = parseUnaryExp(tokenList)
+            return Unary_Expression(unop, inner_exp)
 
     nextT = peek(tokenList, 1)
     token = peek(tokenList)

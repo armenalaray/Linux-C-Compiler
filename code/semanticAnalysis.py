@@ -2,8 +2,8 @@ import copy
 import sys
 import parser
 
-def resolveExpression(exp, idMap):
-    match exp:        
+def resolveExpression(expression, idMap):
+    match expression:        
         case parser.Assignment_Expression(lvalue=lvalue, exp=exp):
             
             #if type(lvalue) != parser.Var_Expression:
@@ -79,6 +79,11 @@ def resolveExpression(exp, idMap):
             e = resolveExpression(exp, idMap)
             return parser.Dereference(e)            
 
+        case parser.Subscript(ptrExp = ptrExp, indexExp = indexExp):
+            ptrExp = resolveExpression(ptrExp, idMap)
+            indexExp = resolveExpression(indexExp, idMap)
+            return parser.Subscript(ptrExp, indexExp)
+
         case _:
             #print(type(exp))
             print("Invalid expression type: {0}".format(type(exp)))
@@ -139,6 +144,25 @@ def resolveFileScopeVarDecl(dec, idMap):
 
     return dec
 
+def resolveInitializer(initializer, idMap):
+    match initializer:
+        case parser.SingleInit(exp=exp):
+            exp = resolveExpression(exp, idMap)
+            return parser.SingleInit(exp)
+            
+        case parser.CompoundInit(initializerList = initializerList):
+            initList = []
+            for i in initializerList:
+                init = resolveInitializer(i, idMap)
+                initList.append(init)
+    
+            #print(initList)
+            return parser.CompoundInit(initList)
+        
+        case _:
+            print("Invalid initializer type: {0}".format(type(initializer)))
+            sys.exit(1)
+
 def resolveLocalVarDecl(dec, idMap):
 
     if dec.identifier in idMap:
@@ -152,9 +176,9 @@ def resolveLocalVarDecl(dec, idMap):
         return resolveFileScopeVarDecl(dec, idMap)
     else:
         uniqueName = resolveID(dec.identifier, idMap)
-        if dec.exp:
-            exp = resolveExpression(dec.exp, idMap)
-            return parser.VariableDecl(uniqueName, dec.varType, exp, dec.storageClass)
+        if dec.initializer:
+            init = resolveInitializer(dec.initializer, idMap)
+            return parser.VariableDecl(uniqueName, dec.varType, init, dec.storageClass)
     
         return parser.VariableDecl(uniqueName, dec.varType, None, dec.storageClass)
 
