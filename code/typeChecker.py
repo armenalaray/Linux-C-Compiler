@@ -558,7 +558,7 @@ def GetStaticInitializer(varType, int):
             print("Error: Invalid Variable Type. {0}".format(varType))
             sys.exit(1)
 
-
+"""
 def AnnotateExpression(varDecl):
 
     match varDecl.exp:
@@ -612,11 +612,16 @@ def AnnotateExpression(varDecl):
         case _:
             print("Error: Non constant expression.")
             sys.exit(1)
+"""
 
 def AnnotateInitializer(varDecl, type_, init, initList):
-    print(type_)
-    match init:
-        case parser.SingleInit(exp = exp, retType = retType):
+
+    match type_, init:
+        case parser.ArrayType(elementType = elementType, size = size), parser.SingleInit(exp = exp, retType = retType):
+            print("Error: Scalar Initializer for Array Type.")
+            sys.exit(1)
+
+        case _, parser.SingleInit(exp = exp, retType = retType):
             match exp:
                 case parser.Constant_Expression(const = const):
                     match const:
@@ -660,14 +665,17 @@ def AnnotateInitializer(varDecl, type_, init, initList):
                 case _:
                     print("Error: Non constant expression.")
                     sys.exit(1)
-            pass
 
-        case parser.CompoundInit(initializerList = initializerList, retType = retType):
+        case parser.ArrayType(elementType = elementType, size = size), parser.CompoundInit(initializerList = initializerList, retType = retType):
             
+            if len(initializerList) > size:
+                print("Error: Wrong number of values of initializer.")
+                sys.exit(1)
+
             astInitList = []
             index  = 0
             for astInit in initializerList:
-                i = AnnotateInitializer(varDecl, type_.elementType, astInit, initList)
+                i = AnnotateInitializer(varDecl, elementType, astInit, initList)
                 astInitList.append(i)
                 index += 1
 
@@ -680,7 +688,7 @@ def AnnotateInitializer(varDecl, type_, init, initList):
 
 
         case _:
-            print("Error: Invalid Innitializer.")
+            print("Error: Can't Initialize a scalar object with a compound initializer.")
             sys.exit(1)
 
 
@@ -808,7 +816,7 @@ def typeCheckInitializer(targetType, initializer, symbolTable):
 def typeCheckLocalVarDecl(varDecl, symbolTable):
 
     if varDecl.storageClass.storageClass == parser.StorageType.EXTERN:
-        if varDecl.exp:
+        if varDecl.initialzer:
             print("Error: Initializer on local extern variable declaration.")
             sys.exit(1)
         
@@ -832,14 +840,17 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
         
         initialValue = None
         
-        if varDecl.exp:
-            initialValue = AnnotateExpression(varDecl)
+        if varDecl.initializer:
+            initList = []
+            astInit = AnnotateInitializer(varDecl, varDecl.varType, varDecl.initializer, initList)
+            varDecl.initializer = astInit
+            initialValue = Initial(initList)
         else:
             initialValue = GetStaticInitializer(varDecl.varType, 0)
         
         symbolTable[varDecl.identifier] = Entry(varDecl.identifier, StaticAttributes(initialVal=initialValue, global_=False), varDecl.varType)
 
-        return parser.VariableDecl(varDecl.identifier, varDecl.varType, varDecl.exp, varDecl.storageClass)
+        return parser.VariableDecl(varDecl.identifier, varDecl.varType, varDecl.initializer, varDecl.storageClass)
 
             
     else:
