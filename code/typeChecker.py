@@ -101,6 +101,13 @@ class DoubleInit(StaticInit):
     def __str__(self):
         return "{self.double}".format(self=self)
 
+class ZeroInit(StaticInit):
+    def __init__(self, bytes):
+        self.bytes = bytes
+
+    def __str__(self):
+        return "Ale"
+
 def getCommonType(type1, type2):
     if type(type1) == type(type2):
         return type1
@@ -606,7 +613,7 @@ def AnnotateExpression(varDecl):
             print("Error: Non constant expression.")
             sys.exit(1)
 
-def AnnotateInitializer(varDecl, type_, init, initList):
+def AnnotateInitializer(varDecl, type_, init, initList, baseTypeSize):
     print(type_)
     match init:
         case parser.SingleInit(exp = exp, retType = retType):
@@ -658,8 +665,17 @@ def AnnotateInitializer(varDecl, type_, init, initList):
             pass
 
         case parser.CompoundInit(initializerList = initializerList, retType = retType):
+            # 3
+            type_.size
+            index  = 0
             for i in initializerList:
-                AnnotateInitializer(varDecl, type_.elementType, i, initList)
+                AnnotateInitializer(varDecl, type_.elementType, i, initList, baseTypeSize)
+                index += 1
+
+            while index < type_.size:
+                initList.append(ZeroInit(baseTypeSize))
+                index += 1
+
 
         case _:
             print("Error: Invalid Innitializer.")
@@ -671,8 +687,9 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
     initialValue = None
 
     if varDecl.initializer:
+        baseTypeSize = varDecl.varType.getBaseTypeSize()
         initList = []
-        AnnotateInitializer(varDecl, varDecl.varType, varDecl.initializer, initList)
+        AnnotateInitializer(varDecl, varDecl.varType, varDecl.initializer, initList, baseTypeSize)
         initialValue = Initial(initList)
 
     else:
