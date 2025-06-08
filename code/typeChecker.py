@@ -614,12 +614,23 @@ def AnnotateExpression(varDecl):
             sys.exit(1)
 """
 
+def CreateZeroInitializer(type_, initList):
+    match type_:
+        case parser.ArrayType(elementType = elementType, size = size):
+            for i in range(size):    
+                CreateZeroInitializer(elementType, initList)
+            
+        case _:
+            initList.append(GetStaticInitializer(type_, 0))
+            
+
 def AnnotateInitializer(varDecl, type_, init, initList):
 
     match type_, init:
         case parser.ArrayType(elementType = elementType, size = size), parser.SingleInit(exp = exp, retType = retType):
             print("Error: Scalar Initializer for Array Type.")
             sys.exit(1)
+            
 
         case _, parser.SingleInit(exp = exp, retType = retType):
             match exp:
@@ -834,7 +845,7 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
         else:
             symbolTable[varDecl.identifier] = Entry(varDecl.identifier, StaticAttributes(NoInitializer(), global_=True), varDecl.varType)
 
-        return parser.VariableDecl(varDecl.identifier, varDecl.varType, varDecl.exp, varDecl.storageClass)
+        return parser.VariableDecl(varDecl.identifier, varDecl.varType, varDecl.initializer, varDecl.storageClass)
     
     elif varDecl.storageClass.storageClass == parser.StorageType.STATIC:
         
@@ -846,7 +857,9 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
             varDecl.initializer = astInit
             initialValue = Initial(initList)
         else:
-            initialValue = GetStaticInitializer(varDecl.varType, 0)
+            initList = []
+            CreateZeroInitializer(varDecl.varType, initList)
+            initialValue = Initial(initList)
         
         symbolTable[varDecl.identifier] = Entry(varDecl.identifier, StaticAttributes(initialVal=initialValue, global_=False), varDecl.varType)
 
