@@ -298,9 +298,12 @@ def typeCheckExpression(exp, symbolTable):
             
 
         case parser.Cast_Expression(targetType = targetType, exp = exp):
-
+            
+            if type(targetType) == parser.ArrayType:
+                print("Error: Cannot cast to an array type.")
+                sys.exit(1)
+            
             e = typeCheckAndConvert(exp, symbolTable)
-            #e = typeCheckExpression(exp, symbolTable)
 
             if (type(e.retType) == parser.PointerType and type(targetType) == parser.DoubleType) or (type(e.retType) == parser.DoubleType and type(targetType) == parser.PointerType):
                 print("Error: Casting pointer to double or a double to a pointer.")
@@ -667,8 +670,66 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
 
     return parser.VariableDecl(varDecl.identifier, varDecl.varType, varDecl.exp, varDecl.storageClass)
 
+def zeroInitializer(elementType):
+    match elementType:
+        case parser.IntType():
+            return parser.SingleInit(parser.Constant_Expression(parser.ConstInt(0), elementType), elementType)
+        
+        case parser.LongType():
+            return parser.SingleInit(parser.Constant_Expression(parser.ConstLong(0), elementType), elementType)
 
-    
+        case parser.UIntType():
+            return parser.SingleInit(parser.Constant_Expression(parser.ConstUInt(0), elementType), elementType)
+            
+        case parser.ULongType():
+            return parser.SingleInit(parser.Constant_Expression(parser.ConstULong(0), elementType), elementType)
+
+        case parser.DoubleType():
+            return parser.SingleInit(parser.Constant_Expression(parser.ConstDouble(0), elementType), elementType)
+        
+        case parser.PointerType():
+            return parser.SingleInit(parser.Constant_Expression(parser.ConstULong(0), elementType), elementType)
+
+        case parser.ArrayType(elementType = elementType_, size = size):
+            initList = []
+            for i in range(size):
+                init = zeroInitializer(elementType_)
+                initList.append(init)
+
+            return parser.CompoundInit(initList, elementType)
+            
+        case _:
+            print("Error: Cannot create zero initializer for type {0}".format(elementType))
+            sys.exit(1)
+    pass
+
+def typeCheckInitializer(targetType, initializer, symbolTable):
+    match targetType, initializer:
+        case _, parser.SingleInit(exp = exp):
+            e = typeCheckAndConvert(exp, symbolTable)
+            e = convertByAssignment(e, targetType)
+            return parser.SingleInit(e, targetType)
+
+        case parser.ArrayType(elementType = elementType, size = size), parser.CompoundInit(initializerList = initializerList):
+            if len(initializerList) > size:
+                print("Error: Wrong number of values of initializer.")
+                sys.exit(1)
+
+            typeCheckedList = []
+            for i in initializerList:
+                init = typeCheckInitializer(elementType, i, symbolTable)
+                typeCheckedList.append(init)
+
+            while len(typeCheckedList) < size:
+                typeCheckedList.append(zeroInitializer(elementType))
+
+            return parser.CompoundInit(typeCheckedList, targetType)
+
+
+
+        case _:
+            print("Error: Can't Initialize a scalar object with a compound initializer.")
+            sys.exit(1)
 
 def typeCheckLocalVarDecl(varDecl, symbolTable):
 
@@ -711,10 +772,9 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
         symbolTable[varDecl.identifier] = Entry(varDecl.identifier, LocalAttributes(), varDecl.varType)
         
         if varDecl.initializer:
-            #e = typeCheckExpression(varDecl.exp, symbolTable)
-            e = convertByAssignment(e, varDecl.varType)
+            init = typeCheckInitializer(varDecl.varType, varDecl.initializer, symbolTable)
 
-            return parser.VariableDecl(varDecl.identifier, varDecl.varType, e, varDecl.storageClass)
+            return parser.VariableDecl(varDecl.identifier, varDecl.varType, init, varDecl.storageClass)
         
         return parser.VariableDecl(varDecl.identifier, varDecl.varType, None, varDecl.storageClass)
 
@@ -857,6 +917,23 @@ def typeCheckBlock(block, symbolTable, functionParentName):
         
 def typeCheckFunctionDeclaration(funDec, symbolTable):
     
+
+    if type(funDec.funType.retType) == parser.ArrayType:
+        print("Error: A function cannot return an array.")
+        sys.exit(1)
+
+    adjustedParamTypes = []
+    for paramType in funDec.funType.paramTypes:
+        match paramType:
+            case parser.ArrayType(elementType = elementType, size = size):
+                adjT = parser.PointerType(referenceType= elementType)
+                adjustedParamTypes.append(adjT)
+
+            case _:
+                adjustedParamTypes.append(paramType)
+
+    funDec.funType.paramTypes = adjustedParamTypes
+
     funType = funDec.funType
     hasBody = funDec.block != None
     alreadyDefined = False
