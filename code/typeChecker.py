@@ -623,37 +623,35 @@ def AnnotateInitializer(varDecl, type_, init, initList):
                         case parser.ConstLong(int = int):
                             temp = parser.Constant_Expression(const, parser.LongType())
                             temp = convertByAssignment(temp, type_)
-                            varDecl.initializer = parser.SingleInit(temp, type_)
-                            
-                            initList.append(GetStaticInitializer(type_, int))                            
+                            initList.append(GetStaticInitializer(type_, int))  
+                            return parser.SingleInit(temp, type_)
 
                         case parser.ConstInt(int = int):
                             temp = parser.Constant_Expression(const, parser.IntType())
                             temp = convertByAssignment(temp, type_)
-                            varDecl.initializer = parser.SingleInit(temp, type_)
-
                             initList.append(GetStaticInitializer(type_, int))                            
+                            return parser.SingleInit(temp, type_)
 
                         case parser.ConstULong(int = int):
                             temp = parser.Constant_Expression(const, parser.ULongType())
                             temp = convertByAssignment(temp, type_)
-                            varDecl.initializer = parser.SingleInit(temp, type_)
-
                             initList.append(GetStaticInitializer(type_, int))                            
+                            return parser.SingleInit(temp, type_)
+                            varDecl.initializer = parser.SingleInit(temp, type_)
                             
                         case parser.ConstUInt(int = int):
                             temp = parser.Constant_Expression(const, parser.UIntType())
                             temp = convertByAssignment(temp, type_)
-                            varDecl.initializer = parser.SingleInit(temp, type_)
-
                             initList.append(GetStaticInitializer(type_, int))                            
+                            return parser.SingleInit(temp, type_)
+                        
+                            varDecl.initializer = parser.SingleInit(temp, type_)
                         
                         case parser.ConstDouble(double=double):
                             temp = parser.Constant_Expression(const, parser.DoubleType())
                             temp = convertByAssignment(temp, type_)
-                            varDecl.initializer = parser.SingleInit(temp, type_)
-
                             initList.append(GetStaticInitializer(type_, int))                            
+                            return parser.SingleInit(temp, type_)
 
                         case _:
                             print("Error: Invalid Constant. {0}".format(type(const)))
@@ -666,15 +664,19 @@ def AnnotateInitializer(varDecl, type_, init, initList):
 
         case parser.CompoundInit(initializerList = initializerList, retType = retType):
             
+            astInitList = []
             index  = 0
-            for i in initializerList:
-                AnnotateInitializer(varDecl, type_.elementType, i, initList)
+            for astInit in initializerList:
+                i = AnnotateInitializer(varDecl, type_.elementType, astInit, initList)
+                astInitList.append(i)
                 index += 1
 
             size = type_.getBaseTypeSize(index)
 
             if index < type_.size:
                 initList.append(ZeroInit(size))
+
+            return parser.CompoundInit(astInitList, type_)
 
 
         case _:
@@ -689,7 +691,8 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
     if varDecl.initializer:
         #baseTypeSize = varDecl.varType.getBaseTypeSize()
         initList = []
-        AnnotateInitializer(varDecl, varDecl.varType, varDecl.initializer, initList)
+        astInit = AnnotateInitializer(varDecl, varDecl.varType, varDecl.initializer, initList)
+        varDecl.initializer = astInit
         initialValue = Initial(initList)
 
     else:
