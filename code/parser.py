@@ -255,7 +255,7 @@ class Type:
         print("Not Overloaded.")
         sys.exit(1)
 
-    def getBaseTypeSize(self):
+    def getBaseTypeSize(self, occupied):
         pass
 
     def getSize():
@@ -271,7 +271,7 @@ class IntType(Type, Node):
         self.size = 4
         self.isSigned = True
 
-    def getBaseTypeSize(self):
+    def getBaseTypeSize(self, occupied):
         return self.size
 
     def __str__(self):
@@ -293,7 +293,7 @@ class LongType(Type, Node):
         self.size = 8
         self.isSigned = True
 
-    def getBaseTypeSize(self):
+    def getBaseTypeSize(self, occupied):
         return self.size
     
     def __str__(self):
@@ -314,7 +314,7 @@ class UIntType(Type, Node):
         self.size = 4
         self.isSigned = False
 
-    def getBaseTypeSize(self):
+    def getBaseTypeSize(self, occupied):
         return self.size
     
     def __str__(self):
@@ -335,7 +335,7 @@ class ULongType(Type, Node):
         self.size = 8
         self.isSigned = False
 
-    def getBaseTypeSize(self):
+    def getBaseTypeSize(self, occupied):
         return self.size
     
     def __str__(self):
@@ -354,7 +354,7 @@ class DoubleType(Type, Node):
     def __str__(self):
         return "double"
     
-    def getBaseTypeSize(self):
+    def getBaseTypeSize(self, occupied):
         return 8
     
     def printNode(self, level):
@@ -371,7 +371,7 @@ class PointerType(Type, Node):
     def __init__(self, referenceType):
         self.referenceType = referenceType
 
-    def getBaseTypeSize(self):
+    def getBaseTypeSize(self, occupied):
         return 8
     
     def __str__(self):
@@ -395,8 +395,8 @@ class ArrayType(Type, Node):
         self.elementType = elementType
         self.size = size
     
-    def getBaseTypeSize(self):
-        return self.elementType.getBaseTypeSize()
+    def getBaseTypeSize(self, occupied):
+        return self.elementType.getBaseTypeSize(0) * self.size - occupied * self.elementType.getBaseTypeSize(0)
     
     def checkType(self, other):
         

@@ -4,7 +4,7 @@ static int nested[3][2] = {{100}, {200, 300}};
 
 //static int nested[3][2] = {{1, 2}, {3, 4}, {5, 6}};
 //static int * a = 0;
-int ** arr[3][3][3] = {{{0,0,0}}};
+int * arr[3][2] = {{0,0}};
 
 int ale(int a[3], double*** b[4])
 {
