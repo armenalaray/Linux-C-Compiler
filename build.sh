@@ -4,7 +4,6 @@
 # My compiler
 
 
-
 lastStage="--validate"
 #noLink="-c"
 library="-lmath.h"
@@ -19,6 +18,11 @@ if test -f test_/test; then
 fi
 
 
+
+#pyinstaller --onefile "$(pwd)"/code/cd.py
+#./dist/cd ./test_/test.c
+#./../writing-a-c-compiler-tests/test_compiler --check-setup
+#./../writing-a-c-compiler-tests/test_compiler "$(pwd)"/dist/cd --chapter 2 --stage lex
 
 
 #python3 "$(pwd)"/code/test.py

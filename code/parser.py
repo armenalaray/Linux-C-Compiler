@@ -401,7 +401,7 @@ class ArrayType(Type, Node):
     def checkType(self, other):
         
         if type(other) == ArrayType:
-            if self.elementType.checkType(other.elementType):
+            if self.elementType.checkType(other.elementType) and self.size == other.size:
                 return True
         
         return False

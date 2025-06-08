@@ -816,7 +816,7 @@ def typeCheckInitializer(targetType, initializer, symbolTable):
 def typeCheckLocalVarDecl(varDecl, symbolTable):
 
     if varDecl.storageClass.storageClass == parser.StorageType.EXTERN:
-        if varDecl.initialzer:
+        if varDecl.initializer:
             print("Error: Initializer on local extern variable declaration.")
             sys.exit(1)
         
