@@ -62,7 +62,8 @@ class NoInitializer(InitialValue):
     pass
 
 class StaticInit:
-    pass
+    def __repr__(self):
+        return self.__str__()
 
 class IntInit(StaticInit):
     def __init__(self, int_):
@@ -605,7 +606,7 @@ def AnnotateExpression(varDecl):
             print("Error: Non constant expression.")
             sys.exit(1)
 
-def AnnotateInitializer(varDecl, type_, init):
+def AnnotateInitializer(varDecl, type_, init, initList):
     print(type_)
     match init:
         case parser.SingleInit(exp = exp, retType = retType):
@@ -617,46 +618,35 @@ def AnnotateInitializer(varDecl, type_, init):
                             temp = convertByAssignment(temp, type_)
                             varDecl.initializer = parser.SingleInit(temp, type_)
                             
-                            initValue = GetStaticInitializer(type_, int)                            
-                            return Initial([initValue])
+                            initList.append(GetStaticInitializer(type_, int))                            
 
                         case parser.ConstInt(int = int):
                             temp = parser.Constant_Expression(const, parser.IntType())
                             temp = convertByAssignment(temp, type_)
                             varDecl.initializer = parser.SingleInit(temp, type_)
 
-                            initValue = GetStaticInitializer(type_, int)                            
-                            return Initial([initValue])
-                            return GetStaticInitializer(type_, int)
+                            initList.append(GetStaticInitializer(type_, int))                            
 
                         case parser.ConstULong(int = int):
                             temp = parser.Constant_Expression(const, parser.ULongType())
                             temp = convertByAssignment(temp, type_)
                             varDecl.initializer = parser.SingleInit(temp, type_)
 
-                            initValue = GetStaticInitializer(type_, int)                            
-                            return Initial([initValue])
-                            return GetStaticInitializer(type_, int)
+                            initList.append(GetStaticInitializer(type_, int))                            
                             
-
                         case parser.ConstUInt(int = int):
                             temp = parser.Constant_Expression(const, parser.UIntType())
                             temp = convertByAssignment(temp, type_)
                             varDecl.initializer = parser.SingleInit(temp, type_)
 
-                            initValue = GetStaticInitializer(type_, int)                            
-                            return Initial([initValue])
-                            return GetStaticInitializer(type_, int)
+                            initList.append(GetStaticInitializer(type_, int))                            
                         
                         case parser.ConstDouble(double=double):
                             temp = parser.Constant_Expression(const, parser.DoubleType())
                             temp = convertByAssignment(temp, type_)
                             varDecl.initializer = parser.SingleInit(temp, type_)
 
-                            initValue = GetStaticInitializer(type_, int)                            
-                            return Initial([initValue])
-                            return GetStaticInitializer(type_, double)
-                            
+                            initList.append(GetStaticInitializer(type_, int))                            
 
                         case _:
                             print("Error: Invalid Constant. {0}".format(type(const)))
@@ -668,14 +658,8 @@ def AnnotateInitializer(varDecl, type_, init):
             pass
 
         case parser.CompoundInit(initializerList = initializerList, retType = retType):
-            #NNOTE: YOUAREHERE!
-            initList = []
             for i in initializerList:
-                #print(type(i))
-                init = AnnotateInitializer(varDecl, type_.elementType, i)
-                initList.append(init)
-
-            return initList
+                AnnotateInitializer(varDecl, type_.elementType, i, initList)
 
         case _:
             print("Error: Invalid Innitializer.")
