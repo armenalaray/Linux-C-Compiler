@@ -1,3 +1,5 @@
+static int * a = 0;
+int ** arr[3][3][3] = {{{0,0,0}}};
 
 int ale(int a[3], double*** b[4])
 {
@@ -7,7 +9,10 @@ int ale(int a[3], double*** b[4])
 
 int main(void)
 {
-    int ** arr[3][2] = {{0,0}};
+    //int ** arr[10][10][3] = {{{0,0,0}}};
+    
+    //int ** arr[3][3][3] = {{{0,0,0}}};
+    
     
     /*
     

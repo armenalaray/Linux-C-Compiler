@@ -207,7 +207,7 @@ class SingleInit(Initializer, Node):
 
         if self.retType:
             output +=  ' : ' + self.retType.printNode(level)
-            
+
         return output
 
 def tabLevel(output, level):
@@ -241,7 +241,9 @@ class CompoundInit(Initializer, Node):
         output += "]"
 
         if self.retType:
-            output +=  ' : ' + self.retType.printNode(level)
+            output += '\n'
+            output = tabLevel(output, level)
+            output +=  ': ' + self.retType.printNode(level)
         
         return output
 

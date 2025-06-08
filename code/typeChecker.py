@@ -52,11 +52,11 @@ class Tentative(InitialValue):
     pass
 
 class Initial(InitialValue):
-    def __init__(self, staticInit):
-        self.staticInit = staticInit
+    def __init__(self, initList):
+        self.initList = initList
 
     def __str__(self):
-        return "{self.staticInit}".format(self=self)
+        return "InitialList: {self.initList}".format(self=self)
 
 class NoInitializer(InitialValue):
     pass
@@ -196,7 +196,7 @@ def convertByAssignment(exp, targetType):
     if isNullPointerConstant(exp) and type(targetType) == parser.PointerType:
         return convertTo(exp, targetType)
     
-    print("Error: Cannot convert type for assignment.")
+    print("Error: Cannot convert type for assignment. {0} and {1}".format(exp.retType, targetType))
     sys.exit(1)
 
 
@@ -529,22 +529,22 @@ def typeCheckExpression(exp, symbolTable):
 def GetStaticInitializer(varType, int):
     match varType:
         case parser.IntType():
-            return Initial(IntInit(int))           
+            return IntInit(int)
 
         case parser.LongType():
-            return Initial(LongInit(int))
+            return LongInit(int)
         
         case parser.UIntType():
-            return Initial(UIntInit(int))
+            return UIntInit(int)
 
         case parser.ULongType():
-            return Initial(ULongInit(int))
+            return ULongInit(int)
 
         case parser.DoubleType():
-            return Initial(DoubleInit(int))
+            return DoubleInit(int)
 
         case parser.PointerType():
-            return Initial(ULongInit(int))
+            return ULongInit(int)
 
         case _:
             print("Error: Invalid Variable Type. {0}".format(varType))
@@ -559,23 +559,15 @@ def AnnotateExpression(varDecl):
                 case parser.ConstLong(int = int):
 
                     varDecl.exp = parser.Constant_Expression(const, parser.LongType())
-                    
                     exp = convertByAssignment(varDecl.exp, varDecl.varType)
-
-                    #exp = convertTo(varDecl.exp, varDecl.varType)
-
                     varDecl.exp = exp
                     
                     return GetStaticInitializer(varDecl.varType, int)                            
 
                 case parser.ConstInt(int = int):
                     
-                    #No lo tiene entonces lo agrega
                     varDecl.exp = parser.Constant_Expression(const, parser.IntType())
-
                     exp = convertByAssignment(varDecl.exp, varDecl.varType)
-                    #exp = convertTo(varDecl.exp, varDecl.varType)
-
                     varDecl.exp = exp
 
                     return GetStaticInitializer(varDecl.varType, int)
@@ -583,7 +575,7 @@ def AnnotateExpression(varDecl):
                 case parser.ConstULong(int = int):
                     varDecl.exp = parser.Constant_Expression(const, parser.ULongType())
                     exp = convertByAssignment(varDecl.exp, varDecl.varType)
-                    #exp = convertTo(varDecl.exp, varDecl.varType)
+                    
                     varDecl.exp = exp
 
                     return GetStaticInitializer(varDecl.varType, int)
@@ -592,7 +584,7 @@ def AnnotateExpression(varDecl):
                 case parser.ConstUInt(int = int):
                     varDecl.exp = parser.Constant_Expression(const, parser.UIntType())
                     exp = convertByAssignment(varDecl.exp, varDecl.varType)
-                    #exp = convertTo(varDecl.exp, varDecl.varType)
+                    
                     varDecl.exp = exp
 
                     return GetStaticInitializer(varDecl.varType, int)
@@ -600,7 +592,6 @@ def AnnotateExpression(varDecl):
                 case parser.ConstDouble(double=double):
                     varDecl.exp = parser.Constant_Expression(const, parser.DoubleType())
                     exp = convertByAssignment(varDecl.exp, varDecl.varType)
-                    #exp = convertTo(varDecl.exp, varDecl.varType)
                     varDecl.exp = exp
 
                     return GetStaticInitializer(varDecl.varType, double)
@@ -614,12 +605,91 @@ def AnnotateExpression(varDecl):
             print("Error: Non constant expression.")
             sys.exit(1)
 
+def AnnotateInitializer(varDecl, type_, init):
+    print(type_)
+    match init:
+        case parser.SingleInit(exp = exp, retType = retType):
+            match exp:
+                case parser.Constant_Expression(const = const):
+                    match const:
+                        case parser.ConstLong(int = int):
+                            temp = parser.Constant_Expression(const, parser.LongType())
+                            temp = convertByAssignment(temp, type_)
+                            varDecl.initializer = parser.SingleInit(temp, type_)
+                            
+                            initValue = GetStaticInitializer(type_, int)                            
+                            return Initial([initValue])
+
+                        case parser.ConstInt(int = int):
+                            temp = parser.Constant_Expression(const, parser.IntType())
+                            temp = convertByAssignment(temp, type_)
+                            varDecl.initializer = parser.SingleInit(temp, type_)
+
+                            initValue = GetStaticInitializer(type_, int)                            
+                            return Initial([initValue])
+                            return GetStaticInitializer(type_, int)
+
+                        case parser.ConstULong(int = int):
+                            temp = parser.Constant_Expression(const, parser.ULongType())
+                            temp = convertByAssignment(temp, type_)
+                            varDecl.initializer = parser.SingleInit(temp, type_)
+
+                            initValue = GetStaticInitializer(type_, int)                            
+                            return Initial([initValue])
+                            return GetStaticInitializer(type_, int)
+                            
+
+                        case parser.ConstUInt(int = int):
+                            temp = parser.Constant_Expression(const, parser.UIntType())
+                            temp = convertByAssignment(temp, type_)
+                            varDecl.initializer = parser.SingleInit(temp, type_)
+
+                            initValue = GetStaticInitializer(type_, int)                            
+                            return Initial([initValue])
+                            return GetStaticInitializer(type_, int)
+                        
+                        case parser.ConstDouble(double=double):
+                            temp = parser.Constant_Expression(const, parser.DoubleType())
+                            temp = convertByAssignment(temp, type_)
+                            varDecl.initializer = parser.SingleInit(temp, type_)
+
+                            initValue = GetStaticInitializer(type_, int)                            
+                            return Initial([initValue])
+                            return GetStaticInitializer(type_, double)
+                            
+
+                        case _:
+                            print("Error: Invalid Constant. {0}".format(type(const)))
+                            sys.exit(1)
+                
+                case _:
+                    print("Error: Non constant expression.")
+                    sys.exit(1)
+            pass
+
+        case parser.CompoundInit(initializerList = initializerList, retType = retType):
+            #NNOTE: YOUAREHERE!
+            initList = []
+            for i in initializerList:
+                #print(type(i))
+                init = AnnotateInitializer(varDecl, type_.elementType, i)
+                initList.append(init)
+
+            return initList
+
+        case _:
+            print("Error: Invalid Innitializer.")
+            sys.exit(1)
+
+
 def typeCheckFileScopeVarDecl(varDecl, symbolTable):
 
     initialValue = None
 
-    if varDecl.exp:
-        initialValue = AnnotateExpression(varDecl)
+    if varDecl.initializer:
+        initList = []
+        AnnotateInitializer(varDecl, varDecl.varType, varDecl.initializer, initList)
+        initialValue = Initial(initList)
 
     else:
         if varDecl.storageClass.storageClass == parser.StorageType.EXTERN:
@@ -668,7 +738,7 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
     vattr = StaticAttributes(initialVal=initialValue, global_=global_)
     symbolTable[varDecl.identifier] = Entry(varDecl.identifier, vattr, varDecl.varType)
 
-    return parser.VariableDecl(varDecl.identifier, varDecl.varType, varDecl.exp, varDecl.storageClass)
+    return parser.VariableDecl(varDecl.identifier, varDecl.varType, varDecl.initializer, varDecl.storageClass)
 
 def zeroInitializer(elementType):
     match elementType:
