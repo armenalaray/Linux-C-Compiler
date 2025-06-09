@@ -1056,13 +1056,13 @@ def typeCheckFunctionDeclaration(funDec, symbolTable):
             print("Error: Incompatible arity in function declarations.")
             sys.exit(1)
         
-        if type(oldDecl.type.retType) != type(funType.retType):
+        if not oldDecl.type.retType.checkType(funType.retType):
             print("Error: Incompatible return type in function declarations.")
             sys.exit(1)
 
         for old, new in zip(oldDecl.type.paramTypes, funType.paramTypes):
             print("Old: ", old, "New:", new)
-            if type(old) != type(new):
+            if not old.checkType(new):
                 print("Error: Incompatible parameter types in function declarations.")
                 sys.exit(1)
 

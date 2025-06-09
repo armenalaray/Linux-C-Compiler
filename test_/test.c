@@ -1,9 +1,10 @@
+/* This is adjusted to
+ *   int f(int (*arr)[3])
+ */
+int f(int arr[2][3]);
 
-int main(void) {
-    extern int arr[6];
-    extern int arr[5];
-
-    return arr[0];
-}
-
-// it's illegal to redeclare arr as a different type
+/* This is adjusted to
+ *   int f(int (*arr)[4])
+ * so it conflicts with the previous declaration
+ */
+int f(int arr[2][4]);
