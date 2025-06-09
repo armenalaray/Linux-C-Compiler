@@ -717,6 +717,9 @@ class Subscript(Expression, Node):
         self.indexExp = indexExp
         self.retType = retType
     
+    def __str__(self):
+        return "Ale"
+    
     def printNode(self, level):
         output = "("
         

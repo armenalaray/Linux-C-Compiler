@@ -488,7 +488,7 @@ def typeCheckExpression(exp, symbolTable):
                         convertedE2 = convertTo(r, parser.LongType())
                         return parser.Binary_Expression(op, l, convertedE2, l.retType)
                         
-                    elif type(l.retType) == parser.PointerType and l.matchType(r.retType):
+                    elif type(l.retType) == parser.PointerType and l.retType.checkType(r.retType):
                         return parser.Binary_Expression(op, l, r, parser.LongType())
                     
                     else:
