@@ -455,7 +455,7 @@ def typeCheckExpression(exp, symbolTable):
                 if isArithmeticType(l.retType) and isArithmeticType(r.retType):
                     return typeCheckCommonArithmeticBinaryExp(op, l, r)
                 
-                elif type(l.retType) == parser.PointerType and l.matchType(r.retType):
+                elif type(l.retType) == parser.PointerType and l.retType.checkType(r.retType):
                     return parser.Binary_Expression(op, l, r, parser.IntType())
                 
             l = typeCheckAndConvert(left, symbolTable)
@@ -666,7 +666,7 @@ def AnnotateInitializer(varDecl, type_, init, initList):
                         case parser.ConstDouble(double=double):
                             temp = parser.Constant_Expression(const, parser.DoubleType())
                             temp = convertByAssignment(temp, type_)
-                            initList.append(GetStaticInitializer(type_, int))                            
+                            initList.append(GetStaticInitializer(type_, double))                            
                             return parser.SingleInit(temp, type_)
 
                         case _:

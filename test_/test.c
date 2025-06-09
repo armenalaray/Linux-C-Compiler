@@ -1,91 +1,93 @@
-/* Declare the same global array multiple times w/ equivalent declarators */
+/* Test comparison of elements of the same array, including multi-dimensional arrays */
 
-// an array of four longs
-long int(arr)[4] = {1, 2, 3, 4};
-
-int long arr[4ul];
-
-// a pointer to a two-dimensional array
-int (*ptr_to_arr)[3][6l];
-
-int((*(ptr_to_arr))[3l])[6u] = 0;
-
-// an array of pointers
-int *array_of_pointers[3] = {0, 0, 0};
-
-// helper function to make sure arr has the values we just initialized
-int test_arr(void) {
-    for (int i = 0; i < 4; i = i + 1) {
-        if (arr[i] != i + 1) {
-            return 1;
-        }
-    }
-    return 0; // success
+// pointer comparisons
+unsigned long gt(unsigned long *a, unsigned long *b) {
+    return a > b;
 }
 
-int test_ptr_to_arr(void) {
-    // at first ptr_to_arr should be null
-    if (ptr_to_arr) {
-        return 2;
-    }
 
-    static int nested_arr[3][6];
-    
-    ptr_to_arr = &nested_arr;
-    ptr_to_arr[0][2][4] = 100;
-    if (nested_arr[2][4] != 100) {
-        return 3;
-    }
-    return 0; // success
+unsigned long lt(unsigned long *a, unsigned long *b) {
+    return a < b;
 }
 
-int test_array_of_pointers(int *ptr) {
-
-    extern int *((array_of_pointers)[3]); // make sure we can redeclare this locally
-
-    // make sure every array element is null
-    // then assign ptr to each of them
-    for (int i = 0; i < 3; i = i + 1) {
-        if (array_of_pointers[i])
-            return 4;
-        array_of_pointers[i] = ptr;
-    }
-
-    // update value through pointer
-    array_of_pointers[2][0] = 11;
-
-    if (*ptr != 11) {
-        return 5;
-    }
-
-    for (int i = 0; i < 3; i = i + 1) {
-        if (array_of_pointers[i][0] != 11) {
-            return 6;
-        }
-    }
-    return 0;
-
+unsigned long ge(unsigned long *a, unsigned long *b) {
+    return a >= b;
 }
+
+unsigned long le(unsigned long *a, unsigned long *b) {
+    return a <= b;
+}
+
+// comparing pointers to nested arrays
+unsigned long gt_nested(unsigned long (*a)[5], unsigned long (*b)[5]) {
+    return a > b;
+}
+
+unsigned long ge_nested(unsigned long (*a)[5], unsigned long (*b)[5]) {
+    return a >= b;
+}
+
 
 int main(void)
 {
-    // make sure arr has the right type/initial values;
-    int check = test_arr();
-    if (check) {
-        return check;
+    // compare elements of a 1D array
+
+    // we don't need to initialize this because we're only comparing pointers to array elements,
+    // not dereferencing them
+    unsigned long arr[5];
+    unsigned long *elem_1 = arr + 1;
+    unsigned long *elem_4 = arr + 4;
+    if (gt(elem_1, elem_4)) {
+        return 1;
+    }
+    if (!(lt(elem_1, elem_4))) {
+        return 2;
+    }
+    if (!(ge(elem_1, elem_1))) {
+        return 3;
+    }
+    if (le(elem_4, elem_1)) {
+        return 4;
     }
 
-    // make sure ptr_to_arr has right type
-    check = test_ptr_to_arr();
-    if (check) {
-        return check;
+    // can also compare to pointer to one past the end of the array
+    unsigned long *one_past_the_end = arr + 5;
+    if (!(gt(one_past_the_end, elem_4))) {
+        return 5;
+    }
+    if (one_past_the_end != elem_4 + 1) {
+        return 6;
     }
 
-    // make sure array_of_pointers has the right type
-    int x = 0;
-    check = test_array_of_pointers(&x);
-    if (check) {
-        return check;
+    // do the same for nested array elements. start w/ pointers to scalar elements within array
+    unsigned long nested_arr[4][5];
+
+    unsigned long *elem_3_2 = *(nested_arr + 3) + 2;
+    unsigned long *elem_3_3 = *(nested_arr + 3) + 3;
+
+    if (lt(elem_3_3, elem_3_2)) {
+        return 7;
+    }
+
+    if (!ge(elem_3_3, elem_3_2)) {
+        return 8;
+    }
+
+    // now look at pointers to whole sub-arrays
+    unsigned long (*subarray_0)[5] = nested_arr;
+    unsigned long (*subarray_3)[5] = nested_arr + 3;
+    unsigned long (*subarray_one_past_the_end)[5] = nested_arr + 4;
+
+    if (ge_nested(subarray_0, subarray_3)){
+        return 9;
+    }
+
+    if (!(gt_nested(subarray_one_past_the_end, subarray_3))) {
+        return 10;
+    }
+
+    if (subarray_3 != subarray_one_past_the_end - 1) {
+        return 11;
     }
 
     return 0;
