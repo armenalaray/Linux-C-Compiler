@@ -457,6 +457,9 @@ def typeCheckExpression(exp, symbolTable):
                 
                 elif type(l.retType) == parser.PointerType and l.retType.checkType(r.retType):
                     return parser.Binary_Expression(op, l, r, parser.IntType())
+                else:
+                    print("Error: Invalid operand types for comparison. {0} and {1}".format(l.retType, r.retType))
+                    sys.exit(1)
                 
             l = typeCheckAndConvert(left, symbolTable)
             r = typeCheckAndConvert(right, symbolTable)
@@ -733,7 +736,8 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
             print("Error: Function redeclared as variable.")
             sys.exit(1)
         
-        if type(oldDecl.type) != type(varDecl.varType):
+        #type(oldDecl.type) != type(varDecl.varType):
+        if not oldDecl.type.checkType(varDecl.varType):
             print("Error: Incompatible variable declarations.")
             sys.exit(1)
 
@@ -838,7 +842,7 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
                 print("Error: Function redeclared as variable.")
                 sys.exit(1)
 
-            if type(oldDecl.type) != type(varDecl.varType):
+            if not oldDecl.type.checkType(varDecl.varType):
                 print("Error: Incompatible local variable declarations.")
                 sys.exit(1)
             
