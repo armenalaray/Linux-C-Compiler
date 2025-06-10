@@ -16,12 +16,32 @@ class Program:
 
         return "ASM Program: {self.topLevelList}".format(self=self)
 
+"""
 class AssemblyType(Enum):
     LONGWORD = 1
     QUADWORD = 2
     DOUBLE = 3
+"""
+
+class AssemblyType:
+    pass
+
+class Longword(AssemblyType):
+    pass
+
+class Quadword(AssemblyType):
+    pass
+
+class Double(AssemblyType):
+    pass
+
+class ByteArray(AssemblyType):
+    def __init__(self, size, alignment):
+        self.size = size
+        self.alignment = alignment
     
 
+"""
 class AssemblySize:
     def __init__(self, type):
         self.type = type
@@ -31,6 +51,8 @@ class AssemblySize:
     
     def __repr__(self):
         return self.__str__()
+"""
+    
 
 class TopLevel:
     pass
@@ -49,11 +71,11 @@ class StaticConstant(TopLevel):
 
 class StaticVariable(TopLevel):
 
-    def __init__(self, identifier, global_, alignment, staticInit):
+    def __init__(self, identifier, global_, alignment, initList):
         self.identifier = identifier
         self.global_ = global_
         self.alignment = alignment
-        self.staticInit = staticInit
+        self.initList = initList
 
     def __str__(self):
         return "Static Variable: Global = {self.global_} Alignment = {self.alignment} : {self.identifier} = {self.staticInit}".format(self=self)
@@ -350,6 +372,22 @@ class CallInstruction():
 class Operand:
     pass
 
+class PseudoMem(Operand):
+    
+    def __init__(self, identifier, offset):
+        self.identifier = identifier
+        self.offset = offset
+
+    
+    
+class Indexed(Operand):
+    def __init__(self, base, index, scale):
+        self.base = base
+        self.index = index
+        self.scale = scale
+
+
+
 class PseudoRegisterOperand:
 
     def __init__(self, pseudo):
@@ -360,14 +398,6 @@ class PseudoRegisterOperand:
 
     def __repr__(self):
         return self.__str__()
-"""
-class StackOperand:
-    def __init__(self, offset):
-        self.offset = offset
-
-    def __str__(self):
-        return r"Stack({self.offset})".format(self=self)
-"""
 
 class MemoryOperand:
     def __init__(self, reg, int):
@@ -556,22 +586,28 @@ def parseValue(v, symbolTable, topLevelList):
 
             match const:
                 case parser.ConstInt():
-                    asmType = AssemblySize(AssemblyType.LONGWORD)
+                    asmType = Longword()
+                    #asmType = AssemblySize(AssemblyType.LONGWORD)
                     cType = parser.IntType()
                     return asmType, cType, ImmediateOperand(const.int)
                     
                 case parser.ConstLong():
-                    asmType = AssemblySize(AssemblyType.QUADWORD)
+                    asmType = Quadword()
+                    #asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.LongType()
                     return asmType, cType, ImmediateOperand(const.int)
 
                 case parser.ConstUInt():
-                    asmType = AssemblySize(AssemblyType.LONGWORD)
+
+                    asmType = Longword()
+                    #asmType = AssemblySize(AssemblyType.LONGWORD)
                     cType = parser.UIntType()
                     return asmType, cType, ImmediateOperand(const.int)
                 
                 case parser.ConstULong():
-                    asmType = AssemblySize(AssemblyType.QUADWORD)
+                    
+                    asmType = Quadword()
+                    #asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.ULongType()
                     return asmType, cType, ImmediateOperand(const.int)
 
@@ -579,7 +615,8 @@ def parseValue(v, symbolTable, topLevelList):
                     name = makeTemp()
                     topLevelList.append(StaticConstant(name, 8, typeChecker.DoubleInit(const.double)))
                     
-                    asmType = AssemblySize(AssemblyType.DOUBLE)
+                    asmType = Double()
+                    #asmType = AssemblySize(AssemblyType.DOUBLE)
                     cType = parser.DoubleType()
                     return asmType, cType, DataOperand(name)
 
@@ -591,28 +628,39 @@ def parseValue(v, symbolTable, topLevelList):
 
             match symbolTable[i].type:
                 case parser.IntType():
-                    asmType = AssemblySize(AssemblyType.LONGWORD)
+                    asmType = Longword()
+                    #asmType = AssemblySize(AssemblyType.LONGWORD)
                     cType = parser.IntType()
 
                 case parser.LongType():
-                    asmType = AssemblySize(AssemblyType.QUADWORD)
+                    asmType = Quadword()
+                    #asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.LongType()
                 
                 case parser.UIntType():
-                    asmType = AssemblySize(AssemblyType.LONGWORD)
+                    asmType = Longword()
+                    #asmType = AssemblySize(AssemblyType.LONGWORD)
                     cType = parser.UIntType()
                 
                 case parser.ULongType():
-                    asmType = AssemblySize(AssemblyType.QUADWORD)
+                    asmType = Quadword()
+                    #asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.ULongType()
 
                 case parser.DoubleType():
-                    asmType = AssemblySize(AssemblyType.DOUBLE)
+                    asmType = Double()
+                    #asmType = AssemblySize(AssemblyType.DOUBLE)
                     cType = parser.DoubleType()
                 
                 case parser.PointerType(referenceType = referenceType):
-                    asmType = AssemblySize(AssemblyType.QUADWORD)
+                    asmType = Quadword()
+                    #asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.ULongType()
+
+                case parser.ArrayType():
+                    asmType = None
+                    cType = symbolTable[i].type
+                    return asmType, cType, PseudoMem(i, 0)
 
                 case _:
                     print("Error: Invalid Assembly Variable. {0}".format(symbolTable[i].type))
@@ -623,28 +671,39 @@ def parseValue(v, symbolTable, topLevelList):
         case _:
             match symbolTable[v].type:
                 case parser.IntType():
-                    asmType = AssemblySize(AssemblyType.LONGWORD)
+                    asmType = Longword()
+                    #asmType = AssemblySize(AssemblyType.LONGWORD)
                     cType = parser.IntType()
 
                 case parser.LongType():
-                    asmType = AssemblySize(AssemblyType.QUADWORD)
+                    asmType = Quadword()
+                    #asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.LongType()
                 
                 case parser.UIntType():
-                    asmType = AssemblySize(AssemblyType.LONGWORD)
+                    asmType = Longword()
+                    #asmType = AssemblySize(AssemblyType.LONGWORD)
                     cType = parser.UIntType()
                 
                 case parser.ULongType():
-                    asmType = AssemblySize(AssemblyType.QUADWORD)
+                    asmType = Quadword()
+                    #asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.ULongType()
 
                 case parser.DoubleType():
-                    asmType = AssemblySize(AssemblyType.DOUBLE)
+                    asmType = Double()
+                    #asmType = AssemblySize(AssemblyType.DOUBLE)
                     cType = parser.DoubleType()
                 
                 case parser.PointerType(referenceType = referenceType):
-                    asmType = AssemblySize(AssemblyType.QUADWORD)
+                    asmType = Quadword()
+                    #asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.ULongType()
+
+                case parser.ArrayType():
+                    asmType = None
+                    cType = symbolTable[v].type
+                    return asmType, cType, PseudoMem(v, 0)
 
                 case _:
                     print("Error: Invalid Assembly Variable. {0}".format(symbolTable[v].type))
@@ -771,6 +830,15 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
     for i in TAC_Instructions:
         match i:
             
+            case tacGenerator.TAC_addPtr():
+                pass
+
+            case tacGenerator.TAC_copyToOffset(src = src, dst = dst, offset = offset):
+                type1, cType1, src = parseValue(src, symbolTable, topLevelList)
+                #type2, cType2, dst_ = parseValue(dst, symbolTable, topLevelList)
+
+                ASM_Instructions.append(MovInstruction(type1, src, PseudoMem(dst, offset)))
+
             case tacGenerator.TAC_returnInstruction(Value=v):
                 type1, cType1, src = parseValue(v, symbolTable, topLevelList)
 
@@ -782,7 +850,9 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     ASM_Instructions.append(instruction0)
                     ASM_Instructions.append(instruction1)
                 else:
-                    instruction0 = MovInstruction(AssemblySize(AssemblyType.DOUBLE), src, RegisterOperand(Register(SSERegisterType.XMM0)))
+                    
+                    instruction0 = MovInstruction(Double(), src, RegisterOperand(Register(SSERegisterType.XMM0)))
+                    #instruction0 = MovInstruction(AssemblySize(AssemblyType.DOUBLE), src, RegisterOperand(Register(SSERegisterType.XMM0)))
 
                     instruction1 = ReturnInstruction()
                     
@@ -811,9 +881,13 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                                     ASM_Instructions.append(instruction2)
                                 else:
 
-                                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Xor), AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(SSERegisterType.XMM0)), RegisterOperand(Register(SSERegisterType.XMM0)))
+                                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Xor), Double(), RegisterOperand(Register(SSERegisterType.XMM0)), RegisterOperand(Register(SSERegisterType.XMM0)))
                                     
-                                    instruction1 = CompInst(AssemblySize(AssemblyType.DOUBLE), src, RegisterOperand(Register(SSERegisterType.XMM0)))
+                                    #instruction0 = BinaryInstruction(BinaryOperator(BinopType.Xor), AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(SSERegisterType.XMM0)), RegisterOperand(Register(SSERegisterType.XMM0)))
+                                    
+                                    instruction1 = CompInst(Double(), src, RegisterOperand(Register(SSERegisterType.XMM0)))
+
+                                    #instruction1 = CompInst(AssemblySize(AssemblyType.DOUBLE), src, RegisterOperand(Register(SSERegisterType.XMM0)))
 
                                     instruction2 = MovInstruction(type2, ImmediateOperand(0), dst)
 
@@ -835,9 +909,13 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                                     name = makeTemp()
                                     topLevelList.append(StaticConstant(name, 16, typeChecker.DoubleInit(-0.0)))
                                     
-                                    instruction0 = MovInstruction(AssemblySize(AssemblyType.DOUBLE), src, dst)
+                                    instruction0 = MovInstruction(Double(), src, dst)
+                                    
+                                    #instruction0 = MovInstruction(AssemblySize(AssemblyType.DOUBLE), src, dst)
 
-                                    instruction1 = BinaryInstruction(BinaryOperator(BinopType.Xor), AssemblySize(AssemblyType.DOUBLE), DataOperand(name), dst)
+                                    instruction1 = BinaryInstruction(BinaryOperator(BinopType.Xor), Double(), DataOperand(name), dst)
+                                    
+                                    #instruction1 = BinaryInstruction(BinaryOperator(BinopType.Xor), AssemblySize(AssemblyType.DOUBLE), DataOperand(name), dst)
 
                                     ASM_Instructions.append(instruction0)
                                     ASM_Instructions.append(instruction1)
@@ -860,7 +938,11 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     stackPadding = 8
                 
                 if stackPadding != 0:
-                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Sub), AssemblySize(AssemblyType.QUADWORD), ImmediateOperand(stackPadding), RegisterOperand(Register(RegisterType.SP)))                    
+                    
+                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Sub), Quadword(), ImmediateOperand(stackPadding), RegisterOperand(Register(RegisterType.SP)))                    
+                    
+                    #instruction0 = BinaryInstruction(BinaryOperator(BinopType.Sub), AssemblySize(AssemblyType.QUADWORD), ImmediateOperand(stackPadding), RegisterOperand(Register(RegisterType.SP)))                    
+
                     ASM_Instructions.append(instruction0)
 
                 for i, (assType, assArg) in enumerate(intArgs):
@@ -868,7 +950,10 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     ASM_Instructions.append(MovInstruction(assType, assArg, RegisterOperand(Register(list(RegisterType)[i]))))
                 
                 for i, assArg in enumerate(doubleArgs):
-                    ASM_Instructions.append(MovInstruction(AssemblySize(AssemblyType.DOUBLE), assArg, RegisterOperand(Register(list(SSERegisterType)[i]))))
+
+                    ASM_Instructions.append(MovInstruction(Double(), assArg, RegisterOperand(Register(list(SSERegisterType)[i]))))
+
+                    #ASM_Instructions.append(MovInstruction(AssemblySize(AssemblyType.DOUBLE), assArg, RegisterOperand(Register(list(SSERegisterType)[i]))))
 
                 
                 stackArgs.reverse()
@@ -892,7 +977,9 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 bytesToRemove = stackPadding + 8 * len(stackArgs)
                 if bytesToRemove:
 
-                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Add), AssemblySize(AssemblyType.QUADWORD), ImmediateOperand(bytesToRemove), RegisterOperand(Register(RegisterType.SP)))
+                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Add), Quadword(), ImmediateOperand(bytesToRemove), RegisterOperand(Register(RegisterType.SP)))
+
+                    #instruction0 = BinaryInstruction(BinaryOperator(BinopType.Add), AssemblySize(AssemblyType.QUADWORD), ImmediateOperand(bytesToRemove), RegisterOperand(Register(RegisterType.SP)))
                     
                     ASM_Instructions.append(instruction0)
 
@@ -900,7 +987,9 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 type1, cType1, asmDst = parseValue(dst, symbolTable, topLevelList)
 
                 if type(cType1) == parser.DoubleType:
-                    ASM_Instructions.append(MovInstruction(AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(SSERegisterType.XMM0)), asmDst))
+                    ASM_Instructions.append(MovInstruction(Double(), RegisterOperand(Register(SSERegisterType.XMM0)), asmDst))
+                    
+                    #ASM_Instructions.append(MovInstruction(AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(SSERegisterType.XMM0)), asmDst))
                     
                 else:
                     ASM_Instructions.append(MovInstruction(type1, RegisterOperand(Register(RegisterType.AX)), asmDst))
@@ -1035,9 +1124,13 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     ASM_Instructions.append(instruction1)
                 else:
                     
-                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Xor), AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(SSERegisterType.XMM0)), RegisterOperand(Register(SSERegisterType.XMM0)))
+                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Xor), Double(), RegisterOperand(Register(SSERegisterType.XMM0)), RegisterOperand(Register(SSERegisterType.XMM0)))
 
-                    instruction1 = CompInst(AssemblySize(AssemblyType.DOUBLE), c, RegisterOperand(Register(SSERegisterType.XMM0)))
+                    #instruction0 = BinaryInstruction(BinaryOperator(BinopType.Xor), AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(SSERegisterType.XMM0)), RegisterOperand(Register(SSERegisterType.XMM0)))
+
+                    instruction1 = CompInst(Double(), c, RegisterOperand(Register(SSERegisterType.XMM0)))
+
+                    #instruction1 = CompInst(AssemblySize(AssemblyType.DOUBLE), c, RegisterOperand(Register(SSERegisterType.XMM0)))
 
                     instruction2 = JumpCCInst(ConcCodeType.E, label)
                     
@@ -1055,9 +1148,13 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     ASM_Instructions.append(instruction0)
                     ASM_Instructions.append(instruction1)        
                 else:
-                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Xor), AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(SSERegisterType.XMM0)), RegisterOperand(Register(SSERegisterType.XMM0)))
+                    instruction0 = BinaryInstruction(BinaryOperator(BinopType.Xor), Double(), RegisterOperand(Register(SSERegisterType.XMM0)), RegisterOperand(Register(SSERegisterType.XMM0)))
 
-                    instruction1 = CompInst(AssemblySize(AssemblyType.DOUBLE), c, RegisterOperand(Register(SSERegisterType.XMM0)))
+                    #instruction0 = BinaryInstruction(BinaryOperator(BinopType.Xor), AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(SSERegisterType.XMM0)), RegisterOperand(Register(SSERegisterType.XMM0)))
+
+                    instruction1 = CompInst(Double(), c, RegisterOperand(Register(SSERegisterType.XMM0)))
+                    
+                    #instruction1 = CompInst(AssemblySize(AssemblyType.DOUBLE), c, RegisterOperand(Register(SSERegisterType.XMM0)))
 
                     instruction2 = JumpCCInst(ConcCodeType.NE, label)
                     
@@ -1071,14 +1168,19 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
 
                 if type(cType1) == parser.UIntType:
                     i0 = MovZeroExtendIns(src, RegisterOperand(Register(RegisterType.AX)))
-                    i1 = Cvtsi2sd(AssemblySize(AssemblyType.QUADWORD), RegisterOperand(Register(RegisterType.AX)), dst)
+
+                    i1 = Cvtsi2sd(Quadword(), RegisterOperand(Register(RegisterType.AX)), dst)
+                    
+                    #i1 = Cvtsi2sd(AssemblySize(AssemblyType.QUADWORD), RegisterOperand(Register(RegisterType.AX)), dst)
 
                     ASM_Instructions.append(i0)
                     ASM_Instructions.append(i1)
 
                 elif type(cType1) == parser.ULongType:
                     
-                    ASM_Instructions.append(CompInst(AssemblySize(AssemblyType.QUADWORD), ImmediateOperand(0), src))
+                    ASM_Instructions.append(CompInst(Quadword(), ImmediateOperand(0), src))
+                    
+                    #ASM_Instructions.append(CompInst(AssemblySize(AssemblyType.QUADWORD), ImmediateOperand(0), src))
                     
                     label1 = makeTemp()
                     
@@ -1086,25 +1188,33 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     
                     ASM_Instructions.append(JumpCCInst(ConcCodeType.L, label1))
                     
-                    ASM_Instructions.append(Cvtsi2sd(AssemblySize(AssemblyType.QUADWORD), src, dst))
+                    ASM_Instructions.append(Cvtsi2sd(Quadword(), src, dst))
+                    
+                    #ASM_Instructions.append(Cvtsi2sd(AssemblySize(AssemblyType.QUADWORD), src, dst))
                     
                     ASM_Instructions.append(JumpInst(label2))
                     
                     ASM_Instructions.append(LabelInst(label1))
                     
-                    ASM_Instructions.append(MovInstruction(AssemblySize(AssemblyType.QUADWORD), src, RegisterOperand(Register(RegisterType.AX))))
+                    ASM_Instructions.append(MovInstruction(Quadword(), src, RegisterOperand(Register(RegisterType.AX))))
                     
-                    ASM_Instructions.append(MovInstruction(AssemblySize(AssemblyType.QUADWORD), RegisterOperand(Register(RegisterType.AX)), RegisterOperand(Register(RegisterType.DX))))
+                    #ASM_Instructions.append(MovInstruction(AssemblySize(AssemblyType.QUADWORD), src, RegisterOperand(Register(RegisterType.AX))))
                     
-                    ASM_Instructions.append(UnaryInstruction(UnaryOperator(UnopType.Shr), AssemblySize(AssemblyType.QUADWORD), RegisterOperand(Register(RegisterType.DX))))
+                    ASM_Instructions.append(MovInstruction(Quadword(), RegisterOperand(Register(RegisterType.AX)), RegisterOperand(Register(RegisterType.DX))))
 
-                    ASM_Instructions.append(BinaryInstruction(BinaryOperator(BinopType.And), AssemblySize(AssemblyType.QUADWORD), ImmediateOperand(1), RegisterOperand(Register(RegisterType.AX))))
+                    #ASM_Instructions.append(MovInstruction(AssemblySize(AssemblyType.QUADWORD), RegisterOperand(Register(RegisterType.AX)), RegisterOperand(Register(RegisterType.DX))))
+                    
+                    ASM_Instructions.append(UnaryInstruction(UnaryOperator(UnopType.Shr), Quadword(), RegisterOperand(Register(RegisterType.DX))))
+                    
+                    #ASM_Instructions.append(UnaryInstruction(UnaryOperator(UnopType.Shr), AssemblySize(AssemblyType.QUADWORD), RegisterOperand(Register(RegisterType.DX))))
 
-                    ASM_Instructions.append(BinaryInstruction(BinaryOperator(BinopType.Or), AssemblySize(AssemblyType.QUADWORD), RegisterOperand(Register(RegisterType.AX)), RegisterOperand(Register(RegisterType.DX))))
+                    ASM_Instructions.append(BinaryInstruction(BinaryOperator(BinopType.And), Quadword(), ImmediateOperand(1), RegisterOperand(Register(RegisterType.AX))))
 
-                    ASM_Instructions.append(Cvtsi2sd(AssemblySize(AssemblyType.QUADWORD), RegisterOperand(Register(RegisterType.DX)), dst))
+                    ASM_Instructions.append(BinaryInstruction(BinaryOperator(BinopType.Or), Quadword(), RegisterOperand(Register(RegisterType.AX)), RegisterOperand(Register(RegisterType.DX))))
 
-                    ASM_Instructions.append(BinaryInstruction(BinaryOperator(BinopType.Add), AssemblySize(AssemblyType.DOUBLE), dst, dst))
+                    ASM_Instructions.append(Cvtsi2sd(Quadword(), RegisterOperand(Register(RegisterType.DX)), dst))
+
+                    ASM_Instructions.append(BinaryInstruction(BinaryOperator(BinopType.Add), Double(), dst, dst))
 
                     ASM_Instructions.append(LabelInst(label2))
 
@@ -1114,8 +1224,8 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
 
                 if type(cType2) == parser.UIntType:
-                    i0 = Cvttsd2si(AssemblySize(AssemblyType.QUADWORD), src, RegisterOperand(Register(RegisterType.AX)))
-                    i1 = MovInstruction(AssemblySize(AssemblyType.LONGWORD), RegisterOperand(Register(RegisterType.AX)), dst)
+                    i0 = Cvttsd2si(Quadword(), src, RegisterOperand(Register(RegisterType.AX)))
+                    i1 = MovInstruction(Longword(), RegisterOperand(Register(RegisterType.AX)), dst)
 
                     ASM_Instructions.append(i0)
                     ASM_Instructions.append(i1)
@@ -1126,7 +1236,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     upperBound = makeTemp()
                     topLevelList.append(StaticConstant(upperBound, 8, typeChecker.DoubleInit(9223372036854775808.0)))
 
-                    ASM_Instructions.append(CompInst(AssemblySize(AssemblyType.DOUBLE), DataOperand(upperBound), src))
+                    ASM_Instructions.append(CompInst(Double(), DataOperand(upperBound), src))
                     
                     label1 = makeTemp()
                     
@@ -1134,21 +1244,21 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     
                     ASM_Instructions.append(JumpCCInst(ConcCodeTypeUnsigned.AE, label1))
                     
-                    ASM_Instructions.append(Cvttsd2si(AssemblySize(AssemblyType.QUADWORD), src, dst))
+                    ASM_Instructions.append(Cvttsd2si(Quadword(), src, dst))
                     
                     ASM_Instructions.append(JumpInst(label2))
                     
                     ASM_Instructions.append(LabelInst(label1))
                     
-                    ASM_Instructions.append(MovInstruction(AssemblySize(AssemblyType.DOUBLE), src, RegisterOperand(Register(SSERegisterType.XMM1))))
+                    ASM_Instructions.append(MovInstruction(Double(), src, RegisterOperand(Register(SSERegisterType.XMM1))))
 
-                    ASM_Instructions.append(BinaryInstruction(BinaryOperator(BinopType.Sub), AssemblySize(AssemblyType.DOUBLE), DataOperand(upperBound), RegisterOperand(Register(SSERegisterType.XMM1))))
+                    ASM_Instructions.append(BinaryInstruction(BinaryOperator(BinopType.Sub), Double(), DataOperand(upperBound), RegisterOperand(Register(SSERegisterType.XMM1))))
                     
-                    ASM_Instructions.append(Cvttsd2si(AssemblySize(AssemblyType.QUADWORD), RegisterOperand(Register(SSERegisterType.XMM1)), dst))
+                    ASM_Instructions.append(Cvttsd2si(Quadword(), RegisterOperand(Register(SSERegisterType.XMM1)), dst))
 
-                    ASM_Instructions.append(MovInstruction(AssemblySize(AssemblyType.QUADWORD), ImmediateOperand(9223372036854775808), RegisterOperand(Register(RegisterType.DX))))
+                    ASM_Instructions.append(MovInstruction(Quadword(), ImmediateOperand(9223372036854775808), RegisterOperand(Register(RegisterType.DX))))
 
-                    ASM_Instructions.append(BinaryInstruction(BinaryOperator(BinopType.Add), AssemblySize(AssemblyType.QUADWORD), RegisterOperand(Register(RegisterType.DX)), dst))
+                    ASM_Instructions.append(BinaryInstruction(BinaryOperator(BinopType.Add), Quadword(), RegisterOperand(Register(RegisterType.DX)), dst))
 
                     ASM_Instructions.append(LabelInst(label2))
 
@@ -1165,7 +1275,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 type1, alignment1, src = parseValue(src, symbolTable, topLevelList)
                 type2, alignment2, dst = parseValue(dst, symbolTable, topLevelList)
 
-                instruction0 = MovInstruction(AssemblySize(AssemblyType.LONGWORD), src, dst)
+                instruction0 = MovInstruction(Longword(), src, dst)
 
                 ASM_Instructions.append(instruction0)           
 
@@ -1213,7 +1323,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
                 type2, cType2, ptr = parseValue(dst_, symbolTable, topLevelList)
                 
-                instruction0 = MovInstruction(AssemblySize(AssemblyType.QUADWORD), ptr, RegisterOperand(Register(RegisterType.AX)))
+                instruction0 = MovInstruction(Quadword(), ptr, RegisterOperand(Register(RegisterType.AX)))
                 
                 instruction1 = MovInstruction(type1, src, MemoryOperand(Register(RegisterType.AX), 0))
 
@@ -1225,7 +1335,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 type1, cType1, ptr = parseValue(src_, symbolTable, topLevelList)
                 type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
                 
-                instruction0 = MovInstruction(AssemblySize(AssemblyType.QUADWORD), ptr, RegisterOperand(Register(RegisterType.AX)))
+                instruction0 = MovInstruction(Quadword(), ptr, RegisterOperand(Register(RegisterType.AX)))
                 
                 instruction1 = MovInstruction(type2, MemoryOperand(Register(RegisterType.AX), 0), dst)
 
@@ -1258,7 +1368,7 @@ def ASM_parseTopLevel(topLevel, symbolTable, topLevelList):
             
             for i, param in enumerate(doubleParams):
                 print(param)
-                i0 = MovInstruction(AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(list(SSERegisterType)[i])), param)
+                i0 = MovInstruction(Double(), RegisterOperand(Register(list(SSERegisterType)[i])), param)
                 ASM_Instructions.append(i0)
             
 
@@ -1301,22 +1411,33 @@ class FunEntry(asm_symtab_entry):
 def matchCType(type):
     match type:
         case parser.IntType():
+            return 4, Longword()
             return 4, AssemblySize(AssemblyType.LONGWORD)
 
         case parser.LongType():
+            return 8, Quadword()
             return 8, AssemblySize(AssemblyType.QUADWORD)
 
         case parser.UIntType():
+            return 4, Longword()
             return 4, AssemblySize(AssemblyType.LONGWORD)
         
         case parser.ULongType():
+            return 8, Quadword()
             return 8, AssemblySize(AssemblyType.QUADWORD)
 
         case parser.DoubleType():
+            return 8, Double()
             return 8, AssemblySize(AssemblyType.DOUBLE)
         
         case parser.PointerType():
+            return 8, Quadword()
             return 8, AssemblySize(AssemblyType.QUADWORD)
+
+        case parser.ArrayType():
+            #TODO FIX THIS
+            return 16, None
+            pass
 
         case _:
             print("Error: Invalid C Type to Assembly Conversion. {0}".format(type))
@@ -1336,7 +1457,7 @@ def ASM_parseAST(ast, symbolTable):
                 print("StaticInit:", type(staticInit))
                 match staticInit:
                     case typeChecker.DoubleInit():
-                        backendSymbolTable[identifier] = ObjEntry(AssemblySize(AssemblyType.DOUBLE), isStatic=True, isConstant=True)
+                        backendSymbolTable[identifier] = ObjEntry(Double(), isStatic=True, isConstant=True)
 
                     case _:
                         print("Invalid Static Constant.")

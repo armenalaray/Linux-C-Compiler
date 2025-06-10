@@ -1,3 +1,6 @@
+16 byte aligned base - 20 40 
+
+
 AST Program:
 VarDecl: NULL ArrayType( ArrayType( long, size: 3), size: 2) ale
 VarDecl: NULL ArrayType( ArrayType( long, size: 3), size: 2) nested = 
