@@ -1,3 +1,197 @@
+AST Program:
+VarDecl: NULL ArrayType( ArrayType( long, size: 3), size: 2) ale
+VarDecl: NULL ArrayType( ArrayType( long, size: 3), size: 2) nested = 
+CI:[
+        CI:[SI: (1), SI: (2), ], ]
+VarDecl: NULL int i
+VarDecl: NULL int j = SI: (0)
+FunDecl: NULL main () ParamTypes: () ReturnType: int
+Declaration:
+VarDecl: NULL int j = SI: (0)
+
+0
+AST Program:
+VarDecl: NULL ArrayType( ArrayType( long, size: 3), size: 2) ale
+VarDecl: NULL ArrayType( ArrayType( long, size: 3), size: 2) nested = 
+CI:[
+        CI:[SI: (1), SI: (2), ], ]
+VarDecl: NULL int i
+VarDecl: NULL int j = SI: (0)
+FunDecl: NULL main () ParamTypes: () ReturnType: int
+Declaration:
+VarDecl: NULL int j.0 = SI: (0)
+
+0
+AST Program:
+VarDecl: NULL ArrayType( ArrayType( long, size: 3), size: 2) ale
+VarDecl: NULL ArrayType( ArrayType( long, size: 3), size: 2) nested = 
+CI:[
+        CI:[SI: (1 : long) : long, SI: (2 : long) : long, ]
+        : ArrayType( long, size: 3), ]
+: ArrayType( ArrayType( long, size: 3), size: 2)
+VarDecl: NULL int i
+VarDecl: NULL int j = SI: (0 : int) : int
+FunDecl: NULL main () ParamTypes: () ReturnType: int
+Declaration:
+VarDecl: NULL int j.0 = SI: (0 : int) : int
+
+{'ale': ale ArrayType: ArrayType: long Size: 3 Size: 2 InitialVal: <typeChecker.Tentative object at 0x7f4a1931a5a0> Global: True, 'nested': nested ArrayType: ArrayType: long Size: 3 Size: 2 InitialVal: InitialList: [c_long(1), c_long(2), 8, 24] Global: True, 'i': i int InitialVal: <typeChecker.Tentative object at 0x7f4a19319e20> Global: True, 'j': j int InitialVal: InitialList: [c_int(0)] Global: True, 'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'j.0': j.0 int <typeChecker.LocalAttributes object at 0x7f4a1931ab40>}
+0
+AST Program:
+VarDecl: NULL ArrayType( ArrayType( long, size: 3), size: 2) ale
+VarDecl: NULL ArrayType( ArrayType( long, size: 3), size: 2) nested = 
+CI:[
+        CI:[SI: (1 : long) : long, SI: (2 : long) : long, ]
+        : ArrayType( long, size: 3), ]
+: ArrayType( ArrayType( long, size: 3), size: 2)
+VarDecl: NULL int i
+VarDecl: NULL int j = SI: (0 : int) : int
+FunDecl: NULL main () ParamTypes: () ReturnType: int
+Declaration:
+VarDecl: NULL int j.0 = SI: (0 : int) : int
+
+<class 'parser.SingleInit'>
+TAC Program:[Function: main ([]) instructions:[(j.0 + 0) = 0 , Return 0], Global: True ale = [48], Global: True nested = [c_long(1), c_long(2), 8, 24], Global: True i = [c_int(0)], Global: True j = [c_int(0)]]
+{'ale': ale ArrayType: ArrayType: long Size: 3 Size: 2 InitialVal: <typeChecker.Tentative object at 0x7f4a1931a5a0> Global: True, 'nested': nested ArrayType: ArrayType: long Size: 3 Size: 2 InitialVal: InitialList: [c_long(1), c_long(2), 8, 24] Global: True, 'i': i int InitialVal: <typeChecker.Tentative object at 0x7f4a19319e20> Global: True, 'j': j int InitialVal: InitialList: [c_int(0)] Global: True, 'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'j.0': j.0 int <typeChecker.LocalAttributes object at 0x7f4a1931ab40>}
+0
+from test: 0
+/home/alejandro
+84 INFO: PyInstaller: 6.13.0, contrib hooks: 2025.3
+84 INFO: Python: 3.12.3
+86 INFO: Platform: Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.39
+86 INFO: Python environment: /usr
+86 INFO: wrote /home/alejandro/cd.spec
+140 INFO: Module search paths (PYTHONPATH):
+['/usr/lib/python312.zip',
+ '/usr/lib/python3.12',
+ '/usr/lib/python3.12/lib-dynload',
+ '/home/alejandro/.local/lib/python3.12/site-packages',
+ '/usr/local/lib/python3.12/dist-packages',
+ '/usr/lib/python3/dist-packages',
+ '/home/alejandro/CComp/code']
+335 INFO: checking Analysis
+344 INFO: checking PYZ
+356 INFO: checking PKG
+356 INFO: Bootloader /home/alejandro/.local/lib/python3.12/site-packages/PyInstaller/bootloader/Linux-64bit-intel/run
+357 INFO: checking EXE
+357 INFO: Build complete! The results are available in: /home/alejandro/dist
+======================================================================
+FAIL: test_valid/libraries/external_tentative_var_client (test_framework.basic.TestChapter10.test_valid/libraries/external_tentative_var_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_10/valid/libraries/external_tentative_var_client.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/external_var_scoping (test_framework.basic.TestChapter10.test_valid/libraries/external_var_scoping)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_10/valid/libraries/external_var_scoping.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/external_variable_client (test_framework.basic.TestChapter10.test_valid/libraries/external_variable_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_10/valid/libraries/external_variable_client.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/push_arg_on_page_boundary (test_framework.basic.TestChapter10.test_valid/push_arg_on_page_boundary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_10/valid/push_arg_on_page_boundary.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/long_global_var_client (test_framework.basic.TestChapter11.test_valid/libraries/long_global_var_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_11/valid/libraries/long_global_var_client.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/unsigned_global_var_client (test_framework.basic.TestChapter12.test_valid/libraries/unsigned_global_var_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_12/valid/libraries/unsigned_global_var_client.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/extern_double_client (test_framework.basic.TestChapter13.test_valid/libraries/extern_double_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/libraries/extern_double_client.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/global_pointer_client (test_framework.basic.TestChapter14.test_valid/libraries/global_pointer_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/libraries/global_pointer_client.c failed with error:
+
+#####################################################################
+======================================================================
+FAIL: test_valid/declarators/big_array (test_framework.basic.TestChapter15.test_valid/declarators/big_array)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/declarators/big_array.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/global_array_client (test_framework.basic.TestChapter15.test_valid/libraries/global_array_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/libraries/global_array_client.c failed with error:
+
+
+----------------------------------------------------------------------
+Ran 612 tests in 85.240s
+
+FAILED (failures=10)
+
+
+
 TAC Program:[Function: main ([]) instructions:[Copy i.1 = None, Copy j.2 = None, 
 
 tmp.3 = Get Address arr.0 , 

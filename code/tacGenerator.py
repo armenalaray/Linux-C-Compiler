@@ -24,7 +24,7 @@ class StaticVariable(TopLevel):
         self.initList = initList
     
     def __str__(self):
-        return "Global: {self.global_} {self.identifier} = {self.init}".format(self=self)
+        return "Global: {self.global_} {self.identifier} = {self.initList}".format(self=self)
 
     def __repr__(self):
         return self.__str__()
@@ -1219,19 +1219,26 @@ def TAC_convertSymbolsToTAC(symbolTable):
 
                             case parser.PointerType():
                                 init = typeChecker.ULongInit(0)
+                            
+                            case parser.ArrayType(elementType = elementType, size = size):
+                                size = entry.type.getBaseTypeSize(0)
+                                init = typeChecker.ZeroInit(size)
                                 
                             case _:
                                 print("Error: Invalid Tentative Initializer. {0}".format(entry.type))
                                 sys.exit(1)
                                 
                                     
-                        tacDefs.append(StaticVariable(name, global_, entry.type, init))
+                        tacDefs.append(StaticVariable(name, global_, entry.type, [init]))
 
-                    case typeChecker.Initial(staticInit=staticInit):
-                        tacDefs.append(StaticVariable(name, global_, entry.type, staticInit))
+                    case typeChecker.Initial(initList = initList):
+                        tacDefs.append(StaticVariable(name, global_, entry.type, initList))
+
+                    case typeChecker.NoInitializer():
+                        pass
                     
                     case _:
-                        print("Invalid")
+                        print("Invalid Initial Val. {0}".format(initialVal))
                         sys.exit(1)
 
     #print(tacDefs)

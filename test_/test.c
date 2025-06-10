@@ -1,10 +1,9 @@
-long nested[2][3] = { {1l, 2l} };
+/* Test that we can parse an array declarator with a size greater than UINT_MAX
+ * Note that we don't actually allocate space for this array!
+ */
 
-int main(void)
-{
-    //long nested[2][3] = { {1l, 2l} };
-    int i = 0;
-    int j = 0;
+extern int x[4294967297L][100000000];
 
-    //return i[arr][j];
+int main(void) {
+    return 0;
 }
