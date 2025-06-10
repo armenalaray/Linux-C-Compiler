@@ -386,7 +386,11 @@ class Indexed(Operand):
         self.index = index
         self.scale = scale
 
+    def __str__(self):
+        return r"Indexed({self.base} + {self.index} * {self.scale})".format(self=self)
 
+    def __repr__(self):
+        return self.__str__()
 
 class PseudoRegisterOperand:
 
@@ -830,9 +834,43 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
     for i in TAC_Instructions:
         match i:
             
-            case tacGenerator.TAC_addPtr():
-                pass
+            #scale is a number
+            case tacGenerator.TAC_addPtr(ptr = ptr_, index = index_, scale = scale, dst = dst_):
+                
+                type1, cType1, ptr = parseValue(ptr_, symbolTable, topLevelList)
+                type2, cType2, index = parseValue(index_, symbolTable, topLevelList)
+                type3, cType3, dst = parseValue(dst_, symbolTable, topLevelList)
+                
+                match index_:
+                    case tacGenerator.TAC_ConstantValue(const = const):
 
+                        ASM_Instructions.append(MovInstruction(Quadword(), ptr, RegisterOperand(Register(RegisterType.AX))))
+
+                        ASM_Instructions.append(LeaInstruction(MemoryOperand(Register(RegisterType.AX), const.int * scale), dst))
+                        
+                        
+                    case tacGenerator.TAC_VariableValue(identifier = identifier):
+                        if scale > 8:
+                            ASM_Instructions.append(MovInstruction(Quadword(), ptr, RegisterOperand(Register(RegisterType.AX))))
+
+                            ASM_Instructions.append(MovInstruction(Quadword(), index, RegisterOperand(Register(RegisterType.DX))))
+
+                            ASM_Instructions.append(BinaryInstruction(BinaryOperator(BinopType.Mult), Quadword(), ImmediateOperand(scale), RegisterOperand(Register(RegisterType.DX))))
+
+                            ASM_Instructions.append(LeaInstruction(Indexed(Register(RegisterType.AX), Register(RegisterType.DX), 1), dst))
+
+                        else:
+                            ASM_Instructions.append(MovInstruction(Quadword(), ptr, RegisterOperand(Register(RegisterType.AX))))
+
+                            ASM_Instructions.append(MovInstruction(Quadword(), index, RegisterOperand(Register(RegisterType.DX))))
+
+                            ASM_Instructions.append(LeaInstruction(Indexed(Register(RegisterType.AX), Register(RegisterType.DX), scale), dst))
+
+                    case _:
+                        print("Error: Invalid TAC Value.")
+                        sys.exit(1)
+
+            #dest is a string
             case tacGenerator.TAC_copyToOffset(src = src, dst = dst, offset = offset):
                 type1, cType1, src = parseValue(src, symbolTable, topLevelList)
                 #type2, cType2, dst_ = parseValue(dst, symbolTable, topLevelList)
@@ -1009,13 +1047,14 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
 
                     instruction2 = None
 
-                    #HERE I check for signed and unsigned
-                    if type(cType1) == parser.IntType or type(cType1) == parser.LongType:                     
-                    
-                        instruction2 = SetCCInst(list(ConcCodeType)[op.operator.value], dst)
-                    
-                    elif type(cType1) == parser.UIntType or type(cType1) == parser.ULongType or type(cType1) == parser.DoubleType:
+                    def isSigned(cType):
+                        if type(cType) == parser.IntType or type(cType) == parser.LongType:                         
+                            return True
+                        return False
 
+                    if isSigned(cType1) and isSigned(cType2):
+                        instruction2 = SetCCInst(list(ConcCodeType)[op.operator.value], dst)
+                    else:
                         instruction2 = SetCCInst(list(ConcCodeTypeUnsigned)[op.operator.value], dst)
                         
                     ASM_Instructions.append(instruction0)
@@ -1107,8 +1146,6 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                             
                             ASM_Instructions.append(instruction0)
                             ASM_Instructions.append(instruction1)
-
-
             
             case tacGenerator.TAC_JumpInst(label=label):
                 ASM_Instructions.append(JumpInst(label))
