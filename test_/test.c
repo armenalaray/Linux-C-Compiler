@@ -10,5 +10,5 @@ int main(void)
     a - 2;
     c - a;
 
-    a > b;
+    //a > b;
 }

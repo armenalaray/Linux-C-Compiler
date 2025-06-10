@@ -637,9 +637,57 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                         case parser.BinopType.SUBTRACT:
 
                             if type(left.retType) == parser.PointerType and isIntegerType(right.retType):
-                                pass
+
+                                src1 = TAC_emitTackyAndConvert(left, instructions, symbolTable)
+
+                                ptr = makeTempVariable(left.retType, symbolTable)
+
+                                instructions.append(TAC_CopyInstruction(src1, ptr))
+
+                                src2 = TAC_emitTackyAndConvert(right, instructions, symbolTable)
+
+                                inte = makeTempVariable(right.retType, symbolTable)
+
+                                instructions.append(TAC_CopyInstruction(src2, inte))
+
+                                negate = makeTempVariable(right.retType, symbolTable)
+
+                                instructions.append(TAC_UnaryInstruction(TAC_UnaryOperator(UnopType.NEGATE), inte, negate))
+                                
+                                dst = makeTempVariable(expression.retType, symbolTable)
+
+                                scale = left.retType.referenceType.getBaseTypeSize(0)
+                                
+                                instructions.append(TAC_addPtr(ptr, negate, scale, dst))
+
+                                return PlainOperand(dst)
+                                
                             elif type(left.retType) == parser.PointerType and left.retType.checkType(right.retType):
-                                pass
+
+                                src1 = TAC_emitTackyAndConvert(left, instructions, symbolTable)
+
+                                ptr1 = makeTempVariable(left.retType, symbolTable)
+
+                                instructions.append(TAC_CopyInstruction(src1, ptr1))
+
+                                src2 = TAC_emitTackyAndConvert(right, instructions, symbolTable)
+
+                                ptr2 = makeTempVariable(right.retType, symbolTable)
+
+                                instructions.append(TAC_CopyInstruction(src2, ptr2))
+
+                                diff = makeTempVariable(left.retType, symbolTable)
+
+                                instructions.append(TAC_BinaryInstruction(TAC_BinaryOperator(BinopType.SUBTRACT), ptr1, ptr2, diff))
+
+                                dst = makeTempVariable(expression.retType, symbolTable)
+
+                                typeSize = left.retType.referenceType.getBaseTypeSize(0)
+
+                                instructions.append(TAC_BinaryInstruction(TAC_BinaryOperator(BinopType.DIVIDE), diff, typeSize, dst))
+
+                                return PlainOperand(dst)
+
                             else:
                                 return binaryCommonTacky()
                             
