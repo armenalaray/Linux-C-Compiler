@@ -4,6 +4,8 @@ import parser
 import semanticAnalysis
 import typeChecker
 
+from typeChecker import isIntegerType
+
 class TAC_Program:
     def __init__(self, topLevelList):
         self.topLevelList = topLevelList
@@ -15,11 +17,11 @@ class TopLevel:
     pass
 
 class StaticVariable(TopLevel):
-    def __init__(self, identifier, global_, type, init):
+    def __init__(self, identifier, global_, type, initList):
         self.identifier = identifier
         self.global_ = global_
         self.type = type
-        self.init = init
+        self.initList = initList
     
     def __str__(self):
         return "Global: {self.global_} {self.identifier} = {self.init}".format(self=self)
@@ -42,6 +44,20 @@ class TAC_FunctionDef(TopLevel):
 
 class instruction:
     pass
+
+class TAC_addPtr(instruction):
+    def __init__(self, ptr, index, scale, dst):
+        self.ptr = ptr
+        self.index = index
+        self.scale = scale
+        self.dst = dst
+
+class TAC_copyToOffset(instruction):
+    def __init__(self, src, dst, offset):
+        self.src = src
+        self.dst = dst
+        self.offset = offset
+
 
 class TAC_returnInstruction(instruction):
     def __init__(self, Value):
@@ -438,7 +454,7 @@ def TAC_emitTackyAndConvert(exp, instructions, symbolTable):
     match result:
         case PlainOperand(val=val):
             return val
-            pass
+            
         case DereferencedPointer(val=ptr):
             tmp = makeTempVariable(exp.retType, symbolTable)
             instructions.append(TAC_Load(ptr, tmp))
@@ -447,6 +463,10 @@ def TAC_emitTackyAndConvert(exp, instructions, symbolTable):
 def TAC_parseInstructions(expression, instructions, symbolTable):
     
     match expression:
+        
+        case parser.Subscript():
+            pass
+
         case parser.Constant_Expression(const = const):
             return PlainOperand(TAC_ConstantValue(const))
         
@@ -546,15 +566,13 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                         case parser.BinopType.AND:
                             
                             v1 = TAC_emitTackyAndConvert(left, instructions, symbolTable)
-                            #v1 = TAC_parseInstructions(left, instructions, symbolTable)
                             
                             false_label = makeTemp()
 
                             instructions.append(TAC_JumpIfZeroInst(v1, false_label))
 
                             v2 = TAC_emitTackyAndConvert(right, instructions, symbolTable)
-                            #v2 = TAC_parseInstructions(right, instructions, symbolTable)
-
+                            
                             instructions.append(TAC_JumpIfZeroInst(v2, false_label))
 
                             result = makeTempVariable(expression.retType, symbolTable)
@@ -572,7 +590,6 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                             instructions.append(TAC_LabelInst(end))
 
                             return PlainOperand(result)
-
 
                         case parser.BinopType.OR:
                             
@@ -604,14 +621,65 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
 
                             return PlainOperand(result)
 
+                        case parser.BinopType.ADD:
+                            #slo puede pointer y aritmetic
+                            #pointer aritmetic
+                            if type(left.retType) == parser.PointerType and isIntegerType(right.retType):
+
+                                src1 = TAC_emitTackyAndConvert(left, instructions, symbolTable)
+
+                                ptr = makeTempVariable(left.retType, symbolTable)
+
+                                instructions.append(TAC_CopyInstruction(src1, ptr))
+
+                                src2 = TAC_emitTackyAndConvert(right, instructions, symbolTable)
+
+                                inte = makeTempVariable(right.retType, symbolTable)
+
+                                instructions.append(TAC_CopyInstruction(src2, inte))
+                                
+                                dst = makeTempVariable(expression.retType, symbolTable)
+
+                                scale = left.retType.referenceType.getBaseTypeSize(0)
+                                
+                                instructions.append(TAC_addPtr(ptr, inte, scale, dst))
+
+                            elif isIntegerType(left.retType) and type(right.retType) == parser.PointerType:
+
+                                src1 = TAC_emitTackyAndConvert(right, instructions, symbolTable)
+
+                                ptr = makeTempVariable(left.retType, symbolTable)
+
+                                instructions.append(TAC_CopyInstruction(src1, ptr))
+
+                                src2 = TAC_emitTackyAndConvert(left, instructions, symbolTable)
+
+                                inte = makeTempVariable(right.retType, symbolTable)
+
+                                instructions.append(TAC_CopyInstruction(src2, inte))
+                                
+                                dst = makeTempVariable(expression.retType, symbolTable)
+
+                                scale = right.retType.referenceType.getBaseTypeSize(0)
+                                
+                                instructions.append(TAC_addPtr(ptr, inte, scale, dst))
+                                
+                            else:
+                                src1 = TAC_emitTackyAndConvert(left, instructions, symbolTable)
+
+                                src2 = TAC_emitTackyAndConvert(right, instructions, symbolTable)
+
+                                dst = makeTempVariable(expression.retType, symbolTable)                            
+
+                                operator = parseOperator(op)
+                                instructions.append(TAC_BinaryInstruction(operator, src1, src2, dst))
                         
                         case _:
-                            
+                            #add
+
                             src1 = TAC_emitTackyAndConvert(left, instructions, symbolTable)
-                            #src1 = TAC_parseInstructions(left, instructions, symbolTable)
 
                             src2 = TAC_emitTackyAndConvert(right, instructions, symbolTable)
-                            #src2 = TAC_parseInstructions(right, instructions, symbolTable)
 
                             dst = makeTempVariable(expression.retType, symbolTable)                            
 
@@ -941,11 +1009,10 @@ def TAC_parseVarDeclarations(variableDecl, instructions, symbolTable):
     if variableDecl.storageClass.storageClass != parser.StorageType.NULL:
         pass
     else:
-        if variableDecl.exp:
+        if variableDecl.initializer:
             
-            src = TAC_emitTackyAndConvert(variableDecl.exp, instructions, symbolTable)
-
-            #src = TAC_parseInstructions(variableDecl.exp, instructions, symbolTable)
+            src = None
+            #src = TAC_emitTackyAndConvert(variableDecl.exp, instructions, symbolTable)
 
             dst = TAC_VariableValue(variableDecl.identifier)
             instructions.append(TAC_CopyInstruction(src, dst))
