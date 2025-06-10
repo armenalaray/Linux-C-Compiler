@@ -40,6 +40,8 @@ class ByteArray(AssemblyType):
         self.size = size
         self.alignment = alignment
     
+    def __str__(self):
+        return "ByteArray(Size = {self.size}, Alignment = {self.alignment})".format(self=self)
 
 """
 class AssemblySize:
@@ -378,6 +380,11 @@ class PseudoMem(Operand):
         self.identifier = identifier
         self.offset = offset
 
+    def __str__(self):
+        return r"PseudoMem({self.identifier}, {self.offset})".format(self=self)
+
+    def __repr__(self):
+        return self.__str__()
     
     
 class Indexed(Operand):
@@ -524,8 +531,6 @@ class SSERegisterType(Enum):
     XMM14 = 8
     XMM15 = 9
 
-
-
 class Register:
     def __init__(self, register):
         self.register = register
@@ -591,27 +596,21 @@ def parseValue(v, symbolTable, topLevelList):
             match const:
                 case parser.ConstInt():
                     asmType = Longword()
-                    #asmType = AssemblySize(AssemblyType.LONGWORD)
                     cType = parser.IntType()
                     return asmType, cType, ImmediateOperand(const.int)
                     
                 case parser.ConstLong():
                     asmType = Quadword()
-                    #asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.LongType()
                     return asmType, cType, ImmediateOperand(const.int)
 
                 case parser.ConstUInt():
-
                     asmType = Longword()
-                    #asmType = AssemblySize(AssemblyType.LONGWORD)
                     cType = parser.UIntType()
                     return asmType, cType, ImmediateOperand(const.int)
                 
                 case parser.ConstULong():
-                    
                     asmType = Quadword()
-                    #asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.ULongType()
                     return asmType, cType, ImmediateOperand(const.int)
 
@@ -620,7 +619,6 @@ def parseValue(v, symbolTable, topLevelList):
                     topLevelList.append(StaticConstant(name, 8, typeChecker.DoubleInit(const.double)))
                     
                     asmType = Double()
-                    #asmType = AssemblySize(AssemblyType.DOUBLE)
                     cType = parser.DoubleType()
                     return asmType, cType, DataOperand(name)
 
@@ -661,9 +659,24 @@ def parseValue(v, symbolTable, topLevelList):
                     #asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.ULongType()
 
-                case parser.ArrayType():
+                case parser.ArrayType(elementType = elementType, size = size):
+                    
                     asmType = None
                     cType = symbolTable[i].type
+                    
+                    sizeArray = cType.getBaseTypeSize(0)
+                    print(sizeArray)
+
+                    while type(cType) == parser.ArrayType:
+                        cType = cType.elementType
+
+                    alignment, other = matchCType(cType)
+                        
+                    if sizeArray < 16:
+                        asmType = ByteArray(sizeArray, alignment)                
+                    else:
+                        asmType = ByteArray(sizeArray, 16)                
+
                     return asmType, cType, PseudoMem(i, 0)
 
                 case _:
@@ -705,16 +718,29 @@ def parseValue(v, symbolTable, topLevelList):
                     cType = parser.ULongType()
 
                 case parser.ArrayType():
+
                     asmType = None
                     cType = symbolTable[v].type
+                    
+                    sizeArray = cType.getBaseTypeSize(0)
+                    print(sizeArray)
+
+                    while type(cType) == parser.ArrayType:
+                        cType = cType.elementType
+
+                    alignment, other = matchCType(cType)
+                        
+                    if sizeArray < 16:
+                        asmType = ByteArray(sizeArray, alignment)                
+                    else:
+                        asmType = ByteArray(sizeArray, 16)                
+
                     return asmType, cType, PseudoMem(v, 0)
 
                 case _:
                     print("Error: Invalid Assembly Variable. {0}".format(symbolTable[v].type))
                     sys.exit(1)
             return asmType, cType, PseudoRegisterOperand(v)
-
-
 
 def parseOperator(op):
     match op:
@@ -745,24 +771,6 @@ def Expect(*args):
                 sys.exit(1)
         other = i
 
-"""
-def parseBinaryInstructionGeneral(src1_, src2_, dst_, op, symbolTable, ASM_Instructions, topLevelList):
-
-    type1, alignment1, src1 = parseValue(src1_, symbolTable, topLevelList)
-    type2, alignment2, src2 = parseValue(src2_, symbolTable, topLevelList)
-    type3, alignment3, dst = parseValue(dst_, symbolTable, topLevelList)
-    
-    Expect(type1, type2, type3)
-
-    operator = parseOperator(op)
-            
-    instruction0 = MovInstruction(type1, src1, dst)
-    instruction1 = BinaryInstruction(operator, type1, src2, dst)
-    
-    ASM_Instructions.append(instruction0)
-    ASM_Instructions.append(instruction1)
-"""
-
 def isIntegerType(type_):
     if type(type_) == parser.UIntType or type(type_) == parser.ULongType or type(type_) == parser.IntType or type(type_) == parser.LongType:
         return True 
@@ -780,7 +788,6 @@ def parseUnaryInstructionGeneral(src_, dst_, o, symbolTable, ASM_Instructions, t
     ASM_Instructions.append(instruction0)
     ASM_Instructions.append(instruction1)
 
-#expresiones
 def classifyParameters(values, symbolTable, topLevelList):
     intRegArgs = []
     doubleRegArgs = []
@@ -801,33 +808,7 @@ def classifyParameters(values, symbolTable, topLevelList):
             else:
                 stackArgs.append(typedOperand)
                 
-    return intRegArgs, doubleRegArgs, stackArgs
-
-"""
-def classifyParametersWithoutParsing(values, symbolTable, topLevelList):
-    intRegArgs = []
-    doubleRegArgs = []
-    stackArgs = []
-
-    for arg in values:
-        t, cType1, operand = parseValue(arg, symbolTable, topLevelList)
-
-        typedOperand = (operand, t)
-
-        if type(cType1) == parser.DoubleType:
-            if len(doubleRegArgs) < 8:
-                doubleRegArgs.append(operand)
-            else:
-                stackArgs.append(typedOperand)
-        else:
-            if len(intRegArgs) < 6:
-                intRegArgs.append(typedOperand)
-            else:
-                stackArgs.append(typedOperand)
-                
-    return intRegArgs, doubleRegArgs, stackArgs
-"""
-    
+    return intRegArgs, doubleRegArgs, stackArgs  
 
 def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLevelList):
 

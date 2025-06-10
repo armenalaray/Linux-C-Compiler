@@ -1,3 +1,11 @@
+
+TAC Program:[Function: main ([]) instructions:[(d.1 + 0) = a.0 , (d.1 + 4) = 2 , (d.1 + 8) = 0 , (d.1 + 12) = 0 , tmp.2 = Get Address c , tmp.3 = Get Address d.1 , tmp.4 = tmp.2 _ tmp.3, Return 0], Global: True a = [400], Global: True c = [c_int(4), c_int(4)]]
+
+ASM Program: [Function main stackOffset: None global: True instructions:[
+	AssType: <assemblyGenerator.Longword object at 0x7f942c2c9730> 
+	Mov(Pseudo(a.0), PseudoMem(d.1, 0)), AssType: <assemblyGenerator.Longword object at 0x7f942c2c9820> Mov(Imm(2), PseudoMem(d.1, 4)), AssType: <assemblyGenerator.Longword object at 0x7f942c2c98b0> Mov(Imm(0), PseudoMem(d.1, 8)), AssType: <assemblyGenerator.Longword object at 0x7f942c2c9970> Mov(Imm(0), PseudoMem(d.1, 12)), Lea(PseudoMem(c, 0), Pseudo(tmp.2)), Lea(PseudoMem(d.1, 0), Pseudo(tmp.3)), AssType: <assemblyGenerator.Quadword object at 0x7f942c2c99a0> Cmp(Pseudo(tmp.3), Pseudo(tmp.2)), AssType: <assemblyGenerator.Longword object at 0x7f942c2c9b50> Mov(Imm(0), Pseudo(tmp.4)), SetCC(ConcCodeTypeUnsigned.A, Pseudo(tmp.4)), AssType: <assemblyGenerator.Longword object at 0x7f942c2c9dc0> Mov(Imm(0), Reg(AX)), ret], Static Variable: Global = True Alignment = 16 : a = [400], Static Variable: Global = True Alignment = 4 : c = [c_int(4), c_int(4)]]
+
+
 16 byte aligned base - 20 40 
 
 
