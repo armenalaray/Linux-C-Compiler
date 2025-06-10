@@ -1,3 +1,40 @@
+TAC Program:[Function: main ([]) instructions:[Copy i.1 = None, Copy j.2 = None, 
+
+tmp.3 = Get Address arr.0 , 
+
+Copy tmp.4 = tmp.3, 
+SignExtend tmp.5 = i.1, 
+Copy tmp.6 = tmp.5, 
+
+temp.7  = arr.0 + index * 16
+AddPtr tmp.7 = tmp.4 + tmp.6 * 16, 
+
+Copy tmp.8 = tmp.7, 
+
+SignExtend tmp.9 = j.2, 
+Copy tmp.10 = tmp.9, 
+
+temp.11 = ptr + j * 4
+AddPtr tmp.11 = tmp.8 + tmp.10 * 4, 
+
+tmp.12 = Load tmp.11 , 
+
+Return tmp.12, 
+
+Return 0]]
+
+
+TAC Program:[Function: main ([]) instructions:[Copy i.1 = None, Copy j.2 = None, 
+
+tmp.3 = Get Address arr.0 , 
+Copy tmp.4 = tmp.3, 
+
+SignExtend tmp.5 = i.1, 
+Copy tmp.6 = tmp.5,
+
+<tacGenerator.TAC_addPtr object at 0x7fe150d30d70>, Copy tmp.8 = tmp.7, SignExtend tmp.9 = j.2, Copy tmp.10 = tmp.9, <tacGenerator.TAC_addPtr object at 0x7fe150d30f20>, tmp.12 = Load tmp.11 , Return tmp.12, Return 0]]
+
+
 a - 240
 2400 - 240 = 2160
 

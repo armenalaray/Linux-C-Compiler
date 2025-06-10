@@ -1,14 +1,8 @@
 
 int main(void)
 {
-    int a[2] = {2,2};
-    int b[2] = {2,2};
-    int *c = a + 2;
-    a + 2;
-    3 + a;
-
-    a - 2;
-    c - a;
-
-    //a > b;
+    int arr[3][4];
+    int i = 0;
+    int j = 0;
+    return i[arr][j];
 }
