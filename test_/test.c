@@ -1,13 +1,7 @@
+int c[2] = {4,4};
 
 int main(void) {
-    
     int a;
-    
-    int b[10][10] = {{a,2}};
-    int c[10] = {a,2};
-    int d[10] = {a,2};
-    
-    
-    b + 2;
+    int d[4] = {a,2};
     c > d;
 }

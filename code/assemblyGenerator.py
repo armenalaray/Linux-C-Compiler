@@ -78,7 +78,7 @@ class StaticVariable(TopLevel):
         self.initList = initList
 
     def __str__(self):
-        return "Static Variable: Global = {self.global_} Alignment = {self.alignment} : {self.identifier} = {self.staticInit}".format(self=self)
+        return "Static Variable: Global = {self.global_} Alignment = {self.alignment} : {self.identifier} = {self.initList}".format(self=self)
 
     def __repr__(self):
         return self.__str__()
@@ -1387,10 +1387,10 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
 
 def ASM_parseTopLevel(topLevel, symbolTable, topLevelList):
     match topLevel:
-        case tacGenerator.StaticVariable(identifier = identifier, global_ = global_, type = type, init = init):
+        case tacGenerator.StaticVariable(identifier = identifier, global_ = global_, type = type, initList = initList):
             #print(identifier)
             alignment, other = matchCType(type)
-            return StaticVariable(identifier, global_, alignment, init)
+            return StaticVariable(identifier, global_, alignment, initList)
         
         case tacGenerator.TAC_FunctionDef(identifier = identifier, global_ = global_, params = params, instructions = instructions):
             
@@ -1420,6 +1420,10 @@ def ASM_parseTopLevel(topLevel, symbolTable, topLevelList):
             ASM_parseInstructions(instructions, ASM_Instructions, symbolTable, topLevelList)
             return Function(identifier, global_, ASM_Instructions)
 
+        case _:
+            print("Error: Invalid TAC Top Level.")
+            sys.exit(1)
+
 class asm_symtab_entry:
     pass
 
@@ -1445,8 +1449,8 @@ class FunEntry(asm_symtab_entry):
     def __repr__(self):
         return self.__str__()
 
-def matchCType(type):
-    match type:
+def matchCType(cType):
+    match cType:
         case parser.IntType():
             return 4, Longword()
             return 4, AssemblySize(AssemblyType.LONGWORD)
@@ -1471,11 +1475,20 @@ def matchCType(type):
             return 8, Quadword()
             return 8, AssemblySize(AssemblyType.QUADWORD)
 
-        case parser.ArrayType():
-            #TODO FIX THIS
-            return 16, None
-            pass
+        case parser.ArrayType(elementType = elementType, size = size):
+            sizeArray = cType.getBaseTypeSize(0)
+            print(sizeArray)
 
+            while type(cType) == parser.ArrayType:
+                cType = cType.elementType
+
+            alignment, other = matchCType(cType)
+             
+            if sizeArray < 16:
+                return alignment, ByteArray(sizeArray, alignment)                
+            else:
+                return 16, ByteArray(sizeArray, 16)                
+                
         case _:
             print("Error: Invalid C Type to Assembly Conversion. {0}".format(type))
             sys.exit(1)
