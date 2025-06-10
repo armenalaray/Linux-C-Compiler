@@ -559,6 +559,19 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
             return PlainOperand(dst)
         
         case parser.Binary_Expression(operator=op, left=left, right=right):
+
+            def binaryCommonTacky():
+                src1 = TAC_emitTackyAndConvert(left, instructions, symbolTable)
+
+                src2 = TAC_emitTackyAndConvert(right, instructions, symbolTable)
+
+                dst = makeTempVariable(expression.retType, symbolTable)                            
+
+                operator = parseOperator(op)
+                instructions.append(TAC_BinaryInstruction(operator, src1, src2, dst))
+
+                return PlainOperand(dst)
+
             match op:
                 case parser.BinaryOperator(operator=o):
                     
@@ -621,6 +634,16 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
 
                             return PlainOperand(result)
 
+                        case parser.BinopType.SUBTRACT:
+
+                            if type(left.retType) == parser.PointerType and isIntegerType(right.retType):
+                                pass
+                            elif type(left.retType) == parser.PointerType and left.retType.checkType(right.retType):
+                                pass
+                            else:
+                                return binaryCommonTacky()
+                            
+
                         case parser.BinopType.ADD:
                             #slo puede pointer y aritmetic
                             #pointer aritmetic
@@ -644,6 +667,8 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                                 
                                 instructions.append(TAC_addPtr(ptr, inte, scale, dst))
 
+                                return PlainOperand(dst)
+
                             elif isIntegerType(left.retType) and type(right.retType) == parser.PointerType:
 
                                 src1 = TAC_emitTackyAndConvert(right, instructions, symbolTable)
@@ -663,30 +688,15 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                                 scale = right.retType.referenceType.getBaseTypeSize(0)
                                 
                                 instructions.append(TAC_addPtr(ptr, inte, scale, dst))
+
+                                return PlainOperand(dst)
                                 
                             else:
-                                src1 = TAC_emitTackyAndConvert(left, instructions, symbolTable)
-
-                                src2 = TAC_emitTackyAndConvert(right, instructions, symbolTable)
-
-                                dst = makeTempVariable(expression.retType, symbolTable)                            
-
-                                operator = parseOperator(op)
-                                instructions.append(TAC_BinaryInstruction(operator, src1, src2, dst))
+                                return binaryCommonTacky()
                         
                         case _:
-                            #add
 
-                            src1 = TAC_emitTackyAndConvert(left, instructions, symbolTable)
-
-                            src2 = TAC_emitTackyAndConvert(right, instructions, symbolTable)
-
-                            dst = makeTempVariable(expression.retType, symbolTable)                            
-
-                            operator = parseOperator(op)
-                            instructions.append(TAC_BinaryInstruction(operator, src1, src2, dst))
-
-                            return PlainOperand(dst)
+                            return binaryCommonTacky()
                             
 
                 case parser.UnaryOperator():
