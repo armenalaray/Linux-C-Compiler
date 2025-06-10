@@ -303,8 +303,6 @@ def typeCheckExpression(exp, symbolTable):
             retType = parser.PointerType(typedInner.retType)
             return parser.AddrOf(typedInner, retType)
 
-            
-
         case parser.Cast_Expression(targetType = targetType, exp = exp):
             
             if type(targetType) == parser.ArrayType:
@@ -337,7 +335,6 @@ def typeCheckExpression(exp, symbolTable):
             r = convertByAssignment(r, l.retType)
             return parser.Assignment_Expression(l, r, l.retType)
             
-
         case parser.Constant_Expression(const=const):
             #print(type(const))
             match const:
@@ -390,7 +387,6 @@ def typeCheckExpression(exp, symbolTable):
                 case _:
                     return parser.Unary_Expression(op, e, e.retType)
                           
-        
         case parser.Binary_Expression(operator=op, left=left, right=right):
             
             def typeCheckCommonArithmeticBinaryExp(op, l, r):
@@ -512,8 +508,7 @@ def typeCheckExpression(exp, symbolTable):
                     
                 case _:                    
                     return typeCheckCommonArithmeticBinaryExp(op, l, r)
-
-                    
+      
         case parser.Conditional_Expression(condExp=condExp, thenExp=thenExp, elseExp=elseExp):
 
             condExp = typeCheckAndConvert(condExp, symbolTable)

@@ -64,6 +64,11 @@ class TAC_copyToOffset(instruction):
         self.dst = dst
         self.offset = offset
 
+    def __str__(self):
+        return "({self.dst} + {self.offset}) = {self.src} ".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
 
 class TAC_returnInstruction(instruction):
     def __init__(self, Value):
@@ -516,7 +521,6 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
 
                 return DereferencedPointer(dst)
                 
-
         case parser.Constant_Expression(const = const):
             return PlainOperand(TAC_ConstantValue(const))
         
@@ -815,7 +819,6 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                     instructions.append(TAC_Store(rval, ptr))
                     return PlainOperand(rval)
 
-
         case parser.FunctionCall_Exp(identifier=id, argumentList = argumentList):
             a = []
 
@@ -911,7 +914,6 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
             instructions.append(TAC_LabelInst(end))
 
             return PlainOperand(result)
-        
         
         case parser.AddrOf(exp = exp):
             
@@ -1110,6 +1112,25 @@ def TAC_parseStatement(statement, instructions, symbolTable, end=None):
             print("Invalid Statement")
             sys.exit(1)
 
+def TAC_emitInitializer(variableDecl, init, instructions, symbolTable, offset):
+    print(type(init))
+    
+    match init:
+        case parser.SingleInit(exp = exp, retType = retType):
+            src = TAC_emitTackyAndConvert(exp, instructions, symbolTable)
+
+            typeSize = retType.getBaseTypeSize(0)
+            instructions.append(TAC_copyToOffset(src, variableDecl.identifier, offset[0]))
+            offset[0] += typeSize
+            
+        case parser.CompoundInit(initializerList = initializerList, retType = retType):
+
+            for i in initializerList:
+                TAC_emitInitializer(variableDecl, i, instructions, symbolTable, offset)
+            
+        
+    
+
 def TAC_parseVarDeclarations(variableDecl, instructions, symbolTable):
 
     if variableDecl.storageClass.storageClass != parser.StorageType.NULL:
@@ -1117,12 +1138,12 @@ def TAC_parseVarDeclarations(variableDecl, instructions, symbolTable):
     else:
         if variableDecl.initializer:
             
-            src = None
+            TAC_emitInitializer(variableDecl, variableDecl.initializer, instructions, symbolTable, [0])
+            
             #src = TAC_emitTackyAndConvert(variableDecl.exp, instructions, symbolTable)
-
-            dst = TAC_VariableValue(variableDecl.identifier)
-            instructions.append(TAC_CopyInstruction(src, dst))
-            print(dst)
+            #dst = TAC_VariableValue(variableDecl.identifier)
+            #instructions.append(TAC_CopyInstruction(src, dst))
+            #print(dst)
 
 def TAC_parseDeclarations(decl, instructions, symbolTable):
     match decl:
