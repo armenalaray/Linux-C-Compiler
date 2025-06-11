@@ -216,13 +216,13 @@ def printStaticInit(staticInit, output):
 
 def printInstructionSuffix(type, output):
     match type:
-        case assemblyGenerator.AssemblyType.LONGWORD:
+        case assemblyGenerator.Longword():
             output += 'l'
             
-        case assemblyGenerator.AssemblyType.QUADWORD:
+        case assemblyGenerator.Quadword():
             output += 'q'
 
-        case assemblyGenerator.AssemblyType.DOUBLE:
+        case assemblyGenerator.Double():
             output += 'sd'
             pass
 
@@ -235,13 +235,13 @@ def printInstructionSuffix(type, output):
 def getOperandSize(type):
     operandSize = None
     match type:
-        case assemblyGenerator.AssemblyType.LONGWORD:
+        case assemblyGenerator.Longword():
             operandSize = OperandSize.BYTE_4
             
-        case assemblyGenerator.AssemblyType.QUADWORD:
+        case assemblyGenerator.Quadword():
             operandSize = OperandSize.BYTE_8
 
-        case assemblyGenerator.AssemblyType.DOUBLE:
+        case assemblyGenerator.Double():
             operandSize = OperandSize.BYTE_8
         
         case _:
@@ -313,13 +313,11 @@ def printTopLevel(topLevel, output, symbolTable):
                     case assemblyGenerator.MovInstruction(assType=assType, sourceO=src, destO=dst):
                         output += '\n\tmov'
 
-                        #print(type(assType.type))
-
-                        output = printInstructionSuffix(assType.type, output)
+                        output = printInstructionSuffix(assType, output)
                                 
                         output += ' '
                                 
-                        operandSize = getOperandSize(assType.type)
+                        operandSize = getOperandSize(assType)
 
                         output = matchOperand(src, output, operandSize)
                         
@@ -331,11 +329,6 @@ def printTopLevel(topLevel, output, symbolTable):
 
                     case assemblyGenerator.ReturnInstruction():
                         output += '\n\tmovq %rbp, %rsp\n\tpopq %rbp\n\tret'
-
-
-                    #case assemblyGenerator.AllocateStackInstruction(offset=off):
-                    #    output += '\n\tsubq ${0}'.format(off)
-                    #    output += ', %rsp'
                         
                         
                     case assemblyGenerator.UnaryInstruction(operator=o, assType = assType, dest=dst):
@@ -352,45 +345,40 @@ def printTopLevel(topLevel, output, symbolTable):
                                     case assemblyGenerator.UnopType.Shr:
                                         output += '\n\tshr'
 
-                        output = printInstructionSuffix(assType.type, output)
+                        output = printInstructionSuffix(assType, output)
 
                         output += ' '                
 
-                        operandSize = getOperandSize(assType.type)
+                        operandSize = getOperandSize(assType)
                         output = matchOperand(dst, output, operandSize)
 
                     case assemblyGenerator.BinaryInstruction(operator=op, assType = assType, src=src, dest=dst):
 
-                        #print("Ale:", assType.type)
-                        match assType.type:
-                            case assemblyGenerator.AssemblyType.DOUBLE:
+                        match assType:
+                            case assemblyGenerator.Double():
 
                                 match op:
                                     case assemblyGenerator.BinaryOperator(operator=o):
                                         match o:
                                             case assemblyGenerator.BinopType.Add:
                                                 output += '\n\tadd'
-                                                output = printInstructionSuffix(assType.type, output)
-                                                pass
+                                                output = printInstructionSuffix(assType, output)
 
                                             case assemblyGenerator.BinopType.Sub:
                                                 output += '\n\tsub'
-                                                output = printInstructionSuffix(assType.type, output)
+                                                output = printInstructionSuffix(assType, output)
                                             
                                             case assemblyGenerator.BinopType.And:
                                                 output += '\n\and'
-                                                output = printInstructionSuffix(assType.type, output)
-                                                pass
+                                                output = printInstructionSuffix(assType, output)
 
                                             case assemblyGenerator.BinopType.Or:
                                                 output += '\n\or'
-                                                output = printInstructionSuffix(assType.type, output)
-                                                pass
+                                                output = printInstructionSuffix(assType, output)
 
                                             case assemblyGenerator.BinopType.DivDouble:
                                                 output += '\n\tdiv'
-                                                output = printInstructionSuffix(assType.type, output)
-                                                pass
+                                                output = printInstructionSuffix(assType, output)
 
                                             case assemblyGenerator.BinopType.Mult:
                                                 output += '\n\tmulsd'
@@ -405,7 +393,7 @@ def printTopLevel(topLevel, output, symbolTable):
                                 
                                 output += ' '                
 
-                                operandSize = getOperandSize(assType.type)
+                                operandSize = getOperandSize(assType)
 
                                 output = matchOperand(src, output, operandSize)
                                 output += ', '
@@ -419,19 +407,19 @@ def printTopLevel(topLevel, output, symbolTable):
                                         match o:
                                             case assemblyGenerator.BinopType.Add:
                                                 output += '\n\tadd'
-                                                output = printInstructionSuffix(assType.type, output)
+                                                output = printInstructionSuffix(assType, output)
                                                 
                                             case assemblyGenerator.BinopType.Sub:
                                                 output += '\n\tsub'
-                                                output = printInstructionSuffix(assType.type, output)
+                                                output = printInstructionSuffix(assType, output)
 
                                             case assemblyGenerator.BinopType.And:
                                                 output += '\n\tand'
-                                                output = printInstructionSuffix(assType.type, output)
+                                                output = printInstructionSuffix(assType, output)
 
                                             case assemblyGenerator.BinopType.Or:
                                                 output += '\n\tor'
-                                                output = printInstructionSuffix(assType.type, output)
+                                                output = printInstructionSuffix(assType, output)
 
                                             case assemblyGenerator.BinopType.Mult:
                                                 output += '\n\timul'
@@ -444,7 +432,7 @@ def printTopLevel(topLevel, output, symbolTable):
 
                                 output += ' '                
 
-                                operandSize = getOperandSize(assType.type)
+                                operandSize = getOperandSize(assType)
 
                                 output = matchOperand(src, output, operandSize)
                                 output += ', '
@@ -454,11 +442,11 @@ def printTopLevel(topLevel, output, symbolTable):
                     case assemblyGenerator.Cvtsi2sd(assType = assType, sourceO = sourceO, destO = destO):
                         output += "\n\tcvtsi2sd"
 
-                        output = printInstructionSuffix(assType.type, output)
+                        output = printInstructionSuffix(assType, output)
 
                         output += ' '                
 
-                        operandSize = getOperandSize(assType.type)
+                        operandSize = getOperandSize(assType)
 
                         output = matchOperand(sourceO, output, operandSize)
                         output += ', '
@@ -469,11 +457,11 @@ def printTopLevel(topLevel, output, symbolTable):
                     case assemblyGenerator.Cvttsd2si(assType = assType, sourceO = sourceO, destO = destO):
                         output += "\n\tcvttsd2si"
 
-                        output = printInstructionSuffix(assType.type, output)
+                        output = printInstructionSuffix(assType, output)
 
                         output += ' '                
 
-                        operandSize = getOperandSize(assType.type)
+                        operandSize = getOperandSize(assType)
 
                         output = matchOperand(sourceO, output, operandSize)
                         output += ', '
@@ -489,44 +477,43 @@ def printTopLevel(topLevel, output, symbolTable):
                     case assemblyGenerator.IDivInstruction(assType = assType, divisor=divisor):
                         output += '\n\tidiv'
 
-                        output = printInstructionSuffix(assType.type, output)
+                        output = printInstructionSuffix(assType, output)
 
                         output += ' '                
                         
-                        operandSize = getOperandSize(assType.type)
+                        operandSize = getOperandSize(assType)
                         output = matchOperand(divisor, output, operandSize)
 
                     
                     case assemblyGenerator.DivInstruction(assType = assType, divisor=divisor):
                         output += '\n\tdiv'
 
-                        output = printInstructionSuffix(assType.type, output)
+                        output = printInstructionSuffix(assType, output)
 
                         output += ' '                
                         
-                        operandSize = getOperandSize(assType.type)
+                        operandSize = getOperandSize(assType)
                         output = matchOperand(divisor, output, operandSize)
                     
                     
                     case assemblyGenerator.CDQInstruction(assType = assType):
-                        match assType.type:
-                            case assemblyGenerator.AssemblyType.LONGWORD:
+                        match assType:
+                            case assemblyGenerator.Longword():
                                 output += '\n\tcdq'
-                            case assemblyGenerator.AssemblyType.QUADWORD:
+                            case assemblyGenerator.Quadword():
                                 output += '\n\tcqo'
                             
                     
                     case assemblyGenerator.CompInst(assType = assType, operand0=op0, operand1=op1):
                         
-                        match assType.type:
-                            case assemblyGenerator.AssemblyType.DOUBLE:
-                                #print("Ale:", assType.type)
+                        match assType:
+                            case assemblyGenerator.Double():
 
                                 output += '\n\tcomisd'
 
                                 output += ' '                
 
-                                operandSize = getOperandSize(assType.type)
+                                operandSize = getOperandSize(assType)
 
                                 output = matchOperand(op0, output, operandSize)
 
@@ -536,15 +523,14 @@ def printTopLevel(topLevel, output, symbolTable):
 
                                 
                             case _:
-                                #print("Ale:", assType.type)
                                 
                                 output += '\n\tcmp'
 
-                                output = printInstructionSuffix(assType.type, output)
+                                output = printInstructionSuffix(assType, output)
 
                                 output += ' '                
 
-                                operandSize = getOperandSize(assType.type)
+                                operandSize = getOperandSize(assType)
 
                                 output = matchOperand(op0, output, operandSize)
 
@@ -562,7 +548,6 @@ def printTopLevel(topLevel, output, symbolTable):
                         
                     
                     case assemblyGenerator.SetCCInst(conc_code=code, operand=op):
-                        print(type(code))
                         output += '\n\tset{0} '.format(code.name)
                         output = matchOperand(op, output, OperandSize.BYTE_1)
 
@@ -579,12 +564,6 @@ def printTopLevel(topLevel, output, symbolTable):
                             output += "\n\tcall {0}".format(identifier)
                         else:
                             output += "\n\tcall {0}@PLT".format(identifier)
-
-                    #case assemblyGenerator.DeallocateStackInstruction(offset = offset):
-                    #    output += "\n\taddq ${0}, %rsp".format(offset)
-
-                    
-                    
 
                     case _:
                         print("Instruction {0} not added into code emission!".format(i))
