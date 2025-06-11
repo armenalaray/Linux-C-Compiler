@@ -154,12 +154,7 @@ def matchRegister(reg, output, operandSize):
 def matchOperand(operand, output, operandSize):
 
     match operand:
-        #case assemblyGenerator.StackOperand(offset=off):
-        #    output += '{0}(%rbp)'.format(off)
-
         case assemblyGenerator.MemoryOperand(reg = reg, int = int):
-            print("Ale")
-
             output += '{0}'.format(int)
 
             output += '('
@@ -177,30 +172,37 @@ def matchOperand(operand, output, operandSize):
         case assemblyGenerator.ImmediateOperand(imm=im):
             output += '${0}'.format(im)
 
+        case assemblyGenerator.Indexed():
+            pass
+        
+        case _:
+            print("Error: Operand not added into code emission. {0}".format(operand))
+            sys.exit(1)
+
     return output
 
 def printStaticInit(staticInit, output):
     match staticInit:
         case typeChecker.IntInit(int=int):
-            if int == 0:
+            if int.value == 0:
                 output += '\t.zero 4\n'
             else:
                 output += '\t.long {0}\n'.format(int.value)
 
         case typeChecker.LongInit(int=int):
-            if int == 0:
+            if int.value == 0:
                 output += '\t.zero 8\n'
             else:
                 output += '\t.quad {0}\n'.format(int.value)
 
         case typeChecker.UIntInit(int=int):
-            if int == 0:
+            if int.value == 0:
                 output += '\t.zero 4\n'
             else:
                 output += '\t.long {0}\n'.format(int.value)
             
         case typeChecker.ULongInit(int=int):
-            if int == 0:
+            if int.value == 0:
                 output += '\t.zero 8\n'
             else:
                 output += '\t.quad {0}\n'.format(int.value)
@@ -209,8 +211,11 @@ def printStaticInit(staticInit, output):
             output += '\t.double {0}\n'.format(double.value)
             pass
 
+        case typeChecker.ZeroInit(bytes = bytes):
+            output += '\t.zero {0}\n'.format(bytes)
+
         case _:
-            print("Error:")
+            print("Error: {0}".format(type(staticInit)))
             sys.exit(1)
     return output
 
@@ -225,9 +230,12 @@ def printInstructionSuffix(type, output):
         case assemblyGenerator.Double():
             output += 'sd'
             pass
+        
+        case assemblyGenerator.ByteArray():
+            pass
 
         case _:
-            print("Invalid assembly type.")
+            print("Invalid assembly type. {0}".format(type))
             sys.exit(1)
 
     return output
@@ -243,37 +251,63 @@ def getOperandSize(type):
 
         case assemblyGenerator.Double():
             operandSize = OperandSize.BYTE_8
+
+        case assemblyGenerator.ByteArray():
+            pass
         
         case _:
-            print("Invalid Operand Size")
+            print("Invalid Operand Size. {0}".format(type))
             sys.exit(1)
 
     return operandSize
 
 def printTopLevel(topLevel, output, symbolTable):
     match topLevel:
-        case assemblyGenerator.StaticVariable(identifier = identifier, global_ = global_, alignment = alignment, staticInit = staticInit):
+        case assemblyGenerator.StaticVariable(identifier = identifier, global_ = global_, alignment = alignment, initList = initList):
             
-            match staticInit:
-                case typeChecker.DoubleInit():
-                    print("Ale:", type(staticInit))
+            varType = symbolTable[identifier].assType
+            print(type(varType))
+
+            match varType:
+                case assemblyGenerator.Double():
                     if global_ == True:
                         output += '\t.globl {0}\n'.format(identifier)
 
                     output += '\t.data\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
 
-                    output = printStaticInit(staticInit, output)
+                    output = printStaticInit(initList[0], output)
+                    
+                case assemblyGenerator.ByteArray():
+                    if len(initList) == 1 and type(initList[0]) == typeChecker.ZeroInit:
+                        init = initList[0]
 
-                case _:
-                    print("Ale:", type(staticInit))
-
-                    if staticInit.int == 0:
                         if global_ == True:
                             output += '\t.globl {0}\n'.format(identifier)
 
                         output += '\t.bss\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
 
-                        output = printStaticInit(staticInit, output)
+                        output = printStaticInit(init, output)
+                    else:
+                        if global_ == True:
+                            output += '\t.globl {0}\n'.format(identifier)
+
+                        output += '\t.data\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
+
+                        for init in initList:
+                            output = printStaticInit(init, output)
+                            
+                        
+
+                case _:
+                    print(type(initList[0].int.value))
+
+                    if initList[0].int.value == 0:
+                        if global_ == True:
+                            output += '\t.globl {0}\n'.format(identifier)
+
+                        output += '\t.bss\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
+
+                        output = printStaticInit(initList[0], output)
 
                     else:
                         if global_ == True:
@@ -281,7 +315,54 @@ def printTopLevel(topLevel, output, symbolTable):
 
                         output += '\t.data\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
 
-                        output = printStaticInit(staticInit, output)
+                        output = printStaticInit(initList[0], output)
+                    
+            """
+            if (type(varType) == assemblyGenerator.Longword or type(varType) == assemblyGenerator.Quadword or type(varType) == assemblyGenerator.ByteArray):
+
+
+                init = initList[0]
+
+                if global_ == True:
+                    output += '\t.globl {0}\n'.format(identifier)
+
+                output += '\t.bss\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
+
+                output = printStaticInit(init, output)
+                
+            else:
+
+                #aca es con inizializador
+                for i in initList:
+                    print(type(i))
+                    match i:
+                        case typeChecker.DoubleInit():
+                            if global_ == True:
+                                output += '\t.globl {0}\n'.format(identifier)
+
+                            output += '\t.data\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
+
+                            output = printStaticInit(i, output)
+
+                        case _:
+
+                            if staticInit.int == 0:
+                                if global_ == True:
+                                    output += '\t.globl {0}\n'.format(identifier)
+
+                                output += '\t.bss\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
+
+                                output = printStaticInit(staticInit, output)
+
+                            else:
+                                if global_ == True:
+                                    output += '\t.globl {0}\n'.format(identifier)
+
+                                output += '\t.data\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
+
+                                output = printStaticInit(staticInit, output)
+            """
+            
             
         case assemblyGenerator.StaticConstant(identifier = identifier, alignment = alignment, staticInit = staticInit):
 
