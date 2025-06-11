@@ -738,7 +738,7 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
 
                                 typeSize = left.retType.referenceType.getBaseTypeSize(0)
 
-                                instructions.append(TAC_BinaryInstruction(TAC_BinaryOperator(BinopType.DIVIDE), diff, typeSize, dst))
+                                instructions.append(TAC_BinaryInstruction(TAC_BinaryOperator(BinopType.DIVIDE), diff, TAC_ConstantValue(parser.ConstULong(typeSize)), dst))
 
                                 return PlainOperand(dst)
 

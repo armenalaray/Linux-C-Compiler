@@ -686,6 +686,15 @@ def parseValue(v, symbolTable, topLevelList):
             return asmType, cType, PseudoRegisterOperand(i)
         
         case _:
+            """
+            if v in symbolTable:
+                pass
+            else:
+                print("Error: Symbol not in SymbolTable. {0}".format(v))
+                sys.exit(1)
+                pass
+            """
+
             match symbolTable[v].type:
                 case parser.IntType():
                     asmType = Longword()
@@ -979,7 +988,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 
                 for assType, asmArg in stackArgs:
                     
-                    if type(asmArg) == ImmediateOperand or type(asmArg) == RegisterOperand or assType.type == AssemblyType.QUADWORD or assType.type == AssemblyType.DOUBLE:
+                    if type(asmArg) == ImmediateOperand or type(asmArg) == RegisterOperand or type(assType) == Quadword() or type(assType) == Double():
 
                         ASM_Instructions.append(PushInstruction(asmArg))
                         

@@ -1,3 +1,2382 @@
+from test: 0
+/home/alejandro
+75 INFO: PyInstaller: 6.13.0, contrib hooks: 2025.3
+76 INFO: Python: 3.12.3
+78 INFO: Platform: Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.39
+78 INFO: Python environment: /usr
+78 INFO: wrote /home/alejandro/cd.spec
+129 INFO: Module search paths (PYTHONPATH):
+['/usr/lib/python312.zip',
+ '/usr/lib/python3.12',
+ '/usr/lib/python3.12/lib-dynload',
+ '/home/alejandro/.local/lib/python3.12/site-packages',
+ '/usr/local/lib/python3.12/dist-packages',
+ '/usr/lib/python3/dist-packages',
+ '/home/alejandro/CComp/code']
+328 INFO: checking Analysis
+330 INFO: Building because /home/alejandro/CComp/code/ReplacePseudoRegisters.py changed
+330 INFO: Running Analysis Analysis-00.toc
+331 INFO: Target bytecode optimization level: 0
+331 INFO: Initializing module dependency graph...
+331 INFO: Initializing module graph hook caches...
+340 INFO: Analyzing modules for base_library.zip ...
+1026 INFO: Processing standard module hook 'hook-encodings.py' from '/home/alejandro/.local/lib/python3.12/site-packages/PyInstaller/hooks'
+1978 INFO: Processing standard module hook 'hook-pickle.py' from '/home/alejandro/.local/lib/python3.12/site-packages/PyInstaller/hooks'
+2698 INFO: Processing standard module hook 'hook-heapq.py' from '/home/alejandro/.local/lib/python3.12/site-packages/PyInstaller/hooks'
+2970 INFO: Caching module dependency graph...
+3002 INFO: Looking for Python shared library...
+3011 INFO: Using Python shared library: /lib/x86_64-linux-gnu/libpython3.12.so
+3011 INFO: Analyzing /home/alejandro/CComp/code/cd.py
+/home/alejandro/CComp/code/codeEmission.py:386: SyntaxWarning: invalid escape sequence '\o'
+  output += '\n\or'
+3219 INFO: Processing module hooks (post-graph stage)...
+3225 INFO: Performing binary vs. data reclassification (1 entries)
+3227 INFO: Looking for ctypes DLLs
+3244 INFO: Analyzing run-time hooks ...
+3245 INFO: Including run-time hook 'pyi_rth_inspect.py' from '/home/alejandro/.local/lib/python3.12/site-packages/PyInstaller/hooks/rthooks'
+3250 INFO: Creating base_library.zip...
+3285 INFO: Looking for dynamic libraries
+3398 INFO: Warnings written to /home/alejandro/build/cd/warn-cd.txt
+3405 INFO: Graph cross-reference written to /home/alejandro/build/cd/xref-cd.html
+3411 INFO: checking PYZ
+3412 INFO: Building because /home/alejandro/CComp/code/ReplacePseudoRegisters.py changed
+3412 INFO: Building PYZ (ZlibArchive) /home/alejandro/build/cd/PYZ-00.pyz
+3578 INFO: Building PYZ (ZlibArchive) /home/alejandro/build/cd/PYZ-00.pyz completed successfully.
+3585 INFO: checking PKG
+3585 INFO: Building because toc changed
+3585 INFO: Building PKG (CArchive) cd.pkg
+5886 INFO: Building PKG (CArchive) cd.pkg completed successfully.
+5887 INFO: Bootloader /home/alejandro/.local/lib/python3.12/site-packages/PyInstaller/bootloader/Linux-64bit-intel/run
+5887 INFO: checking EXE
+5888 INFO: Building because toc changed
+5888 INFO: Building EXE from EXE-00.toc
+5889 INFO: Copying bootloader EXE to /home/alejandro/dist/cd
+5889 INFO: Appending PKG archive to custom ELF section in EXE
+5923 INFO: Building EXE from EXE-00.toc completed successfully.
+5924 INFO: Build complete! The results are available in: /home/alejandro/dist
+======================================================================
+FAIL: test_valid/libraries/many_args_client (test_framework.basic.TestChapter9.test_valid/libraries/many_args_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_9/valid/libraries/many_args_client.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-180407:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/libraries/no_function_calls/local_stack_variables_client (test_framework.basic.TestChapter9.test_valid/libraries/no_function_calls/local_stack_variables_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_9/valid/libraries/no_function_calls/local_stack_variables_client.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-180427:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/stack_arguments/call_putchar (test_framework.basic.TestChapter9.test_valid/stack_arguments/call_putchar)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_9/valid/stack_arguments/call_putchar.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-180483:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/stack_arguments/lots_of_arguments (test_framework.basic.TestChapter9.test_valid/stack_arguments/lots_of_arguments)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_9/valid/stack_arguments/lots_of_arguments.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-180488:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/stack_arguments/stack_alignment (test_framework.basic.TestChapter9.test_valid/stack_arguments/stack_alignment)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_9/valid/stack_arguments/stack_alignment.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-180493:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/stack_arguments/test_for_memory_leaks (test_framework.basic.TestChapter9.test_valid/stack_arguments/test_for_memory_leaks)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_9/valid/stack_arguments/test_for_memory_leaks.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-180498:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/push_arg_on_page_boundary (test_framework.basic.TestChapter10.test_valid/push_arg_on_page_boundary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_10/valid/push_arg_on_page_boundary.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-180756:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/implicit_casts/convert_function_arguments (test_framework.basic.TestChapter11.test_valid/implicit_casts/convert_function_arguments)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_11/valid/implicit_casts/convert_function_arguments.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-180908:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/libraries/long_args_client (test_framework.basic.TestChapter11.test_valid/libraries/long_args_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_11/valid/libraries/long_args_client.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Quadword' object has no attribute 'type'
+[PYI-180931:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/long_expressions/long_args (test_framework.basic.TestChapter11.test_valid/long_expressions/long_args)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_11/valid/long_expressions/long_args.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Quadword' object has no attribute 'type'
+[PYI-180999:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/long_expressions/rewrite_large_multiply_regression (test_framework.basic.TestChapter11.test_valid/long_expressions/rewrite_large_multiply_regression)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_11/valid/long_expressions/rewrite_large_multiply_regression.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-181020:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/explicit_casts/rewrite_movz_regression (test_framework.basic.TestChapter12.test_valid/explicit_casts/rewrite_movz_regression)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_12/valid/explicit_casts/rewrite_movz_regression.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-181080:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/libraries/unsigned_args_client (test_framework.basic.TestChapter12.test_valid/libraries/unsigned_args_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_12/valid/libraries/unsigned_args_client.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Quadword' object has no attribute 'type'
+[PYI-181131:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/explicit_casts/rewrite_cvttsd2si_regression (test_framework.basic.TestChapter13.test_valid/explicit_casts/rewrite_cvttsd2si_regression)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/explicit_casts/rewrite_cvttsd2si_regression.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-181288:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/function_calls/double_and_int_params_recursive (test_framework.basic.TestChapter13.test_valid/function_calls/double_and_int_params_recursive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/function_calls/double_and_int_params_recursive.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Double' object has no attribute 'type'
+[PYI-181344:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/function_calls/push_xmm (test_framework.basic.TestChapter13.test_valid/function_calls/push_xmm)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/function_calls/push_xmm.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Double' object has no attribute 'type'
+[PYI-181354:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/libraries/double_and_int_params_recursive (test_framework.basic.TestChapter13.test_valid/libraries/double_and_int_params_recursive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/libraries/double_and_int_params_recursive.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Double' object has no attribute 'type'
+[PYI-181400:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/libraries/double_and_int_params_recursive_client (test_framework.basic.TestChapter13.test_valid/libraries/double_and_int_params_recursive_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/libraries/double_and_int_params_recursive_client.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Double' object has no attribute 'type'
+[PYI-181405:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/libraries/double_params_and_result_client (test_framework.basic.TestChapter13.test_valid/libraries/double_params_and_result_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/libraries/double_params_and_result_client.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Double' object has no attribute 'type'
+[PYI-181425:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/pointer_arithmetic/pointer_diff (test_framework.basic.TestChapter15.test_valid/pointer_arithmetic/pointer_diff)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/pointer_arithmetic/pointer_diff.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 1049, in ASM_parseInstructions
+  File "assemblyGenerator.py", line 689, in parseValue
+KeyError: 4
+[PYI-182160:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+
+
+
+
+
+
+
+
+[<TokenType.INT_KW: 4>]
+int (FunDeclarator: (IdenDeclarator: main) [])
+[<TokenType.INT_KW: 4>]
+int (ArrayDeclarator: (IdenDeclarator: arr), 3)
+0
+AST Program:
+FunDecl: NULL main () ParamTypes: () ReturnType: int
+Declaration:
+VarDecl: NULL ArrayType( int, size: 3) arr = 
+CI:[SI: (1), SI: (2), SI: (3), ]
+Statement: return ((NEGATE ((arr)[(2)])) EQUAL (NEGATE (3)))
+
+0
+AST Program:
+FunDecl: NULL main () ParamTypes: () ReturnType: int
+Declaration:
+VarDecl: NULL ArrayType( int, size: 3) arr.0 = 
+CI:[SI: (1), SI: (2), SI: (3), ]
+Statement: return ((NEGATE ((arr.0)[(2)])) EQUAL (NEGATE (3)))
+
+0
+AST Program:
+FunDecl: NULL main () ParamTypes: () ReturnType: int
+Declaration:
+VarDecl: NULL ArrayType( int, size: 3) arr.0 = 
+CI:[SI: (1 : int) : int, SI: (2 : int) : int, SI: (3 : int) : int, ]
+: ArrayType( int, size: 3)
+Statement: return ((NEGATE ((&(arr.0 : ArrayType( int, size: 3)) : Pint)[((long) (2 : int) : long)] : int) : int) EQUAL (NEGATE (3 : int) : int) : int)
+
+{'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'arr.0': arr.0 ArrayType: int Size: 3 <typeChecker.LocalAttributes object at 0x7fd5bc4726c0>}
+0
+AST Program:
+FunDecl: NULL main () ParamTypes: () ReturnType: int
+Declaration:
+VarDecl: NULL ArrayType( int, size: 3) arr.0 = 
+CI:[SI: (1 : int) : int, SI: (2 : int) : int, SI: (3 : int) : int, ]
+: ArrayType( int, size: 3)
+Statement: return ((NEGATE ((&(arr.0 : ArrayType( int, size: 3)) : Pint)[((long) (2 : int) : long)] : int) : int) EQUAL (NEGATE (3 : int) : int) : int)
+
+<class 'parser.CompoundInit'>
+<class 'parser.SingleInit'>
+<class 'parser.SingleInit'>
+<class 'parser.SingleInit'>
+TAC Program:[Function: main ([]) instructions:[(arr.0 + 0) = 1 , (arr.0 + 4) = 2 , (arr.0 + 8) = 3 , tmp.1 = Get Address arr.0 , Copy tmp.2 = tmp.1, SignExtend tmp.3 = 2, Copy tmp.4 = tmp.3, AddPtr tmp.5 = tmp.2 + tmp.4 * 4, tmp.6 = Load tmp.5 , tmp.7 = -tmp.6, tmp.8 = -3, tmp.9 = tmp.7 _ tmp.8, Return tmp.9, Return 0]]
+{'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'arr.0': arr.0 ArrayType: int Size: 3 <typeChecker.LocalAttributes object at 0x7fd5bc4726c0>, 'tmp.1': tmp.1 Pint <typeChecker.LocalAttributes object at 0x7fd5bc4736b0>, 'tmp.2': tmp.2 Pint <typeChecker.LocalAttributes object at 0x7fd5bc4735c0>, 'tmp.3': tmp.3 long <typeChecker.LocalAttributes object at 0x7fd5bc4738f0>, 'tmp.4': tmp.4 long <typeChecker.LocalAttributes object at 0x7fd5bc4737d0>, 'tmp.5': tmp.5 int <typeChecker.LocalAttributes object at 0x7fd5bc473530>, 'tmp.6': tmp.6 int <typeChecker.LocalAttributes object at 0x7fd5bc473470>, 'tmp.7': tmp.7 int <typeChecker.LocalAttributes object at 0x7fd5bc4733b0>, 'tmp.8': tmp.8 int <typeChecker.LocalAttributes object at 0x7fd5bc473bc0>, 'tmp.9': tmp.9 int <typeChecker.LocalAttributes object at 0x7fd5bc4732c0>}
+12
+<class 'parser.IntType'>
+12
+ASM Program: [Function main stackOffset: None global: True instructions:[AssType: <assemblyGenerator.Longword object at 0x7fd5bc488a10> Mov(Imm(1), PseudoMem(arr.0, 0)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc488b00> Mov(Imm(2), PseudoMem(arr.0, 4)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc488bc0> Mov(Imm(3), PseudoMem(arr.0, 8)), Lea(PseudoMem(arr.0, 0), Pseudo(tmp.1)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc488d70> Mov(Pseudo(tmp.1), Pseudo(tmp.2)), MovSX(Imm(2), Pseudo(tmp.3)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc488c80> Mov(Pseudo(tmp.3), Pseudo(tmp.4)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc489100> Mov(Pseudo(tmp.2), Reg(AX)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc4891c0> Mov(Pseudo(tmp.4), Reg(DX)), Lea(Indexed(AX + DX * 4), Pseudo(tmp.5)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc489070> Mov(Pseudo(tmp.5), Reg(AX)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc488fe0> Mov(Memory(AX, 0), Pseudo(tmp.6)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc488da0> Mov(Pseudo(tmp.6), Pseudo(tmp.7)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc488da0> Unary(Neg, Pseudo(tmp.7)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc489520> Mov(Imm(3), Pseudo(tmp.8)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc489520> Unary(Neg, Pseudo(tmp.8)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc489700> Cmp(Pseudo(tmp.8), Pseudo(tmp.7)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc4894c0> Mov(Imm(0), Pseudo(tmp.9)), SetCC(ConcCodeType.E, Pseudo(tmp.9)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc4898b0> Mov(Pseudo(tmp.9), Reg(AX)), ret, AssType: <assemblyGenerator.Longword object at 0x7fd5bc4899d0> Mov(Imm(0), Reg(AX)), ret]]
+{'main': Defined: True, 'arr.0': AssType: ByteArray(Size = 12, Alignment = 4) IsStatic: False IsConstant: False, 'tmp.1': AssType: <assemblyGenerator.Quadword object at 0x7fd5bc4894f0> IsStatic: False IsConstant: False, 'tmp.2': AssType: <assemblyGenerator.Quadword object at 0x7fd5bc4895e0> IsStatic: False IsConstant: False, 'tmp.3': AssType: <assemblyGenerator.Quadword object at 0x7fd5bc4895b0> IsStatic: False IsConstant: False, 'tmp.4': AssType: <assemblyGenerator.Quadword object at 0x7fd5bc4886e0> IsStatic: False IsConstant: False, 'tmp.5': AssType: <assemblyGenerator.Longword object at 0x7fd5bc489b20> IsStatic: False IsConstant: False, 'tmp.6': AssType: <assemblyGenerator.Longword object at 0x7fd5bc489b80> IsStatic: False IsConstant: False, 'tmp.7': AssType: <assemblyGenerator.Longword object at 0x7fd5bc489be0> IsStatic: False IsConstant: False, 'tmp.8': AssType: <assemblyGenerator.Longword object at 0x7fd5bc489c70> IsStatic: False IsConstant: False, 'tmp.9': AssType: <assemblyGenerator.Longword object at 0x7fd5bc489d00> IsStatic: False IsConstant: False}
+ASM Program: [Function main stackOffset: -68 global: True instructions:[AssType: <assemblyGenerator.Longword object at 0x7fd5bc488a10> Mov(Imm(1), Memory(BP, -12)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc488b00> Mov(Imm(2), Memory(BP, -8)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc488bc0> Mov(Imm(3), Memory(BP, -4)), Lea(Memory(BP, -12), Memory(BP, -24)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc488d70> Mov(Memory(BP, -24), Memory(BP, -32)), MovSX(Imm(2), Memory(BP, -40)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc488c80> Mov(Memory(BP, -40), Memory(BP, -48)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc489100> Mov(Memory(BP, -32), Reg(AX)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc4891c0> Mov(Memory(BP, -48), Reg(DX)), Lea(Indexed(AX + DX * 4), Memory(BP, -52)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc489070> Mov(Memory(BP, -52), Reg(AX)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc488fe0> Mov(Memory(AX, 0), Memory(BP, -56)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc488da0> Mov(Memory(BP, -56), Memory(BP, -60)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc488da0> Unary(Neg, Memory(BP, -60)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc489520> Mov(Imm(3), Memory(BP, -64)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc489520> Unary(Neg, Memory(BP, -64)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc489700> Cmp(Memory(BP, -64), Memory(BP, -60)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc4894c0> Mov(Imm(0), Memory(BP, -68)), SetCC(ConcCodeType.E, Memory(BP, -68)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc4898b0> Mov(Memory(BP, -68), Reg(AX)), ret, AssType: <assemblyGenerator.Longword object at 0x7fd5bc4899d0> Mov(Imm(0), Reg(AX)), ret]]
+-80
+ASM Program: [Function main stackOffset: -68 global: True instructions:[AssType: <assemblyGenerator.Quadword object at 0x7fd5bc490560> Binary(Sub, Imm(80), Reg(SP)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc488a10> Mov(Imm(1), Memory(BP, -12)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc488b00> Mov(Imm(2), Memory(BP, -8)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc488bc0> Mov(Imm(3), Memory(BP, -4)), Lea(Memory(BP, -12), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc4906b0> Mov(Reg(R11d), Memory(BP, -24)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc488d70> Mov(Memory(BP, -24), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc488d70> Mov(Reg(R10d), Memory(BP, -32)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc4908c0> Mov(Imm(2), Reg(R10d)), MovSX(Reg(R10d), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc490980> Mov(Reg(R11d), Memory(BP, -40)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc488c80> Mov(Memory(BP, -40), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc488c80> Mov(Reg(R10d), Memory(BP, -48)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc489100> Mov(Memory(BP, -32), Reg(AX)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc4891c0> Mov(Memory(BP, -48), Reg(DX)), Lea(Indexed(AX + DX * 4), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc490b30> Mov(Reg(R11d), Memory(BP, -52)), AssType: <assemblyGenerator.Quadword object at 0x7fd5bc489070> Mov(Memory(BP, -52), Reg(AX)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc488fe0> Mov(Memory(AX, 0), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc488fe0> Mov(Reg(R10d), Memory(BP, -56)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc488da0> Mov(Memory(BP, -56), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc488da0> Mov(Reg(R10d), Memory(BP, -60)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc488da0> Unary(Neg, Memory(BP, -60)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc489520> Mov(Imm(3), Memory(BP, -64)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc489520> Unary(Neg, Memory(BP, -64)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc489700> Mov(Memory(BP, -64), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc489700> Cmp(Reg(R10d), Memory(BP, -60)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc4894c0> Mov(Imm(0), Memory(BP, -68)), SetCC(ConcCodeType.E, Memory(BP, -68)), AssType: <assemblyGenerator.Longword object at 0x7fd5bc4898b0> Mov(Memory(BP, -68), Reg(AX)), ret, AssType: <assemblyGenerator.Longword object at 0x7fd5bc4899d0> Mov(Imm(0), Reg(AX)), ret]]
+0
+from test: 0
+/home/alejandro
+71 INFO: PyInstaller: 6.13.0, contrib hooks: 2025.3
+72 INFO: Python: 3.12.3
+73 INFO: Platform: Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.39
+73 INFO: Python environment: /usr
+74 INFO: wrote /home/alejandro/cd.spec
+123 INFO: Module search paths (PYTHONPATH):
+['/usr/lib/python312.zip',
+ '/usr/lib/python3.12',
+ '/usr/lib/python3.12/lib-dynload',
+ '/home/alejandro/.local/lib/python3.12/site-packages',
+ '/usr/local/lib/python3.12/dist-packages',
+ '/usr/lib/python3/dist-packages',
+ '/home/alejandro/CComp/code']
+399 INFO: checking Analysis
+401 INFO: Building because /home/alejandro/CComp/code/ReplacePseudoRegisters.py changed
+401 INFO: Running Analysis Analysis-00.toc
+401 INFO: Target bytecode optimization level: 0
+401 INFO: Initializing module dependency graph...
+402 INFO: Initializing module graph hook caches...
+409 INFO: Analyzing modules for base_library.zip ...
+913 INFO: Processing standard module hook 'hook-heapq.py' from '/home/alejandro/.local/lib/python3.12/site-packages/PyInstaller/hooks'
+981 INFO: Processing standard module hook 'hook-encodings.py' from '/home/alejandro/.local/lib/python3.12/site-packages/PyInstaller/hooks'
+2121 INFO: Processing standard module hook 'hook-pickle.py' from '/home/alejandro/.local/lib/python3.12/site-packages/PyInstaller/hooks'
+3013 INFO: Caching module dependency graph...
+3044 INFO: Looking for Python shared library...
+3054 INFO: Using Python shared library: /lib/x86_64-linux-gnu/libpython3.12.so
+3054 INFO: Analyzing /home/alejandro/CComp/code/cd.py
+/home/alejandro/CComp/code/codeEmission.py:386: SyntaxWarning: invalid escape sequence '\o'
+  output += '\n\or'
+3267 INFO: Processing module hooks (post-graph stage)...
+3271 INFO: Performing binary vs. data reclassification (1 entries)
+3274 INFO: Looking for ctypes DLLs
+3288 INFO: Analyzing run-time hooks ...
+3288 INFO: Including run-time hook 'pyi_rth_inspect.py' from '/home/alejandro/.local/lib/python3.12/site-packages/PyInstaller/hooks/rthooks'
+3293 INFO: Creating base_library.zip...
+3331 INFO: Looking for dynamic libraries
+3448 INFO: Warnings written to /home/alejandro/build/cd/warn-cd.txt
+3455 INFO: Graph cross-reference written to /home/alejandro/build/cd/xref-cd.html
+3461 INFO: checking PYZ
+3462 INFO: Building because /home/alejandro/CComp/code/ReplacePseudoRegisters.py changed
+3462 INFO: Building PYZ (ZlibArchive) /home/alejandro/build/cd/PYZ-00.pyz
+3637 INFO: Building PYZ (ZlibArchive) /home/alejandro/build/cd/PYZ-00.pyz completed successfully.
+3644 INFO: checking PKG
+3644 INFO: Building because toc changed
+3644 INFO: Building PKG (CArchive) cd.pkg
+5921 INFO: Building PKG (CArchive) cd.pkg completed successfully.
+5922 INFO: Bootloader /home/alejandro/.local/lib/python3.12/site-packages/PyInstaller/bootloader/Linux-64bit-intel/run
+5922 INFO: checking EXE
+5922 INFO: Building because toc changed
+5922 INFO: Building EXE from EXE-00.toc
+5924 INFO: Copying bootloader EXE to /home/alejandro/dist/cd
+5924 INFO: Appending PKG archive to custom ELF section in EXE
+5954 INFO: Building EXE from EXE-00.toc completed successfully.
+5955 INFO: Build complete! The results are available in: /home/alejandro/dist
+======================================================================
+FAIL: test_valid/libraries/many_args_client (test_framework.basic.TestChapter9.test_valid/libraries/many_args_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_9/valid/libraries/many_args_client.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-176034:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/libraries/no_function_calls/local_stack_variables_client (test_framework.basic.TestChapter9.test_valid/libraries/no_function_calls/local_stack_variables_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_9/valid/libraries/no_function_calls/local_stack_variables_client.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-176054:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/stack_arguments/call_putchar (test_framework.basic.TestChapter9.test_valid/stack_arguments/call_putchar)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_9/valid/stack_arguments/call_putchar.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-176104:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/stack_arguments/lots_of_arguments (test_framework.basic.TestChapter9.test_valid/stack_arguments/lots_of_arguments)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_9/valid/stack_arguments/lots_of_arguments.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-176109:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/stack_arguments/stack_alignment (test_framework.basic.TestChapter9.test_valid/stack_arguments/stack_alignment)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_9/valid/stack_arguments/stack_alignment.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-176114:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/stack_arguments/test_for_memory_leaks (test_framework.basic.TestChapter9.test_valid/stack_arguments/test_for_memory_leaks)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_9/valid/stack_arguments/test_for_memory_leaks.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-176119:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/push_arg_on_page_boundary (test_framework.basic.TestChapter10.test_valid/push_arg_on_page_boundary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_10/valid/push_arg_on_page_boundary.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-176359:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/implicit_casts/convert_function_arguments (test_framework.basic.TestChapter11.test_valid/implicit_casts/convert_function_arguments)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_11/valid/implicit_casts/convert_function_arguments.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-176499:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/libraries/long_args_client (test_framework.basic.TestChapter11.test_valid/libraries/long_args_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_11/valid/libraries/long_args_client.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Quadword' object has no attribute 'type'
+[PYI-176519:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/long_expressions/long_args (test_framework.basic.TestChapter11.test_valid/long_expressions/long_args)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_11/valid/long_expressions/long_args.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Quadword' object has no attribute 'type'
+[PYI-176584:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/long_expressions/rewrite_large_multiply_regression (test_framework.basic.TestChapter11.test_valid/long_expressions/rewrite_large_multiply_regression)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_11/valid/long_expressions/rewrite_large_multiply_regression.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-176599:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/explicit_casts/rewrite_movz_regression (test_framework.basic.TestChapter12.test_valid/explicit_casts/rewrite_movz_regression)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_12/valid/explicit_casts/rewrite_movz_regression.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-176659:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/libraries/unsigned_args_client (test_framework.basic.TestChapter12.test_valid/libraries/unsigned_args_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_12/valid/libraries/unsigned_args_client.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Quadword' object has no attribute 'type'
+[PYI-176704:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/constants/constant_doubles (test_framework.basic.TestChapter13.test_valid/constants/constant_doubles)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/constants/constant_doubles.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/constants/round_constants (test_framework.basic.TestChapter13.test_valid/constants/round_constants)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/constants/round_constants.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/explicit_casts/double_to_signed (test_framework.basic.TestChapter13.test_valid/explicit_casts/double_to_signed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/explicit_casts/double_to_signed.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/explicit_casts/double_to_unsigned (test_framework.basic.TestChapter13.test_valid/explicit_casts/double_to_unsigned)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/explicit_casts/double_to_unsigned.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/explicit_casts/rewrite_cvttsd2si_regression (test_framework.basic.TestChapter13.test_valid/explicit_casts/rewrite_cvttsd2si_regression)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/explicit_casts/rewrite_cvttsd2si_regression.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-176849:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/explicit_casts/signed_to_double (test_framework.basic.TestChapter13.test_valid/explicit_casts/signed_to_double)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/explicit_casts/signed_to_double.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/explicit_casts/unsigned_to_double (test_framework.basic.TestChapter13.test_valid/explicit_casts/unsigned_to_double)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/explicit_casts/unsigned_to_double.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/floating_expressions/arithmetic_ops (test_framework.basic.TestChapter13.test_valid/floating_expressions/arithmetic_ops)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/floating_expressions/arithmetic_ops.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/floating_expressions/comparisons (test_framework.basic.TestChapter13.test_valid/floating_expressions/comparisons)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/floating_expressions/comparisons.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/floating_expressions/logical (test_framework.basic.TestChapter13.test_valid/floating_expressions/logical)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/floating_expressions/logical.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/floating_expressions/loop_controlling_expression (test_framework.basic.TestChapter13.test_valid/floating_expressions/loop_controlling_expression)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/floating_expressions/loop_controlling_expression.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/floating_expressions/simple (test_framework.basic.TestChapter13.test_valid/floating_expressions/simple)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/floating_expressions/simple.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/floating_expressions/static_initialized_double (test_framework.basic.TestChapter13.test_valid/floating_expressions/static_initialized_double)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/floating_expressions/static_initialized_double.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/function_calls/double_and_int_parameters (test_framework.basic.TestChapter13.test_valid/function_calls/double_and_int_parameters)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/function_calls/double_and_int_parameters.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/function_calls/double_and_int_params_recursive (test_framework.basic.TestChapter13.test_valid/function_calls/double_and_int_params_recursive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/function_calls/double_and_int_params_recursive.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Double' object has no attribute 'type'
+[PYI-176899:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/function_calls/double_parameters (test_framework.basic.TestChapter13.test_valid/function_calls/double_parameters)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/function_calls/double_parameters.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/function_calls/push_xmm (test_framework.basic.TestChapter13.test_valid/function_calls/push_xmm)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/function_calls/push_xmm.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Double' object has no attribute 'type'
+[PYI-176909:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/function_calls/return_double (test_framework.basic.TestChapter13.test_valid/function_calls/return_double)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/function_calls/return_double.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/function_calls/standard_library_call (test_framework.basic.TestChapter13.test_valid/function_calls/standard_library_call)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/function_calls/standard_library_call.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/function_calls/use_arg_after_fun_call (test_framework.basic.TestChapter13.test_valid/function_calls/use_arg_after_fun_call)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/function_calls/use_arg_after_fun_call.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/implicit_casts/common_type (test_framework.basic.TestChapter13.test_valid/implicit_casts/common_type)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/implicit_casts/common_type.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/implicit_casts/complex_arithmetic_common_type (test_framework.basic.TestChapter13.test_valid/implicit_casts/complex_arithmetic_common_type)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/implicit_casts/complex_arithmetic_common_type.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/implicit_casts/convert_for_assignment (test_framework.basic.TestChapter13.test_valid/implicit_casts/convert_for_assignment)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/implicit_casts/convert_for_assignment.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/implicit_casts/static_initializers (test_framework.basic.TestChapter13.test_valid/implicit_casts/static_initializers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/implicit_casts/static_initializers.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/double_and_int_params_recursive (test_framework.basic.TestChapter13.test_valid/libraries/double_and_int_params_recursive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/libraries/double_and_int_params_recursive.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Double' object has no attribute 'type'
+[PYI-176949:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/libraries/double_and_int_params_recursive_client (test_framework.basic.TestChapter13.test_valid/libraries/double_and_int_params_recursive_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/libraries/double_and_int_params_recursive_client.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Double' object has no attribute 'type'
+[PYI-176954:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/libraries/double_parameters (test_framework.basic.TestChapter13.test_valid/libraries/double_parameters)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/libraries/double_parameters.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/double_parameters_client (test_framework.basic.TestChapter13.test_valid/libraries/double_parameters_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/libraries/double_parameters_client.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/double_params_and_result_client (test_framework.basic.TestChapter13.test_valid/libraries/double_params_and_result_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/libraries/double_params_and_result_client.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Double' object has no attribute 'type'
+[PYI-176974:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/libraries/extern_double_client (test_framework.basic.TestChapter13.test_valid/libraries/extern_double_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/libraries/extern_double_client.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/use_arg_after_fun_call_client (test_framework.basic.TestChapter13.test_valid/libraries/use_arg_after_fun_call_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/libraries/use_arg_after_fun_call_client.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/special_values/infinity (test_framework.basic.TestChapter13.test_valid/special_values/infinity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/special_values/infinity.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/special_values/negative_zero (test_framework.basic.TestChapter13.test_valid/special_values/negative_zero)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/special_values/negative_zero.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/special_values/subnormal_not_zero (test_framework.basic.TestChapter13.test_valid/special_values/subnormal_not_zero)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/special_values/subnormal_not_zero.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/comparisons/pointers_as_conditions (test_framework.basic.TestChapter14.test_valid/comparisons/pointers_as_conditions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/comparisons/pointers_as_conditions.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/declarators/declarators (test_framework.basic.TestChapter14.test_valid/declarators/declarators)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/declarators/declarators.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/dereference/multilevel_indirection (test_framework.basic.TestChapter14.test_valid/dereference/multilevel_indirection)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/dereference/multilevel_indirection.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/dereference/read_through_pointers (test_framework.basic.TestChapter14.test_valid/dereference/read_through_pointers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/dereference/read_through_pointers.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/dereference/static_var_indirection (test_framework.basic.TestChapter14.test_valid/dereference/static_var_indirection)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/dereference/static_var_indirection.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/dereference/update_through_pointers (test_framework.basic.TestChapter14.test_valid/dereference/update_through_pointers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/dereference/update_through_pointers.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/global_pointer_client (test_framework.basic.TestChapter14.test_valid/libraries/global_pointer_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/libraries/global_pointer_client.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/initialization/automatic (test_framework.basic.TestChapter15.test_valid/initialization/automatic)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/initialization/automatic.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/initialization/automatic_nested (test_framework.basic.TestChapter15.test_valid/initialization/automatic_nested)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/initialization/automatic_nested.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/initialization/static (test_framework.basic.TestChapter15.test_valid/initialization/static)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/initialization/static.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/initialization/static_nested (test_framework.basic.TestChapter15.test_valid/initialization/static_nested)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/initialization/static_nested.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/set_array_val_client (test_framework.basic.TestChapter15.test_valid/libraries/set_array_val_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/libraries/set_array_val_client.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/pointer_arithmetic/pointer_add (test_framework.basic.TestChapter15.test_valid/pointer_arithmetic/pointer_add)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/pointer_arithmetic/pointer_add.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/pointer_arithmetic/pointer_diff (test_framework.basic.TestChapter15.test_valid/pointer_arithmetic/pointer_diff)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/pointer_arithmetic/pointer_diff.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 1049, in ASM_parseInstructions
+  File "assemblyGenerator.py", line 689, in parseValue
+KeyError: 4
+[PYI-177655:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/subscripting/simple_subscripts (test_framework.basic.TestChapter15.test_valid/subscripting/simple_subscripts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/subscripting/simple_subscripts.c failed with error:
+
+
+
+
+
+
+
+
+
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Quadword' object has no attribute 'type'
+[PYI-173075:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/long_expressions/rewrite_large_multiply_regression (test_framework.basic.TestChapter11.test_valid/long_expressions/rewrite_large_multiply_regression)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_11/valid/long_expressions/rewrite_large_multiply_regression.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-173090:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/explicit_casts/rewrite_movz_regression (test_framework.basic.TestChapter12.test_valid/explicit_casts/rewrite_movz_regression)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_12/valid/explicit_casts/rewrite_movz_regression.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-173150:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/libraries/unsigned_args (test_framework.basic.TestChapter12.test_valid/libraries/unsigned_args)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_12/valid/libraries/unsigned_args.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/unsigned_args_client (test_framework.basic.TestChapter12.test_valid/libraries/unsigned_args_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_12/valid/libraries/unsigned_args_client.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Quadword' object has no attribute 'type'
+[PYI-173195:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/constants/constant_doubles (test_framework.basic.TestChapter13.test_valid/constants/constant_doubles)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/constants/constant_doubles.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/constants/round_constants (test_framework.basic.TestChapter13.test_valid/constants/round_constants)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/constants/round_constants.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/explicit_casts/double_to_signed (test_framework.basic.TestChapter13.test_valid/explicit_casts/double_to_signed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/explicit_casts/double_to_signed.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/explicit_casts/double_to_unsigned (test_framework.basic.TestChapter13.test_valid/explicit_casts/double_to_unsigned)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/explicit_casts/double_to_unsigned.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/explicit_casts/rewrite_cvttsd2si_regression (test_framework.basic.TestChapter13.test_valid/explicit_casts/rewrite_cvttsd2si_regression)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/explicit_casts/rewrite_cvttsd2si_regression.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Longword' object has no attribute 'type'
+[PYI-173340:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/explicit_casts/signed_to_double (test_framework.basic.TestChapter13.test_valid/explicit_casts/signed_to_double)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/explicit_casts/signed_to_double.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/explicit_casts/unsigned_to_double (test_framework.basic.TestChapter13.test_valid/explicit_casts/unsigned_to_double)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/explicit_casts/unsigned_to_double.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/floating_expressions/arithmetic_ops (test_framework.basic.TestChapter13.test_valid/floating_expressions/arithmetic_ops)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/floating_expressions/arithmetic_ops.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/floating_expressions/comparisons (test_framework.basic.TestChapter13.test_valid/floating_expressions/comparisons)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/floating_expressions/comparisons.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/floating_expressions/logical (test_framework.basic.TestChapter13.test_valid/floating_expressions/logical)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/floating_expressions/logical.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/floating_expressions/loop_controlling_expression (test_framework.basic.TestChapter13.test_valid/floating_expressions/loop_controlling_expression)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/floating_expressions/loop_controlling_expression.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/floating_expressions/simple (test_framework.basic.TestChapter13.test_valid/floating_expressions/simple)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/floating_expressions/simple.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/floating_expressions/static_initialized_double (test_framework.basic.TestChapter13.test_valid/floating_expressions/static_initialized_double)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/floating_expressions/static_initialized_double.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/function_calls/double_and_int_parameters (test_framework.basic.TestChapter13.test_valid/function_calls/double_and_int_parameters)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/function_calls/double_and_int_parameters.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/function_calls/double_and_int_params_recursive (test_framework.basic.TestChapter13.test_valid/function_calls/double_and_int_params_recursive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/function_calls/double_and_int_params_recursive.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Double' object has no attribute 'type'
+[PYI-173390:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/function_calls/double_parameters (test_framework.basic.TestChapter13.test_valid/function_calls/double_parameters)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/function_calls/double_parameters.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/function_calls/push_xmm (test_framework.basic.TestChapter13.test_valid/function_calls/push_xmm)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/function_calls/push_xmm.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Double' object has no attribute 'type'
+[PYI-173400:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/function_calls/return_double (test_framework.basic.TestChapter13.test_valid/function_calls/return_double)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/function_calls/return_double.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/function_calls/standard_library_call (test_framework.basic.TestChapter13.test_valid/function_calls/standard_library_call)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/function_calls/standard_library_call.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/function_calls/use_arg_after_fun_call (test_framework.basic.TestChapter13.test_valid/function_calls/use_arg_after_fun_call)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/function_calls/use_arg_after_fun_call.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/implicit_casts/common_type (test_framework.basic.TestChapter13.test_valid/implicit_casts/common_type)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/implicit_casts/common_type.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/implicit_casts/complex_arithmetic_common_type (test_framework.basic.TestChapter13.test_valid/implicit_casts/complex_arithmetic_common_type)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/implicit_casts/complex_arithmetic_common_type.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/implicit_casts/convert_for_assignment (test_framework.basic.TestChapter13.test_valid/implicit_casts/convert_for_assignment)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/implicit_casts/convert_for_assignment.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/implicit_casts/static_initializers (test_framework.basic.TestChapter13.test_valid/implicit_casts/static_initializers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/implicit_casts/static_initializers.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/double_and_int_params_recursive (test_framework.basic.TestChapter13.test_valid/libraries/double_and_int_params_recursive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/libraries/double_and_int_params_recursive.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Double' object has no attribute 'type'
+[PYI-173440:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/libraries/double_and_int_params_recursive_client (test_framework.basic.TestChapter13.test_valid/libraries/double_and_int_params_recursive_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/libraries/double_and_int_params_recursive_client.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Double' object has no attribute 'type'
+[PYI-173445:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/libraries/double_parameters (test_framework.basic.TestChapter13.test_valid/libraries/double_parameters)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/libraries/double_parameters.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/double_parameters_client (test_framework.basic.TestChapter13.test_valid/libraries/double_parameters_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/libraries/double_parameters_client.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/double_params_and_result (test_framework.basic.TestChapter13.test_valid/libraries/double_params_and_result)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/libraries/double_params_and_result.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/double_params_and_result_client (test_framework.basic.TestChapter13.test_valid/libraries/double_params_and_result_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/libraries/double_params_and_result_client.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 982, in ASM_parseInstructions
+AttributeError: 'Double' object has no attribute 'type'
+[PYI-173465:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/libraries/extern_double_client (test_framework.basic.TestChapter13.test_valid/libraries/extern_double_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/libraries/extern_double_client.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/use_arg_after_fun_call_client (test_framework.basic.TestChapter13.test_valid/libraries/use_arg_after_fun_call_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/libraries/use_arg_after_fun_call_client.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/special_values/infinity (test_framework.basic.TestChapter13.test_valid/special_values/infinity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/special_values/infinity.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/special_values/negative_zero (test_framework.basic.TestChapter13.test_valid/special_values/negative_zero)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/special_values/negative_zero.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/special_values/subnormal_not_zero (test_framework.basic.TestChapter13.test_valid/special_values/subnormal_not_zero)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/special_values/subnormal_not_zero.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/casts/cast_between_pointer_types (test_framework.basic.TestChapter14.test_valid/casts/cast_between_pointer_types)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/casts/cast_between_pointer_types.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/comparisons/compare_pointers (test_framework.basic.TestChapter14.test_valid/comparisons/compare_pointers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/comparisons/compare_pointers.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/comparisons/pointers_as_conditions (test_framework.basic.TestChapter14.test_valid/comparisons/pointers_as_conditions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/comparisons/pointers_as_conditions.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/declarators/declarators (test_framework.basic.TestChapter14.test_valid/declarators/declarators)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/declarators/declarators.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/declarators/declare_pointer_in_for_loop (test_framework.basic.TestChapter14.test_valid/declarators/declare_pointer_in_for_loop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/declarators/declare_pointer_in_for_loop.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/dereference/address_of_dereference (test_framework.basic.TestChapter14.test_valid/dereference/address_of_dereference)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/dereference/address_of_dereference.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/dereference/dereference_expression_result (test_framework.basic.TestChapter14.test_valid/dereference/dereference_expression_result)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/dereference/dereference_expression_result.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/dereference/multilevel_indirection (test_framework.basic.TestChapter14.test_valid/dereference/multilevel_indirection)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/dereference/multilevel_indirection.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/dereference/read_through_pointers (test_framework.basic.TestChapter14.test_valid/dereference/read_through_pointers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/dereference/read_through_pointers.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/dereference/simple (test_framework.basic.TestChapter14.test_valid/dereference/simple)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/dereference/simple.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/dereference/static_var_indirection (test_framework.basic.TestChapter14.test_valid/dereference/static_var_indirection)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/dereference/static_var_indirection.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/dereference/update_through_pointers (test_framework.basic.TestChapter14.test_valid/dereference/update_through_pointers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/dereference/update_through_pointers.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/function_calls/address_of_argument (test_framework.basic.TestChapter14.test_valid/function_calls/address_of_argument)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/function_calls/address_of_argument.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/function_calls/return_pointer (test_framework.basic.TestChapter14.test_valid/function_calls/return_pointer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/function_calls/return_pointer.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/function_calls/update_value_through_pointer_parameter (test_framework.basic.TestChapter14.test_valid/function_calls/update_value_through_pointer_parameter)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/function_calls/update_value_through_pointer_parameter.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/global_pointer (test_framework.basic.TestChapter14.test_valid/libraries/global_pointer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/libraries/global_pointer.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/global_pointer_client (test_framework.basic.TestChapter14.test_valid/libraries/global_pointer_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/libraries/global_pointer_client.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/static_pointer_client (test_framework.basic.TestChapter14.test_valid/libraries/static_pointer_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_14/valid/libraries/static_pointer_client.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/allocation/test_alignment (test_framework.basic.TestChapter15.test_valid/allocation/test_alignment)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/allocation/test_alignment.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/casts/implicit_and_explicit_conversions (test_framework.basic.TestChapter15.test_valid/casts/implicit_and_explicit_conversions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/casts/implicit_and_explicit_conversions.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/casts/multi_dim_casts (test_framework.basic.TestChapter15.test_valid/casts/multi_dim_casts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/casts/multi_dim_casts.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/declarators/array_as_argument (test_framework.basic.TestChapter15.test_valid/declarators/array_as_argument)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/declarators/array_as_argument.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/declarators/equivalent_declarators (test_framework.basic.TestChapter15.test_valid/declarators/equivalent_declarators)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/declarators/equivalent_declarators.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/declarators/for_loop_array (test_framework.basic.TestChapter15.test_valid/declarators/for_loop_array)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/declarators/for_loop_array.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/declarators/return_nested_array (test_framework.basic.TestChapter15.test_valid/declarators/return_nested_array)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/declarators/return_nested_array.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/initialization/automatic (test_framework.basic.TestChapter15.test_valid/initialization/automatic)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/initialization/automatic.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/initialization/automatic_nested (test_framework.basic.TestChapter15.test_valid/initialization/automatic_nested)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/initialization/automatic_nested.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/initialization/static (test_framework.basic.TestChapter15.test_valid/initialization/static)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/initialization/static.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/initialization/static_nested (test_framework.basic.TestChapter15.test_valid/initialization/static_nested)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/initialization/static_nested.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/initialization/trailing_comma_initializer (test_framework.basic.TestChapter15.test_valid/initialization/trailing_comma_initializer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/initialization/trailing_comma_initializer.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/global_array (test_framework.basic.TestChapter15.test_valid/libraries/global_array)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/libraries/global_array.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/global_array_client (test_framework.basic.TestChapter15.test_valid/libraries/global_array_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/libraries/global_array_client.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/return_pointer_to_array_client (test_framework.basic.TestChapter15.test_valid/libraries/return_pointer_to_array_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/libraries/return_pointer_to_array_client.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/set_array_val (test_framework.basic.TestChapter15.test_valid/libraries/set_array_val)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/libraries/set_array_val.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/libraries/set_array_val_client (test_framework.basic.TestChapter15.test_valid/libraries/set_array_val_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/libraries/set_array_val_client.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/pointer_arithmetic/add_dereference_and_assign (test_framework.basic.TestChapter15.test_valid/pointer_arithmetic/add_dereference_and_assign)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/pointer_arithmetic/add_dereference_and_assign.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/pointer_arithmetic/pointer_add (test_framework.basic.TestChapter15.test_valid/pointer_arithmetic/pointer_add)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/pointer_arithmetic/pointer_add.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/pointer_arithmetic/pointer_diff (test_framework.basic.TestChapter15.test_valid/pointer_arithmetic/pointer_diff)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/pointer_arithmetic/pointer_diff.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1480, in ASM_parseAST
+  File "assemblyGenerator.py", line 1401, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 1049, in ASM_parseInstructions
+  File "assemblyGenerator.py", line 689, in parseValue
+KeyError: 4
+[PYI-174146:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+======================================================================
+FAIL: test_valid/subscripting/addition_subscript_equivalence (test_framework.basic.TestChapter15.test_valid/subscripting/addition_subscript_equivalence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/subscripting/addition_subscript_equivalence.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/subscripting/array_of_pointers_to_arrays (test_framework.basic.TestChapter15.test_valid/subscripting/array_of_pointers_to_arrays)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/subscripting/array_of_pointers_to_arrays.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/subscripting/complex_operands (test_framework.basic.TestChapter15.test_valid/subscripting/complex_operands)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/subscripting/complex_operands.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/subscripting/simple (test_framework.basic.TestChapter15.test_valid/subscripting/simple)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/subscripting/simple.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/subscripting/simple_subscripts (test_framework.basic.TestChapter15.test_valid/subscripting/simple_subscripts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/subscripting/simple_subscripts.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/subscripting/subscript_nested (test_framework.basic.TestChapter15.test_valid/subscripting/subscript_nested)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/subscripting/subscript_nested.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/subscripting/subscript_pointer (test_framework.basic.TestChapter15.test_valid/subscripting/subscript_pointer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/subscripting/subscript_pointer.c failed with error:
+
+
+======================================================================
+FAIL: test_valid/subscripting/subscript_precedence (test_framework.basic.TestChapter15.test_valid/subscripting/subscript_precedence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_15/valid/subscripting/subscript_precedence.c failed with error:
+
+
+
+
 12 - 8 20 
 
 24

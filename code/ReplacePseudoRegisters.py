@@ -111,6 +111,15 @@ def ReplaceOperand(operand, table, offset, symbolTable):
         case assemblyGenerator.RegisterOperand():
             pass
 
+        case assemblyGenerator.Indexed():
+            pass
+
+        case assemblyGenerator.MemoryOperand():
+            pass
+        
+        case assemblyGenerator.DataOperand():
+            pass
+
         case _:
             print("Error. {0}".format(operand))
             sys.exit(1)
