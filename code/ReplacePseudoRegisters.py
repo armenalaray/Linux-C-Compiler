@@ -5,6 +5,7 @@ import assemblyGenerator
 
 def ReplaceOperand(operand, table, offset, symbolTable):
     match operand:
+        
         case assemblyGenerator.PseudoRegisterOperand(pseudo=id):
 
             if table.get(id) == None:
@@ -21,21 +22,25 @@ def ReplaceOperand(operand, table, offset, symbolTable):
                 match symbolTable[id]:
                     case assemblyGenerator.ObjEntry(assType = assType, isStatic = isStatic):
                         allocateSize = 0
-                        match assType.type:
-                            case assemblyGenerator.AssemblyType.LONGWORD:
+                        match assType:
+                            case assemblyGenerator.Longword():
                                 allocateSize = 4
                                 offset -= allocateSize
                                 
-                            case assemblyGenerator.AssemblyType.QUADWORD:
+                            case assemblyGenerator.Quadword():
                                 allocateSize = 8
                                 offset -= allocateSize
                                 offset = offset - offset % 8
 
-                            case assemblyGenerator.AssemblyType.DOUBLE:
+                            case assemblyGenerator.Double():
                                 allocateSize = 8
                                 offset -= allocateSize
                                 #esto es para alinearlo a 8 
                                 offset = offset - offset % 8
+                            
+                            case _:
+                                print("Error")
+                                sys.exit(1)
                                 
 
                         table.update({id : offset})
@@ -45,9 +50,71 @@ def ReplaceOperand(operand, table, offset, symbolTable):
                 sys.exit(1)
 
             value = table[id] 
-            
             return offset, assemblyGenerator.MemoryOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.BP), value) 
     
+        case assemblyGenerator.PseudoMem(identifier = id, offset = offset_):
+
+            if table.get(id) == None:
+
+                if id in symbolTable:
+                    match symbolTable[id]:
+                        case assemblyGenerator.FunEntry():
+                            pass
+                        case assemblyGenerator.ObjEntry(assType = assType, isStatic = isStatic):
+                            if isStatic:
+                                return offset, assemblyGenerator.DataOperand(id)
+                            
+                #stack allocation
+                match symbolTable[id]:
+                    case assemblyGenerator.ObjEntry(assType = assType, isStatic = isStatic):
+                        allocateSize = 0
+                        match assType:
+                            case assemblyGenerator.Longword():
+                                allocateSize = 4
+                                offset -= allocateSize
+                                
+                            case assemblyGenerator.Quadword():
+                                allocateSize = 8
+                                offset -= allocateSize
+                                offset = offset - offset % 8
+
+                            case assemblyGenerator.Double():
+                                allocateSize = 8
+                                offset -= allocateSize
+                                #esto es para alinearlo a 8 
+                                offset = offset - offset % 8
+                            
+                            case assemblyGenerator.ByteArray(size = size, alignment = alignment):
+                                offset -= size
+                                offset = offset - offset % alignment
+
+                            case _:
+                                print("Error. {0}".format(assType))
+                                sys.exit(1)
+                                
+
+                        table.update({id : offset})
+            
+            if table.get(id) == None:
+                print("Error: Symbol not in offset table.")
+                sys.exit(1)
+
+            value = table[id] 
+            value = value + offset_
+            return offset, assemblyGenerator.MemoryOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.BP), value) 
+    
+            pass
+        
+        case assemblyGenerator.ImmediateOperand():
+            pass
+
+        case assemblyGenerator.RegisterOperand():
+            pass
+
+        case _:
+            print("Error. {0}".format(operand))
+            sys.exit(1)
+
     return offset, None
 
 def ReplaceTopLevel(topLevel, symbolTable):
