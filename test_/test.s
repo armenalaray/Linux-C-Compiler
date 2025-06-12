@@ -3,113 +3,87 @@
 main:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $320, %rsp
-	leaq -12(%rbp), %r11
-	movq %r11, -24(%rbp)
-	movq -24(%rbp), %r10
-	movq %r10, -32(%rbp)
+	subq $4224, %rsp
+	leaq -4000(%rbp), %r11
+	movq %r11, -4008(%rbp)
+	movq -4008(%rbp), %r10
+	movq %r10, -4016(%rbp)
 	movl $0, %r10d
 	movslq %r10d, %r11
-	movq %r11, -40(%rbp)
-	movq -40(%rbp), %r10
-	movq %r10, -48(%rbp)
-	movq -32(%rbp), %rax
-	movq -48(%rbp), %rdx
-	leaq (%rax, %rdx, 4), %r11
-	movq %r11, -56(%rbp)
-	movq -56(%rbp), %r10
-	movq %r10, -64(%rbp)
+	movq %r11, -4024(%rbp)
+	movq -4024(%rbp), %r10
+	movq %r10, -4032(%rbp)
+	movq -4016(%rbp), %rax
+	movq -4032(%rbp), %rdx
+	imul $400, %rdx
+	leaq (%rax, %rdx, 1), %r11
+	movq %r11, -4040(%rbp)
+	movq -4040(%rbp), %r10
+	movq %r10, -4048(%rbp)
 	movl $0, %r10d
 	movslq %r10d, %r11
-	movq %r11, -72(%rbp)
-	movq -72(%rbp), %r10
-	movq %r10, -80(%rbp)
-	movq -64(%rbp), %rax
-	movq -80(%rbp), %rdx
+	movq %r11, -4056(%rbp)
+	movq -4056(%rbp), %r10
+	movq %r10, -4064(%rbp)
+	movq -4048(%rbp), %rax
+	movq -4064(%rbp), %rdx
+	imul $40, %rdx
+	leaq (%rax, %rdx, 1), %r11
+	movq %r11, -4072(%rbp)
+	movq -4072(%rbp), %r10
+	movq %r10, -4080(%rbp)
+	movl $0, %r10d
+	movslq %r10d, %r11
+	movq %r11, -4088(%rbp)
+	movq -4088(%rbp), %r10
+	movq %r10, -4096(%rbp)
+	movq -4080(%rbp), %rax
+	movq -4096(%rbp), %rdx
 	leaq (%rax, %rdx, 4), %r11
-	movq %r11, -88(%rbp)
-	movq -88(%rbp), %rax
+	movq %r11, -4104(%rbp)
+	movq -4104(%rbp), %rax
 	movl $1, 0(%rax)
-	leaq -12(%rbp), %r11
-	movq %r11, -96(%rbp)
-	movq -96(%rbp), %r10
-	movq %r10, -104(%rbp)
-	movl $1, %r10d
-	movslq %r10d, %r11
-	movq %r11, -112(%rbp)
-	movq -112(%rbp), %r10
-	movq %r10, -120(%rbp)
-	movq -104(%rbp), %rax
-	movq -120(%rbp), %rdx
-	leaq (%rax, %rdx, 4), %r11
-	movq %r11, -128(%rbp)
-	movq -128(%rbp), %r10
-	movq %r10, -136(%rbp)
-	movl $0, %r10d
-	movslq %r10d, %r11
-	movq %r11, -144(%rbp)
-	movq -144(%rbp), %r10
-	movq %r10, -152(%rbp)
-	movq -136(%rbp), %rax
-	movq -152(%rbp), %rdx
-	leaq (%rax, %rdx, 4), %r11
-	movq %r11, -160(%rbp)
-	movq -160(%rbp), %rax
-	movl $2, 0(%rax)
-	leaq -12(%rbp), %r11
-	movq %r11, -168(%rbp)
-	movq -168(%rbp), %r10
-	movq %r10, -176(%rbp)
+	leaq -4000(%rbp), %r11
+	movq %r11, -4112(%rbp)
+	movq -4112(%rbp), %r10
+	movq %r10, -4120(%rbp)
 	movl $2, %r10d
 	movslq %r10d, %r11
-	movq %r11, -184(%rbp)
-	movq -184(%rbp), %r10
-	movq %r10, -192(%rbp)
-	movq -176(%rbp), %rax
-	movq -192(%rbp), %rdx
-	leaq (%rax, %rdx, 4), %r11
-	movq %r11, -200(%rbp)
-	movq -200(%rbp), %r10
-	movq %r10, -208(%rbp)
+	movq %r11, -4128(%rbp)
+	movq -4128(%rbp), %r10
+	movq %r10, -4136(%rbp)
+	movq -4120(%rbp), %rax
+	movq -4136(%rbp), %rdx
+	imul $400, %rdx
+	leaq (%rax, %rdx, 1), %r11
+	movq %r11, -4144(%rbp)
+	movq -4144(%rbp), %r10
+	movq %r10, -4152(%rbp)
 	movl $0, %r10d
 	movslq %r10d, %r11
-	movq %r11, -216(%rbp)
-	movq -216(%rbp), %r10
-	movq %r10, -224(%rbp)
-	movq -208(%rbp), %rax
-	movq -224(%rbp), %rdx
-	leaq (%rax, %rdx, 4), %r11
-	movq %r11, -232(%rbp)
-	movq -232(%rbp), %rax
-	movl $3, 0(%rax)
-	leaq -12(%rbp), %r11
-	movq %r11, -240(%rbp)
-	movq -240(%rbp), %r10
-	movq %r10, -248(%rbp)
-	movl $2, %r10d
-	movslq %r10d, %r11
-	movq %r11, -256(%rbp)
-	movq -256(%rbp), %r10
-	movq %r10, -264(%rbp)
-	movq -248(%rbp), %rax
-	movq -264(%rbp), %rdx
-	leaq (%rax, %rdx, 4), %r11
-	movq %r11, -272(%rbp)
-	movq -272(%rbp), %r10
-	movq %r10, -280(%rbp)
+	movq %r11, -4160(%rbp)
+	movq -4160(%rbp), %r10
+	movq %r10, -4168(%rbp)
+	movq -4152(%rbp), %rax
+	movq -4168(%rbp), %rdx
+	imul $40, %rdx
+	leaq (%rax, %rdx, 1), %r11
+	movq %r11, -4176(%rbp)
+	movq -4176(%rbp), %r10
+	movq %r10, -4184(%rbp)
 	movl $0, %r10d
 	movslq %r10d, %r11
-	movq %r11, -288(%rbp)
-	movq -288(%rbp), %r10
-	movq %r10, -296(%rbp)
-	movq -280(%rbp), %rax
-	movq -296(%rbp), %rdx
+	movq %r11, -4192(%rbp)
+	movq -4192(%rbp), %r10
+	movq %r10, -4200(%rbp)
+	movq -4184(%rbp), %rax
+	movq -4200(%rbp), %rdx
 	leaq (%rax, %rdx, 4), %r11
-	movq %r11, -304(%rbp)
-	movq -304(%rbp), %rax
+	movq %r11, -4208(%rbp)
+	movq -4208(%rbp), %rax
 	movl 0(%rax), %r10d
-	movl %r10d, -308(%rbp)
-	movl -308(%rbp), %eax
+	movl %r10d, -4212(%rbp)
+	movl -4212(%rbp), %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
