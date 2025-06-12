@@ -18,8 +18,10 @@ class Program(Node):
     def printNode(self, level):
         #print("AST Program:")
         output = 'AST Program:\n'
-        for i in self.declList:
-            output += i.printNode(level) + "\n"
+
+        if self.declList:
+            for i in self.declList:
+                output += i.printNode(level) + "\n"
         
         return output
 

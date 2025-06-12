@@ -84,6 +84,7 @@ def ReplaceOperand(operand, table, offset, symbolTable):
                                 #esto es para alinearlo a 8 
                                 offset = offset - offset % 8
                             
+                            #aqui esta el error
                             case assemblyGenerator.ByteArray(size = size, alignment = alignment):
                                 offset -= size
                                 offset = offset - offset % alignment

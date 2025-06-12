@@ -4,7 +4,7 @@
 # My compiler
 
 
-#lastStage="--codegen"
+#lastStage="--validate"
 #noLink="-c"
 library="-lmath.h"
 

@@ -491,7 +491,7 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
 
                 instructions.append(TAC_CopyInstruction(src2, inte))
                 
-                dst = makeTempVariable(retType, symbolTable)
+                dst = makeTempVariable(parser.ULongType(), symbolTable)
 
                 scale = e1.retType.referenceType.getBaseTypeSize(0)
                 
@@ -513,7 +513,7 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
 
                 instructions.append(TAC_CopyInstruction(src2, inte))
                 
-                dst = makeTempVariable(expression.retType, symbolTable)
+                dst = makeTempVariable(parser.ULongType(), symbolTable)
 
                 scale = e2.retType.referenceType.getBaseTypeSize(0)
                 
@@ -708,7 +708,7 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
 
                                 instructions.append(TAC_UnaryInstruction(TAC_UnaryOperator(UnopType.NEGATE), inte, negate))
                                 
-                                dst = makeTempVariable(expression.retType, symbolTable)
+                                dst = makeTempVariable(parser.ULongType(), symbolTable)
 
                                 scale = left.retType.referenceType.getBaseTypeSize(0)
                                 
@@ -764,7 +764,7 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
 
                                 instructions.append(TAC_CopyInstruction(src2, inte))
                                 
-                                dst = makeTempVariable(expression.retType, symbolTable)
+                                dst = makeTempVariable(parser.ULongType(), symbolTable)
 
                                 scale = left.retType.referenceType.getBaseTypeSize(0)
                                 
@@ -786,7 +786,7 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
 
                                 instructions.append(TAC_CopyInstruction(src2, inte))
                                 
-                                dst = makeTempVariable(expression.retType, symbolTable)
+                                dst = makeTempVariable(parser.ULongType(), symbolTable)
 
                                 scale = right.retType.referenceType.getBaseTypeSize(0)
                                 
