@@ -11,7 +11,6 @@ library="-lmath.h"
 python3 "$(pwd)"/code/cd.py $lastStage $noLink $library "$(pwd)"/test_/test.c
 echo $?
 
-
 if test -f test_/test; then
     ./test_/test
     echo "from test: "$?
@@ -19,10 +18,10 @@ fi
 
 ################################
 #BUILD SYSTEM
-#cd ./../
-#echo "$(pwd)"
-#pyinstaller --onefile "$(pwd)"/CComp/code/cd.py
-#./writing-a-c-compiler-tests/test_compiler "$(pwd)"/dist/cd --chapter 15 --stage codegen
+cd ./../
+echo "$(pwd)"
+pyinstaller --onefile "$(pwd)"/CComp/code/cd.py
+./writing-a-c-compiler-tests/test_compiler "$(pwd)"/dist/cd --chapter 15
 
 
 

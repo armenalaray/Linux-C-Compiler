@@ -1,3 +1,403 @@
+StackArgs: [(<assemblyGenerator.Double object at 0x7f661c661b50>, Pseudo(tmp.63)), (<assemblyGenerator.Double object at 0x7f661c661be0>, Pseudo(tmp.66)), (<assemblyGenerator.Double object at 0x7f661c661b80>, Pseudo(tmp.69))]
+
+
+
+
+ movsd -32(%rbp), %xmm0
+        movsd -40(%rbp), %xmm1
+        movsd -48(%rbp), %xmm2
+        movsd -56(%rbp), %xmm3
+        movsd -64(%rbp), %xmm4
+        movsd -72(%rbp), %xmm5
+        movsd -96(%rbp), %xmm6
+        movsd -120(%rbp), %xmm7
+        
+        movsd -192(%rbp), %rax
+        pushq %rax
+        movsd -168(%rbp), %rax
+        pushq %rax
+        movsd -144(%rbp), %rax
+        pushq %rax
+        call callee
+
+
+
+
+======================================================================
+ERROR: test_valid/function_calls/push_xmm (test_framework.basic.TestChapter13.test_valid/function_calls/push_xmm)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 603, in test_run
+    self.compile_and_run(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 398, in compile_and_run
+    result = subprocess.run(
+             ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/usr/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: PosixPath('/home/alejandro/writing-a-c-compiler-tests/tests/chapter_13/valid/function_calls/push_xmm')
+
+array
+5558010
+
+
+
+
+TAC Program:[Function: 
+
+get_multidim_ptr_diff_2 (['ptr1.0', 'ptr2.1']) instructions:[Copy tmp.3 = ptr2.1, Copy tmp.4 = ptr1.0, tmp.5 = tmp.3 - tmp.4, tmp.6 = tmp.5 / 40L, Truncate tmp.7 = tmp.6, Return tmp.7, Return 0], 
+
+Function: main ([]) instructions:[
+  
+  tmp.8 = Get Address multidim.2 , 
+  Copy tmp.9 = tmp.8, 
+  SignExtend tmp.10 = 2, 
+  Copy tmp.11 = tmp.10, 
+  AddPtr tmp.12 = tmp.9 + tmp.11 * 840, Copy tmp.13 = tmp.12, SignExtend tmp.14 = 2, Copy tmp.15 = tmp.14, AddPtr tmp.16 = tmp.13 + tmp.15 * 120, Copy tmp.17 = tmp.16, SignExtend tmp.18 = 2, Copy tmp.19 = tmp.18, AddPtr tmp.20 = tmp.17 + tmp.19 * 40, Copy tmp.21 = tmp.20, tmp.22 = Get Address multidim.2 , Copy tmp.23 = tmp.22, SignExtend tmp.24 = 2, Copy tmp.25 = tmp.24, AddPtr tmp.26 = tmp.23 + tmp.25 * 840, Copy tmp.27 = tmp.26, SignExtend tmp.28 = 2, Copy tmp.29 = tmp.28, AddPtr tmp.30 = tmp.27 + tmp.29 * 120, Copy tmp.31 = tmp.30, tmp.32 = get_multidim_ptr_diff_2([tmp.21, tmp.31]), tmp.33 = -2, tmp.34 = tmp.32 _ tmp.33, Copy tmp.35 = tmp.34, JumpIfZero(tmp.35, tmp.36), Return 4, Label(tmp.36), Return 0, Return 0]
+
+
+get_multidim_ptr_diff_2:
+        pushq %rbp
+        movq %rsp, %rbp
+        subq $64, %rsp
+        
+        primero
+        movq %rdi, -8(%rbp)
+        segundo
+        movq %rsi, -16(%rbp)
+
+        movq -16(%rbp), %r10
+        segundo        
+        movq %r10, -24(%rbp)
+        movq -8(%rbp), %r10
+        primero
+        movq %r10, -32(%rbp)
+
+        segundo
+        movq -24(%rbp), %r10
+        segundo
+        movq %r10, -40(%rbp)
+
+        primero
+        movq -32(%rbp), %r10
+        
+        segundo
+        src , dst
+
+        el mas grande el mas chiquito
+        subq %r10, -40(%rbp)
+        -80 / 40
+
+        movq -40(%rbp), %rax
+        movq $0, %rdx
+        movq $40, %r10
+        divq %r10
+        movq %rax, -48(%rbp)
+        movl -48(%rbp), %r10d
+        movl %r10d, -52(%rbp)
+        movl -52(%rbp), %eax
+        movq %rbp, %rsp
+        popq %rbp
+        ret
+        movl $0, %eax
+        movq %rbp, %rsp
+        popq %rbp
+        ret
+
+
+main:
+        pushq %rbp
+        movq %rsp, %rbp
+        subq $2112, %rsp
+        leaq multidim.2(%rip), %r11
+        movq %r11, -8(%rbp)
+        movq -8(%rbp), %r10
+        movq %r10, -16(%rbp)
+        
+        movl $2, %r10d
+        movslq %r10d, %r11
+        movq %r11, -24(%rbp)
+        movq -24(%rbp), %r10
+        movq %r10, -32(%rbp)
+
+        array
+        movq -16(%rbp), %rax
+        long 2
+        movq -32(%rbp), %rdx
+
+        1 * 2
+        imul $840, %rdx
+
+        leaq (%rax, %rdx, 1), %r11
+        86A0 en r11
+
+        movq %r11, -880(%rbp)
+        movq -880(%rbp), %r10
+        movq %r10, -888(%rbp)
+        
+        movl $2, %r10d
+
+        movslq %r10d, %r11
+        movq %r11, -896(%rbp)
+        movq -896(%rbp), %r10
+        movq %r10, -904(%rbp)
+
+        pointer
+        movq -888(%rbp), %rax
+        2
+        movq -904(%rbp), %rdx
+
+        240
+        imul $120, %rdx
+
+        leaq (%rax, %rdx, 1), %r11
+        8790 en r11
+
+        movq %r11, -1024(%rbp)
+        movq -1024(%rbp), %r10
+
+        pointer
+        movq %r10, -1032(%rbp)
+
+        movl $2, %r10d
+        
+        movslq %r10d, %r11
+
+        movq %r11, -1040(%rbp)
+        movq -1040(%rbp), %r10
+        movq %r10, -1048(%rbp)
+
+        pointer
+        movq -1032(%rbp), %rax
+
+        2
+        movq -1048(%rbp), %rdx
+        imul $40, %rdx
+
+        leaq (%rax, %rdx, 1), %r11
+        87E0 en r11
+
+        pointer
+        movq %r11, -1056(%rbp)
+
+        movq -1056(%rbp), %r10
+        movq %r10, -1064(%rbp)
+
+        -x428(rbp) - primero - 87E0 - rdi
+                     segundo - 8790 - rsi
+
+        leaq multidim.2(%rip), %r11
+        movq %r11, -1072(%rbp)
+        movq -1072(%rbp), %r10
+        movq %r10, -1080(%rbp)
+        movl $2, %r10d
+        movslq %r10d, %r11
+        movq %r11, -1088(%rbp)
+        movq -1088(%rbp), %r10
+        movq %r10, -1096(%rbp)
+        movq -1080(%rbp), %rax
+        movq -1096(%rbp), %rdx
+        imul $840, %rdx
+        leaq (%rax, %rdx, 1), %r11
+        movq %r11, -1936(%rbp)
+        movq -1936(%rbp), %r10
+        movq %r10, -1944(%rbp)
+        movl $2, %r10d
+        movslq %r10d, %r11
+        movq %r11, -1952(%rbp)
+        movq -1952(%rbp), %r10
+        movq %r10, -1960(%rbp)
+        movq -1944(%rbp), %rax
+        movq -1960(%rbp), %rdx
+        imul $120, %rdx
+        leaq (%rax, %rdx, 1), %r11
+        movq %r11, -2080(%rbp)
+        movq -2080(%rbp), %r10
+        movq %r10, -2088(%rbp)
+
+        primero
+        movq -1064(%rbp), %rdi
+        segundo
+        movq -2088(%rbp), %rsi
+
+        call get_multidim_ptr_diff_2
+
+        movl %eax, -2092(%rbp)
+        movl $2, -2096(%rbp)
+        negl -2096(%rbp)
+        movl -2096(%rbp), %r10d
+        cmpl %r10d, -2092(%rbp)
+        movl $0, -2100(%rbp)
+        setNE -2100(%rbp)
+        movl -2100(%rbp), %r10d
+        movl %r10d, -2104(%rbp)
+        cmpl $0, -2104(%rbp)
+        jE .Ltmp.36
+        movl $4, %eax
+        movq %rbp, %rsp
+        popq %rbp
+        ret
+
+
+
+840
+Se divide entre 40
+
+get_multidim_ptr_diff_2:
+        pushq %rbp
+        movq %rsp, %rbp
+        subq $64, %rsp
+        movq %rdi, -8(%rbp)
+        movq %rsi, -16(%rbp)
+        movq -16(%rbp), %r10
+        movq %r10, -24(%rbp)
+        movq -8(%rbp), %r10
+        movq %r10, -32(%rbp)
+        movq -24(%rbp), %r10
+        movq %r10, -40(%rbp)
+        movq -32(%rbp), %r10
+        subq %r10, -40(%rbp)
+        movq -40(%rbp), %rax
+        movq $0, %rdx
+        movq $40, %r10
+        divq %r10
+        movq %rax, -48(%rbp)
+        movl -48(%rbp), %r10d
+        movl %r10d, -52(%rbp)
+        movl -52(%rbp), %eax
+        movq %rbp, %rsp
+        popq %rbp
+        ret
+        movl $0, %eax
+        movq %rbp, %rsp
+        popq %rbp
+        ret
+        .globl main
+        .text
+
+
+te tiene que dar 80!
+
+
+
+
+
+
+.Ltmp.80:
+        leaq multidim.11(%rip), %r11
+        movq %r11, -2128(%rbp)
+        movq -2128(%rbp), %r10
+        movq %r10, -2136(%rbp)
+        movl $2, %r10d
+        movslq %r10d, %r11
+        movq %r11, -2144(%rbp)
+        movq -2144(%rbp), %r10
+        movq %r10, -2152(%rbp)
+        movq -2136(%rbp), %rax
+        movq -2152(%rbp), %rdx
+        imul $840, %rdx
+        leaq (%rax, %rdx, 1), %r11
+        movq %r11, -2992(%rbp)
+        movq -2992(%rbp), %r10
+        movq %r10, -3000(%rbp)
+        movl $2, %r10d
+        movslq %r10d, %r11
+        movq %r11, -3008(%rbp)
+        movq -3008(%rbp), %r10
+        movq %r10, -3016(%rbp)
+        movq -3000(%rbp), %rax
+        movq -3016(%rbp), %rdx
+        imul $120, %rdx
+        leaq (%rax, %rdx, 1), %r11
+        movq %r11, -3136(%rbp)
+        movq -3136(%rbp), %r10
+        movq %r10, -3144(%rbp)
+        movl $2, %r10d
+        movslq %r10d, %r11
+        movq %r11, -3152(%rbp)
+        movq -3152(%rbp), %r10
+        movq %r10, -3160(%rbp)
+        movq -3144(%rbp), %rax
+        movq -3160(%rbp), %rdx
+        imul $40, %rdx
+        leaq (%rax, %rdx, 1), %r11
+        movq %r11, -3168(%rbp)
+        movq -3168(%rbp), %r10
+        movq %r10, -3176(%rbp)
+        leaq multidim.11(%rip), %r11
+        movq %r11, -3184(%rbp)
+        movq -3184(%rbp), %r10
+        movq %r10, -3192(%rbp)
+        movl $2, %r10d
+        movslq %r10d, %r11
+        movq %r11, -3200(%rbp)
+        movq -3200(%rbp), %r10
+        movq %r10, -3208(%rbp)
+        movq -3192(%rbp), %rax
+        movq -3208(%rbp), %rdx
+        imul $840, %rdx
+        leaq (%rax, %rdx, 1), %r11
+        movq %r11, -4048(%rbp)
+        movq -4048(%rbp), %r10
+        movq %r10, -4056(%rbp)
+        movl $2, %r10d
+        movslq %r10d, %r11
+        movq %r11, -4064(%rbp)
+        movq -4064(%rbp), %r10
+        movq %r10, -4072(%rbp)
+        movq -4056(%rbp), %rax
+        movq -4072(%rbp), %rdx
+        imul $120, %rdx
+        leaq (%rax, %rdx, 1), %r11
+        movq %r11, -4192(%rbp)
+        movq -4192(%rbp), %r10
+        movq %r10, -4200(%rbp)
+        movq -3176(%rbp), %rdi
+        movq -4200(%rbp), %rsi
+        call get_multidim_ptr_diff_2
+        movl %eax, -4204(%rbp)
+        movl $2, -4208(%rbp)
+        negl -4208(%rbp)
+        movl -4208(%rbp), %r10d
+        cmpl %r10d, -4204(%rbp)
+        movl $0, -4212(%rbp)
+        setNE -4212(%rbp)
+        movl -4212(%rbp), %r10d
+        movl %r10d, -4216(%rbp)
+        cmpl $0, -4216(%rbp)
+        jE .Ltmp.109
+        movl $4, %eax
+        movq %rbp, %rsp
+        popq %rbp
+        ret
+
+
+
+
+ASM Program: [Function get_ptr_diff stackOffset: -52 global: True instructions:[AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a2e570> Binary(Sub, Imm(64), Reg(SP)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a002f0> Mov(Reg(DI), Memory(BP, -8)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a01700> Mov(Reg(SI), Memory(BP, -16)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a00e30> Mov(Memory(BP, -16), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a00e30> Mov(Reg(R10d), Memory(BP, -24)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a018b0> Mov(Memory(BP, -8), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a018b0> Mov(Reg(R10d), Memory(BP, -32)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f19f6db0> Mov(Memory(BP, -24), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f19f6db0> Mov(Reg(R10d), Memory(BP, -40)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f19f6db0> Mov(Memory(BP, -32), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f19f6db0> Binary(Sub, Reg(R10d), Memory(BP, -40)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f19e6a50> Mov(Memory(BP, -40), Reg(AX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f19e6a50> Mov(Imm(0), Reg(DX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f19e6a50> Mov(Imm(4), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f19e6a50> Div(Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f19e6a50> Mov(Reg(AX), Memory(BP, -48)), AssType: <assemblyGenerator.Longword object at 0x7ff0f19f6ed0> Mov(Memory(BP, -48), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7ff0f19f6ed0> Mov(Reg(R10d), Memory(BP, -52)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a01d60> Mov(Memory(BP, -52), Reg(AX)), ret, AssType: <assemblyGenerator.Longword object at 0x7ff0f1a01e50> Mov(Imm(0), Reg(AX)), ret], Function get_long_ptr_diff stackOffset: -52 global: True instructions:[AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a2e690> Binary(Sub, Imm(64), Reg(SP)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a018e0> Mov(Reg(DI), Memory(BP, -8)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a00a40> Mov(Reg(SI), Memory(BP, -16)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a02060> Mov(Memory(BP, -16), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a02060> Mov(Reg(R10d), Memory(BP, -24)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a021b0> Mov(Memory(BP, -8), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a021b0> Mov(Reg(R10d), Memory(BP, -32)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a020f0> Mov(Memory(BP, -24), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a020f0> Mov(Reg(R10d), Memory(BP, -40)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a020f0> Mov(Memory(BP, -32), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a020f0> Binary(Sub, Reg(R10d), Memory(BP, -40)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a02420> Mov(Memory(BP, -40), Reg(AX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a02420> Mov(Imm(0), Reg(DX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a02420> Mov(Imm(8), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a02420> Div(Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a02420> Mov(Reg(AX), Memory(BP, -48)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a024e0> Mov(Memory(BP, -48), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a024e0> Mov(Reg(R10d), Memory(BP, -52)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a028d0> Mov(Memory(BP, -52), Reg(AX)), ret, AssType: <assemblyGenerator.Longword object at 0x7ff0f1a02990> Mov(Imm(0), Reg(AX)), ret], Function get_multidim_ptr_diff stackOffset: -52 global: True instructions:[AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a2ede0> Binary(Sub, Imm(64), Reg(SP)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a02540> Mov(Reg(DI), Memory(BP, -8)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a021e0> Mov(Reg(SI), Memory(BP, -16)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a02bd0> Mov(Memory(BP, -16), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a02bd0> Mov(Reg(R10d), Memory(BP, -24)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a02db0> Mov(Memory(BP, -8), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a02db0> Mov(Reg(R10d), Memory(BP, -32)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a02c90> Mov(Memory(BP, -24), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a02c90> Mov(Reg(R10d), Memory(BP, -40)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a02c90> Mov(Memory(BP, -32), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a02c90> Binary(Sub, Reg(R10d), Memory(BP, -40)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a03020> Mov(Memory(BP, -40), Reg(AX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a03020> Mov(Imm(0), Reg(DX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a03020> Mov(Imm(120), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a03020> Div(Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a03020> Mov(Reg(AX), Memory(BP, -48)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a030e0> Mov(Memory(BP, -48), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a030e0> Mov(Reg(R10d), Memory(BP, -52)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a034d0> Mov(Memory(BP, -52), Reg(AX)), ret, AssType: <assemblyGenerator.Longword object at 0x7ff0f1a035f0> Mov(Imm(0), Reg(AX)), ret], Function get_multidim_ptr_diff_2 stackOffset: -52 global: True instructions:[AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a2f5c0> Binary(Sub, Imm(64), Reg(SP)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a03440> Mov(Reg(DI), Memory(BP, -8)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a03620> Mov(Reg(SI), Memory(BP, -16)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a038f0> Mov(Memory(BP, -16), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a038f0> Mov(Reg(R10d), Memory(BP, -24)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a03a70> Mov(Memory(BP, -8), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a03a70> Mov(Reg(R10d), Memory(BP, -32)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a03b60> Mov(Memory(BP, -24), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a03b60> Mov(Reg(R10d), Memory(BP, -40)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a03b60> Mov(Memory(BP, -32), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a03b60> Binary(Sub, Reg(R10d), Memory(BP, -40)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a03d40> Mov(Memory(BP, -40), Reg(AX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a03d40> Mov(Imm(0), Reg(DX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a03d40> Mov(Imm(40), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a03d40> Div(Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a03d40> Mov(Reg(AX), Memory(BP, -48)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a03e00> Mov(Memory(BP, -48), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a03e00> Mov(Reg(R10d), Memory(BP, -52)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a0c350> Mov(Memory(BP, -52), Reg(AX)), ret, AssType: <assemblyGenerator.Longword object at 0x7ff0f1a0c470> Mov(Imm(0), Reg(AX)), ret], Function main stackOffset: -4216 global: True instructions:[AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a344d0> Binary(Sub, Imm(4224), Reg(SP)), AssType: <assemblyGenerator.Longword object at 0x7ff0f19f7530> Mov(Imm(5), Memory(BP, -32)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a0c2c0> Mov(Imm(4), Memory(BP, -28)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a0c650> Mov(Imm(3), Memory(BP, -24)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a0c740> Mov(Imm(2), Memory(BP, -20)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a0c830> Mov(Imm(1), Memory(BP, -16)), Lea(Memory(BP, -32), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a34650> Mov(Reg(R11d), Memory(BP, -40)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0c9b0> Mov(Memory(BP, -40), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0c9b0> Mov(Reg(R10d), Memory(BP, -48)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a348c0> Mov(Imm(5), Reg(R10d)), MovSX(Reg(R10d), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a349b0> Mov(Reg(R11d), Memory(BP, -56)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f19f4740> Mov(Memory(BP, -56), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f19f4740> Mov(Reg(R10d), Memory(BP, -64)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0cd70> Mov(Memory(BP, -48), Reg(AX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0ce60> Mov(Memory(BP, -64), Reg(DX)), Lea(Indexed(AX + DX * 4), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a34bc0> Mov(Reg(R11d), Memory(BP, -72)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f19e6810> Mov(Memory(BP, -72), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f19e6810> Mov(Reg(R10d), Memory(BP, -80)), Lea(Memory(BP, -32), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a34e30> Mov(Reg(R11d), Memory(BP, -88)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0ccb0> Mov(Memory(BP, -88), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0ccb0> Mov(Reg(R10d), Memory(BP, -96)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0d1c0> Mov(Memory(BP, -80), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0d1c0> Mov(Reg(R10d), Memory(BP, -104)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0d2e0> Mov(Memory(BP, -96), Reg(DI)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0d370> Mov(Memory(BP, -104), Reg(SI)), Call(get_ptr_diff), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a0d580> Mov(Reg(AX), Memory(BP, -108)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a0d700> Cmp(Imm(5), Memory(BP, -108)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a0d0a0> Mov(Imm(0), Memory(BP, -112)), SetCC(ConcCodeType.NE, Memory(BP, -112)), AssType: <assemblyGenerator.Longword object at 0x7ff0f19f57c0> Mov(Memory(BP, -112), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7ff0f19f57c0> Mov(Reg(R10d), Memory(BP, -116)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a0d8e0> Cmp(Imm(0), Memory(BP, -116)), JmpCC(ConcCodeType.E, tmp.43), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a0d9d0> Mov(Imm(1), Reg(AX)), ret, Label(tmp.43), Lea(Memory(BP, -192), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a352b0> Mov(Reg(R11d), Memory(BP, -200)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0d1f0> Mov(Memory(BP, -200), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0d1f0> Mov(Reg(R10d), Memory(BP, -208)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a35520> Mov(Imm(3), Reg(R10d)), MovSX(Reg(R10d), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a35610> Mov(Reg(R11d), Memory(BP, -216)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0d880> Mov(Memory(BP, -216), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0d880> Mov(Reg(R10d), Memory(BP, -224)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0d130> Mov(Memory(BP, -208), Reg(AX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0e030> Mov(Memory(BP, -224), Reg(DX)), Lea(Indexed(AX + DX * 8), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a35820> Mov(Reg(R11d), Memory(BP, -232)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0e1e0> Mov(Memory(BP, -232), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0e1e0> Mov(Reg(R10d), Memory(BP, -240)), Lea(Memory(BP, -192), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a35a90> Mov(Reg(R11d), Memory(BP, -248)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0dd90> Mov(Memory(BP, -248), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0dd90> Mov(Reg(R10d), Memory(BP, -256)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0e420> Mov(Memory(BP, -240), Reg(DI)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0e4b0> Mov(Memory(BP, -256), Reg(SI)), Call(get_long_ptr_diff), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a0e690> Mov(Reg(AX), Memory(BP, -260)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a0e2d0> Mov(Imm(3), Memory(BP, -264)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a0e2d0> Unary(Neg, Memory(BP, -264)), AssType: <assemblyGenerator.Longword object at 0x7ff0f19f4ad0> Mov(Memory(BP, -264), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7ff0f19f4ad0> Cmp(Reg(R10d), Memory(BP, -260)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a0e870> Mov(Imm(0), Memory(BP, -268)), SetCC(ConcCodeType.NE, Memory(BP, -268)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a0eab0> Mov(Memory(BP, -268), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a0eab0> Mov(Reg(R10d), Memory(BP, -272)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a0eba0> Cmp(Imm(0), Memory(BP, -272)), JmpCC(ConcCodeType.E, tmp.56), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a0ec90> Mov(Imm(2), Reg(AX)), ret, Label(tmp.56), Lea(Data(multidim.11), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a35f40> Mov(Reg(R11d), Memory(BP, -280)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0e840> Mov(Memory(BP, -280), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0e840> Mov(Reg(R10d), Memory(BP, -288)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a361b0> Mov(Imm(2), Reg(R10d)), MovSX(Reg(R10d), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a362a0> Mov(Reg(R11d), Memory(BP, -296)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0eae0> Mov(Memory(BP, -296), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0eae0> Mov(Reg(R10d), Memory(BP, -304)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0e6c0> Mov(Memory(BP, -288), Reg(AX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0f2c0> Mov(Memory(BP, -304), Reg(DX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0f3e0> Binary(Mult, Imm(840), Reg(DX)), Lea(Indexed(AX + DX * 1), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a364b0> Mov(Reg(R11d), Memory(BP, -1152)), AssType: ByteArray(Size = 840, Alignment = 16) Mov(Memory(BP, -1152), Reg(R10d)), AssType: ByteArray(Size = 840, Alignment = 16) Mov(Reg(R10d), Memory(BP, -1160)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a36720> Mov(Imm(1), Reg(R10d)), MovSX(Reg(R10d), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a36810> Mov(Reg(R11d), Memory(BP, -1168)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0f050> Mov(Memory(BP, -1168), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0f050> Mov(Reg(R10d), Memory(BP, -1176)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0ee40> Mov(Memory(BP, -1160), Reg(AX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0f9b0> Mov(Memory(BP, -1176), Reg(DX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0fad0> Binary(Mult, Imm(120), Reg(DX)), Lea(Indexed(AX + DX * 1), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a36a20> Mov(Reg(R11d), Memory(BP, -1184)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0fc80> Mov(Memory(BP, -1184), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0fc80> Mov(Reg(R10d), Memory(BP, -1192)), Lea(Data(multidim.11), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a36c90> Mov(Reg(R11d), Memory(BP, -1200)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0f740> Mov(Memory(BP, -1200), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0f740> Mov(Reg(R10d), Memory(BP, -1208)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a36f00> Mov(Imm(2), Reg(R10d)), MovSX(Reg(R10d), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a36ff0> Mov(Reg(R11d), Memory(BP, -1216)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0fcb0> Mov(Memory(BP, -1216), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0fcb0> Mov(Reg(R10d), Memory(BP, -1224)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0f650> Mov(Memory(BP, -1208), Reg(AX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a18200> Mov(Memory(BP, -1224), Reg(DX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a18320> Binary(Mult, Imm(840), Reg(DX)), Lea(Indexed(AX + DX * 1), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a37200> Mov(Reg(R11d), Memory(BP, -2064)), AssType: ByteArray(Size = 840, Alignment = 16) Mov(Memory(BP, -2064), Reg(R10d)), AssType: ByteArray(Size = 840, Alignment = 16) Mov(Reg(R10d), Memory(BP, -2072)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a37470> Mov(Imm(4), Reg(R10d)), MovSX(Reg(R10d), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a37560> Mov(Reg(R11d), Memory(BP, -2080)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a18050> Mov(Memory(BP, -2080), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a18050> Mov(Reg(R10d), Memory(BP, -2088)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a0fd70> Mov(Memory(BP, -2072), Reg(AX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a188f0> Mov(Memory(BP, -2088), Reg(DX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a18a10> Binary(Mult, Imm(120), Reg(DX)), Lea(Indexed(AX + DX * 1), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a37770> Mov(Reg(R11d), Memory(BP, -2096)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a18bc0> Mov(Memory(BP, -2096), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a18bc0> Mov(Reg(R10d), Memory(BP, -2104)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a18cb0> Mov(Memory(BP, -1192), Reg(DI)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a18d40> Mov(Memory(BP, -2104), Reg(SI)), Call(get_multidim_ptr_diff), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a18f50> Mov(Reg(AX), Memory(BP, -2108)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a19070> Cmp(Imm(3), Memory(BP, -2108)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a187a0> Mov(Imm(0), Memory(BP, -2112)), SetCC(ConcCodeType.NE, Memory(BP, -2112)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a191f0> Mov(Memory(BP, -2112), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a191f0> Mov(Reg(R10d), Memory(BP, -2116)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a19310> Cmp(Imm(0), Memory(BP, -2116)), JmpCC(ConcCodeType.E, tmp.80), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a19400> Mov(Imm(3), Reg(AX)), ret, Label(tmp.80), Lea(Data(multidim.11), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a37b00> Mov(Reg(R11d), Memory(BP, -2128)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a18bf0> Mov(Memory(BP, -2128), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a18bf0> Mov(Reg(R10d), Memory(BP, -2136)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a37d70> Mov(Imm(2), Reg(R10d)), MovSX(Reg(R10d), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a37e60> Mov(Reg(R11d), Memory(BP, -2144)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a19220> Mov(Memory(BP, -2144), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a19220> Mov(Reg(R10d), Memory(BP, -2152)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a18680> Mov(Memory(BP, -2136), Reg(AX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a19a30> Mov(Memory(BP, -2152), Reg(DX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a19b50> Binary(Mult, Imm(840), Reg(DX)), Lea(Indexed(AX + DX * 1), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a380b0> Mov(Reg(R11d), Memory(BP, -2992)), AssType: ByteArray(Size = 840, Alignment = 16) Mov(Memory(BP, -2992), Reg(R10d)), AssType: ByteArray(Size = 840, Alignment = 16) Mov(Reg(R10d), Memory(BP, -3000)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a38320> Mov(Imm(2), Reg(R10d)), MovSX(Reg(R10d), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a38410> Mov(Reg(R11d), Memory(BP, -3008)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a197c0> Mov(Memory(BP, -3008), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a197c0> Mov(Reg(R10d), Memory(BP, -3016)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a195b0> Mov(Memory(BP, -3000), Reg(AX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1a0f0> Mov(Memory(BP, -3016), Reg(DX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1a210> Binary(Mult, Imm(120), Reg(DX)), Lea(Indexed(AX + DX * 1), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a38620> Mov(Reg(R11d), Memory(BP, -3136)), AssType: ByteArray(Size = 120, Alignment = 16) Mov(Memory(BP, -3136), Reg(R10d)), AssType: ByteArray(Size = 120, Alignment = 16) Mov(Reg(R10d), Memory(BP, -3144)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a38890> Mov(Imm(2), Reg(R10d)), MovSX(Reg(R10d), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a38980> Mov(Reg(R11d), Memory(BP, -3152)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a19eb0> Mov(Memory(BP, -3152), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a19eb0> Mov(Reg(R10d), Memory(BP, -3160)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a19910> Mov(Memory(BP, -3144), Reg(AX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1a7e0> Mov(Memory(BP, -3160), Reg(DX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1a900> Binary(Mult, Imm(40), Reg(DX)), Lea(Indexed(AX + DX * 1), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a38b90> Mov(Reg(R11d), Memory(BP, -3168)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1aab0> Mov(Memory(BP, -3168), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1aab0> Mov(Reg(R10d), Memory(BP, -3176)), Lea(Data(multidim.11), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a38e00> Mov(Reg(R11d), Memory(BP, -3184)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1a570> Mov(Memory(BP, -3184), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1a570> Mov(Reg(R10d), Memory(BP, -3192)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a39070> Mov(Imm(2), Reg(R10d)), MovSX(Reg(R10d), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a39160> Mov(Reg(R11d), Memory(BP, -3200)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1aae0> Mov(Memory(BP, -3200), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1aae0> Mov(Reg(R10d), Memory(BP, -3208)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1a480> Mov(Memory(BP, -3192), Reg(AX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1aff0> Mov(Memory(BP, -3208), Reg(DX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1b110> Binary(Mult, Imm(840), Reg(DX)), Lea(Indexed(AX + DX * 1), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a39370> Mov(Reg(R11d), Memory(BP, -4048)), AssType: ByteArray(Size = 840, Alignment = 16) Mov(Memory(BP, -4048), Reg(R10d)), AssType: ByteArray(Size = 840, Alignment = 16) Mov(Reg(R10d), Memory(BP, -4056)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a395e0> Mov(Imm(2), Reg(R10d)), MovSX(Reg(R10d), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a396d0> Mov(Reg(R11d), Memory(BP, -4064)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1adb0> Mov(Memory(BP, -4064), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1adb0> Mov(Reg(R10d), Memory(BP, -4072)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1aba0> Mov(Memory(BP, -4056), Reg(AX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1b6e0> Mov(Memory(BP, -4072), Reg(DX)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1b800> Binary(Mult, Imm(120), Reg(DX)), Lea(Indexed(AX + DX * 1), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a398e0> Mov(Reg(R11d), Memory(BP, -4192)), AssType: ByteArray(Size = 120, Alignment = 16) Mov(Memory(BP, -4192), Reg(R10d)), AssType: ByteArray(Size = 120, Alignment = 16) Mov(Reg(R10d), Memory(BP, -4200)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1baa0> Mov(Memory(BP, -3176), Reg(DI)), AssType: <assemblyGenerator.Quadword object at 0x7ff0f1a1bb30> Mov(Memory(BP, -4200), Reg(SI)), Call(get_multidim_ptr_diff_2), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a1bd40> Mov(Reg(AX), Memory(BP, -4204)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a1b590> Mov(Imm(2), Memory(BP, -4208)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a1b590> Unary(Neg, Memory(BP, -4208)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a1bfb0> Mov(Memory(BP, -4208), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a1bfb0> Cmp(Reg(R10d), Memory(BP, -4204)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a1bef0> Mov(Imm(0), Memory(BP, -4212)), SetCC(ConcCodeType.NE, Memory(BP, -4212)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a201d0> Mov(Memory(BP, -4212), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a201d0> Mov(Reg(R10d), Memory(BP, -4216)), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a202f0> Cmp(Imm(0), Memory(BP, -4216)), JmpCC(ConcCodeType.E, tmp.109), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a203e0> Mov(Imm(4), Reg(AX)), ret, Label(tmp.109), AssType: <assemblyGenerator.Longword object at 0x7ff0f1a20560> Mov(Imm(0), Reg(AX)), ret, AssType: <assemblyGenerator.Longword object at 0x7ff0f1a206b0> Mov(Imm(0), Reg(AX)), ret], 
+
+
+
+
+
+
+
+
+
+Static Variable: Global = False Alignment = 16 : multidim.11 = [c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0), c_double(0.0)]]
+
+
+
+
+
+
+
+
+
 from test: 0
 /home/alejandro
 75 INFO: PyInstaller: 6.13.0, contrib hooks: 2025.3

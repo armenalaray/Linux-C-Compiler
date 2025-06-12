@@ -181,8 +181,8 @@ if __name__ == "__main__":
 
 			output = codeEmission.outputAsmFile(ass, backSymbolTable)
 
-			#if printDebugInfo:
-			#	print(output)
+			if printDebugInfo:
+				print(output)
 
 			#ASSEMBLER
 			asmFile = os.path.dirname(file) + "/" + os.path.basename(file).split('.')[0] + '.s'
@@ -191,7 +191,7 @@ if __name__ == "__main__":
 			aFile.write(output)
 			aFile.close()
 
-			"""
+			
 			if NoLink:
 				assC = "gcc -ggdb -c " + asmFile + " -o " + os.path.dirname(file) + "/" + os.path.basename(file).split('.')[0] + '.o'
 
@@ -209,7 +209,7 @@ if __name__ == "__main__":
 				print(assC)
 
 				os.system(assC)
-			"""
+			
 			
 
 	sys.exit(0)

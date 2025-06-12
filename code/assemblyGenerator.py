@@ -988,7 +988,10 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 
                 for assType, asmArg in stackArgs:
                     
-                    if type(asmArg) == ImmediateOperand or type(asmArg) == RegisterOperand or type(assType) == Quadword() or type(assType) == Double():
+
+                    if type(asmArg) == ImmediateOperand or type(asmArg) == RegisterOperand or type(assType) == Quadword or type(assType) == Double:
+
+                        #print(type(assType))
 
                         ASM_Instructions.append(PushInstruction(asmArg))
                         

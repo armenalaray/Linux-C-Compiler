@@ -1,3 +1,4 @@
+import traceback
 import sys
 import assemblyGenerator
 from enum import Enum
@@ -172,8 +173,17 @@ def matchOperand(operand, output, operandSize):
         case assemblyGenerator.ImmediateOperand(imm=im):
             output += '${0}'.format(im)
 
-        case assemblyGenerator.Indexed():
-            pass
+        case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+            print(type(scale), scale)
+            
+            output += '('
+
+            output = matchRegister(base, output, operandSize)
+            output += ', '
+            output = matchRegister(index, output, operandSize)
+            output += ', {0}'.format(scale)
+
+            output += ')'
         
         case _:
             print("Error: Operand not added into code emission. {0}".format(operand))
@@ -229,10 +239,12 @@ def printInstructionSuffix(type, output):
 
         case assemblyGenerator.Double():
             output += 'sd'
-            pass
         
         case assemblyGenerator.ByteArray():
-            pass
+            output += 'q'
+            #traceback.print_stack()
+            #print("Invalid Byte ARRay as operand?")
+            #sys.exit(1)
 
         case _:
             print("Invalid assembly type. {0}".format(type))
@@ -252,8 +264,11 @@ def getOperandSize(type):
         case assemblyGenerator.Double():
             operandSize = OperandSize.BYTE_8
 
-        case assemblyGenerator.ByteArray():
-            pass
+        case assemblyGenerator.ByteArray(size = size, alignment = alignment):
+            operandSize = OperandSize.BYTE_8
+            #traceback.print_stack()
+            #print("Invalid Byte ARRay as operand?")
+            #sys.exit(1)
         
         case _:
             print("Invalid Operand Size. {0}".format(type))
@@ -294,9 +309,7 @@ def printTopLevel(topLevel, output, symbolTable):
                         output += '\t.data\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
 
                         for init in initList:
-                            output = printStaticInit(init, output)
-                            
-                        
+                            output = printStaticInit(init, output)   
 
                 case _:
                     print(type(initList[0].int.value))
@@ -388,8 +401,6 @@ def printTopLevel(topLevel, output, symbolTable):
                         output += ', '
 
                         output = matchOperand(destO, output, OperandSize.BYTE_8) 
-
-                        
 
                     case assemblyGenerator.MovInstruction(assType=assType, sourceO=src, destO=dst):
                         output += '\n\tmov'

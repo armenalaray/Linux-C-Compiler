@@ -718,6 +718,8 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                                 
                             elif type(left.retType) == parser.PointerType and left.retType.checkType(right.retType):
 
+                                #pointer diff
+
                                 src1 = TAC_emitTackyAndConvert(left, instructions, symbolTable)
 
                                 ptr1 = makeTempVariable(left.retType, symbolTable)
@@ -730,15 +732,15 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
 
                                 instructions.append(TAC_CopyInstruction(src2, ptr2))
 
-                                diff = makeTempVariable(left.retType, symbolTable)
+                                diff = makeTempVariable(parser.LongType(), symbolTable)
 
                                 instructions.append(TAC_BinaryInstruction(TAC_BinaryOperator(BinopType.SUBTRACT), ptr1, ptr2, diff))
 
-                                dst = makeTempVariable(expression.retType, symbolTable)
+                                dst = makeTempVariable(parser.LongType(), symbolTable)
 
                                 typeSize = left.retType.referenceType.getBaseTypeSize(0)
 
-                                instructions.append(TAC_BinaryInstruction(TAC_BinaryOperator(BinopType.DIVIDE), diff, TAC_ConstantValue(parser.ConstULong(typeSize)), dst))
+                                instructions.append(TAC_BinaryInstruction(TAC_BinaryOperator(BinopType.DIVIDE), diff, TAC_ConstantValue(parser.ConstLong(typeSize)), dst))
 
                                 return PlainOperand(dst)
 
