@@ -1,5 +1,5 @@
-# C Compiler
-This is a C Compiler I made in Python, it translates from C to x86 assembly language, I made it on Ubuntu Linux. I used GCC to assembly and preprocess the C File, then I compile it with my compiler and pass it to GAS for assembly.
+# Linux C Compiler
+This is a Linux C Compiler I made from scratch in Python, it generates assembly code from C source code.
 
 ## Prerequisites:
 You need GCC installed in your system and Python and Pyinstaller.
