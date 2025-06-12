@@ -1,10 +1,6 @@
 # C Compiler
 This is a C Compiler I made in Python, it translates from C to x86 assembly language, I made it on Ubuntu Linux. I used GCC to assembly and preprocess the C File, then I compile it with my compiler and pass it to GAS for assembly.
 
-These are the compiler passes I made for the compiler:
-
-<img width="242" alt="compiler_passes" src="https://github.com/user-attachments/assets/58b2c401-b813-4a6c-a456-e6a39018c0b2" />
-
 ## How to build from source:
 
 You need to build with pyinstaller and build cd.py:
@@ -12,6 +8,15 @@ You need to build with pyinstaller and build cd.py:
 ```
 pyinstaller path/to/cd.py
 ```
+
+This will build the compiler driver with the compiler inside for your architecture host.
+
+## How to test the compiler 
+
+These are the compiler passes I made for the compiler:
+
+<img width="242" alt="compiler_passes" src="https://github.com/user-attachments/assets/58b2c401-b813-4a6c-a456-e6a39018c0b2" />
+
 
 ## Output
 
