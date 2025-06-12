@@ -9,6 +9,11 @@ These are the compiler passes I made for the compiler:
 
 You need to build with pyinstaller and build cd.py:
 
+```
+function test() {
+  console.log("notice the blank line before this function?");
+}
+```
 
 ## Output
 
