@@ -14,7 +14,13 @@ pyinstaller path/to/cd.py
 
 This will build the compiler driver with the compiler inside for your architecture host.
 
-## How to test the compiler 
+## Testing
+
+I tested the compiler against a Test Suite of many test cases. So it works.
+
+![Screenshot 2025-06-11 174118](https://github.com/user-attachments/assets/2dd0346a-8c94-4f6c-bcb6-278d7856f37a)
+
+## How to use the compiler 
 ```
 ./path/to/cd --lastStage --noLink -lLibraryName path/to/cFile.c 
 ```
