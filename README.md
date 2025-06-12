@@ -13,7 +13,7 @@ This will build the compiler driver with the compiler inside for your architectu
 
 ## How to test the compiler 
 ```
-./path/to/cd --lastStage --noLink -lLibraryName --lastStage --noLink -lLibraryName path/to/cFile.c 
+./path/to/cd --lastStage --noLink -lLibraryName path/to/cFile.c 
 ```
 
 
