@@ -56,6 +56,9 @@ class TokenType(Enum):
     AMPERSAND = 49
     OPEN_BRACKET = 50
     CLOSE_BRACKET = 51
+    CHAR_KW = 52
+    CHAR_CONST = 53
+    STRING_LITERAL = 54
 
 def Lex(buffer, iFile):
     tokenList = []
@@ -158,12 +161,33 @@ def Lex(buffer, iFile):
         if dd:
             continue
 
+        isStringLiteral = r"\"([^\'\\\n]|\\[\'\"\?\\abfnrtv])*\""
+        sl = re.match(isStringLiteral, buffer)
+        if sl:
+            #print("Ale")
+            tokenList.append((sl.group(), TokenType.STRING_LITERAL, LineNumber))
+            buffer = sl.string[sl.span()[1]:]
+            continue
+
+        isCharacterConstant = r"\'([^\'\\\n]|\\[\'\"\?\\abfnrtv])\'"
+        cc = re.match(isCharacterConstant, buffer)
+        if cc:
+            #print("Ale")
+            tokenList.append((cc.group(), TokenType.CHAR_CONST, LineNumber))
+            buffer = cc.string[cc.span()[1]:]
+            continue
+
+
+
         is_alphanumeric = r"[a-zA-Z_]\w*\b"
         alphanumeric = re.match(is_alphanumeric, buffer)
         if alphanumeric:
             
             match alphanumeric.group():
                 
+                case "char":
+                    tokenList.append(("char", TokenType.CHAR_KW, LineNumber))
+
                 case "double":
                     tokenList.append(("double", TokenType.DOUBLE_KW, LineNumber))
 
