@@ -1,38 +1,18 @@
-int main(void)
-{
-    
-    char a = "\'";
+/* Test that we can use strings literals as function arguments/return values */
 
-    //char a = '\??';
+#ifdef SUPPRESS_WARNINGS
+#ifdef __clang__
+#pragma clang diagnostic ignored "-Wincompatible-library-redeclaration"
+#else
+#pragma GCC diagnostic ignored "-Wbuiltin-declaration-mismatch"
+#endif
+#endif
 
+unsigned long strlen(char *s);
 
-    
-    char *str_ptr = 'abc\'\n\"\?';
-
-    /*
-    char a = '\"';
-    char a = '\?';
-    char a = '\\';
-    char a = '\a';
-    char a = '\b';
-    char a = '\f';
-    char a = '\n';
-    char a = '\r';
-    char a = '\t';
-    char a = '\v';
-    */
-
-    /*
-    char (*array_ptr)[4] = &"abc";
-    
-    
-    array_ptr + 1;
-    str_ptr + 1;
-    
-    //this is illegal!
-    char *ptr = "abc";
-    ptr[0] = 'x';
-    */
-    
-
+char *return_string(void) {
+    // constant strings have static storage duration,
+    // so this will persist after the function call;
+    return "I'm a string!";
 }
+

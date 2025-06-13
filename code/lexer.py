@@ -161,7 +161,7 @@ def Lex(buffer, iFile):
         if dd:
             continue
 
-        isStringLiteral = r"\"([^\'\\\n]|\\[\'\"\?\\abfnrtv])*\""
+        isStringLiteral = r"\"([^\"\\\n]|\\[\'\"\\\?abfnrtv])*\""
         sl = re.match(isStringLiteral, buffer)
         if sl:
             #print("Ale")
