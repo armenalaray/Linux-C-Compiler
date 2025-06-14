@@ -238,7 +238,7 @@ def typeCheckAndConvert(exp, symbolTable):
             return typedExp
 
 def isAnLvalue(exp):
-    if type(exp) == parser.Var_Expression or type(exp) == parser.Dereference or type(exp) == parser.Subscript:
+    if type(exp) == parser.StringExpression or type(exp) == parser.Var_Expression or type(exp) == parser.Dereference or type(exp) == parser.Subscript:
         return True
     
     return False
@@ -282,8 +282,8 @@ def typeCheckExpression(exp, symbolTable):
                     print("Error: Variable {0} used as function name.".format(id))
                     sys.exit(1)
 
-        case parser.StringExpression():
-            pass
+        case parser.StringExpression(string = string):
+            return parser.StringExpression(string, parser.ArrayType(parser.CharType(), len(string) + 1))
 
         case parser.Dereference(exp = exp):
             typedInner = typeCheckAndConvert(exp, symbolTable)

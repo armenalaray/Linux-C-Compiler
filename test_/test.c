@@ -7,5 +7,6 @@ int main(void) {
     unsigned char a[10][10] = {{'a', 4000}};
     signed char e[10][10] = {{'a', 4000}};
 
-    "Alejandro";
+    &"\n\'\t";
+    *"\n\'\t" = 2;
 }

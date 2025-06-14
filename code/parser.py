@@ -267,6 +267,7 @@ class Type:
         return self.__str__()
 
 class CharType(Type, Node):
+    
     def __init__(self):
         super().__init__()
         self.size = 1
@@ -478,7 +479,7 @@ class ArrayType(Type, Node):
     
     def printNode(self, level):
         output = "ArrayType( "
-
+        #print(self.size)
         output += self.elementType.printNode(level) + ", size: " + str(self.size)
         output += ")"
         return output
