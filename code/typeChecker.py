@@ -41,9 +41,14 @@ class StaticAttributes(IdentifierAttributes):
     
     def __repr__(self):
         return self.__str__()
-
+    
 class LocalAttributes(IdentifierAttributes):
     pass
+
+class ConstantAttr(IdentifierAttributes):
+    def __init__(self, staticInit):
+        self.staticInit = staticInit
+
 
 class InitialValue:
     pass
@@ -72,7 +77,6 @@ class CharInit(StaticInit):
     def __str__(self):
         return "{self.int}".format(self=self)
     
-
 class UCharInit(StaticInit):
     def __init__(self, int_):
         self.int = ctypes.c_uint8(int(int_))
@@ -116,12 +120,25 @@ class DoubleInit(StaticInit):
     def __str__(self):
         return "{self.double}".format(self=self)
 
+class StringInit(StaticInit):
+    def __init__(self, string, nullT):
+        self.string = string
+        self.nullT = nullT
+
+class PointerInit(StaticInit):
+    def __init__(self, name):
+        self.name = name
+
+
 class ZeroInit(StaticInit):
     def __init__(self, bytes):
         self.bytes = bytes
 
     def __str__(self):
         return "{self.bytes}".format(self=self)
+
+
+
 
 def getCommonType(type1, type2):
     
@@ -196,7 +213,7 @@ def getCommonPointerType(exp1, exp2):
 
 
 def isCharacterType(targetType):
-    if parser.CharType or type(targetType) == parser.SCharType or type(targetType) == parser.UCharType:
+    if type(targetType) == parser.CharType or type(targetType) == parser.SCharType or type(targetType) == parser.UCharType:
         return True
     return False
 
@@ -662,8 +679,13 @@ def AnnotateInitializer(varDecl, type_, init, initList):
 
     match type_, init:
         case parser.ArrayType(elementType = elementType, size = size), parser.SingleInit(exp = exp, retType = retType):
-            print("Error: Scalar Initializer for Array Type.")
-            sys.exit(1)
+
+            match exp:
+                case parser.StringExpression():
+                    pass
+                case _:
+                    print("Error: Scalar Initializer for Array Type.")
+                    sys.exit(1)
             
 
         case _, parser.SingleInit(exp = exp, retType = retType):
@@ -840,7 +862,31 @@ def zeroInitializer(elementType):
     pass
 
 def typeCheckInitializer(targetType, initializer, symbolTable):
+    
     match targetType, initializer:
+        
+        case parser.ArrayType(elementType = elementType, size = size), parser.SingleInit(exp = exp):
+            match exp:
+                case parser.StringExpression(string = string):
+                    if not isCharacterType(elementType):
+                        print("Error: Cannot initialize a non character type with a string literal. {0}".format(elementType))
+                        sys.exit(1)
+                    
+                    if len(string) > size:
+                        print("Error: Too many characters in string literal.")
+                        sys.exit(1)
+                    
+                    return parser.SingleInit(parser.StringExpression(string, targetType), targetType)
+
+                case _:
+                    print("Error: Scalar Initializer for Array Type.")
+                    sys.exit(1)
+                    
+                    #e = typeCheckAndConvert(exp, symbolTable)
+                    #e = convertByAssignment(e, targetType)
+                    #return parser.SingleInit(e, targetType)
+
+
         case _, parser.SingleInit(exp = exp):
             e = typeCheckAndConvert(exp, symbolTable)
             e = convertByAssignment(e, targetType)
@@ -860,7 +906,6 @@ def typeCheckInitializer(targetType, initializer, symbolTable):
                 typeCheckedList.append(zeroInitializer(elementType))
 
             return parser.CompoundInit(typeCheckedList, targetType)
-
 
 
         case _:
