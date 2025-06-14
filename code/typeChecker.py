@@ -282,6 +282,9 @@ def typeCheckExpression(exp, symbolTable):
                     print("Error: Variable {0} used as function name.".format(id))
                     sys.exit(1)
 
+        case parser.StringExpression():
+            pass
+
         case parser.Dereference(exp = exp):
             typedInner = typeCheckAndConvert(exp, symbolTable)
             #typedInner = typeCheckExpression(exp, symbolTable)

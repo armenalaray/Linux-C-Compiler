@@ -84,9 +84,12 @@ def resolveExpression(expression, idMap):
             indexExp = resolveExpression(indexExp, idMap)
             return parser.Subscript(ptrExp, indexExp)
 
+        case parser.StringExpression(string = string):
+            return parser.StringExpression(string)
+
         case _:
             #print(type(exp))
-            print("Invalid expression type: {0}".format(type(exp)))
+            print("Invalid expression type: {0}".format(type(expression)))
             sys.exit(1)
 
 global_value = 0
