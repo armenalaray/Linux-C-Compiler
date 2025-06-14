@@ -1013,6 +1013,26 @@ class FunctionCall_Exp(Expression, Node):
 class Const:
     pass
 
+class ConstChar(Const, Node):
+    def __init__(self, int):
+        self.int = int
+    
+    def __str__(self):
+        return "{self.int}".format(self=self)
+    
+    def printNode(self, level):
+        return "{}".format(self.int)
+
+class ConstUChar(Const, Node):
+    def __init__(self, int):
+        self.int = int
+    
+    def __str__(self):
+        return "{self.int}".format(self=self)
+    
+    def printNode(self, level):
+        return "{}".format(self.int)
+
 class ConstInt(Const, Node):
     def __init__(self, int):
         self.int = int
@@ -1066,14 +1086,6 @@ class ConstDouble(Const, Node):
     def printNode(self, level):
         return "{}".format(self.double)
     
-class ConstChar(Const, Node):
-    def __init__(self, double):
-        self.int = int
-
-class ConstUChar(Const, Node):
-    def __init__(self, double):
-        self.int = int
-
 
 class UnopType(Enum):
     NEGATE = 1

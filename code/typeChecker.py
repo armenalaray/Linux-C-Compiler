@@ -792,8 +792,19 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
 
     return parser.VariableDecl(varDecl.identifier, varDecl.varType, varDecl.initializer, varDecl.storageClass)
 
+#esta funcion es para locales
 def zeroInitializer(elementType):
     match elementType:
+
+        case parser.CharType():
+            return parser.SingleInit(parser.Constant_Expression(parser.ConstChar(0), elementType), elementType)
+        
+        case parser.UCharType():
+            return parser.SingleInit(parser.Constant_Expression(parser.ConstUChar(0), elementType), elementType)
+
+        case parser.SCharType():
+            return parser.SingleInit(parser.Constant_Expression(parser.ConstChar(0), elementType), elementType)
+        
         case parser.IntType():
             return parser.SingleInit(parser.Constant_Expression(parser.ConstInt(0), elementType), elementType)
         
