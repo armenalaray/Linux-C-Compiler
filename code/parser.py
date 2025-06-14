@@ -265,6 +265,71 @@ class Type:
 
     def __repr__(self):
         return self.__str__()
+
+class CharType(Type, Node):
+    def __init__(self):
+        super().__init__()
+        self.size = 1
+        self.isSigned = True
+
+    def getBaseTypeSize(self, occupied):
+        return self.size
+
+    def __str__(self):
+        return "char"
+    
+    def printNode(self, level):
+        return "char"
+    
+    def checkType(self, other):
+        if type(other) == CharType:
+            return True
+
+        return False
+    
+
+class SCharType(Type, Node):
+    def __init__(self):
+        super().__init__()
+        self.size = 1
+        self.isSigned = True
+
+    def getBaseTypeSize(self, occupied):
+        return self.size
+
+    def __str__(self):
+        return "signed char"
+    
+    def printNode(self, level):
+        return "signed char"
+    
+    def checkType(self, other):
+        if type(other) == SCharType:
+            return True
+
+        return False
+    
+
+class UCharType(Type, Node):
+    def __init__(self):
+        super().__init__()
+        self.size = 1
+        self.isSigned = False
+
+    def getBaseTypeSize(self, occupied):
+        return self.size
+
+    def __str__(self):
+        return "unsigned char"
+    
+    def printNode(self, level):
+        return "unsigned char"
+    
+    def checkType(self, other):
+        if type(other) == UCharType:
+            return True
+
+        return False
     
 
 class IntType(Type, Node):
@@ -675,12 +740,30 @@ class Expression:
     retType = None
     def __repr__(self):
         return self.__str__()
+
+class StringExpression(Expression, Node):
+    def __init__(self, string, retType = None):
+        self.string = string
+        self.retType = retType
+
+    def __str__(self):
+        return "{self.string} RetType: {self.retType}".format(self=self)
     
+    def printNode(self, level):
+        output = "("
+        output += self.string
+
+        if self.retType:
+            output +=  ' : ' + self.retType.printNode(level)
+
+        output += ")"
+        return output    
+
 class Dereference(Expression, Node):
     def __init__(self, exp, retType = None):
         self.exp = exp
         self.retType = retType
-    
+
     def __str__(self):
         return "*{self.exp} RetType: {self.retType}".format(self=self)
     
@@ -983,6 +1066,14 @@ class ConstDouble(Const, Node):
     def printNode(self, level):
         return "{}".format(self.double)
     
+class ConstChar(Const, Node):
+    def __init__(self, double):
+        self.int = int
+
+class ConstUChar(Const, Node):
+    def __init__(self, double):
+        self.int = int
+
 
 class UnopType(Enum):
     NEGATE = 1
@@ -1326,101 +1417,6 @@ def processAbstractDeclarator(abstractD, baseType):
             sys.exit(1)
 
 
-
-"""
-
-def parseFactor(tokenList):
-
-    token = peek(tokenList, 1)
-    token_ = peek(tokenList)
-
-    #print(token)
-
-    if isTypeSpecifier(token) and token_[1] == TokenType.OPEN_PAREN:
-        takeToken(tokenList)
-        #expect(TokenType.OPEN_PAREN, tokenList)
-
-        token = peek(tokenList)
-
-        types = []
-        while isTypeSpecifier(token):
-            types.append(takeToken(tokenList))
-            token = peek(tokenList)
-
-        type = parseTypes(types)
-
-        token = peek(tokenList)
-
-        if token[1] == TokenType.ASTERISK or token[1] == TokenType.OPEN_PAREN or token[1] == TokenType.OPEN_BRACKET:
-
-            abstractD = parseAbstractDeclarator(tokenList)
-
-            print("{0} {1}".format(type, abstractD))
-
-            type = processAbstractDeclarator(abstractD, type)
-
-
-        expect(TokenType.CLOSE_PAREN, tokenList)
-
-        exp = parseFactor(tokenList)
-
-        return Cast_Expression(type, exp)
-        
-    #esta pensando q es una funcion!
-    if token_[1] == TokenType.IDENTIFIER and token[1] == TokenType.OPEN_PAREN:
-        iden = parseIdentifier(tokenList)
-        expect(TokenType.OPEN_PAREN, tokenList)
-
-        token = peek(tokenList)
-        if token[1] == TokenType.CLOSE_PAREN:
-            expect(TokenType.CLOSE_PAREN, tokenList)
-            return FunctionCall_Exp(iden)
-            
-        expList = parseArgumentList(tokenList)
-
-        expect(TokenType.CLOSE_PAREN, tokenList)
-        return FunctionCall_Exp(iden, expList)
-
-
-    #Aqui se usa el primero
-    token = peek(tokenList)
-
-    if isConstant(token):
-        const = parseConstant(tokenList)
-        #print(const)
-        return Constant_Expression(const)
-    
-    elif token[1] == TokenType.IDENTIFIER:
-        id = parseIdentifier(tokenList)
-        return Var_Expression(id)
-
-    elif token[1] == TokenType.ASTERISK:
-        takeToken(tokenList)
-        inner_exp = parseFactor(tokenList)
-        return Dereference(inner_exp)
-    
-    elif token[1] == TokenType.AMPERSAND:
-        takeToken(tokenList)
-        inner_exp = parseFactor(tokenList)
-        return AddrOf(inner_exp)
-
-    elif token[1] == TokenType.TILDE or token[1] == TokenType.HYPHEN or token[1] == TokenType.EXCLAMATION:
-        operator = parseUnop(tokenList)
-        inner_exp = parseFactor(tokenList)
-        return Unary_Expression(operator, inner_exp)
-        
-    elif token[1] == TokenType.OPEN_PAREN:
-        takeToken(tokenList)
-        inner_exp = parseExp(tokenList, 0)
-        expect(TokenType.CLOSE_PAREN, tokenList)
-        return inner_exp
-        
-    else:
-        print("Malformed expression at Line {0}.".format(token[2]))
-        sys.exit(1)
-
-"""
-
 precTable = {
     TokenType.ASTERISK : 50, 
     TokenType.FORWARD_SLASH : 50,
@@ -1504,6 +1500,19 @@ def parsePrimaryExp(tokenList):
         inner_exp = parseExp(tokenList, 0)
         expect(TokenType.CLOSE_PAREN, tokenList)
         return inner_exp
+    
+    elif token[1] == TokenType.STRING_LITERAL:
+        sLL = []
+        sLL.append(takeToken(tokenList)[0])
+        
+        token = peek(tokenList)
+        while token[1] == TokenType.STRING_LITERAL:
+            sLL.append(takeToken(tokenList)[0])
+            token = peek(tokenList)
+        
+        result = "".join(sLL)
+        print(result)
+        return StringExpression(result)
         
     else:
         print("Malformed expression at Line {0}.".format(token[2]))
@@ -1778,7 +1787,7 @@ def parseTypes(rawTypes):
 
     if types == [TokenType.DOUBLE_KW]:
         return DoubleType()
-
+    
     if TokenType.DOUBLE_KW in types:
         print("Error: Can't combine double with other type specifiers.")
         sys.exit(1)
@@ -1791,6 +1800,19 @@ def parseTypes(rawTypes):
 
     if TokenType.UNSIGNED_KW in setTypes and TokenType.SIGNED_KW in setTypes:
         print("Invalid Type Specifier.")
+        sys.exit(1)
+
+    if len(setTypes) == 2 and TokenType.UNSIGNED_KW in setTypes and TokenType.CHAR_KW in setTypes:
+        return UCharType()
+    
+    if len(setTypes) == 2 and TokenType.SIGNED_KW in setTypes and TokenType.CHAR_KW in setTypes:
+        return SCharType()
+
+    if len(setTypes) == 1 and TokenType.CHAR_KW in setTypes:
+        return CharType()
+    
+    if TokenType.CHAR_KW in setTypes:
+        print("Error: Can't combine char with other type specifiers.")
         sys.exit(1)
 
     if TokenType.UNSIGNED_KW in setTypes and TokenType.LONG_KW in setTypes:
@@ -1817,6 +1839,8 @@ def parseTypeAndStorageClass(specifierList):
             storageClasses.append(specifier)
             
     type = parseTypes(types)
+
+    print(type)
 
     if len(storageClasses) > 1:
         print("Invalid Storage Class.")
@@ -2052,60 +2076,10 @@ def parseBlock(tokenList):
     return Block(BlockItemList)
 
 def isTypeSpecifier(token):
-    if token[1] == TokenType.INT_KW or token[1] == TokenType.LONG_KW or token[1] == TokenType.SIGNED_KW or token[1] == TokenType.UNSIGNED_KW or token[1] == TokenType.DOUBLE_KW: 
+    if token[1] == TokenType.INT_KW or token[1] == TokenType.LONG_KW or token[1] == TokenType.SIGNED_KW or token[1] == TokenType.UNSIGNED_KW or token[1] == TokenType.DOUBLE_KW or token[1] == TokenType.CHAR_KW: 
         return True
     
     return False
-
-def parseParamList_(tokenList):
-    paramNames = []
-    paramTypes = []
-
-    token = peek(tokenList)
-
-    if token[1] == TokenType.VOID_KW:
-        takeToken(tokenList)
-        return paramTypes, paramNames
-    
-    #parseTypeSpecifier(tokenList, paramTypes)
-    
-    types = []
-    while isTypeSpecifier(token):
-        types.append(takeToken(tokenList))
-        token = peek(tokenList)
-
-    type = parseTypes(types)
-    paramTypes.append(type)
-
-    iden = parseIdentifier(tokenList)
-    paramNames.append(iden)
-
-    token = peek(tokenList)
-
-
-    while token[1] == TokenType.COMMA:
-        takeToken(tokenList)
-        
-        types = []
-        token = peek(tokenList)
-
-        while isTypeSpecifier(token):
-            types.append(takeToken(tokenList))
-            token = peek(tokenList)
-
-
-        type = parseTypes(types)
-        paramTypes.append(type)
-        
-
-        iden = parseIdentifier(tokenList)
-        paramNames.append(iden)
-
-        token = peek(tokenList)
-
-    
-
-    return paramTypes, paramNames
 
 def parseParam(tokenList):
     types = []

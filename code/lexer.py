@@ -164,16 +164,99 @@ def Lex(buffer, iFile):
         isStringLiteral = r"\"([^\"\\\n]|\\[\'\"\\\?abfnrtv])*\""
         sl = re.match(isStringLiteral, buffer)
         if sl:
-            #print("Ale")
-            tokenList.append((sl.group(), TokenType.STRING_LITERAL, LineNumber))
+            """
+            """
+            sliced = sl.group()[1:len(sl.group())-1]
+            lSliced = list(sliced)
+            
+            unScapedL = []
+            print(lSliced)
+
+            while lSliced != []:
+                value = None
+                char = lSliced.pop(0)
+                match char:
+                    case '\\':
+                        char = lSliced.pop(0) 
+                        match char:
+                            case '\'':
+                                value = '\''
+                            case '\"':
+                                value = '\"'
+                            case '?':
+                                value = '?'
+                            case '\\':
+                                value = '\\'
+                            case 'a':
+                                value = '\a'
+                            case 'b':
+                                value = '\b'
+                            case 'f':
+                                value = '\f'
+                            case 'n':
+                                value = '\n'
+                            case 'r':
+                                value = '\r'
+                            case 't':
+                                value = '\t'
+                            case 'v':
+                                value = '\v' 
+                    case _:
+                        value = char
+                
+                unScapedL.append(value)
+            
+            print(unScapedL)
+
+            a = "".join(unScapedL)
+            print(a)
+            tokenList.append((a, TokenType.STRING_LITERAL, LineNumber))
             buffer = sl.string[sl.span()[1]:]
             continue
 
         isCharacterConstant = r"\'([^\'\\\n]|\\[\'\"\?\\abfnrtv])\'"
         cc = re.match(isCharacterConstant, buffer)
         if cc:
-            #print("Ale")
-            tokenList.append((cc.group(), TokenType.CHAR_CONST, LineNumber))
+            sliced = cc.group()[1:len(cc.group())-1]
+            #print(sliced)
+            asciiValue = None
+            #ale = "Ale\n"
+            #print(ale)
+            match sliced[0]:
+                case '\\':
+                    match sliced[1]:
+                        case '\'':
+                            asciiValue = ord('\'')
+                        case '\"':
+                            asciiValue = ord('\"')
+                        case '?':
+                            asciiValue = ord('?')
+                        case '\\':
+                            asciiValue = ord('\\')
+                        case 'a':
+                            asciiValue = ord('\a')
+                        case 'b':
+                            asciiValue = ord('\b')
+                        case 'f':
+                            asciiValue = ord('\f')
+                        case 'n':
+                            asciiValue = ord('\n')
+                        case 'r':
+                            asciiValue = ord('\r')
+                        case 't':
+                            asciiValue = ord('\t')
+                        case 'v':
+                            asciiValue = ord('\v')
+
+                case _:
+                    asciiValue = ord(sliced[0])
+
+            if asciiValue == None:
+                print("Error invalid token: {0} at Line: {1}".format(buffer, LineNumber))
+                os.remove(iFile)
+                sys.exit(1)
+
+            tokenList.append((asciiValue, TokenType.INT_CONSTANT, LineNumber))
             buffer = cc.string[cc.span()[1]:]
             continue
 
