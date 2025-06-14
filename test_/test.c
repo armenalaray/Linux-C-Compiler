@@ -1,23 +1,10 @@
 
-/*
-char unsigned a = '\"';
-char unsigned a = '\?';
-char unsigned a = '\\';
-char unsigned a = '\a';
-char unsigned a = '\b';
-char unsigned a = '\f';
-char unsigned a = '\n';
-char unsigned a = '\r';
-char unsigned a = '\t';
-char unsigned a = '\v';
-*/
+unsigned char d = 4000;
+char b = 'b';
+signed char c = 'a';
+unsigned char a[10][10] = {{'a', 4000}};
 
-//char ale[5] = "Alejando\'\"\?\\\a\b\f\n\r\t\v";
-
-
-int main(void)
-{
-    return "Alejando\'\"\?\\\a\b\f\n\r\t\v" "Alejando\'\"\?\\\a\b\f\n\r\t\v" "Alejando\'\"\?\\\a\b\f\n\r\t\v";
+int main(void) {
     
-    char unsigned a = '\'';
+
 }

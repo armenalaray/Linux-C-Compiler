@@ -1208,7 +1208,7 @@ def parseConstant(tokenList):
     match token[1]:
         case TokenType.DOUBLE_CONSTANT:
             v = float(digitString)
-            print(v)
+            #print(v)
             return ConstDouble(v)
 
         case _:
@@ -1511,7 +1511,7 @@ def parsePrimaryExp(tokenList):
             token = peek(tokenList)
         
         result = "".join(sLL)
-        print(result)
+        #print(result)
         return StringExpression(result)
         
     else:
@@ -1585,7 +1585,7 @@ def parseUnaryExp(tokenList):
 
             abstractD = parseAbstractDeclarator(tokenList)
 
-            print("{0} {1}".format(type, abstractD))
+            #print("{0} {1}".format(type, abstractD))
 
             type = processAbstractDeclarator(abstractD, type)
 
@@ -1779,7 +1779,7 @@ def parseStatement(tokenList):
 def parseTypes(rawTypes):
     types = [x[1] for x in rawTypes]
 
-    print(types)
+    #print(types)
 
     if types == []:
         print("Invalid Type Specifier.")
@@ -1840,7 +1840,7 @@ def parseTypeAndStorageClass(specifierList):
             
     type = parseTypes(types)
 
-    print(type)
+    #print(type)
 
     if len(storageClasses) > 1:
         print("Invalid Storage Class.")
@@ -2023,7 +2023,7 @@ def parseDeclaration(tokenList):
 
     declarator = parseDeclarator(tokenList)
 
-    print(baseType, declarator)
+    #print(baseType, declarator)
 
     name, declType, params = processDeclarator(declarator, baseType)
 

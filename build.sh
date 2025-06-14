@@ -4,7 +4,7 @@
 # My compiler
 
 
-lastStage="--parse"
+lastStage="--validate"
 #noLink="-c"
 library="-lmath.h"
 
@@ -21,7 +21,7 @@ fi
 #cd ./../
 #echo "$(pwd)"
 #pyinstaller --onefile "$(pwd)"/CComp/code/cd.py
-#./writing-a-c-compiler-tests/test_compiler "$(pwd)"/dist/cd --chapter 16 --stage lex
+#./writing-a-c-compiler-tests/test_compiler "$(pwd)"/dist/cd --chapter 16 --stage parse
 
 
 

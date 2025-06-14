@@ -64,6 +64,21 @@ class NoInitializer(InitialValue):
 class StaticInit:
     def __repr__(self):
         return self.__str__()
+    
+class CharInit(StaticInit):
+    def __init__(self, int_):
+        self.int = ctypes.c_int8(int(int_))
+    
+    def __str__(self):
+        return "{self.int}".format(self=self)
+    
+
+class UCharInit(StaticInit):
+    def __init__(self, int_):
+        self.int = ctypes.c_uint8(int(int_))
+    
+    def __str__(self):
+        return "{self.int}".format(self=self)
 
 class IntInit(StaticInit):
     def __init__(self, int_):
@@ -109,17 +124,19 @@ class ZeroInit(StaticInit):
         return "{self.bytes}".format(self=self)
 
 def getCommonType(type1, type2):
-    if type(type1) == type(type2):
+    
+    if isCharacterType(type1):
+        type1 = parser.IntType()
+
+    if isCharacterType(type2):
+        type2 = parser.IntType()
+
+    if type1.checkType(type2):
         return type1
     
-    print("Ale")
-
     if type(type1) == parser.DoubleType or type(type2) == parser.DoubleType:
         return parser.DoubleType()
     
-    print("Type 1:\n\tIs Signed:", type1.isSigned, "Size:", type1.size)
-    print("Type 2:\n\tIs Signed:", type2.isSigned, "Size:", type2.size)
-
     if type1.size == type2.size:
         if type1.isSigned:
             return type2
@@ -131,12 +148,10 @@ def getCommonType(type1, type2):
     else:
         return type2
 
-#se hace explicito!
 def convertTo(exp, resultType):
     if type(exp.retType) == type(resultType):
         return exp
     
-    #print("Ale")
     return parser.Cast_Expression(resultType, exp, resultType)
 
 def isNullPointerConstant(exp):
@@ -180,14 +195,19 @@ def getCommonPointerType(exp1, exp2):
     sys.exit(1)
 
 
+def isCharacterType(targetType):
+    if parser.CharType or type(targetType) == parser.SCharType or type(targetType) == parser.UCharType:
+        return True
+    return False
+
 def isIntegerType(targetType):
-    if type(targetType) == parser.IntType or type(targetType) == parser.LongType or type(targetType) == parser.UIntType or type(targetType) == parser.ULongType:
+    if isCharacterType(targetType) or type(targetType) == parser.IntType or type(targetType) == parser.LongType or type(targetType) == parser.UIntType or type(targetType) == parser.ULongType:
         return True
     
     return False
 
 def isArithmeticType(targetType):
-    if type(targetType) == parser.IntType or type(targetType) == parser.LongType or type(targetType) == parser.UIntType or type(targetType) == parser.ULongType or type(targetType) == parser.DoubleType:
+    if isIntegerType(targetType) or type(targetType) == parser.DoubleType:
         return True
     
     return False
@@ -358,9 +378,8 @@ def typeCheckExpression(exp, symbolTable):
                     print("Invalid Constant Type. {0}".format(type(const)))
                     sys.exit(1)
 
-        case parser.Unary_Expression(operator=op, expression=exp):
-            e = typeCheckAndConvert(exp, symbolTable)
-            #e = typeCheckExpression(exp, symbolTable)
+        case parser.Unary_Expression(operator=op, expression=exp_):
+            e = typeCheckAndConvert(exp_, symbolTable)
             
             match op.operator:
                 case parser.UnopType.COMPLEMENT:
@@ -371,6 +390,9 @@ def typeCheckExpression(exp, symbolTable):
                     if type(e.retType) == parser.PointerType:
                         print("Error: Can't take the bitwise complement of a pointer.")
                         sys.exit(1)
+                    
+                    if isCharacterType(e.retType):
+                        e = convertTo(e, parser.IntType())
                         
                     return parser.Unary_Expression(op, e, e.retType)
 
@@ -379,6 +401,9 @@ def typeCheckExpression(exp, symbolTable):
                         print("Error: Can't negate a pointer.")
                         sys.exit(1)
 
+                    if isCharacterType(e.retType):
+                        e = convertTo(e, parser.IntType())
+                        
                     return parser.Unary_Expression(op, e, e.retType)
 
                 case parser.UnopType.NOT:
@@ -483,7 +508,6 @@ def typeCheckExpression(exp, symbolTable):
                         return typeCheckCommonArithmeticBinaryExp(op, l, r)
 
                     elif type(l.retType) == parser.PointerType and isIntegerType(r.retType):
-
                         convertedE2 = convertTo(r, parser.LongType())
                         return parser.Binary_Expression(op, l, convertedE2, l.retType)
                         
@@ -551,6 +575,15 @@ def GetStaticInitializer(varType, int):
 
         case parser.PointerType():
             return ULongInit(int)
+        
+        case parser.CharType():
+            return CharInit(int)
+
+        case parser.SCharType():
+            return CharInit(int)
+
+        case parser.UCharType():
+            return UCharInit(int)
 
         case _:
             print("Error: Invalid Variable Type. {0}".format(varType))
@@ -651,15 +684,12 @@ def AnnotateInitializer(varDecl, type_, init, initList):
                             temp = convertByAssignment(temp, type_)
                             initList.append(GetStaticInitializer(type_, int))                            
                             return parser.SingleInit(temp, type_)
-                            varDecl.initializer = parser.SingleInit(temp, type_)
                             
                         case parser.ConstUInt(int = int):
                             temp = parser.Constant_Expression(const, parser.UIntType())
                             temp = convertByAssignment(temp, type_)
                             initList.append(GetStaticInitializer(type_, int))                            
                             return parser.SingleInit(temp, type_)
-                        
-                            varDecl.initializer = parser.SingleInit(temp, type_)
                         
                         case parser.ConstDouble(double=double):
                             temp = parser.Constant_Expression(const, parser.DoubleType())
