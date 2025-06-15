@@ -969,8 +969,10 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
             dst = TAC_emitTackyAndConvert(exp, instructions, symbolTable)
             return DereferencedPointer(dst)
 
-        case parser.StringExpression():
-            pass
+        case parser.StringExpression(string = string, retType = retType):
+            tmp = makeTemp()
+            symbolTable[tmp] = typeChecker.Entry(tmp, typeChecker.ConstantAttr(typeChecker.StringInit(string, True)), parser.ArrayType(parser.CharType(), len(string) + 1))
+            return PlainOperand(TAC_VariableValue(tmp))
 
         case _:
             print("Invalid Expression. {0}".format(type(expression)))
@@ -1153,15 +1155,35 @@ def TAC_parseStatement(statement, instructions, symbolTable, end=None):
             sys.exit(1)
 
 def TAC_emitInitializer(variableDecl, init, instructions, symbolTable, offset):
-    print(type(init))
     
     match init:
         case parser.SingleInit(exp = exp, retType = retType):
-            src = TAC_emitTackyAndConvert(exp, instructions, symbolTable)
+            
+            match exp:
+                case parser.StringExpression(string = string, retType = retType_):
+                    
+                    for char in string:            
+                        #print(retType)
+                        typeSize = retType.elementType.getBaseTypeSize(0)
+                        instructions.append(TAC_copyToOffset(TAC_ConstantValue(parser.ConstChar(ord(char))), variableDecl.identifier, offset[0]))
+                        offset[0] += typeSize
 
-            typeSize = retType.getBaseTypeSize(0)
-            instructions.append(TAC_copyToOffset(src, variableDecl.identifier, offset[0]))
-            offset[0] += typeSize
+                    #add zero padding
+                    
+                    print(retType.size)
+                    at = retType.size
+
+                    while at > len(string):
+                        typeSize = retType.elementType.getBaseTypeSize(0)
+                        instructions.append(TAC_copyToOffset(TAC_ConstantValue(parser.ConstChar(0)), variableDecl.identifier, offset[0]))
+                        offset[0] += typeSize
+                        at -= 1
+
+                case _:
+                    src = TAC_emitTackyAndConvert(exp, instructions, symbolTable)
+                    typeSize = retType.getBaseTypeSize(0)
+                    instructions.append(TAC_copyToOffset(src, variableDecl.identifier, offset[0]))
+                    offset[0] += typeSize
             
         case parser.CompoundInit(initializerList = initializerList, retType = retType):
 

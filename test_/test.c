@@ -1,5 +1,8 @@
+char * ale(void)
+{
+    return "A profound statement.";
+}
 
 int main(void) {
-    char a = 'a';
-    int b = a;    
+    ale();
 }
