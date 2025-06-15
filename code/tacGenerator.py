@@ -16,6 +16,18 @@ class TAC_Program:
 class TopLevel:
     pass
 
+class StaticConstant(TopLevel):
+    def __init__(self, identifier, type, staticInit):
+        self.identifier = identifier
+        self.type = type
+        self.staticInit = staticInit
+
+    def __str__(self):
+        return "{self.identifier} Type: {self.type} {self.staticInit}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+
 class StaticVariable(TopLevel):
     def __init__(self, identifier, global_, type, initList):
         self.identifier = identifier
@@ -1254,11 +1266,12 @@ def TAC_parseTopLevel(decl, symbolTable):
 def TAC_convertSymbolsToTAC(symbolTable):
     tacDefs = []
     for name, entry in symbolTable.items():
-        #print(type(entry.attrs))
+        print(entry)
         match entry.attrs:
             case typeChecker.StaticAttributes(initialVal = initialVal, global_ = global_):
                 #print(type(initialVal))
                 match initialVal:
+                    #si son tentativas se meten ahi
                     case typeChecker.Tentative():
                         #print(type(entry.type))
                         
@@ -1303,6 +1316,19 @@ def TAC_convertSymbolsToTAC(symbolTable):
                         print("Invalid Initial Val. {0}".format(initialVal))
                         sys.exit(1)
 
+            case typeChecker.ConstantAttr(staticInit = staticInit):
+                tacDefs.append(StaticConstant(entry.name, entry.type, staticInit))
+
+
+            case typeChecker.FunAttributes():
+                pass
+
+            case typeChecker.LocalAttributes():
+                pass
+
+            case _:
+                print("Error: {0} {1}".format(type(entry.attrs), entry.attrs))
+                sys.exit(1)
     #print(tacDefs)
     return tacDefs 
                 
