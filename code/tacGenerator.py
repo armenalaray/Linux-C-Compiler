@@ -538,6 +538,15 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                         case parser.IntType():
                             instructions.append(TAC_DoubleToInt(result, dst))
 
+                        case parser.SCharType():
+                            instructions.append(TAC_DoubleToInt(result, dst))
+
+                        case parser.CharType():
+                            instructions.append(TAC_DoubleToInt(result, dst))
+                            
+                        case parser.UCharType():
+                            instructions.append(TAC_DoubleToUInt(result, dst))
+
                         case parser.LongType():
                             instructions.append(TAC_DoubleToInt(result, dst))
 
@@ -549,6 +558,8 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                         
                         case parser.PointerType():
                             pass
+
+                        
                     
                 case parser.IntType():
                     match targetType:
@@ -558,7 +569,6 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                         case _:
                             CastBetweenIntegers(targetType, exp.retType, result, dst, instructions)
                             
-                
                 case parser.LongType():
                     match targetType:
                         case parser.DoubleType():
@@ -567,7 +577,6 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                         case _:
                             CastBetweenIntegers(targetType, exp.retType, result, dst, instructions)
                             
-
                 case parser.UIntType():
                     match targetType:
                         case parser.DoubleType():
@@ -575,8 +584,32 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
 
                         case _:
                             CastBetweenIntegers(targetType, exp.retType, result, dst, instructions)
-                            
 
+                case parser.SCharType():
+                    match targetType:
+                        case parser.DoubleType():
+                            instructions.append(TAC_IntToDouble(result, dst))
+
+                        case _:
+                            CastBetweenIntegers(targetType, exp.retType, result, dst, instructions)
+
+
+                case parser.CharType():
+                    match targetType:
+                        case parser.DoubleType():
+                            instructions.append(TAC_IntToDouble(result, dst))
+                            
+                        case _:
+                            CastBetweenIntegers(targetType, exp.retType, result, dst, instructions)
+
+                case parser.UCharType():
+                    match targetType:
+                        case parser.DoubleType():
+                            instructions.append(TAC_UIntToDouble(result, dst))
+                            
+                        case _:
+                            CastBetweenIntegers(targetType, exp.retType, result, dst, instructions)
+                
                 case parser.ULongType():
                     match targetType:
                         case parser.DoubleType():
@@ -593,9 +626,11 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
 
                         case _:
                             CastBetweenIntegers(targetType, exp.retType, result, dst, instructions)
+                
+                
 
                 case _:
-                    print("Invalid Cast Type.")
+                    print("Invalid Cast Type. {0}".format(type(exp.retType)))
                     sys.exit(1)
                             
             return PlainOperand(dst)
@@ -933,6 +968,9 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
         case parser.Dereference(exp=exp):
             dst = TAC_emitTackyAndConvert(exp, instructions, symbolTable)
             return DereferencedPointer(dst)
+
+        case parser.StringExpression():
+            pass
 
         case _:
             print("Invalid Expression. {0}".format(type(expression)))
