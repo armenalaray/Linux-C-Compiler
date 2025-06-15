@@ -774,17 +774,14 @@ def AnnotateInitializer(varDecl, type_, init, initList, symbolTable):
                     symbolTable[tmp] = Entry(tmp, ConstantAttr(StringInit(string, True)), parser.ArrayType(parser.CharType(), len(string) + 1))
 
                     initList.append(PointerInit(tmp))
+
+                    return parser.SingleInit(parser.StringExpression(string, type_), type_)
                 
                 case _:
-                    AnnotateSingleInit(exp, type_)
-                    
-            
+                    return AnnotateSingleInit(exp, type_)
 
         case _, parser.SingleInit(exp = exp, retType = retType):
-            #match exp:
-            #   case parser.Constant_Expression():
-
-            AnnotateSingleInit(exp, type_)
+            return AnnotateSingleInit(exp, type_)
 
         case parser.ArrayType(elementType = elementType, size = size), parser.CompoundInit(initializerList = initializerList, retType = retType):
             
@@ -795,7 +792,7 @@ def AnnotateInitializer(varDecl, type_, init, initList, symbolTable):
             astInitList = []
             index  = 0
             for astInit in initializerList:
-                i = AnnotateInitializer(varDecl, elementType, astInit, initList)
+                i = AnnotateInitializer(varDecl, elementType, astInit, initList, symbolTable)
                 astInitList.append(i)
                 index += 1
 
