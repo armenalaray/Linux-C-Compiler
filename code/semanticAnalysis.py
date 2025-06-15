@@ -97,7 +97,6 @@ global_value = 0
 def makeTemporary(id):
     global global_value
     name = "{0}.{1}".format(id, global_value)
-    #print(name)
     global_value += 1
     return name
 

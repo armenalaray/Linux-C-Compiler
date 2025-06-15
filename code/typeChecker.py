@@ -3,6 +3,8 @@ from enum import Enum
 import ctypes
 import parser
 
+from semanticAnalysis import makeTemporary
+
 class Entry:
     def __init__(self, name, attrs, type, funType=None):
         self.name = name
@@ -48,6 +50,9 @@ class LocalAttributes(IdentifierAttributes):
 class ConstantAttr(IdentifierAttributes):
     def __init__(self, staticInit):
         self.staticInit = staticInit
+
+    def __str__(self):
+        return "{self.staticInit}".format(self=self)
 
 
 class InitialValue:
@@ -124,10 +129,16 @@ class StringInit(StaticInit):
     def __init__(self, string, nullT):
         self.string = string
         self.nullT = nullT
+    
+    def __str__(self):
+        return "({self.string}, AddZero: {self.nullT})".format(self=self)
 
 class PointerInit(StaticInit):
     def __init__(self, name):
         self.name = name
+    
+    def __str__(self):
+        return "PointerInit: {self.name}".format(self=self)
 
 
 class ZeroInit(StaticInit):
@@ -136,9 +147,6 @@ class ZeroInit(StaticInit):
 
     def __str__(self):
         return "{self.bytes}".format(self=self)
-
-
-
 
 def getCommonType(type1, type2):
     
@@ -675,60 +683,108 @@ def CreateZeroInitializer(type_, initList):
             initList.append(GetStaticInitializer(type_, 0))
             
 
-def AnnotateInitializer(varDecl, type_, init, initList):
+def AnnotateInitializer(varDecl, type_, init, initList, symbolTable):
+
+    def AnnotateSingleInit(exp, type_):
+        match exp:
+            case parser.Constant_Expression(const = const):
+                match const:
+                    case parser.ConstLong(int = int):
+                        temp = parser.Constant_Expression(const, parser.LongType())
+                        temp = convertByAssignment(temp, type_)
+                        initList.append(GetStaticInitializer(type_, int))  
+                        return parser.SingleInit(temp, type_)
+
+                    case parser.ConstInt(int = int):
+                        temp = parser.Constant_Expression(const, parser.IntType())
+                        temp = convertByAssignment(temp, type_)
+                        initList.append(GetStaticInitializer(type_, int))                            
+                        return parser.SingleInit(temp, type_)
+
+                    case parser.ConstULong(int = int):
+                        temp = parser.Constant_Expression(const, parser.ULongType())
+                        temp = convertByAssignment(temp, type_)
+                        initList.append(GetStaticInitializer(type_, int))                            
+                        return parser.SingleInit(temp, type_)
+                        
+                    case parser.ConstUInt(int = int):
+                        temp = parser.Constant_Expression(const, parser.UIntType())
+                        temp = convertByAssignment(temp, type_)
+                        initList.append(GetStaticInitializer(type_, int))                            
+                        return parser.SingleInit(temp, type_)
+                    
+                    case parser.ConstDouble(double=double):
+                        temp = parser.Constant_Expression(const, parser.DoubleType())
+                        temp = convertByAssignment(temp, type_)
+                        initList.append(GetStaticInitializer(type_, double))                            
+                        return parser.SingleInit(temp, type_)
+
+                    case _:
+                        print("Error: Invalid Constant. {0}".format(type(const)))
+                        sys.exit(1)
+                        
+            case _:
+                print("Error: Non constant expression.")
+                sys.exit(1)
 
     match type_, init:
         case parser.ArrayType(elementType = elementType, size = size), parser.SingleInit(exp = exp, retType = retType):
 
             match exp:
-                case parser.StringExpression():
-                    pass
+                case parser.StringExpression(string = string):
+                    if not isCharacterType(elementType):
+                        print("Error: Cannot initialize a non character type with a string literal. {0}".format(elementType))
+                        sys.exit(1)
+                    
+                    if len(string) > size:
+                        print("Error: Too many characters in string literal.")
+                        sys.exit(1)
+
+                    nullT = True
+                    occupiedB = len(string)
+
+                    if occupiedB == size:
+                        nullT = False
+                    elif occupiedB < size:
+                        nullT = True
+                        occupiedB += 1
+
+                    initList.append(StringInit(string, nullT))
+
+                    if occupiedB < size: 
+                        initList.append(ZeroInit(size - occupiedB))
+                    
+                    return parser.SingleInit(parser.StringExpression(string, type_), type_)
+                    
                 case _:
                     print("Error: Scalar Initializer for Array Type.")
                     sys.exit(1)
             
+        case parser.PointerType(referenceType = referenceType), parser.SingleInit(exp = exp, retType = retType):
 
-        case _, parser.SingleInit(exp = exp, retType = retType):
             match exp:
-                case parser.Constant_Expression(const = const):
-                    match const:
-                        case parser.ConstLong(int = int):
-                            temp = parser.Constant_Expression(const, parser.LongType())
-                            temp = convertByAssignment(temp, type_)
-                            initList.append(GetStaticInitializer(type_, int))  
-                            return parser.SingleInit(temp, type_)
+                case parser.StringExpression(string = string):
+                    if type(referenceType) != parser.CharType:
+                        print("Error: Cannot initialize a pointer to non char type.")
+                        sys.exit(1)
 
-                        case parser.ConstInt(int = int):
-                            temp = parser.Constant_Expression(const, parser.IntType())
-                            temp = convertByAssignment(temp, type_)
-                            initList.append(GetStaticInitializer(type_, int))                            
-                            return parser.SingleInit(temp, type_)
+                    tmp = makeTemporary("string")
+                    print(tmp)
 
-                        case parser.ConstULong(int = int):
-                            temp = parser.Constant_Expression(const, parser.ULongType())
-                            temp = convertByAssignment(temp, type_)
-                            initList.append(GetStaticInitializer(type_, int))                            
-                            return parser.SingleInit(temp, type_)
-                            
-                        case parser.ConstUInt(int = int):
-                            temp = parser.Constant_Expression(const, parser.UIntType())
-                            temp = convertByAssignment(temp, type_)
-                            initList.append(GetStaticInitializer(type_, int))                            
-                            return parser.SingleInit(temp, type_)
-                        
-                        case parser.ConstDouble(double=double):
-                            temp = parser.Constant_Expression(const, parser.DoubleType())
-                            temp = convertByAssignment(temp, type_)
-                            initList.append(GetStaticInitializer(type_, double))                            
-                            return parser.SingleInit(temp, type_)
+                    symbolTable[tmp] = Entry(tmp, ConstantAttr(StringInit(string, True)), parser.ArrayType(parser.CharType(), len(string) + 1))
 
-                        case _:
-                            print("Error: Invalid Constant. {0}".format(type(const)))
-                            sys.exit(1)
+                    initList.append(PointerInit(tmp))
                 
                 case _:
-                    print("Error: Non constant expression.")
-                    sys.exit(1)
+                    AnnotateSingleInit(exp, type_)
+                    
+            
+
+        case _, parser.SingleInit(exp = exp, retType = retType):
+            #match exp:
+            #   case parser.Constant_Expression():
+
+            AnnotateSingleInit(exp, type_)
 
         case parser.ArrayType(elementType = elementType, size = size), parser.CompoundInit(initializerList = initializerList, retType = retType):
             
@@ -762,8 +818,19 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
 
     if varDecl.initializer:
         #baseTypeSize = varDecl.varType.getBaseTypeSize()
+
+        #match varDecl.varType, varDecl.initializer:
+        #    case parser.PointerType(referenceType = referenceType), parser.SingleInit(exp = exp, retType = retType):
+        #        if type(referenceType) != parser.CharType:
+        #            print("Error: Cannot initialize a pointer to non char type.")
+        #            sys.exit(1)
+
+            
+            #AnnotateSingleInit(exp, type_)
+
         initList = []
-        astInit = AnnotateInitializer(varDecl, varDecl.varType, varDecl.initializer, initList)
+        astInit = AnnotateInitializer(varDecl, varDecl.varType, varDecl.initializer, initList, symbolTable)
+
         varDecl.initializer = astInit
         initialValue = Initial(initList)
 
@@ -881,7 +948,7 @@ def typeCheckInitializer(targetType, initializer, symbolTable):
                 case _:
                     print("Error: Scalar Initializer for Array Type.")
                     sys.exit(1)
-                    
+
                     #e = typeCheckAndConvert(exp, symbolTable)
                     #e = convertByAssignment(e, targetType)
                     #return parser.SingleInit(e, targetType)
@@ -941,7 +1008,7 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
         
         if varDecl.initializer:
             initList = []
-            astInit = AnnotateInitializer(varDecl, varDecl.varType, varDecl.initializer, initList)
+            astInit = AnnotateInitializer(varDecl, varDecl.varType, varDecl.initializer, initList, symbolTable)
             varDecl.initializer = astInit
             initialValue = Initial(initList)
         else:
