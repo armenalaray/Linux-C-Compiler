@@ -814,17 +814,6 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable):
     initialValue = None
 
     if varDecl.initializer:
-        #baseTypeSize = varDecl.varType.getBaseTypeSize()
-
-        #match varDecl.varType, varDecl.initializer:
-        #    case parser.PointerType(referenceType = referenceType), parser.SingleInit(exp = exp, retType = retType):
-        #        if type(referenceType) != parser.CharType:
-        #            print("Error: Cannot initialize a pointer to non char type.")
-        #            sys.exit(1)
-
-            
-            #AnnotateSingleInit(exp, type_)
-
         initList = []
         astInit = AnnotateInitializer(varDecl, varDecl.varType, varDecl.initializer, initList, symbolTable)
 
@@ -963,6 +952,7 @@ def typeCheckInitializer(targetType, initializer, symbolTable):
 
             typeCheckedList = []
             for i in initializerList:
+                #aqui le faltan bytes en string literals
                 init = typeCheckInitializer(elementType, i, symbolTable)
                 typeCheckedList.append(init)
 
