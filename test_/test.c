@@ -8,8 +8,10 @@ char * foo(void)
 
 int main(void) {
 
-    char a = 'a';
+    unsigned char a = 'a';
     
+    int d = a;
+
     char ale[3][4][2] = {
         {"al", "je", "al", "al"}, 
         {"al", "je", "al", "al"}, 

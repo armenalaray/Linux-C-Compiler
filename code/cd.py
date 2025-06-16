@@ -164,15 +164,15 @@ if __name__ == "__main__":
 				print(ass)
 				print(backSymbolTable)
 			
-			ReplacePseudoRegisters.ReplacePseudoRegisters(ass, backSymbolTable)
+			#ReplacePseudoRegisters.ReplacePseudoRegisters(ass, backSymbolTable)
 
-			if printDebugInfo:
-				print(ass)
+			#if printDebugInfo:
+			#	print(ass)
 
-			FixingUpInstructions.FixingUpInstructions(ass)
+			#FixingUpInstructions.FixingUpInstructions(ass)
 
-			if printDebugInfo:
-				print(ass)
+			#if printDebugInfo:
+			#	print(ass)
 		
 
 			if LastStage == 'assemblyGeneration':

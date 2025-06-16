@@ -23,7 +23,7 @@ class StaticConstant(TopLevel):
         self.staticInit = staticInit
 
     def __str__(self):
-        return "{self.identifier} Type: {self.type} {self.staticInit}".format(self=self)
+        return "{self.type} - {self.identifier} = {self.staticInit}".format(self=self)
     
     def __repr__(self):
         return self.__str__()

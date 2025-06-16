@@ -16,14 +16,10 @@ class Program:
 
         return "ASM Program: {self.topLevelList}".format(self=self)
 
-"""
-class AssemblyType(Enum):
-    LONGWORD = 1
-    QUADWORD = 2
-    DOUBLE = 3
-"""
-
 class AssemblyType:
+    pass
+
+class Byte(AssemblyType):
     pass
 
 class Longword(AssemblyType):
@@ -42,19 +38,6 @@ class ByteArray(AssemblyType):
     
     def __str__(self):
         return "ByteArray(Size = {self.size}, Alignment = {self.alignment})".format(self=self)
-
-"""
-class AssemblySize:
-    def __init__(self, type):
-        self.type = type
-    
-    def __str__(self):
-        return "{self.type}".format(self=self)
-    
-    def __repr__(self):
-        return self.__str__()
-"""
-    
 
 class TopLevel:
     pass
@@ -159,7 +142,9 @@ class MovInstruction:
 
 class MovSXInstruction:
 
-    def __init__(self, sourceO, destO):
+    def __init__(self, srcType, dstType, sourceO, destO):
+        self.srcType = srcType
+        self.dstType = dstType
         self.sourceO = sourceO
         self.destO = destO
 
@@ -171,7 +156,9 @@ class MovSXInstruction:
     
 class MovZeroExtendIns:
 
-    def __init__(self, sourceO, destO):
+    def __init__(self, srcType, dstType, sourceO, destO):
+        self.srcType = srcType
+        self.dstType = dstType
         self.sourceO = sourceO
         self.destO = destO
 
@@ -594,6 +581,17 @@ def parseValue(v, symbolTable, topLevelList):
         case tacGenerator.TAC_ConstantValue(const = const):
 
             match const:
+
+                case parser.ConstChar():
+                    asmType = Byte()
+                    cType = parser.CharType()
+                    return asmType, cType, ImmediateOperand(const.int)
+
+                case parser.ConstUChar():
+                    asmType = Byte()
+                    cType = parser.UCharType()
+                    return asmType, cType, ImmediateOperand(const.int)
+
                 case parser.ConstInt():
                     asmType = Longword()
                     cType = parser.IntType()
@@ -621,7 +619,8 @@ def parseValue(v, symbolTable, topLevelList):
                     asmType = Double()
                     cType = parser.DoubleType()
                     return asmType, cType, DataOperand(name)
-
+                
+                
                 case _:
                     print("Error: Invalid Assembly Constant. {0}".format(type(const)))
                     sys.exit(1)
@@ -629,29 +628,37 @@ def parseValue(v, symbolTable, topLevelList):
         case tacGenerator.TAC_VariableValue(identifier=i):
 
             match symbolTable[i].type:
+
+                case parser.CharType():
+                    asmType = Byte()
+                    cType = parser.CharType()
+
+                case parser.SCharType():
+                    asmType = Byte()
+                    cType = parser.SCharType()
+
+                case parser.UCharType():
+                    asmType = Byte()
+                    cType = parser.UCharType()
+
                 case parser.IntType():
                     asmType = Longword()
-                    #asmType = AssemblySize(AssemblyType.LONGWORD)
                     cType = parser.IntType()
 
                 case parser.LongType():
                     asmType = Quadword()
-                    #asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.LongType()
                 
                 case parser.UIntType():
                     asmType = Longword()
-                    #asmType = AssemblySize(AssemblyType.LONGWORD)
                     cType = parser.UIntType()
                 
                 case parser.ULongType():
                     asmType = Quadword()
-                    #asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.ULongType()
 
                 case parser.DoubleType():
                     asmType = Double()
-                    #asmType = AssemblySize(AssemblyType.DOUBLE)
                     cType = parser.DoubleType()
                 
                 case parser.PointerType(referenceType = referenceType):
@@ -678,52 +685,52 @@ def parseValue(v, symbolTable, topLevelList):
                         asmType = ByteArray(sizeArray, 16)                
 
                     return asmType, cType, PseudoMem(i, 0)
-
+                
+                
                 case _:
-                    print("Error: Invalid Assembly Variable. {0}".format(symbolTable[i].type))
+                    print("Error: Invalid Assembly Variable_. {0}".format(symbolTable[i].type))
                     sys.exit(1)
 
             return asmType, cType, PseudoRegisterOperand(i)
         
         case _:
-            """
-            if v in symbolTable:
-                pass
-            else:
-                print("Error: Symbol not in SymbolTable. {0}".format(v))
-                sys.exit(1)
-                pass
-            """
 
             match symbolTable[v].type:
+                
+                case parser.CharType():
+                    asmType = Byte()
+                    cType = parser.CharType()
+
+                case parser.SCharType():
+                    asmType = Byte()
+                    cType = parser.SCharType()
+
+                case parser.UCharType():
+                    asmType = Byte()
+                    cType = parser.UCharType()
+
                 case parser.IntType():
                     asmType = Longword()
-                    #asmType = AssemblySize(AssemblyType.LONGWORD)
                     cType = parser.IntType()
 
                 case parser.LongType():
                     asmType = Quadword()
-                    #asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.LongType()
                 
                 case parser.UIntType():
                     asmType = Longword()
-                    #asmType = AssemblySize(AssemblyType.LONGWORD)
                     cType = parser.UIntType()
                 
                 case parser.ULongType():
                     asmType = Quadword()
-                    #asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.ULongType()
 
                 case parser.DoubleType():
                     asmType = Double()
-                    #asmType = AssemblySize(AssemblyType.DOUBLE)
                     cType = parser.DoubleType()
                 
                 case parser.PointerType(referenceType = referenceType):
                     asmType = Quadword()
-                    #asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.ULongType()
 
                 case parser.ArrayType():
@@ -745,6 +752,7 @@ def parseValue(v, symbolTable, topLevelList):
                         asmType = ByteArray(sizeArray, 16)                
 
                     return asmType, cType, PseudoMem(v, 0)
+                
 
                 case _:
                     print("Error: Invalid Assembly Variable. {0}".format(symbolTable[v].type))
@@ -863,8 +871,6 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
             #dest is a string
             case tacGenerator.TAC_copyToOffset(src = src, dst = dst, offset = offset):
                 type1, cType1, src = parseValue(src, symbolTable, topLevelList)
-                #type2, cType2, dst_ = parseValue(dst, symbolTable, topLevelList)
-
                 ASM_Instructions.append(MovInstruction(type1, src, PseudoMem(dst, offset)))
 
             case tacGenerator.TAC_returnInstruction(Value=v):
@@ -1297,7 +1303,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 type1, alignment1, src = parseValue(src, symbolTable, topLevelList)
                 type2, alignment2, dst = parseValue(dst, symbolTable, topLevelList)
 
-                instruction0 = MovSXInstruction(src, dst)
+                instruction0 = MovSXInstruction(type1, type2, src, dst)
 
                 ASM_Instructions.append(instruction0)
 
@@ -1305,7 +1311,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 type1, alignment1, src = parseValue(src, symbolTable, topLevelList)
                 type2, alignment2, dst = parseValue(dst, symbolTable, topLevelList)
 
-                instruction0 = MovInstruction(Longword(), src, dst)
+                instruction0 = MovInstruction(type2, src, dst)
 
                 ASM_Instructions.append(instruction0)           
 
@@ -1326,7 +1332,8 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
             case tacGenerator.TAC_zeroExtendInstruction(src = src_, dst = dst_):
                 type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
                 type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
-                ASM_Instructions.append(MovZeroExtendIns(src, dst))
+
+                ASM_Instructions.append(MovZeroExtendIns(type1, type2, src, dst))
 
             case tacGenerator.TAC_DoubleToInt(src = src_, dst = dst_):
                 type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
@@ -1346,7 +1353,6 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
 
                 ASM_Instructions.append(LeaInstruction(src, dst))
-
 
             
             case tacGenerator.TAC_Store(src = src_, dst = dst_):
@@ -1380,9 +1386,12 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
 
 def ASM_parseTopLevel(topLevel, symbolTable, topLevelList):
     match topLevel:
-        case tacGenerator.StaticVariable(identifier = identifier, global_ = global_, type = type, initList = initList):
-            #print(identifier)
+        case tacGenerator.StaticConstant(identifier = identifier, type = type, staticInit = staticInit):
             alignment, other = matchCType(type)
+            return StaticConstant(identifier, alignment, staticInit)
+
+        case tacGenerator.StaticVariable(identifier = identifier, global_ = global_, type = type_, initList = initList):
+            alignment, other = matchCType(type_)
             return StaticVariable(identifier, global_, alignment, initList)
         
         case tacGenerator.TAC_FunctionDef(identifier = identifier, global_ = global_, params = params, instructions = instructions):
@@ -1414,7 +1423,7 @@ def ASM_parseTopLevel(topLevel, symbolTable, topLevelList):
             return Function(identifier, global_, ASM_Instructions)
 
         case _:
-            print("Error: Invalid TAC Top Level.")
+            print("Error: Invalid TAC Top Level. {0}".format(type(topLevel)))
             sys.exit(1)
 
 class asm_symtab_entry:
@@ -1481,9 +1490,18 @@ def matchCType(cType):
                 return alignment, ByteArray(sizeArray, alignment)                
             else:
                 return 16, ByteArray(sizeArray, 16)                
-                
+        
+        case parser.CharType():
+            return 1, Byte()
+
+        case parser.SCharType():
+            return 1, Byte()
+
+        case parser.UCharType():
+            return 1, Byte()
+
         case _:
-            print("Error: Invalid C Type to Assembly Conversion. {0}".format(type))
+            print("Error: Invalid C Type to Assembly Conversion. {0}".format(cType))
             sys.exit(1)
 
 def ASM_parseAST(ast, symbolTable):
@@ -1497,14 +1515,17 @@ def ASM_parseAST(ast, symbolTable):
     for i in funcDefList:
         match i:
             case StaticConstant(identifier = identifier, alignment = alignment, staticInit = staticInit):
-                print("StaticInit:", type(staticInit))
+                #print("StaticInit:", type(staticInit))
                 match staticInit:
                     case typeChecker.DoubleInit():
                         backendSymbolTable[identifier] = ObjEntry(Double(), isStatic=True, isConstant=True)
 
-                    case _:
-                        print("Invalid Static Constant.")
-                        sys.exit(1)
+                    #case typeChecker.StringInit(string = string, nullT = nullT):
+                    #    backendSymbolTable[identifier] = ObjEntry(, isStatic=True, isConstant=True)
+
+                    #case _:
+                    #    print("Invalid Static Constant.")
+                    #    sys.exit(1)
                         
 
     for name, entry in symbolTable.items():
@@ -1519,6 +1540,14 @@ def ASM_parseAST(ast, symbolTable):
             case typeChecker.StaticAttributes():
                 alignment, type_ = matchCType(entry.type)
                 backendSymbolTable[name] = ObjEntry(assType=type_, isStatic=True, isConstant=False)
+
+            case typeChecker.ConstantAttr():
+                alignment, type_ = matchCType(entry.type)
+                backendSymbolTable[name] = ObjEntry(assType=type_, isStatic=True, isConstant=True)
+
+            case _:
+                print("Error: {0}".format(type(entry.attrs)))
+                sys.exit(1)
                 
 
     return Program(funcDefList), backendSymbolTable
