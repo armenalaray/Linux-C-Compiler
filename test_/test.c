@@ -8,9 +8,9 @@ char * foo(void)
 
 int main(void) {
 
-    unsigned char a = 'a';
     
-    int d = a;
+    double a;
+    unsigned char d = a;
 
     char ale[3][4][2] = {
         {"al", "je", "al", "al"}, 

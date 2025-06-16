@@ -149,7 +149,7 @@ class MovSXInstruction:
         self.destO = destO
 
     def __str__(self):
-        return "MovSX({self.sourceO}, {self.destO})".format(self=self)
+        return "SrcType: {self.srcType} DstType: {self.dstType} MovSX({self.sourceO}, {self.destO})".format(self=self)
 
     def __repr__(self):
         return self.__str__()    
@@ -163,7 +163,7 @@ class MovZeroExtendIns:
         self.destO = destO
 
     def __str__(self):
-        return "MovZeroExtend({self.sourceO}, {self.destO})".format(self=self)
+        return "SrcType: {self.srcType} DstType: {self.dstType} MovZeroExtend({self.sourceO}, {self.destO})".format(self=self)
 
     def __repr__(self):
         return self.__str__()    
@@ -1202,15 +1202,13 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
                 type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
 
-                if type(cType1) == parser.UIntType:
-                    i0 = MovZeroExtendIns(src, RegisterOperand(Register(RegisterType.AX)))
-
-                    i1 = Cvtsi2sd(Quadword(), RegisterOperand(Register(RegisterType.AX)), dst)
-                    
-                    #i1 = Cvtsi2sd(AssemblySize(AssemblyType.QUADWORD), RegisterOperand(Register(RegisterType.AX)), dst)
-
-                    ASM_Instructions.append(i0)
-                    ASM_Instructions.append(i1)
+                if type(cType1) == parser.UCharType:
+                    ASM_Instructions.append(MovZeroExtendIns(Byte(), Longword(), src, RegisterOperand(Register(RegisterType.AX))))
+                    ASM_Instructions.append(Cvtsi2sd(Longword(), RegisterOperand(Register(RegisterType.AX)), dst))
+                
+                elif type(cType1) == parser.UIntType:
+                    ASM_Instructions.append(MovZeroExtendIns(Longword(), Quadword(), src, RegisterOperand(Register(RegisterType.AX))))
+                    ASM_Instructions.append(Cvtsi2sd(Quadword(), RegisterOperand(Register(RegisterType.AX)), dst))
 
                 elif type(cType1) == parser.ULongType:
                     
@@ -1259,7 +1257,11 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
                 type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
 
-                if type(cType2) == parser.UIntType:
+                if type(cType2) == parser.UCharType:
+                    ASM_Instructions.append(Cvttsd2si(Longword(), src, RegisterOperand(Register(RegisterType.AX))))
+                    ASM_Instructions.append(MovInstruction(Byte(), RegisterOperand(Register(RegisterType.AX)), dst))
+
+                elif type(cType2) == parser.UIntType:
                     i0 = Cvttsd2si(Quadword(), src, RegisterOperand(Register(RegisterType.AX)))
                     i1 = MovInstruction(Longword(), RegisterOperand(Register(RegisterType.AX)), dst)
 
@@ -1339,13 +1341,22 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
                 type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
                 
-                ASM_Instructions.append(Cvttsd2si(type2, src, dst))
+                if type(cType2) == parser.IntType or type(cType2) == parser.LongType: 
+                    ASM_Instructions.append(Cvttsd2si(type2, src, dst))
+                elif type(cType2) == parser.CharType or type(cType2) == parser.SCharType: 
+                    ASM_Instructions.append(Cvttsd2si(Longword(), src, RegisterOperand(Register(RegisterType.AX))))
+                    ASM_Instructions.append(MovInstruction(Byte(), RegisterOperand(Register(RegisterType.AX)), dst))
+
 
             case tacGenerator.TAC_IntToDouble(src = src_, dst = dst_):
                 type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
                 type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
-                
-                ASM_Instructions.append(Cvtsi2sd(type1, src, dst))
+
+                if type(cType1) == parser.IntType or type(cType1) == parser.LongType: 
+                    ASM_Instructions.append(Cvtsi2sd(type1, src, dst))
+                elif type(cType1) == parser.CharType or type(cType1) == parser.SCharType: 
+                    ASM_Instructions.append(MovSXInstruction(Byte(), Longword(), src, RegisterOperand(Register(RegisterType.AX))))
+                    ASM_Instructions.append(Cvtsi2sd(Longword(), RegisterOperand(Register(RegisterType.AX)), dst))
                 
 
             case tacGenerator.TAC_GetAddress(src = src_, dst = dst_):
