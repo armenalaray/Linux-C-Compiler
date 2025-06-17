@@ -788,10 +788,12 @@ def Expect(*args):
                 sys.exit(1)
         other = i
 
+"""
 def isIntegerType(type_):
     if type(type_) == parser.UIntType or type(type_) == parser.ULongType or type(type_) == parser.IntType or type(type_) == parser.LongType:
         return True 
     return False
+"""
 
 def parseUnaryInstructionGeneral(src_, dst_, o, symbolTable, ASM_Instructions, topLevelList):
     type1, alignment1, src = parseValue(src_, symbolTable, topLevelList)
@@ -848,7 +850,38 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                         
                         
                     case tacGenerator.TAC_VariableValue(identifier = identifier):
-                        if scale > 8:
+                        
+                        def PtrArithmeticSupportedScale():
+                            ASM_Instructions.append(MovInstruction(Quadword(), ptr, RegisterOperand(Register(RegisterType.AX))))
+
+                            ASM_Instructions.append(MovInstruction(Quadword(), index, RegisterOperand(Register(RegisterType.DX))))
+
+                            ASM_Instructions.append(LeaInstruction(Indexed(Register(RegisterType.AX), Register(RegisterType.DX), scale), dst))
+
+                        match scale:
+                            case 1:
+                                PtrArithmeticSupportedScale()
+                                pass
+                            case 2:
+                                PtrArithmeticSupportedScale()
+                                pass
+                            case 4:
+                                PtrArithmeticSupportedScale()
+                                pass
+                            case 8:
+                                PtrArithmeticSupportedScale()
+                                pass
+                            case _:
+                                ASM_Instructions.append(MovInstruction(Quadword(), ptr, RegisterOperand(Register(RegisterType.AX))))
+
+                                ASM_Instructions.append(MovInstruction(Quadword(), index, RegisterOperand(Register(RegisterType.DX))))
+
+                                ASM_Instructions.append(BinaryInstruction(BinaryOperator(BinopType.Mult), Quadword(), ImmediateOperand(scale), RegisterOperand(Register(RegisterType.DX))))
+
+                                ASM_Instructions.append(LeaInstruction(Indexed(Register(RegisterType.AX), Register(RegisterType.DX), 1), dst))
+
+                        """
+                        if scale > 8 :
                             ASM_Instructions.append(MovInstruction(Quadword(), ptr, RegisterOperand(Register(RegisterType.AX))))
 
                             ASM_Instructions.append(MovInstruction(Quadword(), index, RegisterOperand(Register(RegisterType.DX))))
@@ -863,6 +896,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                             ASM_Instructions.append(MovInstruction(Quadword(), index, RegisterOperand(Register(RegisterType.DX))))
 
                             ASM_Instructions.append(LeaInstruction(Indexed(Register(RegisterType.AX), Register(RegisterType.DX), scale), dst))
+                        """
 
                     case _:
                         print("Error: Invalid TAC Value.")
@@ -876,7 +910,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
             case tacGenerator.TAC_returnInstruction(Value=v):
                 type1, cType1, src = parseValue(v, symbolTable, topLevelList)
 
-                if isIntegerType(cType1):
+                if typeChecker.isIntegerType(cType1):
                     instruction0 = MovInstruction(type1, src, RegisterOperand(Register(RegisterType.AX)))
 
                     instruction1 = ReturnInstruction()
@@ -905,7 +939,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                                 type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
                                 type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
 
-                                if isIntegerType(cType1):
+                                if typeChecker.isIntegerType(cType1):
                                     instruction0 = CompInst(type1, ImmediateOperand(0), src)
                                     instruction1 = MovInstruction(type2, ImmediateOperand(0), dst)
                                     instruction2 = SetCCInst(ConcCodeType.E, dst)
@@ -936,7 +970,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                                 type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
                                 type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
 
-                                if isIntegerType(cType1):
+                                if typeChecker.isIntegerType(cType1):
                                     parseUnaryInstructionGeneral(src_, dst_, o, symbolTable, ASM_Instructions, topLevelList)
                                     
                                 else:
@@ -1152,7 +1186,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
             case tacGenerator.TAC_JumpIfZeroInst(condition=cond, label=label):
                 type1, cType1, c = parseValue(cond, symbolTable, topLevelList)
 
-                if isIntegerType(cType1):
+                if typeChecker.isIntegerType(cType1):
                     instruction0 = CompInst(type1, ImmediateOperand(0), c)
                     instruction1 = JumpCCInst(ConcCodeType.E, label)
                     
@@ -1177,7 +1211,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
             case tacGenerator.TAC_JumpIfNotZeroInst(condition=cond, label=label):
                 type1, cType1, c = parseValue(cond, symbolTable, topLevelList)
 
-                if isIntegerType(cType1):
+                if typeChecker.isIntegerType(cType1):
                     instruction0 = CompInst(type1, ImmediateOperand(0), c)
                     instruction1 = JumpCCInst(ConcCodeType.NE, label)
                     

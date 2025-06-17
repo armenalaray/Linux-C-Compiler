@@ -4,7 +4,7 @@
 # My compiler
 
 
-lastStage="--codegen"
+#lastStage="--codegen"
 #noLink="-c"
 library="-lmath.h"
 
@@ -21,8 +21,7 @@ fi
 #cd ./../
 #echo "$(pwd)"
 #pyinstaller --onefile "$(pwd)"/CComp/code/cd.py
-#./writing-a-c-compiler-tests/test_compiler "$(pwd)"/dist/cd --chapter 16 --stage tacky
-
+#./writing-a-c-compiler-tests/test_compiler "$(pwd)"/dist/cd --chapter 16 
 
 
 #python3 "$(pwd)"/code/test.py
@@ -37,11 +36,11 @@ echo $?
 
 # assembler
 
-: '
-gcc "$(pwd)"/bin/return.s -o bin/return
-./bin/return
-echo $?
-'
+
+#gcc "$(pwd)"/bin/return.s -o bin/return
+#./bin/return
+#echo $?
+
 
 
 #gdb -x gdbcommands.txt 

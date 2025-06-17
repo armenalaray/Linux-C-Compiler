@@ -1,3 +1,67 @@
+0x555555558010 0
+0x555555558011 0
+0x555555558012 0
+0x555555558013 0
+
+i == 1 , j == 0
+
+
+0x555555558014 b 98
+0x555555558015 c
+0x555555558016 0
+0x555555558017 0
+
+0x555555558018 0
+0x555555558019 0
+0x55555555801A 0
+0x55555555801B 0
+
+
+
+
+
+
+
+
+
+
+TAC Program:[Function: return_string ([]) instructions:[tmp.2 = Get Address tmp.1 , Return tmp.2, Return 0], Function: main ([]) instructions:[SignExtend tmp.3 = 0, (ptr.0 + 0) = tmp.3 , tmp.4 = return_string([]), Copy ptr.0 = tmp.4, Copy tmp.5 = ptr.0, SignExtend tmp.6 = 0, Copy tmp.7 = tmp.6, AddPtr tmp.8 = tmp.5 + tmp.7 * 1, tmp.9 = Load tmp.8 , SignExtend tmp.10 = tmp.9, tmp.11 = tmp.10 _ 73, JumpIfNotZero(tmp.11, tmp.12), Copy tmp.13 = ptr.0, SignExtend tmp.14 = 1, Copy tmp.15 = tmp.14, AddPtr tmp.16 = tmp.13 + tmp.15 * 1, tmp.17 = Load tmp.16 , SignExtend tmp.18 = tmp.17, tmp.19 = tmp.18 _ 39, JumpIfNotZero(tmp.19, tmp.12), Copy tmp.20 = 0, Jump(tmp.21), Label(tmp.12), Copy tmp.20 = 1, Label(tmp.21), JumpIfNotZero(tmp.20, tmp.22), 
+
+Copy tmp.23 = ptr.0, 
+SignExtend tmp.24 = 13, 
+Copy tmp.25 = tmp.24, 
+AddPtr tmp.26 = tmp.23 + tmp.25 * 1, 
+
+tmp.27 = Load tmp.26 , 
+JumpIfNotZero(tmp.27, tmp.22), 
+
+Copy tmp.28 = 0, 
+Jump(tmp.29), 
+Label(tmp.22), 
+Copy tmp.28 = 1, 
+Label(tmp.29), 
+Copy tmp.30 = tmp.28, 
+JumpIfZero(tmp.30, tmp.31), Return 2, Label(tmp.31), Return 0, Return 0], 
+ArrayType: char Size: 14 - tmp.1 = (I'm a string!, AddZero: True)]
+
+
+{'return_string': return_string FunType: ParamTypes: [] Return Type: Pchar Defined: True Global: True, 'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'ptr.0': ptr.0 Pchar <typeChecker.LocalAttributes object at 0x7f13a4ac5970>, 'tmp.1': tmp.1 ArrayType: char Size: 14 (I'm a string!, AddZero: True), 'tmp.2': tmp.2 Pchar <typeChecker.LocalAttributes object at 0x7f13a4ac6de0>, 'tmp.3': tmp.3 Pchar <typeChecker.LocalAttributes object at 0x7f13a4ac7140>, 'tmp.4': tmp.4 Pchar <typeChecker.LocalAttributes object at 0x7f13a4ac7350>, 'tmp.5': tmp.5 Pchar <typeChecker.LocalAttributes object at 0x7f13a4ac7860>, 'tmp.6': tmp.6 long <typeChecker.LocalAttributes object at 0x7f13a4ac7aa0>, 'tmp.7': tmp.7 long <typeChecker.LocalAttributes object at 0x7f13a4ac7980>, 'tmp.8': tmp.8 ulong <typeChecker.LocalAttributes object at 0x7f13a4ac79b0>, 'tmp.9': tmp.9 char <typeChecker.LocalAttributes object at 0x7f13a4ac7710>, 'tmp.10': tmp.10 int <typeChecker.LocalAttributes object at 0x7f13a4ac7650>, 'tmp.11': tmp.11 int <typeChecker.LocalAttributes object at 0x7f13a4ac7560>, 'tmp.13': tmp.13 Pchar <typeChecker.LocalAttributes object at 0x7f13a4ac7fb0>, 'tmp.14': tmp.14 long <typeChecker.LocalAttributes object at 0x7f13a4ae02c0>, 'tmp.15': tmp.15 long <typeChecker.LocalAttributes object at 0x7f13a4ae01a0>, 'tmp.16': tmp.16 ulong <typeChecker.LocalAttributes object at 0x7f13a4ae01d0>, 'tmp.17': tmp.17 char <typeChecker.LocalAttributes object at 0x7f13a4ac7ef0>, 'tmp.18': tmp.18 int <typeChecker.LocalAttributes object at 0x7f13a4ae03e0>, 'tmp.19': tmp.19 int <typeChecker.LocalAttributes object at 0x7f13a4ac7d40>, 'tmp.20': tmp.20 int <typeChecker.LocalAttributes object at 0x7f13a4ac7440>, 'tmp.23': tmp.23 Pchar <typeChecker.LocalAttributes object at 0x7f13a4ae07d0>, 'tmp.24': tmp.24 long <typeChecker.LocalAttributes object at 0x7f13a4ae0a10>, 'tmp.25': tmp.25 long <typeChecker.LocalAttributes object at 0x7f13a4ae08f0>, 
+
+'tmp.26': tmp.26 ulong <typeChecker.LocalAttributes object at 0x7f13a4ae0b00>, 
+
+'tmp.27': tmp.27 char <typeChecker.LocalAttributes object at 0x7f13a4ac7050>, 'tmp.28': tmp.28 int <typeChecker.LocalAttributes object at 0x7f13a4ae0c50>, 'tmp.30': tmp.30 int <typeChecker.LocalAttributes object at 0x7f13a4ac6fc0>}
+
+
+
+0x555555556004 I 73
+0x555555556005 ' 39
+0x555555556011 
+
+
+
+
+
+
 4
 
 

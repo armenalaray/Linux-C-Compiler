@@ -192,7 +192,36 @@ def matchOperand(operand, output, operandSize):
     return output
 
 def printStaticInit(staticInit, output):
+    def printEscapedCharacters(string, output):
+        for i in string:
+            #print(i)
+            match i:
+                case '\n':
+                    output += '\\'
+                    output += 'n'
+                case '\\':
+                    output += '\\'
+                    output += '\\'
+                case '\"':
+                    output += '\\'
+                    output += '"'
+                case _:
+                    output += i
+        return output
+
     match staticInit:
+        case typeChecker.CharInit(int=int):
+            if int.value == 0:
+                output += '\t.zero 1\n'
+            else:
+                output += '\t.byte {0}\n'.format(int.value)
+
+        case typeChecker.UCharInit(int=int):
+            if int.value == 0:
+                output += '\t.zero 1\n'
+            else:
+                output += '\t.byte {0}\n'.format(int.value)
+
         case typeChecker.IntInit(int=int):
             if int.value == 0:
                 output += '\t.zero 4\n'
@@ -224,6 +253,21 @@ def printStaticInit(staticInit, output):
         case typeChecker.ZeroInit(bytes = bytes):
             output += '\t.zero {0}\n'.format(bytes)
 
+        
+        case typeChecker.StringInit(string = string, nullT = nullT):
+            
+            if nullT:
+                output += '\t.asciz "'
+                output = printEscapedCharacters(string, output)
+                output += '"\n'
+            else:
+                output += '\t.ascii "'
+                output = printEscapedCharacters(string, output)
+                output += '"\n'
+
+        case typeChecker.PointerInit(name=name):
+            output += '\t.quad {0}\n'.format(name)
+
         case _:
             print("Error: {0}".format(type(staticInit)))
             sys.exit(1)
@@ -242,9 +286,9 @@ def printInstructionSuffix(type, output):
         
         case assemblyGenerator.ByteArray():
             output += 'q'
-            #traceback.print_stack()
-            #print("Invalid Byte ARRay as operand?")
-            #sys.exit(1)
+        
+        case assemblyGenerator.Byte():
+            output += 'b'
 
         case _:
             print("Invalid assembly type. {0}".format(type))
@@ -266,9 +310,9 @@ def getOperandSize(type):
 
         case assemblyGenerator.ByteArray(size = size, alignment = alignment):
             operandSize = OperandSize.BYTE_8
-            #traceback.print_stack()
-            #print("Invalid Byte ARRay as operand?")
-            #sys.exit(1)
+
+        case assemblyGenerator.Byte():
+            operandSize = OperandSize.BYTE_1
         
         case _:
             print("Invalid Operand Size. {0}".format(type))
@@ -311,61 +355,29 @@ def printTopLevel(topLevel, output, symbolTable):
                         for init in initList:
                             output = printStaticInit(init, output)   
 
+
                 case _:
-                    print(type(initList[0].int.value))
+                    value = initList[0]
 
-                    if initList[0].int.value == 0:
-                        if global_ == True:
-                            output += '\t.globl {0}\n'.format(identifier)
-
-                        output += '\t.bss\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
-
-                        output = printStaticInit(initList[0], output)
-
-                    else:
-                        if global_ == True:
-                            output += '\t.globl {0}\n'.format(identifier)
-
-                        output += '\t.data\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
-
-                        output = printStaticInit(initList[0], output)
-                    
-            """
-            if (type(varType) == assemblyGenerator.Longword or type(varType) == assemblyGenerator.Quadword or type(varType) == assemblyGenerator.ByteArray):
-
-
-                init = initList[0]
-
-                if global_ == True:
-                    output += '\t.globl {0}\n'.format(identifier)
-
-                output += '\t.bss\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
-
-                output = printStaticInit(init, output)
-                
-            else:
-
-                #aca es con inizializador
-                for i in initList:
-                    print(type(i))
-                    match i:
-                        case typeChecker.DoubleInit():
+                    match value:
+                        case typeChecker.PointerInit(name = name):
                             if global_ == True:
                                 output += '\t.globl {0}\n'.format(identifier)
 
                             output += '\t.data\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
 
-                            output = printStaticInit(i, output)
-
+                            output = printStaticInit(value, output)
+                            
                         case _:
+                            print(value.int.value)
 
-                            if staticInit.int == 0:
+                            if value.int.value == 0:
                                 if global_ == True:
                                     output += '\t.globl {0}\n'.format(identifier)
 
                                 output += '\t.bss\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
 
-                                output = printStaticInit(staticInit, output)
+                                output = printStaticInit(value, output)
 
                             else:
                                 if global_ == True:
@@ -373,9 +385,7 @@ def printTopLevel(topLevel, output, symbolTable):
 
                                 output += '\t.data\n\t.align {0}\n{1}:\n'.format(alignment, identifier)
 
-                                output = printStaticInit(staticInit, output)
-            """
-            
+                                output = printStaticInit(value, output)
             
         case assemblyGenerator.StaticConstant(identifier = identifier, alignment = alignment, staticInit = staticInit):
 
@@ -393,14 +403,37 @@ def printTopLevel(topLevel, output, symbolTable):
             for i in insList:
                 match i:
                     #esq esta es un sign extend
-                    case assemblyGenerator.MovSXInstruction(sourceO = sourceO, destO = destO):
-                        output += '\n\tmovslq '
+                    case assemblyGenerator.MovSXInstruction(srcType = srcType, dstType = dstType, sourceO = sourceO, destO = destO):
+                        output += '\n\tmovs'
 
-                        output = matchOperand(sourceO, output, OperandSize.BYTE_4)
+                        output = printInstructionSuffix(srcType, output)
+                        output = printInstructionSuffix(dstType, output)
+
+                        output += ' '
+
+                        srcSize = getOperandSize(srcType)
+                        output = matchOperand(sourceO, output, srcSize)
                         
                         output += ', '
 
-                        output = matchOperand(destO, output, OperandSize.BYTE_8) 
+                        dstSize = getOperandSize(dstType)
+                        output = matchOperand(destO, output, dstSize) 
+
+                    case assemblyGenerator.MovZeroExtendIns(srcType = srcType, dstType = dstType,sourceO = sourceO, destO = destO):
+                        output += '\n\tmovz'
+
+                        output = printInstructionSuffix(srcType, output)
+                        output = printInstructionSuffix(dstType, output)
+
+                        output += ' '
+
+                        srcSize = getOperandSize(srcType)
+                        output = matchOperand(sourceO, output, srcSize)
+                        
+                        output += ', '
+
+                        dstSize = getOperandSize(dstType)
+                        output = matchOperand(destO, output, dstSize) 
 
                     case assemblyGenerator.MovInstruction(assType=assType, sourceO=src, destO=dst):
                         output += '\n\tmov'
@@ -417,8 +450,7 @@ def printTopLevel(topLevel, output, symbolTable):
 
                         output = matchOperand(dst, output, operandSize)
 
-                        
-
+                    
                     case assemblyGenerator.ReturnInstruction():
                         output += '\n\tmovq %rbp, %rsp\n\tpopq %rbp\n\tret'
                         
@@ -656,6 +688,8 @@ def printTopLevel(topLevel, output, symbolTable):
                             output += "\n\tcall {0}".format(identifier)
                         else:
                             output += "\n\tcall {0}@PLT".format(identifier)
+
+                    
 
                     case _:
                         print("Instruction {0} not added into code emission!".format(i))

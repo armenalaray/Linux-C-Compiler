@@ -23,9 +23,15 @@ def ReplaceOperand(operand, table, offset, symbolTable):
                     case assemblyGenerator.ObjEntry(assType = assType, isStatic = isStatic):
                         allocateSize = 0
                         match assType:
+                            
+                            case assemblyGenerator.Byte():
+                                allocateSize = 1
+                                offset -= allocateSize
+
                             case assemblyGenerator.Longword():
                                 allocateSize = 4
                                 offset -= allocateSize
+                                offset = offset - offset % 4
                                 
                             case assemblyGenerator.Quadword():
                                 allocateSize = 8
@@ -37,7 +43,7 @@ def ReplaceOperand(operand, table, offset, symbolTable):
                                 offset -= allocateSize
                                 #esto es para alinearlo a 8 
                                 offset = offset - offset % 8
-                            
+
                             case _:
                                 print("Error")
                                 sys.exit(1)
@@ -69,9 +75,14 @@ def ReplaceOperand(operand, table, offset, symbolTable):
                     case assemblyGenerator.ObjEntry(assType = assType, isStatic = isStatic):
                         allocateSize = 0
                         match assType:
+                            case assemblyGenerator.Byte():
+                                allocateSize = 1
+                                offset -= allocateSize
+
                             case assemblyGenerator.Longword():
                                 allocateSize = 4
                                 offset -= allocateSize
+                                offset = offset - offset % 4
                                 
                             case assemblyGenerator.Quadword():
                                 allocateSize = 8

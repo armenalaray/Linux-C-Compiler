@@ -3,7 +3,7 @@ file test_/test
 layout asm
 layout reg
 #set debuginfod enabled on
-break *main+0
+break *main+186 if $rax == 0x555555558014
 run
 
 #set $x=5
