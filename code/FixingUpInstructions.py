@@ -132,11 +132,6 @@ def FixingUpTopLevel(topLevel):
                             
                             case assemblyGenerator.Byte():
                                 fixMemoryOpBothInt(src, dst)
-
-                                if type(src) == assemblyGenerator.ImmediateOperand and src.imm > pow(2, 7) - 1:
-                                    a = ctypes.c_uint8(src.imm)
-                                    src.imm = a.value
-                                    newList.append(i)
                             
                             case assemblyGenerator.Longword():
                                 fixMemoryOpBothInt(src, dst)
@@ -145,9 +140,8 @@ def FixingUpTopLevel(topLevel):
 
                                 fixMemoryOpBothInt(src, dst)
 
-                                #MOV Q cannot move to memory immediate values 
-                                if type(src) == assemblyGenerator.ImmediateOperand and src.imm > pow(2, 63) - 1:
-
+                                if type(src) == assemblyGenerator.ImmediateOperand and src.imm > pow(2, 31) - 1:
+                                    #breakpoint()
                                     instructionImm = assemblyGenerator.MovInstruction(assType, src, assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10)))
 
                                     i.sourceO = assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.R10))
@@ -155,11 +149,6 @@ def FixingUpTopLevel(topLevel):
                                     newList.append(instructionImm)
                                     newList.append(i)
                                 
-                                
-                                
-
-                                
-                                        
 
                     case assemblyGenerator.IDivInstruction(assType=assType, divisor=div):
                         match div:
