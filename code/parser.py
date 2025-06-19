@@ -1,5 +1,6 @@
 import sys
 import re
+import traceback
 from lexer import TokenType
 from enum import Enum
 
@@ -280,6 +281,7 @@ class VoidType(Type, Node):
     def getSize():
         print("Error: Cannot get Size of void Type.")
         sys.exit(1)
+
 
     def checkType(self, other):
         if type(other) == VoidType:
@@ -1640,9 +1642,11 @@ def parseUnaryExp(tokenList):
         
     if token[1] == TokenType.SIZEOF_KW:
         takeToken(tokenList)
+
+        nextToken = peek(tokenList, 1)
         token = peek(tokenList)
 
-        if token[1] == TokenType.OPEN_PAREN:
+        if token[1] == TokenType.OPEN_PAREN and isTypeSpecifier(nextToken):
             takeToken(tokenList)
             type = parseTypeName(tokenList)
             expect(TokenType.CLOSE_PAREN, tokenList)
@@ -1679,8 +1683,9 @@ def parseTypeName(tokenList):
 
 def parseCastExp(tokenList):
     token = peek(tokenList)
+    nextToken = peek(tokenList, 1)
 
-    if token[1] == TokenType.OPEN_PAREN:
+    if token[1] == TokenType.OPEN_PAREN and isTypeSpecifier(nextToken):
         takeToken(tokenList)
         type = parseTypeName(tokenList)
         print(type)
@@ -1881,7 +1886,8 @@ def parseTypes(rawTypes):
     #print(types)
 
     if types == []:
-        print("Invalid Type Specifier.")
+        traceback.print_stack()
+        print("Invalid Type Specifier Empty list.")
         sys.exit(1)
 
     if types == [TokenType.VOID_KW]:
@@ -2061,8 +2067,6 @@ def parseDirectDeclarator(tokenList):
         return declarator
             
     return sDeclarator
-
-    
 
 def parseDeclarator(tokenList):
     token = peek(tokenList)

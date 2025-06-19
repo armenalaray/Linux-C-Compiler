@@ -21,7 +21,7 @@ fi
 #cd ./../
 #echo "$(pwd)"
 #pyinstaller --onefile "$(pwd)"/CComp/code/cd.py
-#./writing-a-c-compiler-tests/test_compiler "$(pwd)"/dist/cd --chapter 17 --stage lex
+#./writing-a-c-compiler-tests/test_compiler "$(pwd)"/dist/cd --chapter 17 --stage parse
 
 
 #python3 "$(pwd)"/code/test.py

@@ -1,9 +1,7 @@
-static void* return_nothing(void ale, void* person, int a) {
-    int * a = 0;
-    *a;
-    (long)a;
-
-    sizeof a;
-    sizeof (int);
-    //return sizeof puts("Shouting into the void");
+int main(void) {
+    /* Nested function definitions are not permitted */
+    int foo(void) {
+        return 1;
+    }
+    return foo();
 }

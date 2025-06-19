@@ -1,3 +1,73 @@
+======================================================================
+FAIL: test_invalid_declarations/nested_function_definition (test_framework.basic.TestChapter9.test_invalid_declarations/nested_function_definition)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_9/invalid_declarations/nested_function_definition.c failed with error:
+
+
+----------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+======================================================================
+FAIL: test_valid/sizeof/sizeof_not_evaluated (test_framework.basic.TestChapter17.test_valid/sizeof/sizeof_not_evaluated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_17/valid/sizeof/sizeof_not_evaluated.c failed with error:
+  File "cd.py", line 119, in <module>
+  File "parser.py", line 2353, in parseProgram
+  File "parser.py", line 2141, in parseDeclaration
+  File "parser.py", line 2292, in parseFunctionDecl
+  File "parser.py", line 2181, in parseBlock
+  File "parser.py", line 2164, in parseBlockItem
+  File "parser.py", line 1867, in parseStatement
+  File "parser.py", line 1698, in parseExp
+  File "parser.py", line 1694, in parseCastExp
+  File "parser.py", line 1649, in parseUnaryExp
+  File "parser.py", line 1668, in parseTypeName
+  File "parser.py", line 1887, in parseTypes
+
+
+----------------------------------------------------------------------
+
+
+
+
+
+
+======================================================================
+FAIL: test_valid/void_pointer/conversion_by_assignment (test_framework.basic.TestChapter17.test_valid/void_pointer/conversion_by_assignment)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_17/valid/void_pointer/conversion_by_assignment.c failed with error:
+
+
+----------------------------------------------------------------------
+
+
+
+
 0x555555558010 0
 0x555555558011 0
 0x555555558012 0
