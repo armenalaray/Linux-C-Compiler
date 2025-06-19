@@ -269,7 +269,24 @@ class Type:
 class VoidType(Type, Node):
     def __str__(self):
         return "void"
+    
+    def printNode(self, level):
+        return "void"
+    
+    def getBaseTypeSize(self, occupied):
+        print("Error: Cannot get Size of void Type.")
+        sys.exit(1)
 
+    def getSize():
+        print("Error: Cannot get Size of void Type.")
+        sys.exit(1)
+
+    def checkType(self, other):
+        if type(other) == VoidType:
+            return True
+
+        return False
+    
 class CharType(Type, Node):
     
     def __init__(self):
@@ -754,11 +771,37 @@ class SizeOf(Expression, Node):
     def __init__(self, exp, retType = None):
         self.exp = exp
         self.retType = retType
+    
+    def __str__(self):
+        return "sizeof {self.exp} RetType: {self.retType}".format(self=self)
+
+    def printNode(self, level):
+        output = "("
+        output += "sizeof " + self.exp.printNode(level)
+
+        if self.retType:
+            output +=  ' : ' + self.retType.printNode(level)
+
+        output += ")"
+        return output    
 
 class SizeOfT(Expression, Node):
     def __init__(self, typeName, retType = None):
         self.typeName = typeName
         self.retType = retType
+
+    def __str__(self):
+        return "sizeofType({self.typeName}) RetType: {self.retType}".format(self=self)
+    
+    def printNode(self, level):
+        output = "("
+        output += "sizeofType(" + self.typeName.printNode(level) + ")"
+
+        if self.retType:
+            output +=  ' : ' + self.retType.printNode(level)
+
+        output += ")"
+        return output    
 
 class StringExpression(Expression, Node):
     def __init__(self, string, retType = None):
@@ -1582,53 +1625,32 @@ def parseUnaryExp(tokenList):
     if UnaryOperatorToken(token):
         if token[1] == TokenType.ASTERISK:
             takeToken(tokenList)
-            inner_exp = parseUnaryExp(tokenList)
+            inner_exp = parseCastExp(tokenList)
             return Dereference(inner_exp)
         
         elif token[1] == TokenType.AMPERSAND:
             takeToken(tokenList)
-            inner_exp = parseUnaryExp(tokenList)
+            inner_exp = parseCastExp(tokenList)
             return AddrOf(inner_exp)
         
         else:
             unop = parseUnop(tokenList)
-            inner_exp = parseUnaryExp(tokenList)
+            inner_exp = parseCastExp(tokenList)
             return Unary_Expression(unop, inner_exp)
-
-    """
-    nextT = peek(tokenList, 1)
-    token = peek(tokenList)
-    
-    if isTypeSpecifier(nextT) and token[1] == TokenType.OPEN_PAREN:
+        
+    if token[1] == TokenType.SIZEOF_KW:
         takeToken(tokenList)
-
         token = peek(tokenList)
 
-        types = []
-        while isTypeSpecifier(token):
-            types.append(takeToken(tokenList))
-            token = peek(tokenList)
-
-        type = parseTypes(types)
-
-        token = peek(tokenList)
-
-        if token[1] == TokenType.ASTERISK or token[1] == TokenType.OPEN_PAREN or token[1] == TokenType.OPEN_BRACKET:
-
-            abstractD = parseAbstractDeclarator(tokenList)
-
-            #print("{0} {1}".format(type, abstractD))
-
-            type = processAbstractDeclarator(abstractD, type)
-
-
-        expect(TokenType.CLOSE_PAREN, tokenList)
-
+        if token[1] == TokenType.OPEN_PAREN:
+            takeToken(tokenList)
+            type = parseTypeName(tokenList)
+            expect(TokenType.CLOSE_PAREN, tokenList)
+            return SizeOfT(type)
+            
         exp = parseUnaryExp(tokenList)
-
-        return Cast_Expression(type, exp)
-    """
-    
+        return SizeOf(exp)
+        
     return parsePostfixExp(tokenList)
         
 
@@ -1665,7 +1687,6 @@ def parseCastExp(tokenList):
         expect(TokenType.CLOSE_PAREN, tokenList)
         exp = parseCastExp(tokenList)
         return Cast_Expression(type, exp)
-        
         
     return parseUnaryExp(tokenList)
 
