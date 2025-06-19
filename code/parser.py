@@ -266,6 +266,10 @@ class Type:
     def __repr__(self):
         return self.__str__()
 
+class VoidType(Type, Node):
+    def __str__(self):
+        return "void"
+
 class CharType(Type, Node):
     
     def __init__(self):
@@ -585,7 +589,7 @@ class IfStatement(Statement, Node):
 
 
 class ReturnStmt(Statement, Node):
-    def __init__(self, exp):
+    def __init__(self, exp = None):
         self.expression = exp
 
     def __str__(self):
@@ -594,7 +598,11 @@ class ReturnStmt(Statement, Node):
     
     def printNode(self, level):
         output = ""
-        output += "return " + self.expression.printNode(level)
+        output += "return" 
+        
+        if self.expression:
+            output += " " + self.expression.printNode(level)
+
         return output
     
 
@@ -741,6 +749,16 @@ class Expression:
     retType = None
     def __repr__(self):
         return self.__str__()
+
+class SizeOf(Expression, Node):
+    def __init__(self, exp, retType = None):
+        self.exp = exp
+        self.retType = retType
+
+class SizeOfT(Expression, Node):
+    def __init__(self, typeName, retType = None):
+        self.typeName = typeName
+        self.retType = retType
 
 class StringExpression(Expression, Node):
     def __init__(self, string, retType = None):
@@ -1776,9 +1794,17 @@ def parseStatement(tokenList):
         
     elif token[1] == TokenType.RETURN_KW:
         takeToken(tokenList)
-        retVal = parseExp(tokenList, 0)
-        expect(TokenType.SEMICOLON, tokenList)
-        return ReturnStmt(retVal) 
+        
+        token = peek(tokenList)
+
+        if token[1] == TokenType.SEMICOLON:
+            expect(TokenType.SEMICOLON, tokenList)
+            return ReturnStmt() 
+        else:
+            retVal = parseExp(tokenList, 0)
+            expect(TokenType.SEMICOLON, tokenList)
+            return ReturnStmt(retVal) 
+
     
     elif token[1] == TokenType.SEMICOLON:
         takeToken(tokenList)
@@ -1796,6 +1822,13 @@ def parseTypes(rawTypes):
 
     if types == []:
         print("Invalid Type Specifier.")
+        sys.exit(1)
+
+    if types == [TokenType.VOID_KW]:
+        return VoidType()
+    
+    if TokenType.VOID_KW in types:
+        print("Error: Can't combine void with other type specifiers.")
         sys.exit(1)
 
     if types == [TokenType.DOUBLE_KW]:
@@ -2036,9 +2069,11 @@ def parseDeclaration(tokenList):
 
     declarator = parseDeclarator(tokenList)
 
-    #print(baseType, declarator)
+    print(baseType, declarator)
 
     name, declType, params = processDeclarator(declarator, baseType)
+
+    print(declType)
 
     if type(declType) == FunType:
         f = parseFunctionDecl(tokenList, name, declType, params, storageClass)
@@ -2089,7 +2124,7 @@ def parseBlock(tokenList):
     return Block(BlockItemList)
 
 def isTypeSpecifier(token):
-    if token[1] == TokenType.INT_KW or token[1] == TokenType.LONG_KW or token[1] == TokenType.SIGNED_KW or token[1] == TokenType.UNSIGNED_KW or token[1] == TokenType.DOUBLE_KW or token[1] == TokenType.CHAR_KW: 
+    if token[1] == TokenType.INT_KW or token[1] == TokenType.LONG_KW or token[1] == TokenType.SIGNED_KW or token[1] == TokenType.UNSIGNED_KW or token[1] == TokenType.DOUBLE_KW or token[1] == TokenType.CHAR_KW or token[1] == TokenType.VOID_KW: 
         return True
     
     return False
@@ -2107,17 +2142,17 @@ def parseParam(tokenList):
 
     return Param(type, declarator)
     
-
 def parseParamList(tokenList):
     paramList = []
 
     expect(TokenType.OPEN_PAREN, tokenList)
 
     token = peek(tokenList)
+    nextToken = peek(tokenList, 1)
 
-    if token[1] == TokenType.VOID_KW:
+    if token[1] == TokenType.VOID_KW and nextToken[1] == TokenType.CLOSE_PAREN:
         takeToken(tokenList)
-        expect(TokenType.CLOSE_PAREN, tokenList)
+        takeToken(tokenList)
         return paramList
 
     param = parseParam(tokenList)    
