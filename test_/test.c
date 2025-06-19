@@ -1,4 +1,6 @@
 static void* return_nothing(void ale, void* person, int a) {
-    return;
+    int a = 0;
+    !a;
+    (long)a;
     //return sizeof puts("Shouting into the void");
 }

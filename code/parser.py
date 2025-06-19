@@ -1595,9 +1595,10 @@ def parseUnaryExp(tokenList):
             inner_exp = parseUnaryExp(tokenList)
             return Unary_Expression(unop, inner_exp)
 
+    """
     nextT = peek(tokenList, 1)
     token = peek(tokenList)
-
+    
     if isTypeSpecifier(nextT) and token[1] == TokenType.OPEN_PAREN:
         takeToken(tokenList)
 
@@ -1626,13 +1627,51 @@ def parseUnaryExp(tokenList):
         exp = parseUnaryExp(tokenList)
 
         return Cast_Expression(type, exp)
+    """
     
     return parsePostfixExp(tokenList)
         
+
+def parseTypeName(tokenList):
     
+    token = peek(tokenList)
+
+    types = []
+    while isTypeSpecifier(token):
+        types.append(takeToken(tokenList))
+        token = peek(tokenList)
+
+    type = parseTypes(types)
+
+    token = peek(tokenList)
+
+    if token[1] == TokenType.ASTERISK or token[1] == TokenType.OPEN_PAREN or token[1] == TokenType.OPEN_BRACKET:
+
+        abstractD = parseAbstractDeclarator(tokenList)
+        type = processAbstractDeclarator(abstractD, type)
+
+        return type
+
+    return type
+
+
+def parseCastExp(tokenList):
+    token = peek(tokenList)
+
+    if token[1] == TokenType.OPEN_PAREN:
+        takeToken(tokenList)
+        type = parseTypeName(tokenList)
+        print(type)
+        expect(TokenType.CLOSE_PAREN, tokenList)
+        exp = parseCastExp(tokenList)
+        return Cast_Expression(type, exp)
+        
+        
+    return parseUnaryExp(tokenList)
 
 def parseExp(tokenList, min_prec):
-    left = parseUnaryExp(tokenList)
+    #left = parseUnaryExp(tokenList)
+    left = parseCastExp(tokenList)
     next_token = peek(tokenList)
     while BinaryOperatorToken(next_token) and precedence(next_token) >= min_prec:
         if next_token[1] == TokenType.EQUAL:
