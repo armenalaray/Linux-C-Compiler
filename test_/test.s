@@ -1,149 +1,139 @@
-	.globl char_to_uchar
+	.globl test_static
 	.text
-char_to_uchar:
+test_static:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movb -1(%rbp), %r10b
-	movb %r10b, -2(%rbp)
-	movb -2(%rbp), %al
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl char_to_schar
-	.text
-char_to_schar:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movb -1(%rbp), %r10b
-	movb %r10b, -2(%rbp)
-	movb -2(%rbp), %al
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl uchar_to_char
-	.text
-uchar_to_char:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movb -1(%rbp), %r10b
-	movb %r10b, -2(%rbp)
-	movb -2(%rbp), %al
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl schar_to_char
-	.text
-schar_to_char:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movb -1(%rbp), %r10b
-	movb %r10b, -2(%rbp)
-	movb -2(%rbp), %al
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl uchar_to_schar
-	.text
-uchar_to_schar:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movb -1(%rbp), %r10b
-	movb %r10b, -2(%rbp)
-	movb -2(%rbp), %al
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl schar_to_uchar
-	.text
-schar_to_uchar:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movb -1(%rbp), %r10b
-	movb %r10b, -2(%rbp)
-	movb -2(%rbp), %al
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl char_to_int
-	.text
-char_to_int:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movsbl -1(%rbp), %r11d
-	movl %r11d, -8(%rbp)
-	movl -8(%rbp), %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl char_to_uint
-	.text
-char_to_uint:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movsbl -1(%rbp), %r11d
-	movl %r11d, -8(%rbp)
-	movl -8(%rbp), %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl char_to_long
-	.text
-char_to_long:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movsbq -1(%rbp), %r11
-	movq %r11, -16(%rbp)
+	subq $272, %rsp
+	leaq static_arr(%rip), %r11
+	movq %r11, -8(%rbp)
+	movq -8(%rbp), %r10
+	movq %r10, -16(%rbp)
+	movl $0, %r10d
+	movslq %r10d, %r11
+	movq %r11, -24(%rbp)
+	movq -24(%rbp), %r10
+	movq %r10, -32(%rbp)
 	movq -16(%rbp), %rax
+	movq -32(%rbp), %rdx
+	leaq (%rax, %rdx, 1), %r11
+	movq %r11, -40(%rbp)
+	movq -40(%rbp), %rax
+	movb 0(%rax), %r10b
+	movb %r10b, -41(%rbp)
+	movsbl -41(%rbp), %r11d
+	movl %r11d, -48(%rbp)
+	cmpl $104, -48(%rbp)
+	movl $0, -52(%rbp)
+	setE -52(%rbp)
+	cmpl $0, -52(%rbp)
+	jE .Ltmp.24
+	leaq static_arr(%rip), %r11
+	movq %r11, -64(%rbp)
+	movq -64(%rbp), %r10
+	movq %r10, -72(%rbp)
+	movl $1, %r10d
+	movslq %r10d, %r11
+	movq %r11, -80(%rbp)
+	movq -80(%rbp), %r10
+	movq %r10, -88(%rbp)
+	movq -72(%rbp), %rax
+	movq -88(%rbp), %rdx
+	leaq (%rax, %rdx, 1), %r11
+	movq %r11, -96(%rbp)
+	movq -96(%rbp), %rax
+	movb 0(%rax), %r10b
+	movb %r10b, -97(%rbp)
+	movsbl -97(%rbp), %r11d
+	movl %r11d, -104(%rbp)
+	cmpl $105, -104(%rbp)
+	movl $0, -108(%rbp)
+	setE -108(%rbp)
+	cmpl $0, -108(%rbp)
+	jE .Ltmp.24
+	movl $1, -112(%rbp)
+	jmp .Ltmp.34
+.Ltmp.24:
+	movl $0, -112(%rbp)
+.Ltmp.34:
+	cmpl $0, -112(%rbp)
+	jE .Ltmp.35
+	leaq static_arr(%rip), %r11
+	movq %r11, -120(%rbp)
+	movq -120(%rbp), %r10
+	movq %r10, -128(%rbp)
+	movl $2, %r10d
+	movslq %r10d, %r11
+	movq %r11, -136(%rbp)
+	movq -136(%rbp), %r10
+	movq %r10, -144(%rbp)
+	movq -128(%rbp), %rax
+	movq -144(%rbp), %rdx
+	leaq (%rax, %rdx, 1), %r11
+	movq %r11, -152(%rbp)
+	movq -152(%rbp), %rax
+	movb 0(%rax), %r10b
+	movb %r10b, -153(%rbp)
+	cmpb $0, -153(%rbp)
+	jNE .Ltmp.42
+	leaq static_arr(%rip), %r11
+	movq %r11, -168(%rbp)
+	movq -168(%rbp), %r10
+	movq %r10, -176(%rbp)
+	movl $3, %r10d
+	movslq %r10d, %r11
+	movq %r11, -184(%rbp)
+	movq -184(%rbp), %r10
+	movq %r10, -192(%rbp)
+	movq -176(%rbp), %rax
+	movq -192(%rbp), %rdx
+	leaq (%rax, %rdx, 1), %r11
+	movq %r11, -200(%rbp)
+	movq -200(%rbp), %rax
+	movb 0(%rax), %r10b
+	movb %r10b, -201(%rbp)
+	cmpb $0, -201(%rbp)
+	jNE .Ltmp.42
+	movl $0, -208(%rbp)
+	jmp .Ltmp.50
+.Ltmp.42:
+	movl $1, -208(%rbp)
+.Ltmp.50:
+	cmpl $0, -208(%rbp)
+	jNE .Ltmp.51
+	leaq static_arr(%rip), %r11
+	movq %r11, -216(%rbp)
+	movq -216(%rbp), %r10
+	movq %r10, -224(%rbp)
+	movl $4, %r10d
+	movslq %r10d, %r11
+	movq %r11, -232(%rbp)
+	movq -232(%rbp), %r10
+	movq %r10, -240(%rbp)
+	movq -224(%rbp), %rax
+	movq -240(%rbp), %rdx
+	leaq (%rax, %rdx, 1), %r11
+	movq %r11, -248(%rbp)
+	movq -248(%rbp), %rax
+	movb 0(%rax), %r10b
+	movb %r10b, -249(%rbp)
+	cmpb $0, -249(%rbp)
+	jNE .Ltmp.51
+	movl $0, -256(%rbp)
+	jmp .Ltmp.59
+.Ltmp.51:
+	movl $1, -256(%rbp)
+.Ltmp.59:
+	cmpl $0, -256(%rbp)
+	movl $0, -260(%rbp)
+	setE -260(%rbp)
+	cmpl $0, -260(%rbp)
+	jE .Ltmp.35
+	movl $1, -264(%rbp)
+	jmp .Ltmp.62
+.Ltmp.35:
+	movl $0, -264(%rbp)
+.Ltmp.62:
+	movl -264(%rbp), %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
@@ -151,16 +141,263 @@ char_to_long:
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-	.globl char_to_ulong
+	.globl test_static_nested
 	.text
-char_to_ulong:
+test_static_nested:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movsbq -1(%rbp), %r11
+	subq $176, %rsp
+	movl $0, -4(%rbp)
+.Ltmp.63:
+	cmpl $3, -4(%rbp)
+	movl $0, -8(%rbp)
+	setL -8(%rbp)
+	movl -8(%rbp), %r10d
+	movl %r10d, -12(%rbp)
+	cmpl $0, -12(%rbp)
+	jE .Lbreak_tmp.11
+	movl $0, -16(%rbp)
+.Ltmp.66:
+	cmpl $4, -16(%rbp)
+	movl $0, -20(%rbp)
+	setL -20(%rbp)
+	movl -20(%rbp), %r10d
+	movl %r10d, -24(%rbp)
+	cmpl $0, -24(%rbp)
+	jE .Lbreak_tmp.12
+	leaq nested_static_arr(%rip), %r11
+	movq %r11, -32(%rbp)
+	movq -32(%rbp), %r10
+	movq %r10, -40(%rbp)
+	movslq -4(%rbp), %r11
+	movq %r11, -48(%rbp)
+	movq -48(%rbp), %r10
+	movq %r10, -56(%rbp)
+	movq -40(%rbp), %rax
+	movq -56(%rbp), %rdx
+	leaq (%rax, %rdx, 4), %r11
+	movq %r11, -64(%rbp)
+	movq -64(%rbp), %r10
+	movq %r10, -72(%rbp)
+	movslq -16(%rbp), %r11
+	movq %r11, -80(%rbp)
+	movq -80(%rbp), %r10
+	movq %r10, -88(%rbp)
+	movq -72(%rbp), %rax
+	movq -88(%rbp), %rdx
+	leaq (%rax, %rdx, 1), %r11
+	movq %r11, -96(%rbp)
+	movq -96(%rbp), %rax
+	movb 0(%rax), %r10b
+	movb %r10b, -97(%rbp)
+	movb -97(%rbp), %r10b
+	movb %r10b, -98(%rbp)
+	movb $0, -99(%rbp)
+	movb -99(%rbp), %r10b
+	movb %r10b, -100(%rbp)
+	cmpl $1, -4(%rbp)
+	movl $0, -104(%rbp)
+	setE -104(%rbp)
+	cmpl $0, -104(%rbp)
+	jE .Ltmp.81
+	cmpl $0, -16(%rbp)
+	movl $0, -108(%rbp)
+	setE -108(%rbp)
+	cmpl $0, -108(%rbp)
+	jE .Ltmp.81
+	movl $1, -112(%rbp)
+	jmp .Ltmp.84
+.Ltmp.81:
+	movl $0, -112(%rbp)
+.Ltmp.84:
+	movl -112(%rbp), %r10d
+	movl %r10d, -116(%rbp)
+	cmpl $0, -116(%rbp)
+	jE .Ltmp.87
+	movb $98, -117(%rbp)
+	movb -117(%rbp), %r10b
+	movb %r10b, -100(%rbp)
+	jmp .Ltmp.86
+.Ltmp.87:
+	cmpl $1, -4(%rbp)
+	movl $0, -124(%rbp)
+	setE -124(%rbp)
+	cmpl $0, -124(%rbp)
+	jE .Ltmp.90
+	cmpl $1, -16(%rbp)
+	movl $0, -128(%rbp)
+	setE -128(%rbp)
+	cmpl $0, -128(%rbp)
+	jE .Ltmp.90
+	movl $1, -132(%rbp)
+	jmp .Ltmp.93
+.Ltmp.90:
+	movl $0, -132(%rbp)
+.Ltmp.93:
+	movl -132(%rbp), %r10d
+	movl %r10d, -136(%rbp)
+	cmpl $0, -136(%rbp)
+	jE .Ltmp.86
+	movb $99, -137(%rbp)
+	movb -137(%rbp), %r10b
+	movb %r10b, -100(%rbp)
+.Ltmp.86:
+	movsbl -98(%rbp), %r11d
+	movl %r11d, -144(%rbp)
+	movsbl -100(%rbp), %r11d
+	movl %r11d, -148(%rbp)
+	movl -148(%rbp), %r10d
+	cmpl %r10d, -144(%rbp)
+	movl $0, -152(%rbp)
+	setNE -152(%rbp)
+	movl -152(%rbp), %r10d
+	movl %r10d, -156(%rbp)
+	cmpl $0, -156(%rbp)
+	jE .Ltmp.100
+	movl $0, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.100:
+.Lcontinue_tmp.12:
+	movl -16(%rbp), %r10d
+	movl %r10d, -160(%rbp)
+	addl $1, -160(%rbp)
+	movl -160(%rbp), %r10d
+	movl %r10d, -16(%rbp)
+	jmp .Ltmp.66
+.Lbreak_tmp.12:
+.Lcontinue_tmp.11:
+	movl -4(%rbp), %r10d
+	movl %r10d, -164(%rbp)
+	addl $1, -164(%rbp)
+	movl -164(%rbp), %r10d
+	movl %r10d, -4(%rbp)
+	jmp .Ltmp.63
+.Lbreak_tmp.11:
+	movl $1, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+	movl $0, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+	.globl test_automatic
+	.text
+test_automatic:
+	pushq %rbp
+	movq %rsp, %rbp
+	subq $224, %rsp
+	movb $97, -4(%rbp)
+	movb $98, -3(%rbp)
+	movb $0, -2(%rbp)
+	movb $0, -1(%rbp)
+	leaq -4(%rbp), %r11
 	movq %r11, -16(%rbp)
-	movq -16(%rbp), %rax
+	movq -16(%rbp), %r10
+	movq %r10, -24(%rbp)
+	movl $0, %r10d
+	movslq %r10d, %r11
+	movq %r11, -32(%rbp)
+	movq -32(%rbp), %r10
+	movq %r10, -40(%rbp)
+	movq -24(%rbp), %rax
+	movq -40(%rbp), %rdx
+	leaq (%rax, %rdx, 1), %r11
+	movq %r11, -48(%rbp)
+	movq -48(%rbp), %rax
+	movb 0(%rax), %r10b
+	movb %r10b, -49(%rbp)
+	movzbl -49(%rbp), %r11d
+	movl %r11d, -56(%rbp)
+	cmpl $97, -56(%rbp)
+	movl $0, -60(%rbp)
+	setE -60(%rbp)
+	cmpl $0, -60(%rbp)
+	jE .Ltmp.111
+	leaq -4(%rbp), %r11
+	movq %r11, -72(%rbp)
+	movq -72(%rbp), %r10
+	movq %r10, -80(%rbp)
+	movl $1, %r10d
+	movslq %r10d, %r11
+	movq %r11, -88(%rbp)
+	movq -88(%rbp), %r10
+	movq %r10, -96(%rbp)
+	movq -80(%rbp), %rax
+	movq -96(%rbp), %rdx
+	leaq (%rax, %rdx, 1), %r11
+	movq %r11, -104(%rbp)
+	movq -104(%rbp), %rax
+	movb 0(%rax), %r10b
+	movb %r10b, -105(%rbp)
+	movzbl -105(%rbp), %r11d
+	movl %r11d, -112(%rbp)
+	cmpl $98, -112(%rbp)
+	movl $0, -116(%rbp)
+	setE -116(%rbp)
+	cmpl $0, -116(%rbp)
+	jE .Ltmp.111
+	movl $1, -120(%rbp)
+	jmp .Ltmp.121
+.Ltmp.111:
+	movl $0, -120(%rbp)
+.Ltmp.121:
+	cmpl $0, -120(%rbp)
+	jE .Ltmp.122
+	leaq -4(%rbp), %r11
+	movq %r11, -128(%rbp)
+	movq -128(%rbp), %r10
+	movq %r10, -136(%rbp)
+	movl $2, %r10d
+	movslq %r10d, %r11
+	movq %r11, -144(%rbp)
+	movq -144(%rbp), %r10
+	movq %r10, -152(%rbp)
+	movq -136(%rbp), %rax
+	movq -152(%rbp), %rdx
+	leaq (%rax, %rdx, 1), %r11
+	movq %r11, -160(%rbp)
+	movq -160(%rbp), %rax
+	movb 0(%rax), %r10b
+	movb %r10b, -161(%rbp)
+	cmpb $0, -161(%rbp)
+	jNE .Ltmp.129
+	leaq -4(%rbp), %r11
+	movq %r11, -176(%rbp)
+	movq -176(%rbp), %r10
+	movq %r10, -184(%rbp)
+	movl $3, %r10d
+	movslq %r10d, %r11
+	movq %r11, -192(%rbp)
+	movq -192(%rbp), %r10
+	movq %r10, -200(%rbp)
+	movq -184(%rbp), %rax
+	movq -200(%rbp), %rdx
+	leaq (%rax, %rdx, 1), %r11
+	movq %r11, -208(%rbp)
+	movq -208(%rbp), %rax
+	movb 0(%rax), %r10b
+	movb %r10b, -209(%rbp)
+	cmpb $0, -209(%rbp)
+	jNE .Ltmp.129
+	movl $0, -216(%rbp)
+	jmp .Ltmp.137
+.Ltmp.129:
+	movl $1, -216(%rbp)
+.Ltmp.137:
+	cmpl $0, -216(%rbp)
+	movl $0, -220(%rbp)
+	setE -220(%rbp)
+	cmpl $0, -220(%rbp)
+	jE .Ltmp.122
+	movl $1, -224(%rbp)
+	jmp .Ltmp.140
+.Ltmp.122:
+	movl $0, -224(%rbp)
+.Ltmp.140:
+	movl -224(%rbp), %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
@@ -168,17 +405,300 @@ char_to_ulong:
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-	.globl char_to_double
+	.globl test_automatic_nested
 	.text
-char_to_double:
+test_automatic_nested:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movsbl -1(%rbp), %eax
-	cvtsi2sdl %eax, %xmm15
-	movsd %xmm15, -16(%rbp)
-	movsd -16(%rbp), %xmm0
+	subq $336, %rsp
+	movb $102, -16(%rbp)
+	movb $111, -15(%rbp)
+	movb $111, -14(%rbp)
+	movb $0, -13(%rbp)
+	movb $0, -12(%rbp)
+	movb $0, -11(%rbp)
+	movb $0, -10(%rbp)
+	movb $0, -9(%rbp)
+	movb $120, -8(%rbp)
+	movb $0, -7(%rbp)
+	movb $0, -6(%rbp)
+	movb $0, -5(%rbp)
+	movb $121, -4(%rbp)
+	movb $122, -3(%rbp)
+	movb $0, -2(%rbp)
+	movb $0, -1(%rbp)
+	movl $0, -20(%rbp)
+.Ltmp.141:
+	cmpl $2, -20(%rbp)
+	movl $0, -24(%rbp)
+	setL -24(%rbp)
+	movl -24(%rbp), %r10d
+	movl %r10d, -28(%rbp)
+	cmpl $0, -28(%rbp)
+	jE .Lbreak_tmp.13
+	movl $0, -32(%rbp)
+.Ltmp.144:
+	cmpl $2, -32(%rbp)
+	movl $0, -36(%rbp)
+	setL -36(%rbp)
+	movl -36(%rbp), %r10d
+	movl %r10d, -40(%rbp)
+	cmpl $0, -40(%rbp)
+	jE .Lbreak_tmp.14
+	movl $0, -44(%rbp)
+.Ltmp.147:
+	cmpl $4, -44(%rbp)
+	movl $0, -48(%rbp)
+	setL -48(%rbp)
+	movl -48(%rbp), %r10d
+	movl %r10d, -52(%rbp)
+	cmpl $0, -52(%rbp)
+	jE .Lbreak_tmp.15
+	leaq -16(%rbp), %r11
+	movq %r11, -64(%rbp)
+	movq -64(%rbp), %r10
+	movq %r10, -72(%rbp)
+	movslq -20(%rbp), %r11
+	movq %r11, -80(%rbp)
+	movq -80(%rbp), %r10
+	movq %r10, -88(%rbp)
+	movq -72(%rbp), %rax
+	movq -88(%rbp), %rdx
+	leaq (%rax, %rdx, 8), %r11
+	movq %r11, -96(%rbp)
+	movq -96(%rbp), %r10
+	movq %r10, -104(%rbp)
+	movslq -32(%rbp), %r11
+	movq %r11, -112(%rbp)
+	movq -112(%rbp), %r10
+	movq %r10, -120(%rbp)
+	movq -104(%rbp), %rax
+	movq -120(%rbp), %rdx
+	leaq (%rax, %rdx, 4), %r11
+	movq %r11, -128(%rbp)
+	movq -128(%rbp), %r10
+	movq %r10, -136(%rbp)
+	movslq -44(%rbp), %r11
+	movq %r11, -144(%rbp)
+	movq -144(%rbp), %r10
+	movq %r10, -152(%rbp)
+	movq -136(%rbp), %rax
+	movq -152(%rbp), %rdx
+	leaq (%rax, %rdx, 1), %r11
+	movq %r11, -160(%rbp)
+	movq -160(%rbp), %rax
+	movb 0(%rax), %r10b
+	movb %r10b, -161(%rbp)
+	movb -161(%rbp), %r10b
+	movb %r10b, -162(%rbp)
+	movb $0, -163(%rbp)
+	movb -163(%rbp), %r10b
+	movb %r10b, -164(%rbp)
+	cmpl $0, -20(%rbp)
+	movl $0, -168(%rbp)
+	setE -168(%rbp)
+	cmpl $0, -168(%rbp)
+	jE .Ltmp.166
+	cmpl $0, -32(%rbp)
+	movl $0, -172(%rbp)
+	setE -172(%rbp)
+	cmpl $0, -172(%rbp)
+	jE .Ltmp.166
+	movl $1, -176(%rbp)
+	jmp .Ltmp.169
+.Ltmp.166:
+	movl $0, -176(%rbp)
+.Ltmp.169:
+	movl -176(%rbp), %r10d
+	movl %r10d, -180(%rbp)
+	cmpl $0, -180(%rbp)
+	jE .Ltmp.172
+	cmpl $0, -44(%rbp)
+	movl $0, -184(%rbp)
+	setE -184(%rbp)
+	movl -184(%rbp), %r10d
+	movl %r10d, -188(%rbp)
+	cmpl $0, -188(%rbp)
+	jE .Ltmp.176
+	movb $102, -189(%rbp)
+	movb -189(%rbp), %r10b
+	movb %r10b, -164(%rbp)
+	jmp .Ltmp.175
+.Ltmp.176:
+	cmpl $1, -44(%rbp)
+	movl $0, -196(%rbp)
+	setE -196(%rbp)
+	cmpl $0, -196(%rbp)
+	jNE .Ltmp.179
+	cmpl $2, -44(%rbp)
+	movl $0, -200(%rbp)
+	setE -200(%rbp)
+	cmpl $0, -200(%rbp)
+	jNE .Ltmp.179
+	movl $0, -204(%rbp)
+	jmp .Ltmp.182
+.Ltmp.179:
+	movl $1, -204(%rbp)
+.Ltmp.182:
+	movl -204(%rbp), %r10d
+	movl %r10d, -208(%rbp)
+	cmpl $0, -208(%rbp)
+	jE .Ltmp.175
+	movb $111, -209(%rbp)
+	movb -209(%rbp), %r10b
+	movb %r10b, -164(%rbp)
+.Ltmp.175:
+	jmp .Ltmp.171
+.Ltmp.172:
+	cmpl $1, -20(%rbp)
+	movl $0, -216(%rbp)
+	setE -216(%rbp)
+	cmpl $0, -216(%rbp)
+	jE .Ltmp.186
+	cmpl $0, -32(%rbp)
+	movl $0, -220(%rbp)
+	setE -220(%rbp)
+	cmpl $0, -220(%rbp)
+	jE .Ltmp.186
+	movl $1, -224(%rbp)
+	jmp .Ltmp.189
+.Ltmp.186:
+	movl $0, -224(%rbp)
+.Ltmp.189:
+	cmpl $0, -224(%rbp)
+	jE .Ltmp.190
+	cmpl $0, -44(%rbp)
+	movl $0, -228(%rbp)
+	setE -228(%rbp)
+	cmpl $0, -228(%rbp)
+	jE .Ltmp.190
+	movl $1, -232(%rbp)
+	jmp .Ltmp.193
+.Ltmp.190:
+	movl $0, -232(%rbp)
+.Ltmp.193:
+	movl -232(%rbp), %r10d
+	movl %r10d, -236(%rbp)
+	cmpl $0, -236(%rbp)
+	jE .Ltmp.195
+	movb $120, -237(%rbp)
+	movb -237(%rbp), %r10b
+	movb %r10b, -164(%rbp)
+	jmp .Ltmp.171
+.Ltmp.195:
+	cmpl $1, -20(%rbp)
+	movl $0, -244(%rbp)
+	setE -244(%rbp)
+	cmpl $0, -244(%rbp)
+	jE .Ltmp.198
+	cmpl $1, -32(%rbp)
+	movl $0, -248(%rbp)
+	setE -248(%rbp)
+	cmpl $0, -248(%rbp)
+	jE .Ltmp.198
+	movl $1, -252(%rbp)
+	jmp .Ltmp.201
+.Ltmp.198:
+	movl $0, -252(%rbp)
+.Ltmp.201:
+	cmpl $0, -252(%rbp)
+	jE .Ltmp.202
+	cmpl $0, -44(%rbp)
+	movl $0, -256(%rbp)
+	setE -256(%rbp)
+	cmpl $0, -256(%rbp)
+	jE .Ltmp.202
+	movl $1, -260(%rbp)
+	jmp .Ltmp.205
+.Ltmp.202:
+	movl $0, -260(%rbp)
+.Ltmp.205:
+	movl -260(%rbp), %r10d
+	movl %r10d, -264(%rbp)
+	cmpl $0, -264(%rbp)
+	jE .Ltmp.207
+	movb $121, -265(%rbp)
+	movb -265(%rbp), %r10b
+	movb %r10b, -164(%rbp)
+	jmp .Ltmp.171
+.Ltmp.207:
+	cmpl $1, -20(%rbp)
+	movl $0, -272(%rbp)
+	setE -272(%rbp)
+	cmpl $0, -272(%rbp)
+	jE .Ltmp.210
+	cmpl $1, -32(%rbp)
+	movl $0, -276(%rbp)
+	setE -276(%rbp)
+	cmpl $0, -276(%rbp)
+	jE .Ltmp.210
+	movl $1, -280(%rbp)
+	jmp .Ltmp.213
+.Ltmp.210:
+	movl $0, -280(%rbp)
+.Ltmp.213:
+	cmpl $0, -280(%rbp)
+	jE .Ltmp.214
+	cmpl $1, -44(%rbp)
+	movl $0, -284(%rbp)
+	setE -284(%rbp)
+	cmpl $0, -284(%rbp)
+	jE .Ltmp.214
+	movl $1, -288(%rbp)
+	jmp .Ltmp.217
+.Ltmp.214:
+	movl $0, -288(%rbp)
+.Ltmp.217:
+	movl -288(%rbp), %r10d
+	movl %r10d, -292(%rbp)
+	cmpl $0, -292(%rbp)
+	jE .Ltmp.171
+	movb $122, -293(%rbp)
+	movb -293(%rbp), %r10b
+	movb %r10b, -164(%rbp)
+.Ltmp.171:
+	movsbl -162(%rbp), %r11d
+	movl %r11d, -300(%rbp)
+	movsbl -164(%rbp), %r11d
+	movl %r11d, -304(%rbp)
+	movl -304(%rbp), %r10d
+	cmpl %r10d, -300(%rbp)
+	movl $0, -308(%rbp)
+	setNE -308(%rbp)
+	movl -308(%rbp), %r10d
+	movl %r10d, -312(%rbp)
+	cmpl $0, -312(%rbp)
+	jE .Ltmp.224
+	movl $0, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.224:
+.Lcontinue_tmp.15:
+	movl -44(%rbp), %r10d
+	movl %r10d, -316(%rbp)
+	addl $1, -316(%rbp)
+	movl -316(%rbp), %r10d
+	movl %r10d, -44(%rbp)
+	jmp .Ltmp.147
+.Lbreak_tmp.15:
+.Lcontinue_tmp.14:
+	movl -32(%rbp), %r10d
+	movl %r10d, -320(%rbp)
+	addl $1, -320(%rbp)
+	movl -320(%rbp), %r10d
+	movl %r10d, -32(%rbp)
+	jmp .Ltmp.144
+.Lbreak_tmp.14:
+.Lcontinue_tmp.13:
+	movl -20(%rbp), %r10d
+	movl %r10d, -324(%rbp)
+	addl $1, -324(%rbp)
+	movl -324(%rbp), %r10d
+	movl %r10d, -20(%rbp)
+	jmp .Ltmp.141
+.Lbreak_tmp.13:
+	movl $1, %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
@@ -186,975 +706,68 @@ char_to_double:
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-	.globl schar_to_int
-	.text
-schar_to_int:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movsbl -1(%rbp), %r11d
-	movl %r11d, -8(%rbp)
-	movl -8(%rbp), %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl schar_to_uint
-	.text
-schar_to_uint:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movsbl -1(%rbp), %r11d
-	movl %r11d, -8(%rbp)
-	movl -8(%rbp), %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl schar_to_long
-	.text
-schar_to_long:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movsbq -1(%rbp), %r11
-	movq %r11, -16(%rbp)
-	movq -16(%rbp), %rax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl schar_to_ulong
-	.text
-schar_to_ulong:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movsbq -1(%rbp), %r11
-	movq %r11, -16(%rbp)
-	movq -16(%rbp), %rax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl schar_to_double
-	.text
-schar_to_double:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movsbl -1(%rbp), %eax
-	cvtsi2sdl %eax, %xmm15
-	movsd %xmm15, -16(%rbp)
-	movsd -16(%rbp), %xmm0
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl uchar_to_int
-	.text
-uchar_to_int:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movzbl -1(%rbp), %r11d
-	movl %r11d, -8(%rbp)
-	movl -8(%rbp), %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl uchar_to_uint
-	.text
-uchar_to_uint:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movzbl -1(%rbp), %r11d
-	movl %r11d, -8(%rbp)
-	movl -8(%rbp), %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl uchar_to_long
-	.text
-uchar_to_long:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movzbq -1(%rbp), %r11
-	movq %r11, -16(%rbp)
-	movq -16(%rbp), %rax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl uchar_to_ulong
-	.text
-uchar_to_ulong:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movzbq -1(%rbp), %r11
-	movq %r11, -16(%rbp)
-	movq -16(%rbp), %rax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl uchar_to_double
-	.text
-uchar_to_double:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movb %dil, -1(%rbp)
-	movzbl -1(%rbp), %eax
-	cvtsi2sdl %eax, %xmm15
-	movsd %xmm15, -16(%rbp)
-	movsd -16(%rbp), %xmm0
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl int_to_char
-	.text
-int_to_char:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movl %edi, -4(%rbp)
-	movb -4(%rbp), %r10b
-	movb %r10b, -5(%rbp)
-	movb -5(%rbp), %al
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl uint_to_char
-	.text
-uint_to_char:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movl %edi, -4(%rbp)
-	movb -4(%rbp), %r10b
-	movb %r10b, -5(%rbp)
-	movb -5(%rbp), %al
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl double_to_char
-	.text
-double_to_char:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movsd %xmm0, -8(%rbp)
-	cvttsd2sil -8(%rbp), %eax
-	movb %al, -9(%rbp)
-	movb -9(%rbp), %al
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl long_to_schar
-	.text
-long_to_schar:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movq %rdi, -8(%rbp)
-	movb -8(%rbp), %r10b
-	movb %r10b, -9(%rbp)
-	movb -9(%rbp), %al
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl ulong_to_schar
-	.text
-ulong_to_schar:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movq %rdi, -8(%rbp)
-	movb -8(%rbp), %r10b
-	movb %r10b, -9(%rbp)
-	movb -9(%rbp), %al
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl int_to_uchar
-	.text
-int_to_uchar:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movl %edi, -4(%rbp)
-	movb -4(%rbp), %r10b
-	movb %r10b, -5(%rbp)
-	movb -5(%rbp), %al
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl uint_to_uchar
-	.text
-uint_to_uchar:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movl %edi, -4(%rbp)
-	movb -4(%rbp), %r10b
-	movb %r10b, -5(%rbp)
-	movb -5(%rbp), %al
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl long_to_uchar
-	.text
-long_to_uchar:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movq %rdi, -8(%rbp)
-	movb -8(%rbp), %r10b
-	movb %r10b, -9(%rbp)
-	movb -9(%rbp), %al
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl ulong_to_uchar
-	.text
-ulong_to_uchar:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movq %rdi, -8(%rbp)
-	movb -8(%rbp), %r10b
-	movb %r10b, -9(%rbp)
-	movb -9(%rbp), %al
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl double_to_uchar
-	.text
-double_to_uchar:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movsd %xmm0, -8(%rbp)
-	cvttsd2sil -8(%rbp), %eax
-	movb %al, -9(%rbp)
-	movb -9(%rbp), %al
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.section .rodata
-	.align 8
-tmp.253:
-	.double 10.0
-	.section .rodata
-	.align 16
-tmp.254:
-	.double -0.0
-	.section .rodata
-	.align 8
-tmp.255:
-	.double 250.0
-	.section .rodata
-	.align 8
-tmp.256:
-	.double 2.6
-	.section .rodata
-	.align 16
-tmp.257:
-	.double -0.0
-	.section .rodata
-	.align 8
-tmp.258:
-	.double 200.99
 	.globl main
 	.text
 main:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $720, %rsp
-	movb $127, -1(%rbp)
-	movb -1(%rbp), %r10b
-	movb %r10b, -2(%rbp)
-	movb -2(%rbp), %r10b
-	movb %r10b, -3(%rbp)
-	movb -3(%rbp), %dil
-	call char_to_uchar
-	movb %al, -4(%rbp)
-	movzbl -4(%rbp), %r11d
-	movl %r11d, -8(%rbp)
-	cmpl $127, -8(%rbp)
-	movl $0, -12(%rbp)
-	setNE -12(%rbp)
-	movl -12(%rbp), %r10d
-	movl %r10d, -16(%rbp)
-	cmpl $0, -16(%rbp)
-	jE .Ltmp.74
+	subq $48, %rsp
+	call test_static
+	movl %eax, -4(%rbp)
+	cmpl $0, -4(%rbp)
+	movl $0, -8(%rbp)
+	setE -8(%rbp)
+	movl -8(%rbp), %r10d
+	movl %r10d, -12(%rbp)
+	cmpl $0, -12(%rbp)
+	jE .Ltmp.231
 	movl $1, %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-.Ltmp.74:
-	movb -2(%rbp), %r10b
-	movb %r10b, -17(%rbp)
-	movb -17(%rbp), %dil
-	call char_to_int
-	movl %eax, -24(%rbp)
-	cmpl $127, -24(%rbp)
-	movl $0, -28(%rbp)
-	setNE -28(%rbp)
-	movl -28(%rbp), %r10d
-	movl %r10d, -32(%rbp)
-	cmpl $0, -32(%rbp)
-	jE .Ltmp.79
+.Ltmp.231:
+	call test_static_nested
+	movl %eax, -16(%rbp)
+	cmpl $0, -16(%rbp)
+	movl $0, -20(%rbp)
+	setE -20(%rbp)
+	movl -20(%rbp), %r10d
+	movl %r10d, -24(%rbp)
+	cmpl $0, -24(%rbp)
+	jE .Ltmp.235
 	movl $2, %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-.Ltmp.79:
-	movb -2(%rbp), %r10b
-	movb %r10b, -33(%rbp)
-	movb -33(%rbp), %dil
-	call char_to_ulong
-	movq %rax, -48(%rbp)
-	movl $127, %r10d
-	movslq %r10d, %r11
-	movq %r11, -56(%rbp)
-	movq -56(%rbp), %r10
-	cmpq %r10, -48(%rbp)
-	movl $0, -60(%rbp)
-	setNE -60(%rbp)
-	movl -60(%rbp), %r10d
-	movl %r10d, -64(%rbp)
-	cmpl $0, -64(%rbp)
-	jE .Ltmp.85
+.Ltmp.235:
+	call test_automatic
+	movl %eax, -28(%rbp)
+	cmpl $0, -28(%rbp)
+	movl $0, -32(%rbp)
+	setE -32(%rbp)
+	movl -32(%rbp), %r10d
+	movl %r10d, -36(%rbp)
+	cmpl $0, -36(%rbp)
+	jE .Ltmp.239
 	movl $3, %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-.Ltmp.85:
-	movl $10, -68(%rbp)
-	negl -68(%rbp)
-	movb -68(%rbp), %r10b
-	movb %r10b, -69(%rbp)
-	movb -69(%rbp), %r10b
-	movb %r10b, -70(%rbp)
-	movb -70(%rbp), %r10b
-	movb %r10b, -71(%rbp)
-	movb -71(%rbp), %dil
-	call schar_to_uchar
-	movb %al, -72(%rbp)
-	movzbl -72(%rbp), %r11d
-	movl %r11d, -76(%rbp)
-	cmpl $246, -76(%rbp)
-	movl $0, -80(%rbp)
-	setNE -80(%rbp)
-	movl -80(%rbp), %r10d
-	movl %r10d, -84(%rbp)
-	cmpl $0, -84(%rbp)
-	jE .Ltmp.93
+.Ltmp.239:
+	call test_automatic_nested
+	movl %eax, -40(%rbp)
+	cmpl $0, -40(%rbp)
+	movl $0, -44(%rbp)
+	setE -44(%rbp)
+	movl -44(%rbp), %r10d
+	movl %r10d, -48(%rbp)
+	cmpl $0, -48(%rbp)
+	jE .Ltmp.243
 	movl $4, %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-.Ltmp.93:
-	movb -70(%rbp), %r10b
-	movb %r10b, -85(%rbp)
-	movb -85(%rbp), %dil
-	call schar_to_long
-	movq %rax, -96(%rbp)
-	movl $10, -100(%rbp)
-	negl -100(%rbp)
-	movslq -100(%rbp), %r11
-	movq %r11, -112(%rbp)
-	movq -112(%rbp), %r10
-	cmpq %r10, -96(%rbp)
-	movl $0, -116(%rbp)
-	setNE -116(%rbp)
-	movl -116(%rbp), %r10d
-	movl %r10d, -120(%rbp)
-	cmpl $0, -120(%rbp)
-	jE .Ltmp.100
-	movl $5, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.100:
-	movb -70(%rbp), %r10b
-	movb %r10b, -121(%rbp)
-	movb -121(%rbp), %dil
-	call schar_to_uint
-	movl %eax, -128(%rbp)
-	movl $4294967286, %r10d
-	cmpl %r10d, -128(%rbp)
-	movl $0, -132(%rbp)
-	setNE -132(%rbp)
-	movl -132(%rbp), %r10d
-	movl %r10d, -136(%rbp)
-	cmpl $0, -136(%rbp)
-	jE .Ltmp.105
-	movl $6, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.105:
-	movb -70(%rbp), %r10b
-	movb %r10b, -137(%rbp)
-	movb -137(%rbp), %dil
-	call schar_to_double
-	movsd %xmm0, -152(%rbp)
-	movsd tmp.253(%rip), %xmm14
-	movsd %xmm14, -160(%rbp)
-	movsd -160(%rbp), %xmm15
-	xorpd tmp.254(%rip), %xmm15
-	movsd %xmm15, -160(%rbp)
-	movsd -152(%rbp), %xmm15
-	comisd -160(%rbp), %xmm15
-	movl $0, -164(%rbp)
-	setNE -164(%rbp)
-	movl -164(%rbp), %r10d
-	movl %r10d, -168(%rbp)
-	cmpl $0, -168(%rbp)
-	jE .Ltmp.111
-	movl $7, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.111:
-	movb $250, -169(%rbp)
-	movb -169(%rbp), %r10b
-	movb %r10b, -170(%rbp)
-	movb -170(%rbp), %r10b
-	movb %r10b, -171(%rbp)
-	movb -171(%rbp), %dil
-	call uchar_to_int
-	movl %eax, -176(%rbp)
-	cmpl $250, -176(%rbp)
-	movl $0, -180(%rbp)
-	setNE -180(%rbp)
-	movl -180(%rbp), %r10d
-	movl %r10d, -184(%rbp)
-	cmpl $0, -184(%rbp)
-	jE .Ltmp.117
-	movl $8, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.117:
-	movb -170(%rbp), %r10b
-	movb %r10b, -185(%rbp)
-	movb -185(%rbp), %dil
-	call uchar_to_long
-	movq %rax, -200(%rbp)
-	movl $250, %r10d
-	movslq %r10d, %r11
-	movq %r11, -208(%rbp)
-	movq -208(%rbp), %r10
-	cmpq %r10, -200(%rbp)
-	movl $0, -212(%rbp)
-	setNE -212(%rbp)
-	movl -212(%rbp), %r10d
-	movl %r10d, -216(%rbp)
-	cmpl $0, -216(%rbp)
-	jE .Ltmp.123
-	movl $9, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.123:
-	movb -170(%rbp), %r10b
-	movb %r10b, -217(%rbp)
-	movb -217(%rbp), %dil
-	call uchar_to_uint
-	movl %eax, -224(%rbp)
-	movl $250, -228(%rbp)
-	movl -228(%rbp), %r10d
-	cmpl %r10d, -224(%rbp)
-	movl $0, -232(%rbp)
-	setNE -232(%rbp)
-	movl -232(%rbp), %r10d
-	movl %r10d, -236(%rbp)
-	cmpl $0, -236(%rbp)
-	jE .Ltmp.129
-	movl $10, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.129:
-	movb -170(%rbp), %r10b
-	movb %r10b, -237(%rbp)
-	movb -237(%rbp), %dil
-	call uchar_to_ulong
-	movq %rax, -248(%rbp)
-	movl $250, %r10d
-	movslq %r10d, %r11
-	movq %r11, -256(%rbp)
-	movq -256(%rbp), %r10
-	cmpq %r10, -248(%rbp)
-	movl $0, -260(%rbp)
-	setNE -260(%rbp)
-	movl -260(%rbp), %r10d
-	movl %r10d, -264(%rbp)
-	cmpl $0, -264(%rbp)
-	jE .Ltmp.135
-	movl $11, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.135:
-	movb -170(%rbp), %r10b
-	movb %r10b, -265(%rbp)
-	movb -265(%rbp), %dil
-	call uchar_to_double
-	movsd %xmm0, -280(%rbp)
-	movsd -280(%rbp), %xmm15
-	comisd tmp.255(%rip), %xmm15
-	movl $0, -284(%rbp)
-	setNE -284(%rbp)
-	movl -284(%rbp), %r10d
-	movl %r10d, -288(%rbp)
-	cmpl $0, -288(%rbp)
-	jE .Ltmp.140
-	movl $12, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.140:
-	movb -170(%rbp), %r10b
-	movb %r10b, -289(%rbp)
-	movb -289(%rbp), %dil
-	call uchar_to_schar
-	movb %al, -290(%rbp)
-	movsbl -290(%rbp), %r11d
-	movl %r11d, -296(%rbp)
-	movl $6, -300(%rbp)
-	negl -300(%rbp)
-	movl -300(%rbp), %r10d
-	cmpl %r10d, -296(%rbp)
-	movl $0, -304(%rbp)
-	setNE -304(%rbp)
-	movl -304(%rbp), %r10d
-	movl %r10d, -308(%rbp)
-	cmpl $0, -308(%rbp)
-	jE .Ltmp.147
-	movl $13, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.147:
-	movb -170(%rbp), %r10b
-	movb %r10b, -309(%rbp)
-	movb -309(%rbp), %dil
-	call uchar_to_char
-	movb %al, -310(%rbp)
-	movsbl -310(%rbp), %r11d
-	movl %r11d, -316(%rbp)
-	movl $6, -320(%rbp)
-	negl -320(%rbp)
-	movl -320(%rbp), %r10d
-	cmpl %r10d, -316(%rbp)
-	movl $0, -324(%rbp)
-	setNE -324(%rbp)
-	movl -324(%rbp), %r10d
-	movl %r10d, -328(%rbp)
-	cmpl $0, -328(%rbp)
-	jE .Ltmp.154
-	movl $14, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.154:
-	movl $128, -332(%rbp)
-	negl -332(%rbp)
-	movb -332(%rbp), %r10b
-	movb %r10b, -333(%rbp)
-	movb -333(%rbp), %r10b
-	movb %r10b, -2(%rbp)
-	movl $128, -340(%rbp)
-	movl -340(%rbp), %edi
-	call int_to_char
-	movb %al, -341(%rbp)
-	movsbl -341(%rbp), %r11d
-	movl %r11d, -348(%rbp)
-	movsbl -2(%rbp), %r11d
-	movl %r11d, -352(%rbp)
-	movl -352(%rbp), %r10d
-	cmpl %r10d, -348(%rbp)
-	movl $0, -356(%rbp)
-	setNE -356(%rbp)
-	movl -356(%rbp), %r10d
-	movl %r10d, -360(%rbp)
-	cmpl $0, -360(%rbp)
-	jE .Ltmp.163
-	movl $15, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.163:
-	movl $6, -364(%rbp)
-	negl -364(%rbp)
-	movb -364(%rbp), %r10b
-	movb %r10b, -365(%rbp)
-	movb -365(%rbp), %r10b
-	movb %r10b, -2(%rbp)
-	movl $2147483898, -372(%rbp)
-	movl -372(%rbp), %edi
-	call uint_to_char
-	movb %al, -373(%rbp)
-	movsbl -373(%rbp), %r11d
-	movl %r11d, -380(%rbp)
-	movsbl -2(%rbp), %r11d
-	movl %r11d, -384(%rbp)
-	movl -384(%rbp), %r10d
-	cmpl %r10d, -380(%rbp)
-	movl $0, -388(%rbp)
-	setNE -388(%rbp)
-	movl -388(%rbp), %r10d
-	movl %r10d, -392(%rbp)
-	cmpl $0, -392(%rbp)
-	jE .Ltmp.172
-	movl $16, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.172:
-	movl $2, -396(%rbp)
-	negl -396(%rbp)
-	movb -396(%rbp), %r10b
-	movb %r10b, -397(%rbp)
-	movb -397(%rbp), %r10b
-	movb %r10b, -2(%rbp)
-	movsd tmp.256(%rip), %xmm14
-	movsd %xmm14, -408(%rbp)
-	movsd -408(%rbp), %xmm15
-	xorpd tmp.257(%rip), %xmm15
-	movsd %xmm15, -408(%rbp)
-	movsd -408(%rbp), %xmm14
-	movsd %xmm14, -416(%rbp)
-	movsd -416(%rbp), %xmm0
-	call double_to_char
-	movb %al, -417(%rbp)
-	movsbl -417(%rbp), %r11d
-	movl %r11d, -424(%rbp)
-	movsbl -2(%rbp), %r11d
-	movl %r11d, -428(%rbp)
-	movl -428(%rbp), %r10d
-	cmpl %r10d, -424(%rbp)
-	movl $0, -432(%rbp)
-	setNE -432(%rbp)
-	movl -432(%rbp), %r10d
-	movl %r10d, -436(%rbp)
-	cmpl $0, -436(%rbp)
-	jE .Ltmp.182
-	movl $17, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.182:
-	movq $17592186044416, %r10
-	movq %r10, -448(%rbp)
-	movq -448(%rbp), %rdi
-	call long_to_schar
-	movb %al, -449(%rbp)
-	movb -449(%rbp), %r10b
-	movb %r10b, -450(%rbp)
-	cmpb $0, -450(%rbp)
-	jE .Ltmp.186
-	movl $18, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.186:
-	movl $126, -456(%rbp)
-	negl -456(%rbp)
-	movb -456(%rbp), %r10b
-	movb %r10b, -457(%rbp)
-	movb -457(%rbp), %r10b
-	movb %r10b, -70(%rbp)
-	movq $9224497936761618562, %r10
-	movq %r10, -472(%rbp)
-	movq -472(%rbp), %rdi
-	call ulong_to_schar
-	movb %al, -473(%rbp)
-	movsbl -473(%rbp), %r11d
-	movl %r11d, -480(%rbp)
-	movsbl -70(%rbp), %r11d
-	movl %r11d, -484(%rbp)
-	movl -484(%rbp), %r10d
-	cmpl %r10d, -480(%rbp)
-	movl $0, -488(%rbp)
-	setNE -488(%rbp)
-	movl -488(%rbp), %r10d
-	movl %r10d, -492(%rbp)
-	cmpl $0, -492(%rbp)
-	jE .Ltmp.195
-	movl $19, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.195:
-	movb $200, -493(%rbp)
-	movb -493(%rbp), %r10b
-	movb %r10b, -170(%rbp)
-	movl $1234488, -500(%rbp)
-	negl -500(%rbp)
-	movl -500(%rbp), %r10d
-	movl %r10d, -504(%rbp)
-	movl -504(%rbp), %edi
-	call int_to_uchar
-	movb %al, -505(%rbp)
-	movzbl -505(%rbp), %r11d
-	movl %r11d, -512(%rbp)
-	movzbl -170(%rbp), %r11d
-	movl %r11d, -516(%rbp)
-	movl -516(%rbp), %r10d
-	cmpl %r10d, -512(%rbp)
-	movl $0, -520(%rbp)
-	setNE -520(%rbp)
-	movl -520(%rbp), %r10d
-	movl %r10d, -524(%rbp)
-	cmpl $0, -524(%rbp)
-	jE .Ltmp.204
-	movl $20, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.204:
-	movl $4293732808, -528(%rbp)
-	movl -528(%rbp), %r10d
-	movl %r10d, -532(%rbp)
-	movl -532(%rbp), %edi
-	call uint_to_uchar
-	movb %al, -533(%rbp)
-	movzbl -533(%rbp), %r11d
-	movl %r11d, -540(%rbp)
-	movzbl -170(%rbp), %r11d
-	movl %r11d, -544(%rbp)
-	movl -544(%rbp), %r10d
-	cmpl %r10d, -540(%rbp)
-	movl $0, -548(%rbp)
-	setNE -548(%rbp)
-	movl -548(%rbp), %r10d
-	movl %r10d, -552(%rbp)
-	cmpl $0, -552(%rbp)
-	jE .Ltmp.212
-	movl $21, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.212:
-	movq $36283884951096, %r10
-	movq %r10, -560(%rbp)
-	negq -560(%rbp)
-	movq -560(%rbp), %r10
-	movq %r10, -568(%rbp)
-	movq -568(%rbp), %rdi
-	call long_to_uchar
-	movb %al, -569(%rbp)
-	movzbl -569(%rbp), %r11d
-	movl %r11d, -576(%rbp)
-	movzbl -170(%rbp), %r11d
-	movl %r11d, -580(%rbp)
-	movl -580(%rbp), %r10d
-	cmpl %r10d, -576(%rbp)
-	movl $0, -584(%rbp)
-	setNE -584(%rbp)
-	movl -584(%rbp), %r10d
-	movl %r10d, -588(%rbp)
-	cmpl $0, -588(%rbp)
-	jE .Ltmp.220
-	movl $22, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.220:
-	movq $9224497936761618632, %r10
-	movq %r10, -600(%rbp)
-	movq -600(%rbp), %rdi
-	call ulong_to_uchar
-	movb %al, -601(%rbp)
-	movzbl -601(%rbp), %r11d
-	movl %r11d, -608(%rbp)
-	movzbl -170(%rbp), %r11d
-	movl %r11d, -612(%rbp)
-	movl -612(%rbp), %r10d
-	cmpl %r10d, -608(%rbp)
-	movl $0, -616(%rbp)
-	setNE -616(%rbp)
-	movl -616(%rbp), %r10d
-	movl %r10d, -620(%rbp)
-	cmpl $0, -620(%rbp)
-	jE .Ltmp.227
-	movl $23, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.227:
-	movsd tmp.258(%rip), %xmm14
-	movsd %xmm14, -632(%rbp)
-	movsd -632(%rbp), %xmm0
-	call double_to_uchar
-	movb %al, -633(%rbp)
-	movzbl -633(%rbp), %r11d
-	movl %r11d, -640(%rbp)
-	movzbl -170(%rbp), %r11d
-	movl %r11d, -644(%rbp)
-	movl -644(%rbp), %r10d
-	cmpl %r10d, -640(%rbp)
-	movl $0, -648(%rbp)
-	setNE -648(%rbp)
-	movl -648(%rbp), %r10d
-	movl %r10d, -652(%rbp)
-	cmpl $0, -652(%rbp)
-	jE .Ltmp.234
-	movl $24, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.234:
-	movb null_ptr.34(%rip), %r10b
-	movb %r10b, -653(%rbp)
-	movb -653(%rbp), %r10b
-	movb %r10b, -654(%rbp)
-	movb -654(%rbp), %r10b
-	movb %r10b, -655(%rbp)
-	cmpb $0, -655(%rbp)
-	jE .Ltmp.237
-	movl $25, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.237:
-	movb $32, -656(%rbp)
-	movb -656(%rbp), %r10b
-	movb %r10b, -2(%rbp)
-	movsbq -2(%rbp), %r11
-	movq %r11, -664(%rbp)
-	movq -664(%rbp), %r10
-	movq %r10, -672(%rbp)
-	movb -672(%rbp), %r10b
-	movb %r10b, -673(%rbp)
-	movsbl -673(%rbp), %r11d
-	movl %r11d, -680(%rbp)
-	movsbl -2(%rbp), %r11d
-	movl %r11d, -684(%rbp)
-	movl -684(%rbp), %r10d
-	cmpl %r10d, -680(%rbp)
-	movl $0, -688(%rbp)
-	setNE -688(%rbp)
-	movl -688(%rbp), %r10d
-	movl %r10d, -692(%rbp)
-	cmpl $0, -692(%rbp)
-	jE .Ltmp.245
-	movl $26, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.245:
-	movb $300, -693(%rbp)
-	movsbl -693(%rbp), %r11d
-	movl %r11d, -700(%rbp)
-	movb $44, -701(%rbp)
-	movsbl -701(%rbp), %r11d
-	movl %r11d, -708(%rbp)
-	movl -708(%rbp), %r10d
-	cmpl %r10d, -700(%rbp)
-	movl $0, -712(%rbp)
-	setNE -712(%rbp)
-	movl -712(%rbp), %r10d
-	movl %r10d, -716(%rbp)
-	cmpl $0, -716(%rbp)
-	jE .Ltmp.252
-	movl $27, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.252:
+.Ltmp.243:
 	movl $0, %eax
 	movq %rbp, %rsp
 	popq %rbp
@@ -1163,8 +776,17 @@ main:
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-	.bss
-	.align 8
-null_ptr.34:
-	.zero 8
+	.data
+	.align 1
+static_arr:
+	.asciz "hi"
+	.zero 2
+	.data
+	.align 1
+nested_static_arr:
+	.asciz ""
+	.zero 3
+	.asciz "bc"
+	.zero 1
+	.zero 4
 	.section	.note.GNU-stack,"",@progbits

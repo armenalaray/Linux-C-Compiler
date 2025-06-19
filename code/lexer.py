@@ -59,6 +59,7 @@ class TokenType(Enum):
     CHAR_KW = 52
     CHAR_CONST = 53
     STRING_LITERAL = 54
+    SIZEOF_KW = 55
 
 def Lex(buffer, iFile):
     tokenList = []
@@ -268,6 +269,9 @@ def Lex(buffer, iFile):
             
             match alphanumeric.group():
                 
+                case "sizeof":
+                    tokenList.append(("sizeof", TokenType.SIZEOF_KW, LineNumber))
+
                 case "char":
                     tokenList.append(("char", TokenType.CHAR_KW, LineNumber))
 
