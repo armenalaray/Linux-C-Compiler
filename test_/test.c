@@ -9,10 +9,28 @@ int main(void) {
     void c = d; 
     int s[4];
 
-    if (c)
+    if (1)
     {
         return 1;
     }
+    
+    while(1)
+    {
+        return 1;
+    }
+    
+    do
+    {
+        return 1;
+    } while (1);
+    
+    
+    for (;1;)
+    {
+        return 1;
+    }
+    
+    
     
     !s;
 

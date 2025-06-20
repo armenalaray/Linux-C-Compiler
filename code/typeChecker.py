@@ -1050,12 +1050,14 @@ def typeCheckStatement(statement, symbolTable, functionParentName):
             c = None
             if condExp:
                 c = typeCheckAndConvert(condExp, symbolTable)
-                #c = typeCheckExpression(condExp, symbolTable)
+
+                if not isScalar(c.retType):
+                    print("Error: Logical operators only apply to scalar expressions.")
+                    sys.exit(1)
 
             p = None
             if postExp:
                 p = typeCheckAndConvert(postExp, symbolTable)
-                #p = typeCheckExpression(postExp, symbolTable)
 
             s = typeCheckStatement(statement, symbolTable, functionParentName)
 
@@ -1065,14 +1067,20 @@ def typeCheckStatement(statement, symbolTable, functionParentName):
             statement = typeCheckStatement(statement, symbolTable, functionParentName)
 
             condExp = typeCheckAndConvert(condExp, symbolTable)
-            #condExp = typeCheckExpression(condExp, symbolTable)
+            
+            if not isScalar(condExp.retType):
+                print("Error: Logical operators only apply to scalar expressions.")
+                sys.exit(1)
 
             return parser.DoWhileStatement(statement, condExp)
 
         case parser.WhileStatement(condExp=condExp, statement=statement):
 
             condExp = typeCheckAndConvert(condExp, symbolTable)
-            #condExp = typeCheckExpression(condExp, symbolTable)
+
+            if not isScalar(condExp.retType):
+                print("Error: Logical operators only apply to scalar expressions.")
+                sys.exit(1)
 
             statement = typeCheckStatement(statement, symbolTable, functionParentName)
 
