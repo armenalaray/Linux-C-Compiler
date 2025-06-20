@@ -1,4 +1,5 @@
 import sys
+import traceback
 from enum import Enum
 import ctypes
 import parser
@@ -591,6 +592,7 @@ def typeCheckExpression(exp, symbolTable):
             return parser.Conditional_Expression(condExp, thenExp, elseExp, commonType)
 
         case _:
+            traceback.print_stack()
             print("Invalid expression type. {0}".format(type(exp)))
             sys.exit(1)
 

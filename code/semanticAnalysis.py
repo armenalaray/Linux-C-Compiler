@@ -1,5 +1,6 @@
 import copy
 import sys
+import traceback
 import parser
 
 def resolveExpression(expression, idMap):
@@ -87,8 +88,15 @@ def resolveExpression(expression, idMap):
         case parser.StringExpression(string = string):
             return parser.StringExpression(string)
 
+        case parser.SizeOf(exp = exp):
+            exp = resolveExpression(exp, idMap)
+            return parser.SizeOf(exp)
+
+        case parser.SizeOfT(typeName = typeName):
+            return parser.SizeOfT(typeName)
+
         case _:
-            #print(type(exp))
+            traceback.print_stack()
             print("Invalid expression type: {0}".format(type(expression)))
             sys.exit(1)
 
@@ -277,7 +285,10 @@ def resolveStatement(statement, idMap):
             return parser.ExpressionStmt(resolveExpression(exp, idMap))
         
         case parser.ReturnStmt(expression=exp):
-            return parser.ReturnStmt(resolveExpression(exp, idMap))
+            if exp: 
+                return parser.ReturnStmt(resolveExpression(exp, idMap))
+            
+            return parser.ReturnStmt()
         
         case parser.IfStatement(exp=exp, thenS=thenS, elseS=elseS):
             #print(type(exp))

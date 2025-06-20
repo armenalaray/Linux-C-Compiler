@@ -1,4 +1,4 @@
-int main(void) {
+void main(void) {
     int *a = 0;
     void *b = a;
 
@@ -9,4 +9,5 @@ int main(void) {
     //a-b;
     void c = d; 
     int* ale = 1 ? b : a;
+    return;
 }
