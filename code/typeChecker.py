@@ -289,20 +289,9 @@ def isComplete(t):
 def isPointerToComplete(t):
     match t:
         case parser.PointerType(referenceType = referenceType):
-            match referenceType:
-                case parser.PointerType():
-                    return isPointerToComplete(referenceType)
-                
-                case parser.ArrayType():
-                    pass
-
-                case _:
-                    return isComplete(referenceType)
-
+            return isComplete(referenceType)
         case _:
             return False
-        
-    return False
 
 def validateTypeSpecifier(t):
 
@@ -370,10 +359,14 @@ def typeCheckExpression(exp, symbolTable):
 
         case parser.Dereference(exp = exp):
             typedInner = typeCheckAndConvert(exp, symbolTable)
-            #typedInner = typeCheckExpression(exp, symbolTable)
             
             match typedInner.retType:
                 case parser.PointerType(referenceType = referenceType):
+
+                    if not isComplete(referenceType):
+                        print("Error: Cannot dereference pointer to void.")
+                        sys.exit(1)         
+
                     return parser.Dereference(typedInner, referenceType)
 
                 case _:
@@ -413,12 +406,10 @@ def typeCheckExpression(exp, symbolTable):
             return parser.AddrOf(typedInner, retType)
 
         case parser.Cast_Expression(targetType = targetType, exp = exp):
-            
-            #if type(targetType) == parser.ArrayType:
-            #    print("Error: Cannot cast to an array type.")
-            #    sys.exit(1)
-            
             e = typeCheckAndConvert(exp, symbolTable)
+            
+            validateTypeSpecifier(targetType)
+            validateTypeSpecifier(e.retType)
 
             if (type(e.retType) == parser.PointerType and type(targetType) == parser.DoubleType) or (type(e.retType) == parser.DoubleType and type(targetType) == parser.PointerType):
                 print("Error: Casting pointer to double or a double to a pointer.")
@@ -853,6 +844,10 @@ def AnnotateInitializer(varDecl, type_, init, initList, symbolTable):
 
 def typeCheckFileScopeVarDecl(varDecl, symbolTable):
 
+    if not isComplete(varDecl.varType):
+        print("Error: Cannot declare variable with void Type.")
+        sys.exit(1)
+
     validateTypeSpecifier(varDecl.varType)
 
     initialValue = None
@@ -1011,6 +1006,10 @@ def typeCheckInitializer(targetType, initializer, symbolTable):
             sys.exit(1)
 
 def typeCheckLocalVarDecl(varDecl, symbolTable):
+
+    if not isComplete(varDecl.varType):
+        print("Error: Cannot declare variable with void Type.")
+        sys.exit(1)
 
     validateTypeSpecifier(varDecl.varType)
 
@@ -1242,6 +1241,11 @@ def typeCheckFunctionDeclaration(funDec, symbolTable):
 
     adjustedParamTypes = []
     for paramType in funDec.funType.paramTypes:
+        
+        if not isComplete(paramType):
+            print("Error: Cannot declare variable with void Type.")
+            sys.exit(1)
+
         match paramType:
             case parser.ArrayType(elementType = elementType, size = size):
                 adjT = parser.PointerType(referenceType= elementType)
