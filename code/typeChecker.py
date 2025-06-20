@@ -447,6 +447,10 @@ def typeCheckExpression(exp, symbolTable):
                     return parser.Unary_Expression(op, e, e.retType)
 
                 case parser.UnopType.NOT:
+                    if not isScalar(e.retType):
+                        print("Error: Logical operators only apply to escalar expressions.")
+                        sys.exit(1)
+
                     return parser.Unary_Expression(op, e, parser.IntType())
                     
                 case _:
@@ -480,8 +484,16 @@ def typeCheckExpression(exp, symbolTable):
                             sys.exit(1)
 
                     case parser.BinopType.AND:
+                        if (not isScalar(l.retType)) or (not isScalar(r.retType)):
+                            print("Error: Logical operators only apply to scalar expressions.")
+                            sys.exit(1)
+
                         return parser.Binary_Expression(op, l, r, parser.IntType())
                     case parser.BinopType.OR:
+                        if (not isScalar(l.retType)) or (not isScalar(r.retType)):
+                            print("Error: Logical operators only apply to scalar expressions.")
+                            sys.exit(1)
+
                         return parser.Binary_Expression(op, l, r, parser.IntType())
                 
                 commonType = None
@@ -578,6 +590,10 @@ def typeCheckExpression(exp, symbolTable):
             condExp = typeCheckAndConvert(condExp, symbolTable)
             thenExp = typeCheckAndConvert(thenExp, symbolTable)
             elseExp = typeCheckAndConvert(elseExp, symbolTable)
+            
+            if not isScalar(condExp.retType):
+                print("Error: Logical operators only apply to scalar expressions.")
+                sys.exit(1)
 
             commonType = None
 
@@ -630,62 +646,6 @@ def GetStaticInitializer(varType, int):
             print("Error: Invalid Variable Type. {0}".format(varType))
             sys.exit(1)
 
-"""
-def AnnotateExpression(varDecl):
-
-    match varDecl.exp:
-        case parser.Constant_Expression(const = const):
-            match const:
-                case parser.ConstLong(int = int):
-
-                    varDecl.exp = parser.Constant_Expression(const, parser.LongType())
-                    exp = convertByAssignment(varDecl.exp, varDecl.varType)
-                    varDecl.exp = exp
-                    
-                    return GetStaticInitializer(varDecl.varType, int)                            
-
-                case parser.ConstInt(int = int):
-                    
-                    varDecl.exp = parser.Constant_Expression(const, parser.IntType())
-                    exp = convertByAssignment(varDecl.exp, varDecl.varType)
-                    varDecl.exp = exp
-
-                    return GetStaticInitializer(varDecl.varType, int)
-
-                case parser.ConstULong(int = int):
-                    varDecl.exp = parser.Constant_Expression(const, parser.ULongType())
-                    exp = convertByAssignment(varDecl.exp, varDecl.varType)
-                    
-                    varDecl.exp = exp
-
-                    return GetStaticInitializer(varDecl.varType, int)
-                    
-
-                case parser.ConstUInt(int = int):
-                    varDecl.exp = parser.Constant_Expression(const, parser.UIntType())
-                    exp = convertByAssignment(varDecl.exp, varDecl.varType)
-                    
-                    varDecl.exp = exp
-
-                    return GetStaticInitializer(varDecl.varType, int)
-                
-                case parser.ConstDouble(double=double):
-                    varDecl.exp = parser.Constant_Expression(const, parser.DoubleType())
-                    exp = convertByAssignment(varDecl.exp, varDecl.varType)
-                    varDecl.exp = exp
-
-                    return GetStaticInitializer(varDecl.varType, double)
-                    
-
-                case _:
-                    print("Error: Invalid Constant. {0}".format(type(const)))
-                    sys.exit(1)
-        
-        case _:
-            print("Error: Non constant expression.")
-            sys.exit(1)
-"""
-
 def CreateZeroInitializer(type_, initList):
     match type_:
         case parser.ArrayType(elementType = elementType, size = size):
@@ -695,7 +655,6 @@ def CreateZeroInitializer(type_, initList):
         case _:
             initList.append(GetStaticInitializer(type_, 0))
             
-
 def AnnotateInitializer(varDecl, type_, init, initList, symbolTable):
 
     def AnnotateSingleInit(exp, type_):
@@ -820,7 +779,6 @@ def AnnotateInitializer(varDecl, type_, init, initList, symbolTable):
         case _:
             print("Error: Can't Initialize a scalar object with a compound initializer.")
             sys.exit(1)
-
 
 def typeCheckFileScopeVarDecl(varDecl, symbolTable):
 
@@ -1031,7 +989,6 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
         
         return parser.VariableDecl(varDecl.identifier, varDecl.varType, None, varDecl.storageClass)
 
-
 def typeCheckVarDeclaration(varDecl, symbolTable, isBlockScope):
     if isBlockScope:
         return typeCheckLocalVarDecl(varDecl, symbolTable)
@@ -1067,6 +1024,17 @@ def typeCheckForInit(forInit, symbolTable):
                 return parser.InitExp(exp)
             
             return parser.InitExp()
+
+def isScalar(t):
+    match t:
+        case parser.VoidType():
+            return False
+        case parser.FunType():
+            return False
+        case parser.ArrayType():
+            return False
+        case _:
+            return True
 
 def typeCheckStatement(statement, symbolTable, functionParentName):
     match statement:
@@ -1117,16 +1085,29 @@ def typeCheckStatement(statement, symbolTable, functionParentName):
             return parser.ExpressionStmt(e)
 
         case parser.ReturnStmt(expression=exp):
-            e = typeCheckAndConvert(exp, symbolTable)
-            #e = typeCheckExpression(exp, symbolTable)
+            funRetType = symbolTable[functionParentName].type.retType
+            
+            if exp:
+                if type(funRetType) == parser.VoidType:
+                    print("Error: Function with void return type cannot have return expression.")
+                    sys.exit(1)
 
-            e = convertByAssignment(e, symbolTable[functionParentName].type.retType)
+                e = typeCheckAndConvert(exp, symbolTable)
+                e = convertByAssignment(e, funRetType)
+                return parser.ReturnStmt(e)
+            
+            if type(funRetType) != parser.VoidType:
+                print("Error: Function must return a value.")
+                sys.exit(1)
 
-            return parser.ReturnStmt(e)
+            return parser.ReturnStmt()
             
         case parser.IfStatement(exp=exp, thenS=thenS, elseS=elseS):
             exp = typeCheckAndConvert(exp, symbolTable)
-            #exp = typeCheckExpression(exp, symbolTable)
+
+            if not isScalar(exp.retType):
+                print("Error: Logical operators only apply to scalar expressions.")
+                sys.exit(1)
 
             thenS = typeCheckStatement(thenS, symbolTable, functionParentName)
 
