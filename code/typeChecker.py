@@ -174,7 +174,7 @@ def getCommonType(type1, type2):
         return type2
 
 def convertTo(exp, resultType):
-    if type(exp.retType) == type(resultType):
+    if exp.retType.checkType(resultType):
         return exp
     
     return parser.Cast_Expression(resultType, exp, resultType)
@@ -215,7 +215,13 @@ def getCommonPointerType(exp1, exp2):
         return type2
     elif isNullPointerConstant(exp2):
         return type1
-    
+    elif type(type1) == parser.PointerType and type(type1.referenceType) == parser.VoidType and type(type2) == parser.PointerType:
+        print("Ale 1")
+        return parser.PointerType(parser.VoidType())
+    elif type(type2) == parser.PointerType and type(type2.referenceType) == parser.VoidType and type(type1) == parser.PointerType:
+        print("Ale 2")
+        return parser.PointerType(parser.VoidType())
+
     print("Error: Expressions have incompatible types. {0} and {1}".format(type1, type2))
     sys.exit(1)
 
@@ -247,6 +253,11 @@ def convertByAssignment(exp, targetType):
         return convertTo(exp, targetType)
 
     if isNullPointerConstant(exp) and type(targetType) == parser.PointerType:
+        return convertTo(exp, targetType)
+    
+    if type(targetType) == parser.PointerType and type(targetType.referenceType) == parser.VoidType and type(exp.retType) == parser.PointerType:
+        return convertTo(exp, targetType)
+    if type(exp.retType) == parser.PointerType and type(exp.retType.referenceType) == parser.VoidType and type(targetType) == parser.PointerType:
         return convertTo(exp, targetType)
     
     print("Error: Cannot convert type for assignment. {0} and {1}".format(exp.retType, targetType))

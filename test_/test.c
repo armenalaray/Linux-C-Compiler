@@ -1,7 +1,12 @@
 int main(void) {
-    /* Nested function definitions are not permitted */
-    int foo(void) {
-        return 1;
-    }
-    return foo();
+    int *a = 0;
+    void *b = a;
+
+    void d;
+    b==a;
+    a!=b;
+
+    //a-b;
+    void c = d; 
+    int* ale = 1 ? b : a;
 }

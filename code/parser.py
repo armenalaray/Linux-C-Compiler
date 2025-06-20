@@ -282,7 +282,6 @@ class VoidType(Type, Node):
         print("Error: Cannot get Size of void Type.")
         sys.exit(1)
 
-
     def checkType(self, other):
         if type(other) == VoidType:
             return True
