@@ -305,7 +305,26 @@ def isPointerToComplete(t):
     return False
 
 def validateTypeSpecifier(t):
-    pass
+
+    match t:
+        case parser.ArrayType(elementType = elementType, size = size):
+            if not isComplete(elementType):
+                print("Error: Illegal array of incomplete type.")
+                sys.exit(1)
+
+            validateTypeSpecifier(elementType)
+
+        case parser.PointerType(referenceType = referenceType):
+            validateTypeSpecifier(referenceType)
+            
+        case parser.FunType(paramTypes = paramTypes, retType = retType):
+            for paramType in paramTypes:
+                validateTypeSpecifier(paramType)
+            
+            validateTypeSpecifier(retType)
+
+        case _:
+            return
 
 def typeCheckExpression(exp, symbolTable):
     match exp:
@@ -649,6 +668,16 @@ def typeCheckExpression(exp, symbolTable):
 
             return parser.Conditional_Expression(condExp, thenExp, elseExp, commonType)
 
+        case parser.SizeOf(exp = exp):
+            e = typeCheckAndConvert(exp, symbolTable)
+            validateTypeSpecifier(e.retType)
+            return parser.SizeOf(e, e.retType)
+
+        case parser.SizeOfT(typeName = typeName):
+            print(type(typeName))
+            validateTypeSpecifier(typeName)
+            return parser.SizeOfT(typeName)
+
         case _:
             traceback.print_stack()
             print("Invalid expression type. {0}".format(type(exp)))
@@ -824,6 +853,8 @@ def AnnotateInitializer(varDecl, type_, init, initList, symbolTable):
 
 def typeCheckFileScopeVarDecl(varDecl, symbolTable):
 
+    validateTypeSpecifier(varDecl.varType)
+
     initialValue = None
 
     if varDecl.initializer:
@@ -980,6 +1011,8 @@ def typeCheckInitializer(targetType, initializer, symbolTable):
             sys.exit(1)
 
 def typeCheckLocalVarDecl(varDecl, symbolTable):
+
+    validateTypeSpecifier(varDecl.varType)
 
     if varDecl.storageClass.storageClass == parser.StorageType.EXTERN:
         if varDecl.initializer:
@@ -1201,6 +1234,7 @@ def typeCheckBlock(block, symbolTable, functionParentName):
         
 def typeCheckFunctionDeclaration(funDec, symbolTable):
     
+    validateTypeSpecifier(funDec.funType)
 
     if type(funDec.funType.retType) == parser.ArrayType:
         print("Error: A function cannot return an array.")
