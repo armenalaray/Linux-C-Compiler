@@ -280,6 +280,33 @@ def isAnLvalue(exp):
     
     return False
 
+def isComplete(t):
+    if type(t) != parser.VoidType:
+        return True
+    
+    return False
+
+def isPointerToComplete(t):
+    match t:
+        case parser.PointerType(referenceType = referenceType):
+            match referenceType:
+                case parser.PointerType():
+                    return isPointerToComplete(referenceType)
+                
+                case parser.ArrayType():
+                    pass
+
+                case _:
+                    return isComplete(referenceType)
+
+        case _:
+            return False
+        
+    return False
+
+def validateTypeSpecifier(t):
+    pass
+
 def typeCheckExpression(exp, symbolTable):
     match exp:
 
@@ -339,11 +366,14 @@ def typeCheckExpression(exp, symbolTable):
             typedE2 = typeCheckAndConvert(e2, symbolTable)
 
             ptrType = None
-            if type(typedE1.retType) == parser.PointerType and isIntegerType(typedE2.retType):
+
+            #if type(typedE1.retType) == parser.PointerType and isIntegerType(typedE2.retType):
+            if isPointerToComplete(typedE1.retType) and isIntegerType(typedE2.retType):
                 ptrType = typedE1.retType
                 typedE2 = convertTo(typedE2, parser.LongType())
 
-            elif isIntegerType(typedE1.retType) and type(typedE2.retType) == parser.PointerType:
+            #elif isIntegerType(typedE1.retType) and type(typedE2.retType) == parser.PointerType:
+            elif isIntegerType(typedE1.retType) and isPointerToComplete(typedE2.retType):
                 ptrType = typedE2.retType
                 typedE1 = convertTo(typedE1, parser.LongType())
             
@@ -554,11 +584,11 @@ def typeCheckExpression(exp, symbolTable):
                     if isArithmeticType(l.retType) and isArithmeticType(r.retType):
                         return typeCheckCommonArithmeticBinaryExp(op, l, r)
 
-                    elif type(l.retType) == parser.PointerType and isIntegerType(r.retType):
+                    elif isPointerToComplete(l.retType) and isIntegerType(r.retType):
                         convertedE2 = convertTo(r, parser.LongType())
                         return parser.Binary_Expression(op, l, convertedE2, l.retType)
                         
-                    elif isIntegerType(l.retType) and type(r.retType) == parser.PointerType:
+                    elif isIntegerType(l.retType) and isPointerToComplete(r.retType):
                         convertedE1 = convertTo(l, parser.LongType())
                         return parser.Binary_Expression(op, convertedE1, r, r.retType)
                     
@@ -571,11 +601,11 @@ def typeCheckExpression(exp, symbolTable):
                     if isArithmeticType(l.retType) and isArithmeticType(r.retType):
                         return typeCheckCommonArithmeticBinaryExp(op, l, r)
 
-                    elif type(l.retType) == parser.PointerType and isIntegerType(r.retType):
+                    elif isPointerToComplete(l.retType) and isIntegerType(r.retType):
                         convertedE2 = convertTo(r, parser.LongType())
                         return parser.Binary_Expression(op, l, convertedE2, l.retType)
                         
-                    elif type(l.retType) == parser.PointerType and l.retType.checkType(r.retType):
+                    elif isPointerToComplete(l.retType) and l.retType.checkType(r.retType):
                         return parser.Binary_Expression(op, l, r, parser.LongType())
                     
                     else:

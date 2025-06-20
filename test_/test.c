@@ -1,44 +1,12 @@
 int main(void) {
     int *a = 0;
-    void *b = a;
-    
-    (void)a;   
-    (int [2])a;   
-    (int (*)(int a))a;   
+    void **b = (void**)&a;
 
-    void d;
-    b == a;
-    a != b;
-    
-    void c = d; 
-    int s[4];
+    //b - 1;
+    a - 1;
 
-    if (1)
-    {
-        return 1;
-    }
+    a[0];
+    //b[0];
+    //0[b];
     
-    while(1)
-    {
-        return 1;
-    }
-    
-    do
-    {
-        return 1;
-    } while (1);
-    
-    
-    for (;1;)
-    {
-        return 1;
-    }
-    
-    
-    !s;
-
-    c != d;
-
-    //a-b;
-    int* ale = 1 ? b : a;
 }
