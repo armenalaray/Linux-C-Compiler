@@ -365,9 +365,9 @@ def typeCheckExpression(exp, symbolTable):
 
         case parser.Cast_Expression(targetType = targetType, exp = exp):
             
-            if type(targetType) == parser.ArrayType:
-                print("Error: Cannot cast to an array type.")
-                sys.exit(1)
+            #if type(targetType) == parser.ArrayType:
+            #    print("Error: Cannot cast to an array type.")
+            #    sys.exit(1)
             
             e = typeCheckAndConvert(exp, symbolTable)
 
@@ -375,7 +375,19 @@ def typeCheckExpression(exp, symbolTable):
                 print("Error: Casting pointer to double or a double to a pointer.")
                 sys.exit(1)
 
-            return parser.Cast_Expression(targetType, e, targetType)
+            if type(targetType) == parser.VoidType:
+                return parser.Cast_Expression(targetType, e, parser.VoidType())
+            
+            if not isScalar(targetType):
+                print("Error: Can only cast to scalar type or void.")
+                sys.exit(1)
+            
+            if not isScalar(e.retType):
+                print("Error: Cannot cast non scalar expression to scalar type.")
+                sys.exit(1)
+
+            else:
+                return parser.Cast_Expression(targetType, e, targetType)
 
         case parser.Var_Expression(identifier = id):
             if type(symbolTable[id].type) == parser.FunType:

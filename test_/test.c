@@ -1,6 +1,10 @@
 int main(void) {
     int *a = 0;
     void *b = a;
+    
+    (void)a;   
+    (int [2])a;   
+    (int (*)(int a))a;   
 
     void d;
     b == a;
@@ -29,7 +33,6 @@ int main(void) {
     {
         return 1;
     }
-    
     
     
     !s;
