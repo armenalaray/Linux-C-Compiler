@@ -552,9 +552,12 @@ def typeCheckExpression(exp, symbolTable):
 
                 if type(l.retType) == parser.PointerType or type(r.retType) == parser.PointerType:
                     commonType = getCommonPointerType(l, r)
-                else:
+                elif isArithmeticType(l.retType) and isArithmeticType(r.retType):
                     commonType = getCommonType(l.retType, r.retType)
-
+                else:
+                    print("Error: Invalid Operands for expression {0}.".format(op.operator.name))
+                    sys.exit(1)
+                    
                 l = convertTo(l, commonType)
                 r = convertTo(r, commonType)
 
@@ -563,16 +566,12 @@ def typeCheckExpression(exp, symbolTable):
                         return parser.Binary_Expression(op, l, r, commonType)
                     case parser.BinopType.SUBTRACT:
                         return parser.Binary_Expression(op, l, r, commonType)
-                        pass
                     case parser.BinopType.MULTIPLY:
                         return parser.Binary_Expression(op, l, r, commonType)
-                        pass
                     case parser.BinopType.MODULO:
                         return parser.Binary_Expression(op, l, r, commonType)
-                        pass
                     case parser.BinopType.DIVIDE:
                         return parser.Binary_Expression(op, l, r, commonType)
-                        pass
                     case _:
                         return parser.Binary_Expression(op, l, r, parser.IntType())
 
@@ -633,7 +632,7 @@ def typeCheckExpression(exp, symbolTable):
                     
                 case parser.BinopType.LESSOREQUAL:
                     return matchRelationalOperator(op, l, r)
-                    
+                
                 case _:                    
                     return typeCheckCommonArithmeticBinaryExp(op, l, r)
       
@@ -649,25 +648,42 @@ def typeCheckExpression(exp, symbolTable):
 
             commonType = None
 
-            if type(thenExp.retType) == parser.PointerType or type(elseExp.retType) == parser.PointerType:
-                commonType = getCommonPointerType(thenExp, elseExp)
-            else:
+            if thenExp.retType == parser.VoidType and elseExp.retType == parser.VoidType:
+                commonType = parser.VoidType()
+
+            elif isArithmeticType(thenExp.retType) and isArithmeticType(elseExp.retType):
                 commonType = getCommonType(thenExp.retType, elseExp.retType)
 
+            elif type(thenExp.retType) == parser.PointerType or type(elseExp.retType) == parser.PointerType:
+                commonType = getCommonPointerType(thenExp, elseExp)
+
+            else:
+                print("Fail cannot convert branches of conditional to a common type.")
+                sys.exit(1)
+                
             thenExp = convertTo(thenExp, commonType)
             elseExp = convertTo(elseExp, commonType)
 
             return parser.Conditional_Expression(condExp, thenExp, elseExp, commonType)
 
-        case parser.SizeOf(exp = exp):
-            e = typeCheckAndConvert(exp, symbolTable)
-            validateTypeSpecifier(e.retType)
-            return parser.SizeOf(e, e.retType)
 
         case parser.SizeOfT(typeName = typeName):
-            print(type(typeName))
             validateTypeSpecifier(typeName)
-            return parser.SizeOfT(typeName)
+            if not isComplete(typeName):
+                print("Error: Can't get the size of an incomplete type.")
+                sys.exit(1)
+
+            return parser.SizeOfT(typeName, parser.ULongType())
+        
+        case parser.SizeOf(exp = exp):
+            e = typeCheckExpression(exp, symbolTable)
+            if not isComplete(e.retType):
+                print("Error: Can't get the size of an incomplete type.")
+                sys.exit(1)
+
+            return parser.SizeOf(e, parser.ULongType())
+
+        
 
         case _:
             traceback.print_stack()
