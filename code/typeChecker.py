@@ -492,6 +492,10 @@ def typeCheckExpression(exp, symbolTable):
                     if type(e.retType) == parser.PointerType:
                         print("Error: Can't negate a pointer.")
                         sys.exit(1)
+                    
+                    if not isComplete(e.retType):
+                        print("Error: Cannot negate void expressions.")
+                        sys.exit(1)
 
                     if isCharacterType(e.retType):
                         e = convertTo(e, parser.IntType())
@@ -648,7 +652,7 @@ def typeCheckExpression(exp, symbolTable):
 
             commonType = None
 
-            if thenExp.retType == parser.VoidType and elseExp.retType == parser.VoidType:
+            if type(thenExp.retType) == parser.VoidType and type(elseExp.retType) == parser.VoidType:
                 commonType = parser.VoidType()
 
             elif isArithmeticType(thenExp.retType) and isArithmeticType(elseExp.retType):
@@ -658,7 +662,8 @@ def typeCheckExpression(exp, symbolTable):
                 commonType = getCommonPointerType(thenExp, elseExp)
 
             else:
-                print("Fail cannot convert branches of conditional to a common type.")
+                traceback.print_stack()
+                print("Fail cannot convert branches of conditional to a common type. {0} and {1}".format(thenExp.retType, elseExp.retType))
                 sys.exit(1)
                 
             thenExp = convertTo(thenExp, commonType)

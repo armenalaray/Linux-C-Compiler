@@ -1,4 +1,39 @@
 ======================================================================
+FAIL: test_invalid_types/void/negate_void (test_framework.basic.TestChapter17.test_invalid_types/void/negate_void)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 580, in test_invalid
+    self.compile_failure(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 334, in compile_failure
+    with self.assertRaises(
+AssertionError: Didn't catch error in /home/alejandro/writing-a-c-compiler-tests/tests/chapter_17/invalid_types/void/negate_void.c
+
+----------------------------------------------------------------------
+
+
+
+
+
+======================================================================
+FAIL: test_valid/void/ternary (test_framework.basic.TestChapter17.test_valid/void/ternary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_17/valid/void/ternary.c failed with error:
+
+
+----------------------------------------------------------------------
+
+
+
+
+
+
+
+======================================================================
 FAIL: test_invalid_declarations/nested_function_definition (test_framework.basic.TestChapter9.test_invalid_declarations/nested_function_definition)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
