@@ -908,56 +908,25 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
         case parser.FunctionCall_Exp(identifier=id, argumentList = argumentList):
             a = []
 
-            #retType fun()
             if argumentList:
                 for exp in argumentList:
                     src = TAC_emitTackyAndConvert(exp, instructions, symbolTable)
-                    #src = TAC_parseInstructions(exp, instructions, symbolTable)
-                    
-                    """
-                    realType = None
-
-                    match src:
-                        case TAC_ConstantValue(const=const):
-                            print(type(const))
-                            match const:
-                                case parser.ConstInt():
-                                    realType = parser.IntType() 
-                                    
-                                case parser.ConstLong():
-                                    realType = parser.LongType()
-
-                                case parser.ConstULong():
-                                    realType = parser.ULongType()
-
-                                case parser.ConstUInt():
-                                    realType = parser.UIntType()
-                                
-                                case parser.ConstDouble():
-                                    realType = parser.DoubleType()
-
-                                case _:
-                                    print("Invalid TAC argument type. {0}".format(type(const)))
-                                    sys.exit(1)
-                                            
-                        case TAC_VariableValue(identifier=iden):
-                            realType = symbolTable[iden].type
-
-                        case _:
-                            print("Invalid TAC Value.")
-                            sys.exit(1)
-                    """
                     
                     dst = makeTempVariable(exp.retType, symbolTable)
                             
                     instructions.append(TAC_CopyInstruction(src, dst))
                     a.append(dst)
-                
+            
             dst = makeTempVariable(expression.retType, symbolTable)
             
-            instructions.append(TAC_FunCallInstruction(id, a, dst))
-            
-            return PlainOperand(dst)
+            if type(expression.retType) == parser.VoidType:
+                instructions.append(TAC_FunCallInstruction(id, a))    
+                return PlainOperand(dst)
+                
+            else:
+                instructions.append(TAC_FunCallInstruction(id, a, dst))    
+                return PlainOperand(dst)
+                
 
         case parser.Conditional_Expression(condExp=condExp, thenExp=thenExp, elseExp=elseExp):
             cond = TAC_emitTackyAndConvert(condExp, instructions, symbolTable)
