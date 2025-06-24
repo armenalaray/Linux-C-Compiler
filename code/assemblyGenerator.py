@@ -4,6 +4,8 @@ import sys
 import parser
 import typeChecker
 
+import traceback
+
 from tacGenerator import makeTemp
 #from tacGenerator import makeStaticConstant
 
@@ -1049,21 +1051,18 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 if bytesToRemove:
 
                     instruction0 = BinaryInstruction(BinaryOperator(BinopType.Add), Quadword(), ImmediateOperand(bytesToRemove), RegisterOperand(Register(RegisterType.SP)))
-
-                    #instruction0 = BinaryInstruction(BinaryOperator(BinopType.Add), AssemblySize(AssemblyType.QUADWORD), ImmediateOperand(bytesToRemove), RegisterOperand(Register(RegisterType.SP)))
                     
                     ASM_Instructions.append(instruction0)
 
-                
-                type1, cType1, asmDst = parseValue(dst, symbolTable, topLevelList)
+                if dst:
+                    type1, cType1, asmDst = parseValue(dst, symbolTable, topLevelList)
 
-                if type(cType1) == parser.DoubleType:
-                    ASM_Instructions.append(MovInstruction(Double(), RegisterOperand(Register(SSERegisterType.XMM0)), asmDst))
-                    
-                    #ASM_Instructions.append(MovInstruction(AssemblySize(AssemblyType.DOUBLE), RegisterOperand(Register(SSERegisterType.XMM0)), asmDst))
-                    
-                else:
-                    ASM_Instructions.append(MovInstruction(type1, RegisterOperand(Register(RegisterType.AX)), asmDst))
+                    if type(cType1) == parser.DoubleType:
+                        ASM_Instructions.append(MovInstruction(Double(), RegisterOperand(Register(SSERegisterType.XMM0)), asmDst))
+                        
+                    else:
+                        ASM_Instructions.append(MovInstruction(type1, RegisterOperand(Register(RegisterType.AX)), asmDst))
+
 
             case tacGenerator.TAC_BinaryInstruction(operator=op, src1=src1_, src2=src2_, dst=dst_):
                 
@@ -1546,6 +1545,7 @@ def matchCType(cType):
             return 1, Byte()
 
         case _:
+            traceback.print_stack()
             print("Error: Invalid C Type to Assembly Conversion. {0}".format(cType))
             sys.exit(1)
 

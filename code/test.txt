@@ -1,4 +1,36 @@
 ======================================================================
+FAIL: test_valid/void_pointer/simple (test_framework.basic.TestChapter17.test_valid/void_pointer/simple)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_17/valid/void_pointer/simple.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 152, in <module>
+  File "tacGenerator.py", line 1375, in TAC_parseProgram
+  File "tacGenerator.py", line 1299, in TAC_parseTopLevel
+  File "tacGenerator.py", line 1279, in TAC_parseFunctionDefinition
+  File "tacGenerator.py", line 1268, in TAC_parseBlock
+  File "tacGenerator.py", line 1261, in TAC_parseDeclarations
+  File "tacGenerator.py", line 1251, in TAC_parseVarDeclarations
+  File "tacGenerator.py", line 1231, in TAC_emitInitializer
+  File "tacGenerator.py", line 475, in TAC_emitTackyAndConvert
+  File "tacGenerator.py", line 677, in TAC_parseInstructions
+  File "tacGenerator.py", line 465, in CastBetweenIntegers
+AttributeError: 'PointerType' object has no attribute 'size'
+[PYI-218723:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+-------------------------------
+
+
+
+
+
+
+======================================================================
 FAIL: test_invalid_types/void/negate_void (test_framework.basic.TestChapter17.test_invalid_types/void/negate_void)
 ----------------------------------------------------------------------
 Traceback (most recent call last):

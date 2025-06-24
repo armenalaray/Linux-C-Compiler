@@ -549,8 +549,12 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
 
             result = TAC_emitTackyAndConvert(exp, instructions, symbolTable)
             
+            #== targetType.checkType(exp.retType):
             if type(targetType) == type(exp.retType):
                 return PlainOperand(result)
+            
+            if type(targetType) == parser.VoidType:
+                return PlainOperand(TAC_VariableValue("Dummy"))
             
             dst = makeTempVariable(targetType, symbolTable)
             
@@ -579,9 +583,6 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                             instructions.append(TAC_DoubleToUInt(result, dst))
                         
                         case parser.PointerType():
-                            pass
-
-                        case parser.VoidType():
                             pass
 
                         
@@ -917,13 +918,13 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                     instructions.append(TAC_CopyInstruction(src, dst))
                     a.append(dst)
             
-            dst = makeTempVariable(expression.retType, symbolTable)
-            
+
             if type(expression.retType) == parser.VoidType:
                 instructions.append(TAC_FunCallInstruction(id, a))    
-                return PlainOperand(dst)
+                return PlainOperand(TAC_VariableValue("Dummy"))
                 
             else:
+                dst = makeTempVariable(expression.retType, symbolTable)
                 instructions.append(TAC_FunCallInstruction(id, a, dst))    
                 return PlainOperand(dst)
                 
@@ -946,10 +947,6 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                 
                 instructions.append(TAC_CopyInstruction(thenE, v1))
 
-                result = makeTempVariable(expression.retType, symbolTable)
-                
-                #instructions.append(TAC_CopyInstruction(v1, result))
-
                 end = makeTemp()
                 instructions.append(TAC_JumpInst(end))
 
@@ -961,11 +958,9 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                 
                 instructions.append(TAC_CopyInstruction(elseE, v2))
 
-                #instructions.append(TAC_CopyInstruction(v2, result))
-
                 instructions.append(TAC_LabelInst(end))
 
-                return PlainOperand(result)
+                return PlainOperand(TAC_VariableValue("Dummy"))
             
             else:
 
