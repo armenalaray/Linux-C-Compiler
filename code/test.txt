@@ -1,4 +1,32 @@
 ======================================================================
+FAIL: test_valid/void/ternary (test_framework.basic.TestChapter17.test_valid/void/ternary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 603, in test_run
+    self.compile_and_run(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 385, in compile_and_run
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_17/valid/void/ternary.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 161, in <module>
+  File "assemblyGenerator.py", line 1556, in ASM_parseAST
+  File "assemblyGenerator.py", line 1467, in ASM_parseTopLevel
+  File "assemblyGenerator.py", line 1357, in ASM_parseInstructions
+  File "assemblyGenerator.py", line 632, in parseValue
+KeyError: 'Dummy'
+[PYI-234008:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+----------------------------------------------------------------------
+
+
+
+
+
+
+
+
+======================================================================
 FAIL: test_valid/void_pointer/simple (test_framework.basic.TestChapter17.test_valid/void_pointer/simple)
 ----------------------------------------------------------------------
 Traceback (most recent call last):

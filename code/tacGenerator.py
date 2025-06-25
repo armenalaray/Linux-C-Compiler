@@ -914,9 +914,17 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
                     src = TAC_emitTackyAndConvert(exp, instructions, symbolTable)
                     
                     dst = makeTempVariable(exp.retType, symbolTable)
-                            
+                                
                     instructions.append(TAC_CopyInstruction(src, dst))
                     a.append(dst)
+                    
+                    #if type(exp.retType) == parser.VoidType:
+                    #    pass
+                    #else:
+                    #    dst = makeTempVariable(exp.retType, symbolTable)
+                                
+                    #    instructions.append(TAC_CopyInstruction(src, dst))
+                    #    a.append(dst)
             
 
             if type(expression.retType) == parser.VoidType:
@@ -941,22 +949,14 @@ def TAC_parseInstructions(expression, instructions, symbolTable):
 
             if type(expression.retType) == parser.VoidType:
 
-                thenE = TAC_emitTackyAndConvert(thenExp, instructions, symbolTable)
-
-                v1 = makeTempVariable(thenExp.retType, symbolTable)
-                
-                instructions.append(TAC_CopyInstruction(thenE, v1))
+                TAC_emitTackyAndConvert(thenExp, instructions, symbolTable)
 
                 end = makeTemp()
                 instructions.append(TAC_JumpInst(end))
 
                 instructions.append(TAC_LabelInst(e2_label))
 
-                elseE = TAC_emitTackyAndConvert(elseExp, instructions, symbolTable)
-                
-                v2 = makeTempVariable(elseExp.retType, symbolTable)
-                
-                instructions.append(TAC_CopyInstruction(elseE, v2))
+                TAC_emitTackyAndConvert(elseExp, instructions, symbolTable)
 
                 instructions.append(TAC_LabelInst(end))
 
