@@ -910,26 +910,27 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 ASM_Instructions.append(MovInstruction(type1, src, PseudoMem(dst, offset)))
 
             case tacGenerator.TAC_returnInstruction(Value=v):
-                type1, cType1, src = parseValue(v, symbolTable, topLevelList)
+                if v:
+                    type1, cType1, src = parseValue(v, symbolTable, topLevelList)
 
-                if typeChecker.isIntegerType(cType1):
-                    instruction0 = MovInstruction(type1, src, RegisterOperand(Register(RegisterType.AX)))
+                    if typeChecker.isIntegerType(cType1):
+                        instruction0 = MovInstruction(type1, src, RegisterOperand(Register(RegisterType.AX)))
 
-                    instruction1 = ReturnInstruction()
-                    
-                    ASM_Instructions.append(instruction0)
-                    ASM_Instructions.append(instruction1)
+                        instruction1 = ReturnInstruction()
+                        
+                        ASM_Instructions.append(instruction0)
+                        ASM_Instructions.append(instruction1)
+                    else:
+                        
+                        instruction0 = MovInstruction(Double(), src, RegisterOperand(Register(SSERegisterType.XMM0)))
+
+                        instruction1 = ReturnInstruction()
+                        
+                        ASM_Instructions.append(instruction0)
+                        ASM_Instructions.append(instruction1)
                 else:
-                    
-                    instruction0 = MovInstruction(Double(), src, RegisterOperand(Register(SSERegisterType.XMM0)))
-                    #instruction0 = MovInstruction(AssemblySize(AssemblyType.DOUBLE), src, RegisterOperand(Register(SSERegisterType.XMM0)))
-
-                    instruction1 = ReturnInstruction()
-                    
+                    instruction0 = ReturnInstruction()    
                     ASM_Instructions.append(instruction0)
-                    ASM_Instructions.append(instruction1)
-
-                    
                  
             case tacGenerator.TAC_UnaryInstruction(operator=o, src=src_, dst=dst_):
                 
