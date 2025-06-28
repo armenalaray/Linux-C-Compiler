@@ -60,10 +60,14 @@ class TokenType(Enum):
     CHAR_CONST = 53
     STRING_LITERAL = 54
     SIZEOF_KW = 55
+    STRUCT_KW = 56
+    PERIOD = 57
+    ARROW = 58
 
 def Lex(buffer, iFile):
     tokenList = []
     LineNumber = 1
+
 
     while buffer != r'':
         #breakpoint()
@@ -81,6 +85,16 @@ def Lex(buffer, iFile):
             #print(LineNumber)
             buffer = wspace.string[wspace.span()[1]:]
         
+        
+        is_ValidPeriod = r"[\.][^\d]"
+        validPeriod = re.match(is_ValidPeriod, buffer)
+        if validPeriod:
+            tokenList.append((".", TokenType.PERIOD, LineNumber))
+            #print(validPeriod.string)
+            buffer = validPeriod.string[1:]
+            continue
+
+
         is_floatingPoint = r"(([0-9]*\.[0-9]+|[0-9]+\.?)[Ee][+-]?[0-9]+|[0-9]*\.[0-9]+|[0-9]+\.)[^\w.]"
         floatingPoint = re.match(is_floatingPoint, buffer)
         if floatingPoint:
@@ -145,7 +159,8 @@ def Lex(buffer, iFile):
             (r"==", TokenType.TEQUALS), 
             (r"!=", TokenType.EXCLAMATIONEQUAL), 
             (r"<=", TokenType.LESSTEQUALT), 
-            (r">=", TokenType.GREATERTEQUALT)
+            (r">=", TokenType.GREATERTEQUALT),
+            (r"->", TokenType.ARROW)
             ]
 
         dd = None
@@ -262,12 +277,15 @@ def Lex(buffer, iFile):
             continue
 
 
-
+        
         is_alphanumeric = r"[a-zA-Z_]\w*\b"
         alphanumeric = re.match(is_alphanumeric, buffer)
         if alphanumeric:
             
             match alphanumeric.group():
+                
+                case "struct":
+                    tokenList.append(("struct", TokenType.STRUCT_KW, LineNumber))
                 
                 case "sizeof":
                     tokenList.append(("sizeof", TokenType.SIZEOF_KW, LineNumber))
@@ -334,8 +352,12 @@ def Lex(buffer, iFile):
         is_char = r"[\[\]&,?:=><!%/*+(){};~-]"
         char = re.match(is_char, buffer)
         if char:
-            #print(char)
+            
             match char.group():
+
+                #case ".":
+                #    tokenList.append((".", TokenType.PERIOD, LineNumber))
+
                 
                 case "[":
                     tokenList.append(("[", TokenType.OPEN_BRACKET, LineNumber))
