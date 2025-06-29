@@ -86,6 +86,21 @@ class D(BlockItem, Node):
 class Decl:
     pass
 
+class StructDecl(Decl, Node):
+    def __init__(self, structDecl):
+        self.structDecl = structDecl
+
+    def printNode(self, level):
+        l = level
+        output = ''
+        while l > 0:
+            output += '\t'
+            l -= 1
+
+        output += "StructDecl:\n" + self.structDecl.printNode(level)
+
+        return output 
+
 class VarDecl(Decl, Node):
     def __init__(self, variableDecl):
         self.variableDecl = variableDecl
@@ -152,6 +167,42 @@ class VariableDecl(Node):
             output +=  " = " + self.initializer.printNode(level)
 
         #output = "{self.storageClass} {self.varType} {self.identifier} = {self.exp}".format(self=self)
+
+        return output
+
+
+class StructDeclaration(Node):
+    def __init__(self, tag, members):
+        self.tag = tag 
+        self.members = members
+
+    def printNode(self, level):
+        l = level
+        output = ''
+        while l > 0:
+            output += '\t'
+            l -= 1
+
+        output += "struct " + self.tag + "\n"
+        for i in self.members:
+            output += i.printNode(level + 1) + "\n"
+
+        return output
+
+class MemberDecl(Node):
+    def __init__(self, name, type):
+        self.name = name
+        self.memberType = type
+
+    def printNode(self, level):
+        l = level
+        output = ''
+        while l > 0:
+            output += '\t'
+            l -= 1
+
+        output += self.memberType.printNode(level)
+        output += " " + self.name
 
         return output
 
@@ -506,6 +557,10 @@ class ArrayType(Type, Node):
         output += ")"
         return output
     
+class StuctureType(Type, Node):
+
+    def __init__(self, tag):
+        self.tag = tag
     
 
 class FunType(Type, Node):
@@ -768,6 +823,19 @@ class Expression:
     def __repr__(self):
         return self.__str__()
 
+class Dot(Expression, Node):
+
+    def __init__(self, struct, member):
+        self.struct = struct
+        self.member = member
+    
+
+class Arrow(Expression, Node):
+    def __init__(self, pointer, member):
+        self.pointer = pointer
+        self.member = member
+
+ 
 class SizeOf(Expression, Node):
     def __init__(self, exp, retType = None):
         self.exp = exp
@@ -1885,7 +1953,7 @@ def parseTypes(rawTypes):
     #print(types)
 
     if types == []:
-        traceback.print_stack()
+        #traceback.print_stack()
         print("Invalid Type Specifier Empty list.")
         sys.exit(1)
 
@@ -2117,9 +2185,58 @@ def processDeclarator(declarator, baseType):
             print("Errror: Invalid Decalarator.")
             sys.exit(1)
 
+def parseMemberDeclaration(tokenList):
+    
+    types = []
+    
+    token = peek(tokenList)
+    while isTypeSpecifier(token):
+        types.append(takeToken(tokenList))
+        token = peek(tokenList)
+
+    baseType = parseTypes(types)
+    #print(type)
+
+    declarator = parseDeclarator(tokenList)
+
+    name, declType, params = processDeclarator(declarator, baseType)
+
+    expect(TokenType.SEMICOLON, tokenList)
+
+    return MemberDecl(name, declType)
+
+
+    
+
+def parseStructDeclaration(tokenList):
+    tag = parseIdentifier(tokenList)
+
+    token = peek(tokenList)
+
+    memberList = []
+    if token[1] == TokenType.OPEN_BRACE:
+        takeToken(tokenList)
+
+        token = peek(tokenList)
+        while token[1] != TokenType.CLOSE_BRACE:
+            memberList.append(parseMemberDeclaration(tokenList))
+            token = peek(tokenList)
+
+    takeToken(tokenList)
+    expect(TokenType.SEMICOLON, tokenList)
+        
+    return StructDeclaration(tag, memberList)
+    
+
 def parseDeclaration(tokenList):
 
     token = peek(tokenList)
+
+    if token[1] == TokenType.STRUCT_KW:
+        takeToken(tokenList)
+        structDecl = parseStructDeclaration(tokenList)
+        return True, StructDecl(structDecl)
+
     if isSpecifier(token) == False:
         return False, None
     

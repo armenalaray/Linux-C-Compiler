@@ -71,7 +71,6 @@ def Lex(buffer, iFile):
 
     while buffer != r'':
         #breakpoint()
-
         #print(buffer)
 
         is_wspace = r"\s+"
