@@ -561,6 +561,13 @@ class StuctureType(Type, Node):
 
     def __init__(self, tag):
         self.tag = tag
+
+    def __str__(self):
+        return "StructType({self.tag})".format(self=self)
+    
+    def printNode(self, level):
+        output = "StructType(" + self.tag + ")"
+        return output
     
 
 class FunType(Type, Node):
@@ -1948,78 +1955,93 @@ def parseStatement(tokenList):
         return ExpressionStmt(retVal)
 
 def parseTypes(rawTypes):
-    types = [x[1] for x in rawTypes]
 
-    #print(types)
+    types = [type(x) for x in rawTypes]
+
+    print(types)
 
     if types == []:
         #traceback.print_stack()
         print("Invalid Type Specifier Empty list.")
         sys.exit(1)
 
-    if types == [TokenType.VOID_KW]:
+    if types == [Struct]:
+        print(rawTypes[0].identifier)
+        return StuctureType(rawTypes[0].identifier)
+    
+    if Struct in types:
+        print("Error: Can't combine Struct type with other type specifiers.")
+        sys.exit(1)
+
+    if types == [Void]:
         return VoidType()
     
-    if TokenType.VOID_KW in types:
+    if Void in types:
         print("Error: Can't combine void with other type specifiers.")
         sys.exit(1)
 
-    if types == [TokenType.DOUBLE_KW]:
+    if types == [Double]:
         return DoubleType()
-    
-    if TokenType.DOUBLE_KW in types:
+                
+    if Double in types:
         print("Error: Can't combine double with other type specifiers.")
         sys.exit(1)
 
     setTypes = set(types)
 
     if len(setTypes) != len(types):
+        traceback.print_stack()
         print("Invalid Type Specifier.")
         sys.exit(1)
-
-    if TokenType.UNSIGNED_KW in setTypes and TokenType.SIGNED_KW in setTypes:
-        print("Invalid Type Specifier.")
+    
+    if Unsigned in setTypes and Signed in setTypes:
+        print("Invalid Type Specifier signed and unsigned.")
         sys.exit(1)
 
-    if len(setTypes) == 2 and TokenType.UNSIGNED_KW in setTypes and TokenType.CHAR_KW in setTypes:
+    if len(setTypes) == 2 and Unsigned in setTypes and Char in setTypes:
         return UCharType()
     
-    if len(setTypes) == 2 and TokenType.SIGNED_KW in setTypes and TokenType.CHAR_KW in setTypes:
+    if len(setTypes) == 2 and Signed in setTypes and Char in setTypes:
         return SCharType()
 
-    if len(setTypes) == 1 and TokenType.CHAR_KW in setTypes:
+    if len(setTypes) == 1 and Char in setTypes:
         return CharType()
     
-    if TokenType.CHAR_KW in setTypes:
+    if Char in setTypes:
         print("Error: Can't combine char with other type specifiers.")
         sys.exit(1)
 
-    if TokenType.UNSIGNED_KW in setTypes and TokenType.LONG_KW in setTypes:
+    if Unsigned in setTypes and Long in setTypes:
         return ULongType()
         
-    if TokenType.UNSIGNED_KW in setTypes:
+    if Unsigned in setTypes:
         return UIntType()
     
-    if TokenType.LONG_KW in setTypes:
+    if Long in setTypes:
         return LongType()
     
     return IntType()
     
-
+"""
+Osea esos no tienen orden pero esos si!
+"""
 def parseTypeAndStorageClass(specifierList):
+    print(specifierList)
+
     types = []
     storageClasses = []
+    
     for specifier in specifierList:
-        if isTypeSpecifier(specifier):
-            types.append(specifier)
+        if type(specifier) == TypeS:
+            types.append(specifier.typeSpec)
 
         #if specifier[1] ==  TokenType.INT_KW or specifier[1] == TokenType.LONG_KW:
         else:
             storageClasses.append(specifier)
             
-    type = parseTypes(types)
+    type_ = parseTypes(types)
 
-    #print(type)
+    print(type_)
 
     if len(storageClasses) > 1:
         print("Invalid Storage Class.")
@@ -2028,18 +2050,48 @@ def parseTypeAndStorageClass(specifierList):
     storageClass = StorageClass(StorageType.NULL)
 
     if len(storageClasses) == 1:
-        s = storageClasses[0]
-        if s[1] == TokenType.EXTERN_KW:
+        s = type(storageClasses[0])
+        if s == Extern:
             storageClass = StorageClass(StorageType.EXTERN)
-            
-        elif s[1] == TokenType.STATIC_KW:
+
+        elif s == Static:
             storageClass = StorageClass(StorageType.STATIC)
 
         else:
             print("Error: Invalid Storage Class: {0}".format(s[0]))
             
-    return type, storageClass
+    return type_, storageClass
+
+class Specifier():
+    pass
+
+class TypeS(Specifier, Node):
+    def __init__(self, typeSpec):
+        self.typeSpec = typeSpec
     
+class Extern(Specifier, Node):
+    pass
+
+class Static(Specifier, Node):
+    pass
+
+def parseSpecifier(tokenList):
+    token = peek(tokenList)
+
+    match token[1]:
+        case TokenType.EXTERN_KW:
+            takeToken(tokenList)
+            return Extern()
+        
+        case TokenType.STATIC_KW:
+            takeToken(tokenList)
+            return Static()
+        
+        case _:
+            typeSpec = parseTypeSpecifier(tokenList)
+            print(typeSpec)
+            return TypeS(typeSpec)
+
 def isSpecifier(token):
     if token[1] == TokenType.EXTERN_KW or token[1] == TokenType.STATIC_KW or isTypeSpecifier(token): 
         return True
@@ -2191,7 +2243,8 @@ def parseMemberDeclaration(tokenList):
     
     token = peek(tokenList)
     while isTypeSpecifier(token):
-        types.append(takeToken(tokenList))
+        typeSpec = parseTypeSpecifier(tokenList)
+        types.append(typeSpec)
         token = peek(tokenList)
 
     baseType = parseTypes(types)
@@ -2231,18 +2284,20 @@ def parseStructDeclaration(tokenList):
 def parseDeclaration(tokenList):
 
     token = peek(tokenList)
+    braceToken = peek(tokenList, 2)
 
-    if token[1] == TokenType.STRUCT_KW:
+    if token[1] == TokenType.STRUCT_KW and (braceToken[1] == TokenType.OPEN_BRACE or braceToken[1] == TokenType.SEMICOLON):
         takeToken(tokenList)
         structDecl = parseStructDeclaration(tokenList)
         return True, StructDecl(structDecl)
-
+    
     if isSpecifier(token) == False:
         return False, None
     
     specifierList = []
     while isSpecifier(token):
-        specifierList.append(takeToken(tokenList))
+        spec = parseSpecifier(tokenList)
+        specifierList.append(spec)
         token = peek(tokenList)
         
     baseType, storageClass = parseTypeAndStorageClass(specifierList)
@@ -2303,8 +2358,78 @@ def parseBlock(tokenList):
 
     return Block(BlockItemList)
 
+class TypeSpecifier():
+    pass
+
+class Int(TypeSpecifier, Node):
+    pass
+
+class Long(TypeSpecifier, Node):
+    pass
+
+class Unsigned(TypeSpecifier, Node):
+    pass
+
+class Signed(TypeSpecifier, Node):
+    pass
+
+class Double(TypeSpecifier, Node):
+    pass
+
+class Char(TypeSpecifier, Node):
+    pass
+
+class Void(TypeSpecifier, Node):
+    pass
+
+class Struct(TypeSpecifier, Node):
+    def __init__(self, identifier):
+        self.identifier = identifier
+
+
+def parseTypeSpecifier(tokenList):
+    token = peek(tokenList)
+    match token[1]:
+        case TokenType.INT_KW:
+            takeToken(tokenList)
+            return Int()
+        
+        case TokenType.LONG_KW:
+            takeToken(tokenList)
+            return Long()
+        
+        case TokenType.SIGNED_KW:
+            takeToken(tokenList)
+            return Signed()
+        
+        case TokenType.UNSIGNED_KW:
+            takeToken(tokenList)
+            return Unsigned()
+        
+        case TokenType.DOUBLE_KW:
+            takeToken(tokenList)
+            return Double()
+        
+        case TokenType.CHAR_KW:
+            takeToken(tokenList)
+            return Char()
+        
+        case TokenType.VOID_KW:
+            takeToken(tokenList)
+            return Void()
+
+        case TokenType.STRUCT_KW:
+            takeToken(tokenList)
+            identifier = parseIdentifier(tokenList)
+            return Struct(identifier)
+
+        case _:
+            traceback.print_stack()
+            print("Error: Invalid type specifier. {0}".format(tokenList))
+            sys.exit(1)
+
 def isTypeSpecifier(token):
-    if token[1] == TokenType.INT_KW or token[1] == TokenType.LONG_KW or token[1] == TokenType.SIGNED_KW or token[1] == TokenType.UNSIGNED_KW or token[1] == TokenType.DOUBLE_KW or token[1] == TokenType.CHAR_KW or token[1] == TokenType.VOID_KW: 
+    if token[1] == TokenType.INT_KW or token[1] == TokenType.LONG_KW or token[1] == TokenType.SIGNED_KW or token[1] == TokenType.UNSIGNED_KW or token[1] == TokenType.DOUBLE_KW or token[1] == TokenType.CHAR_KW or token[1] == TokenType.VOID_KW or token[1] == TokenType.STRUCT_KW: 
         return True
     
     return False
