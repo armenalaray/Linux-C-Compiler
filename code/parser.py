@@ -1300,12 +1300,16 @@ def takeToken(tokenList):
     sys.exit(1)
 
 def peek(tokenList, index=None):
-    if(tokenList != []):
+    if(tokenList != []):  
         if index:
-            return tokenList[index]
+            if (len(tokenList) - 1) < index:
+                return None
+            else:
+                return tokenList[index]
         else:
             return tokenList[0]
     
+    return None
     print("No more tokens.")
     sys.exit(1)
 
@@ -2022,6 +2026,7 @@ def parseStatement(tokenList):
 
     
     elif token[1] == TokenType.SEMICOLON:
+        #breakpoint()
         takeToken(tokenList)
         return NullStatement()
     else:
@@ -2342,6 +2347,7 @@ def parseMemberDeclaration(tokenList):
 def parseStructDeclaration(tokenList):
     tag = parseIdentifier(tokenList)
 
+
     token = peek(tokenList)
 
     memberList = []
@@ -2434,6 +2440,7 @@ def parseBlock(tokenList):
     BlockItemList = []
     
     while peek(tokenList)[1] != TokenType.CLOSE_BRACE:
+        #breakpoint()
         BlockItem = parseBlockItem(tokenList)
         BlockItemList.append(BlockItem)
         

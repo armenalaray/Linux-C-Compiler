@@ -1,3 +1,46 @@
+
+
+
+
+======================================================================
+FAIL: test_valid/empty_expression (test_framework.basic.TestChapter8.test_valid/empty_expression)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_8/valid/empty_expression.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 119, in <module>
+  File "parser.py", line 2682, in parseProgram
+  File "parser.py", line 2398, in parseDeclaration
+  File "parser.py", line 2621, in parseFunctionDecl
+  File "parser.py", line 2438, in parseBlock
+  File "parser.py", line 2410, in parseBlockItem
+  File "parser.py", line 2371, in parseDeclaration
+  File "parser.py", line 1305, in peek
+IndexError: list index out of range
+[PYI-146838:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+
+
+======================================================================
+FAIL: test_invalid_declarations/nested_function_definition (test_framework.basic.TestChapter9.test_invalid_declarations/nested_function_definition)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_9/invalid_declarations/nested_function_definition.c failed with error:
+
+
+----------------------------------------------------------------------
+
+
+
 ======================================================================
 FAIL: test_invalid_parse/struct_decl_empty_member_list (test_framework.basic.TestChapter18.test_invalid_parse/struct_decl_empty_member_list)
 ----------------------------------------------------------------------
