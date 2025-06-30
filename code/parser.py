@@ -1320,8 +1320,7 @@ def expect(expected, tokenList):
     if actual != ():
         if actual[1] != expected:
             traceback.print_stack()
-            #print("Syntax Error Expected: {0} got: {1} at Line {2}.".format(expected, actual[0], actual[2]))
-            print("Syntax Error Expected: {0} got: {1} at Line {2}.".format(expected, tokenList, actual[2]))
+            print("Syntax Error Expected: {0} got: {1} at Line {2}.".format(expected, actual[0], actual[2]))
             sys.exit(1)
     else:
         print("Syntax Error Expected: {0} but there are no more tokens.".format(expected))
@@ -2042,7 +2041,7 @@ def parseTypes(rawTypes):
     print(types)
 
     if types == []:
-        #traceback.print_stack()
+        traceback.print_stack()
         print("Invalid Type Specifier Empty list.")
         sys.exit(1)
 

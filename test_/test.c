@@ -1,3 +1,5 @@
-int main(void) {
-    return 0;;;
-}
+struct test
+{
+    int a = 4;
+    /* data */
+};
