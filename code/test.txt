@@ -1,4 +1,110 @@
 ======================================================================
+FAIL: test_invalid_parse/struct_decl_empty_member_list (test_framework.basic.TestChapter18.test_invalid_parse/struct_decl_empty_member_list)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 580, in test_invalid
+    self.compile_failure(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 334, in compile_failure
+    with self.assertRaises(
+AssertionError: Didn't catch error in /home/alejandro/writing-a-c-compiler-tests/tests/chapter_18/invalid_parse/struct_decl_empty_member_list.c
+
+----------------------------------------------------------------------
+
+
+
+
+======================================================================
+FAIL: test_invalid_parse/struct_member_is_function (test_framework.basic.TestChapter18.test_invalid_parse/struct_member_is_function)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 580, in test_invalid
+    self.compile_failure(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 334, in compile_failure
+    with self.assertRaises(
+AssertionError: Didn't catch error in /home/alejandro/writing-a-c-compiler-tests/tests/chapter_18/invalid_parse/struct_member_is_function.c
+
+----------------------------------------------------------------------
+
+
+
+
+======================================================================
+FAIL: test_valid/no_structure_parameters/struct_copy/stack_clobber (test_framework.basic.TestChapter18.test_valid/no_structure_parameters/struct_copy/stack_clobber)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_18/valid/no_structure_parameters/struct_copy/stack_clobber.c failed with error:
+  File "cd.py", line 119, in <module>
+  File "parser.py", line 2633, in parseProgram
+  File "parser.py", line 2349, in parseDeclaration
+  File "parser.py", line 2572, in parseFunctionDecl
+  File "parser.py", line 2389, in parseBlock
+  File "parser.py", line 2372, in parseBlockItem
+  File "parser.py", line 1988, in parseStatement
+  File "parser.py", line 1809, in parseExp
+  File "parser.py", line 1805, in parseCastExp
+  File "parser.py", line 1766, in parseUnaryExp
+  File "parser.py", line 1701, in parsePostfixExp
+  File "parser.py", line 1655, in parsePrimaryExp
+  File "parser.py", line 1318, in expect
+
+
+----------------------------------------------------------------------
+
+
+
+
+
+======================================================================
+FAIL: test_valid/params_and_returns/return_incomplete_type (test_framework.basic.TestChapter18.test_valid/params_and_returns/return_incomplete_type)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_18/valid/params_and_returns/return_incomplete_type.c failed with error:
+  File "cd.py", line 119, in <module>
+  File "parser.py", line 2632, in parseProgram
+  File "parser.py", line 2325, in parseDeclaration
+  File "parser.py", line 2313, in parseStructDeclaration
+  File "parser.py", line 1318, in expect
+
+
+----------------------------------------------------------------------
+
+
+
+
+======================================================================
+FAIL: test_valid/params_and_returns/temporary_lifetime (test_framework.basic.TestChapter18.test_valid/params_and_returns/temporary_lifetime)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_18/valid/params_and_returns/temporary_lifetime.c failed with error:
+  File "cd.py", line 119, in <module>
+  File "parser.py", line 2630, in parseProgram
+  File "parser.py", line 2346, in parseDeclaration
+  File "parser.py", line 2569, in parseFunctionDecl
+  File "parser.py", line 2386, in parseBlock
+  File "parser.py", line 2358, in parseBlockItem
+  File "parser.py", line 2349, in parseDeclaration
+  File "parser.py", line 2556, in parseVarDecl
+  File "parser.py", line 1318, in expect
+
+
+----------------------------------------------------------------------
+
+
+
+
+======================================================================
 FAIL: test_valid/floating_expressions/comparisons (test_framework.basic.TestChapter13.test_valid/floating_expressions/comparisons)
 ----------------------------------------------------------------------
 Traceback (most recent call last):

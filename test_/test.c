@@ -1,17 +1,7 @@
-//long a;
+// struct member list cannot be empty
+// (note that GCC/Clang allow this as an extenision)
+struct s {};
 
-
-
-struct alejandro
-{
-    unsigned int * a;
-    unsigned long * b;
-};
-
-static struct test a[3];
-
-
-static int main(struct test alejandro)
-{
-
+int main(void) {
+    return 0;
 }

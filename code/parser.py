@@ -832,16 +832,36 @@ class Expression:
 
 class Dot(Expression, Node):
 
-    def __init__(self, struct, member):
+    def __init__(self, struct, member, retType = None):
         self.struct = struct
         self.member = member
+        self.retType = retType
     
+    def printNode(self, level):
+        output = "("
+        output += self.struct.printNode(level) + " . " + self.member
+
+        if self.retType:
+            output +=  ' : ' + self.retType.printNode(level)
+
+        output += ")"
+        return output
 
 class Arrow(Expression, Node):
-    def __init__(self, pointer, member):
+    def __init__(self, pointer, member, retType = None):
         self.pointer = pointer
         self.member = member
+        self.retType = retType
 
+    def printNode(self, level):
+        output = "("
+        output += self.pointer.printNode(level) + " -> " + self.member
+
+        if self.retType:
+            output +=  ' : ' + self.retType.printNode(level)
+
+        output += ")"
+        return output
  
 class SizeOf(Expression, Node):
     def __init__(self, exp, retType = None):
@@ -1295,7 +1315,9 @@ def expect(expected, tokenList):
     #print("actual: ", actual)
     if actual != ():
         if actual[1] != expected:
-            print("Syntax Error Expected: {0} got: {1} at Line {2}.".format(expected, actual[0], actual[2]))
+            traceback.print_stack()
+            #print("Syntax Error Expected: {0} got: {1} at Line {2}.".format(expected, actual[0], actual[2]))
+            print("Syntax Error Expected: {0} got: {1} at Line {2}.".format(expected, tokenList, actual[2]))
             sys.exit(1)
     else:
         print("Syntax Error Expected: {0} but there are no more tokens.".format(expected))
@@ -1675,22 +1697,75 @@ def parseSubscript(tokenList, ptrExp):
 
     return Subscript(ptrExp, indexExp)
 
+def parseDotOperator(tokenList, struct):
+    takeToken(tokenList)
+    member = parseIdentifier(tokenList)
+    return Dot(struct, member)
+
+def parseArrowOperator(tokenList, pointer):
+    takeToken(tokenList)
+    member = parseIdentifier(tokenList)
+    return Arrow(pointer, member)
+
+def parsePostFixOp(tokenList, primaryExp):
+
+    token = peek(tokenList)
+
+    match token[1]:
+        case TokenType.OPEN_BRACKET:
+            return parseSubscript(tokenList, primaryExp)
+        
+        case TokenType.PERIOD:
+            return parseDotOperator(tokenList, primaryExp)
+        
+        case TokenType.ARROW:
+            return parseArrowOperator(tokenList, primaryExp)
+            
+    
+
 def parsePostfixExp(tokenList):
 
     primaryExp = parsePrimaryExp(tokenList)
 
+    #op = parsePostFixOp(tokenList)
+
     token = peek(tokenList)
 
-    if token[1] == TokenType.OPEN_BRACKET:
-        sS = parseSubscript(tokenList, primaryExp)
+    def isPostFixOpToken(token):
+        if token[1] == TokenType.OPEN_BRACKET or token[1] == TokenType.PERIOD or token[1] == TokenType.ARROW:
+            return True
+        
+        return False
+    
+    if isPostFixOpToken(token):
+
+        sS = parsePostFixOp(tokenList, primaryExp)
+        #sS = parseSubscript(tokenList, primaryExp)
 
         token = peek(tokenList)
-        while token[1] == TokenType.OPEN_BRACKET:
-            sS = parseSubscript(tokenList, sS)
+        #while token[1] == TokenType.OPEN_BRACKET:
+        while isPostFixOpToken(token):
+            sS = parsePostFixOp(tokenList, sS)
+            #sS = parseSubscript(tokenList, sS)
             token = peek(tokenList)
                  
         return sS
     
+    """
+    if token[1] == TokenType.PERIOD:
+        takeToken(tokenList)
+        exp = parsePostfixExp(tokenList)
+        #member = parseIdentifier(tokenList)
+        return Dot(primaryExp, exp)
+    
+    if token[1] == TokenType.ARROW:
+        takeToken(tokenList)
+        exp = parsePostfixExp(tokenList)
+        #member = parseIdentifier(tokenList)
+        return Arrow(primaryExp, exp)
+    """
+        
+
     return primaryExp
     
 
@@ -1738,7 +1813,8 @@ def parseTypeName(tokenList):
 
     types = []
     while isTypeSpecifier(token):
-        types.append(takeToken(tokenList))
+        typeSpec = parseTypeSpecifier(tokenList)
+        types.append(typeSpec)
         token = peek(tokenList)
 
     type = parseTypes(types)
@@ -2169,7 +2245,6 @@ def parseDirectDeclarator(tokenList):
 
     if token[1] == TokenType.OPEN_PAREN:
         paramInfos = parseParamList(tokenList) 
-        
         return FunDeclarator(paramInfos, sDeclarator)
 
     #one or many    
@@ -2248,18 +2323,21 @@ def parseMemberDeclaration(tokenList):
         token = peek(tokenList)
 
     baseType = parseTypes(types)
-    #print(type)
 
     declarator = parseDeclarator(tokenList)
 
     name, declType, params = processDeclarator(declarator, baseType)
 
+    print(type(declType))
+    match declType:
+        case FunType():
+            print("Error: Struct members cannot be functions.")
+            sys.exit(1)
+
     expect(TokenType.SEMICOLON, tokenList)
 
     return MemberDecl(name, declType)
 
-
-    
 
 def parseStructDeclaration(tokenList):
     tag = parseIdentifier(tokenList)
@@ -2274,8 +2352,13 @@ def parseStructDeclaration(tokenList):
         while token[1] != TokenType.CLOSE_BRACE:
             memberList.append(parseMemberDeclaration(tokenList))
             token = peek(tokenList)
+        
+        if memberList == []:
+            print("Error: Struct member list cannot be empty.")
+            sys.exit(1)
 
-    takeToken(tokenList)
+        takeToken(tokenList)
+
     expect(TokenType.SEMICOLON, tokenList)
         
     return StructDeclaration(tag, memberList)
@@ -2439,7 +2522,9 @@ def parseParam(tokenList):
     
     token = peek(tokenList)
     while isTypeSpecifier(token):
-        types.append(takeToken(tokenList))
+        typeSpec = parseTypeSpecifier(tokenList)
+        types.append(typeSpec)
+        #types.append(takeToken(tokenList))
         token = peek(tokenList)
 
     type = parseTypes(types)
