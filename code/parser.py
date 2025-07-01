@@ -1299,6 +1299,7 @@ def takeToken(tokenList):
     print("No more tokens.")
     sys.exit(1)
 
+
 def peek(tokenList, index=None):
     if(tokenList != []):  
         if index:

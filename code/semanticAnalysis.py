@@ -95,6 +95,12 @@ def resolveExpression(expression, idMap):
         case parser.SizeOfT(typeName = typeName):
             return parser.SizeOfT(typeName)
 
+        case parser.Dot():
+            pass
+
+        case parser.Arrow():
+            pass
+
         case _:
             traceback.print_stack()
             print("Invalid expression type: {0}".format(type(expression)))
@@ -109,7 +115,7 @@ def makeTemporary(id):
     return name
 
 
-def resolveFunctionDeclaration(funDecl, idMap):
+def resolveFunctionDeclaration(funDecl, idMap, structMap):
     #print(funDecl)
     if funDecl.iden in idMap:
         prev_Entry = idMap[funDecl.iden]
@@ -129,7 +135,7 @@ def resolveFunctionDeclaration(funDecl, idMap):
     
     block = None
     if funDecl.block:
-        block = resolveBlock(funDecl.block, innerMap)
+        block = resolveBlock(funDecl.block, innerMap, structMap)
         
     return parser.FunctionDecl(funDecl.iden, funDecl.funType, newParams, block, funDecl.storageClass)
     
@@ -173,8 +179,19 @@ def resolveInitializer(initializer, idMap):
             print("Invalid initializer type: {0}".format(type(initializer)))
             sys.exit(1)
 
-def resolveLocalVarDecl(dec, idMap):
+def resolveTypeSpecifier(type_, structMap):
+    match type_:
+        case parser.StuctureType(tag = tag):
+            if tag in structMap:
 
+                pass
+            else:
+                print("Error: Specified an undeclared structure type.")
+                sys.exit(1)
+            
+    
+
+def resolveLocalVarDecl(dec, idMap, structMap):
     if dec.identifier in idMap:
         prevEntry = idMap[dec.identifier]
         if prevEntry[1]['from_current_scope']:
@@ -185,25 +202,40 @@ def resolveLocalVarDecl(dec, idMap):
     if dec.storageClass.storageClass == parser.StorageType.EXTERN:
         return resolveFileScopeVarDecl(dec, idMap)
     else:
+        type = resolveTypeSpecifier(dec.varType, structMap)
+
         uniqueName = resolveID(dec.identifier, idMap)
+        
         if dec.initializer:
             init = resolveInitializer(dec.initializer, idMap)
-            return parser.VariableDecl(uniqueName, dec.varType, init, dec.storageClass)
+            return parser.VariableDecl(uniqueName, type, init, dec.storageClass)
     
-        return parser.VariableDecl(uniqueName, dec.varType, None, dec.storageClass)
+        return parser.VariableDecl(uniqueName, type, None, dec.storageClass)
 
 
-def resolveVarDeclaration(dec, idMap, isBlockVar):
+def resolveVarDeclaration(dec, idMap, structMap, isBlockVar):
     if isBlockVar == False:
         return resolveFileScopeVarDecl(dec, idMap)
     else:
-        return resolveLocalVarDecl(dec, idMap)
+        return resolveLocalVarDecl(dec, idMap, structMap)
 
-def resolveDeclaration(dec, idMap, isBlockDecl):
+class MapEntry():
+    def __init__(self, newTag, fromCurrentScope):
+        self.newTag = newTag
+        self.fromCurrentScope = fromCurrentScope
+
+def resolveStructDeclaration(structDecl, structMap):
+    if not (structDecl.tag in structMap) or not structMap[structDecl.tag].fromCurrentScope:
+        uniqueTag = makeTemporary(structDecl.tag)
+        structMap[structDecl.tag] = MapEntry(uniqueTag, True)
+    
+    
+
+def resolveDeclaration(dec, idMap, structMap, isBlockDecl):
 
     match dec:
         case parser.VarDecl(variableDecl = variableDecl):
-            v = resolveVarDeclaration(variableDecl, idMap, isBlockDecl)
+            v = resolveVarDeclaration(variableDecl, idMap, structMap, isBlockDecl)
             return parser.VarDecl(v)
             
         case parser.FunDecl(funDecl = funDecl):
@@ -212,8 +244,16 @@ def resolveDeclaration(dec, idMap, isBlockDecl):
                 print("Error cannot declare static function in block scope.")
                 sys.exit(1)
 
-            f = resolveFunctionDeclaration(funDecl, idMap)
+            f = resolveFunctionDeclaration(funDecl, idMap, structMap)
             return parser.FunDecl(f)
+        
+        case parser.StructDecl(structDecl = structDecl):
+            s = resolveStructDeclaration(structDecl, structMap)
+            return parser.StructDecl(s)
+
+        case _:
+            print("Error: Declaration not resolved. {0}".format(dec))
+            sys.exit(1)
             
 
 def copyidMap(idMap):
@@ -306,7 +346,7 @@ def resolveStatement(statement, idMap):
         case parser.NullStatement():
             return parser.NullStatement()
             
-def resolveBlock(block, idMap):
+def resolveBlock(block, idMap, structMap):
 
     if block.blockItemList:
         blockItemList = []
@@ -314,7 +354,7 @@ def resolveBlock(block, idMap):
         for i in block.blockItemList:
             match i:
                 case parser.D(declaration=dec):
-                    Decl = resolveDeclaration(dec, idMap, True)
+                    Decl = resolveDeclaration(dec, idMap, structMap, True)
                     blockItemList.append(parser.D(Decl))
 
                 case parser.S(statement=statement):
@@ -329,10 +369,11 @@ def resolveBlock(block, idMap):
 def IdentifierResolution(pro):
     
     if pro.declList:
+        structureTypeMap = {}
         idMap = {}
         funcDecList = []
         for decl in pro.declList:
-            f = resolveDeclaration(decl, idMap, False)
+            f = resolveDeclaration(decl, idMap, structureTypeMap, False)
             funcDecList.append(f)
             
         return parser.Program(funcDecList)
