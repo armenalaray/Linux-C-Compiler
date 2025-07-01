@@ -14,6 +14,15 @@ struct Student a;
 struct Student main(struct Address b, struct Address ale[2])
 {
     struct Student student;
+    int a;
+    (struct Student) a;
+    
+    sizeof(struct Student);
+
+    for (struct Address p; p; p = p + 1)
+    {
+        /* code */
+    }
     
     //student1.id = 1;
     //strcpy(student1.name, "John Doe");

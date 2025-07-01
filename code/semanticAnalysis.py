@@ -3,16 +3,11 @@ import sys
 import traceback
 import parser
 
-def resolveExpression(expression, idMap):
+def resolveExpression(expression, idMap, structMap):
     match expression:        
         case parser.Assignment_Expression(lvalue=lvalue, exp=exp):
-            
-            #if type(lvalue) != parser.Var_Expression:
-            #    print("Invalid lvalue!")
-            #    sys.exit(1)
-            
-            left = resolveExpression(lvalue, idMap)
-            right = resolveExpression(exp, idMap)
+            left = resolveExpression(lvalue, idMap, structMap)
+            right = resolveExpression(exp, idMap, structMap)
             return parser.Assignment_Expression(left, right)
         
         case parser.Var_Expression(identifier=id):
@@ -34,7 +29,7 @@ def resolveExpression(expression, idMap):
                 if argumentList:
                     for exp in argumentList:
                         #print(i)
-                        expList.append(resolveExpression(exp, idMap))
+                        expList.append(resolveExpression(exp, idMap, structMap))
                     
                     #print(expList)
 
@@ -49,51 +44,52 @@ def resolveExpression(expression, idMap):
             #return parser.FunctionCall_Exp(id, argumentList)
         
         case parser.Cast_Expression(targetType = targetType, exp = exp):
-            e = resolveExpression(exp, idMap)
-            return parser.Cast_Expression(targetType, e)
+            newType = resolveTypeSpecifier(targetType, structMap)
+            e = resolveExpression(exp, idMap, structMap)
+            return parser.Cast_Expression(newType, e)
 
         case parser.Unary_Expression(operator=op, expression=exp):
-            #print(type(exp))
-            e = resolveExpression(exp, idMap)
+            e = resolveExpression(exp, idMap, structMap)
             return parser.Unary_Expression(op, e)
             
         case parser.Binary_Expression(operator=op, left=left, right=right):
-            l = resolveExpression(left, idMap)
-            r = resolveExpression(right, idMap)
+            l = resolveExpression(left, idMap, structMap)
+            r = resolveExpression(right, idMap, structMap)
 
             return parser.Binary_Expression(op, l, r)
-            pass            
+                   
         
         case parser.Conditional_Expression(condExp=condExp, thenExp=thenExp, elseExp=elseExp):
             print(type(elseExp))
-            c = resolveExpression(condExp, idMap)
-            t = resolveExpression(thenExp, idMap)
-            e = resolveExpression(elseExp, idMap)
+            c = resolveExpression(condExp, idMap, structMap)
+            t = resolveExpression(thenExp, idMap, structMap)
+            e = resolveExpression(elseExp, idMap, structMap)
 
             return parser.Conditional_Expression(c, t, e)
         
         case parser.AddrOf(exp = exp):
-            e = resolveExpression(exp, idMap)
+            e = resolveExpression(exp, idMap, structMap)
             return parser.AddrOf(e)
 
         case parser.Dereference(exp = exp):
-            e = resolveExpression(exp, idMap)
+            e = resolveExpression(exp, idMap, structMap)
             return parser.Dereference(e)            
 
         case parser.Subscript(ptrExp = ptrExp, indexExp = indexExp):
-            ptrExp = resolveExpression(ptrExp, idMap)
-            indexExp = resolveExpression(indexExp, idMap)
+            ptrExp = resolveExpression(ptrExp, idMap, structMap)
+            indexExp = resolveExpression(indexExp, idMap, structMap)
             return parser.Subscript(ptrExp, indexExp)
 
         case parser.StringExpression(string = string):
             return parser.StringExpression(string)
 
         case parser.SizeOf(exp = exp):
-            exp = resolveExpression(exp, idMap)
+            exp = resolveExpression(exp, idMap, structMap)
             return parser.SizeOf(exp)
 
         case parser.SizeOfT(typeName = typeName):
-            return parser.SizeOfT(typeName)
+            newType = resolveTypeSpecifier(typeName, structMap)
+            return parser.SizeOfT(newType)
 
         case parser.Dot():
             pass
@@ -129,7 +125,6 @@ def resolveFunctionDeclaration(funDecl, idMap, structMap):
     newParams = []
     innerMap = copyidMap(idMap)
     for id in funDecl.paramNames:
-        #ERROR: Change this to resolveVarLocalDeclaration
         newParams.append(resolveID(id, innerMap))
 
     
@@ -309,13 +304,12 @@ def copyidMap(idMap):
 
     return newMap
 
-def resolveForInit(forInit, idMap):
+def resolveForInit(forInit, idMap, structMap):
     #print(type(forInit))
 
     match forInit:
         case parser.InitDecl(varDecl = varDecl):
-            #print(type(varDecl))
-            d = resolveVarDeclaration(varDecl, idMap, True)
+            d = resolveVarDeclaration(varDecl, idMap, structMap, True)
             return parser.InitDecl(d)
         
         case parser.InitExp(exp=exp):
@@ -326,7 +320,7 @@ def resolveForInit(forInit, idMap):
             return parser.InitExp(e)
             
 
-def resolveStatement(statement, idMap):
+def resolveStatement(statement, idMap, structMap):
     match statement:
         case parser.BreakStatement():
             return parser.BreakStatement()
@@ -337,52 +331,51 @@ def resolveStatement(statement, idMap):
         case parser.ForStatement(forInit=forInit, condExp=condExp, postExp=postExp, statement=statement, identifier=identifier):
             newidMap = copyidMap(idMap)
 
-            f = resolveForInit(forInit, newidMap)
+            f = resolveForInit(forInit, newidMap, structMap)
             
             c = None
             if condExp:
-                c = resolveExpression(condExp, newidMap)
+                c = resolveExpression(condExp, newidMap, structMap)
 
             p = None
             if postExp:
-                p = resolveExpression(postExp, newidMap)
+                p = resolveExpression(postExp, newidMap, structMap)
 
-            s = resolveStatement(statement, newidMap)
+            s = resolveStatement(statement, newidMap, structMap)
 
             return parser.ForStatement(f, s, c, p)
             
 
         case parser.DoWhileStatement(statement=statement, condExp=condExp, identifier=id):
-            s = resolveStatement(statement, idMap)
-            c = resolveExpression(condExp, idMap)
+            s = resolveStatement(statement, idMap, structMap)
+            c = resolveExpression(condExp, idMap, structMap)
             return parser.DoWhileStatement(s, c)
 
         case parser.WhileStatement(condExp=condExp, statement=statement, identifier=id):
-            c = resolveExpression(condExp, idMap)
-            s = resolveStatement(statement, idMap)
+            c = resolveExpression(condExp, idMap, structMap)
+            s = resolveStatement(statement, idMap, structMap)
             return parser.WhileStatement(c, s)
             
         case parser.ExpressionStmt(exp=exp):
-            return parser.ExpressionStmt(resolveExpression(exp, idMap))
+            return parser.ExpressionStmt(resolveExpression(exp, idMap, structMap))
         
         case parser.ReturnStmt(expression=exp):
             if exp: 
-                return parser.ReturnStmt(resolveExpression(exp, idMap))
+                return parser.ReturnStmt(resolveExpression(exp, idMap, structMap))
             
             return parser.ReturnStmt()
         
         case parser.IfStatement(exp=exp, thenS=thenS, elseS=elseS):
-            #print(type(exp))
-            p = resolveExpression(exp, idMap)
+            p = resolveExpression(exp, idMap, structMap)
 
-            t = resolveStatement(thenS, idMap)
-            e = resolveStatement(elseS, idMap)
+            t = resolveStatement(thenS, idMap, structMap)
+            e = resolveStatement(elseS, idMap, structMap)
 
             return parser.IfStatement(p, t, e)
         
         case parser.CompoundStatement(block=block):
             newidMap = copyidMap(idMap)
-            return parser.CompoundStatement(resolveBlock(block, newidMap))
+            return parser.CompoundStatement(resolveBlock(block, newidMap, structMap))
             
         case parser.NullStatement():
             return parser.NullStatement()
@@ -399,7 +392,7 @@ def resolveBlock(block, idMap, structMap):
                     blockItemList.append(parser.D(Decl))
 
                 case parser.S(statement=statement):
-                    s = resolveStatement(statement, idMap)
+                    s = resolveStatement(statement, idMap, structMap)
                     blockItemList.append(parser.S(s))
         
         return parser.Block(blockItemList)
