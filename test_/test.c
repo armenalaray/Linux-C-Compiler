@@ -9,13 +9,16 @@ struct Student {
     struct Address address; // Nested structure
 };
 
-int main(void)
+struct Student a;
+
+struct Student main(struct Address b, struct Address ale[2])
 {
-    struct Student student1;
-    student1.id = 1;
+    struct Student student;
+    
+    //student1.id = 1;
     //strcpy(student1.name, "John Doe");
     //strcpy(student1.address.city, "New York");
     //strcpy(student1.address.street, "Broadway");
 
-    return 0;
+    //return 0;
 }

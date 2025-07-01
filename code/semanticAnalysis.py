@@ -116,7 +116,7 @@ def makeTemporary(id):
 
 
 def resolveFunctionDeclaration(funDecl, idMap, structMap):
-    #print(funDecl)
+
     if funDecl.iden in idMap:
         prev_Entry = idMap[funDecl.iden]
         if prev_Entry[1]['from_current_scope'] and not prev_Entry[2]['has_linkage']:
@@ -124,7 +124,7 @@ def resolveFunctionDeclaration(funDecl, idMap, structMap):
             sys.exit(1)
             
     idMap[funDecl.iden] = [{'new_name':funDecl.iden}, {'from_current_scope':True}, {'has_linkage':True}]
-    #print(idMap)
+    
 
     newParams = []
     innerMap = copyidMap(idMap)
@@ -137,7 +137,8 @@ def resolveFunctionDeclaration(funDecl, idMap, structMap):
     if funDecl.block:
         block = resolveBlock(funDecl.block, innerMap, structMap)
         
-    return parser.FunctionDecl(funDecl.iden, funDecl.funType, newParams, block, funDecl.storageClass)
+    type_ = resolveTypeSpecifier(funDecl.funType, structMap)
+    return parser.FunctionDecl(funDecl.iden, type_, newParams, block, funDecl.storageClass)
     
 
 
@@ -155,10 +156,13 @@ def resolveID(id, idMap):
 
     return uniqueName
 
-def resolveFileScopeVarDecl(dec, idMap):
+def resolveFileScopeVarDecl(dec, idMap, structMap):
+
+    type = resolveTypeSpecifier(dec.varType, structMap)
+
     idMap[dec.identifier] = [{'new_name':dec.identifier}, {'from_current_scope':True}, {'has_linkage':True}]
 
-    return dec
+    return parser.VariableDecl(dec.identifier, type, dec.initializer)
 
 def resolveInitializer(initializer, idMap):
     match initializer:
@@ -183,11 +187,35 @@ def resolveTypeSpecifier(type_, structMap):
     match type_:
         case parser.StuctureType(tag = tag):
             if tag in structMap:
-
-                pass
+                #print("Ale: ", tag)
+                uniqueTag = structMap[tag].newTag
+                return parser.StuctureType(uniqueTag)
+            
             else:
                 print("Error: Specified an undeclared structure type.")
                 sys.exit(1)
+
+        case parser.PointerType(referenceType = referenceType):
+            newType = resolveTypeSpecifier(referenceType, structMap)
+            return parser.PointerType(newType)
+
+        case parser.ArrayType(elementType = elementType, size = size):
+            newType = resolveTypeSpecifier(elementType, structMap)
+            return parser.ArrayType(newType, size)
+
+        case parser.FunType(paramTypes = paramTypes, retType = retType):
+            
+            newParamTypes = []
+            for i in paramTypes:
+                newType = resolveTypeSpecifier(i, structMap)
+                newParamTypes.append(newType)
+            
+            newRetType = resolveTypeSpecifier(retType, structMap)
+
+            return parser.FunType(newParamTypes, newRetType)
+
+        case _:
+            return type_
             
     
 
@@ -215,7 +243,7 @@ def resolveLocalVarDecl(dec, idMap, structMap):
 
 def resolveVarDeclaration(dec, idMap, structMap, isBlockVar):
     if isBlockVar == False:
-        return resolveFileScopeVarDecl(dec, idMap)
+        return resolveFileScopeVarDecl(dec, idMap, structMap)
     else:
         return resolveLocalVarDecl(dec, idMap, structMap)
 
@@ -225,11 +253,24 @@ class MapEntry():
         self.fromCurrentScope = fromCurrentScope
 
 def resolveStructDeclaration(structDecl, structMap):
+    uniqueTag = None
+
     if not (structDecl.tag in structMap) or not structMap[structDecl.tag].fromCurrentScope:
         uniqueTag = makeTemporary(structDecl.tag)
         structMap[structDecl.tag] = MapEntry(uniqueTag, True)
+    else:
+        uniqueTag = structMap[structDecl.tag].newTag
     
+    processedMembers = []
+
+    for member in structDecl.members:
+        processedType = resolveTypeSpecifier(member.memberType, structMap)
+        processedMembers.append(parser.MemberDecl(member.name, processedType))
+
+    return parser.StructDeclaration(uniqueTag, processedMembers)
+
     
+
 
 def resolveDeclaration(dec, idMap, structMap, isBlockDecl):
 
