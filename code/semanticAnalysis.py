@@ -91,11 +91,14 @@ def resolveExpression(expression, idMap, structMap):
             newType = resolveTypeSpecifier(typeName, structMap)
             return parser.SizeOfT(newType)
 
-        case parser.Dot():
-            pass
+        case parser.Dot(struct = struct, member = member):
+            struct = resolveExpression(struct, idMap, structMap)
+            return parser.Dot(struct, member)
 
-        case parser.Arrow():
-            pass
+        case parser.Arrow(pointer = pointer, member = member):
+            pointer = resolveExpression(pointer, idMap, structMap)
+            return parser.Arrow(pointer, member)
+            
 
         case _:
             traceback.print_stack()

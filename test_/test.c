@@ -6,14 +6,14 @@ int main(void)
     };
 
     struct shadow outer;
-    //outer.x = 2;
+    outer.x = 2;
     {
         struct shadow
         {
             int y;
         };
         struct shadow inner;
-        //inner.y = 3;
-        //return outer.x + inner.y;
+        inner.y = 3;
+        return outer->x + inner.y;
     }
 }
