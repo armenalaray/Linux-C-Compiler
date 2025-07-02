@@ -1,33 +1,19 @@
-struct Address {
-    char city[20];
-    char street[50];
-};
-
-struct Student {
-    int id;
-    char name[50];
-    struct Address address; // Nested structure
-};
-
-struct Student a;
-
-struct Student main(struct Address b, struct Address ale[2])
+int main(void)
 {
-    struct Student student;
-    int a;
-    (struct Student) a;
-    
-    sizeof(struct Student);
-
-    for (struct Address p; p; p = p + 1)
+    struct shadow
     {
-        /* code */
-    }
-    
-    //student1.id = 1;
-    //strcpy(student1.name, "John Doe");
-    //strcpy(student1.address.city, "New York");
-    //strcpy(student1.address.street, "Broadway");
+        int x;
+    };
 
-    //return 0;
+    struct shadow outer;
+    //outer.x = 2;
+    {
+        struct shadow
+        {
+            int y;
+        };
+        struct shadow inner;
+        //inner.y = 3;
+        //return outer.x + inner.y;
+    }
 }

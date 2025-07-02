@@ -121,18 +121,19 @@ def resolveFunctionDeclaration(funDecl, idMap, structMap):
             
     idMap[funDecl.iden] = [{'new_name':funDecl.iden}, {'from_current_scope':True}, {'has_linkage':True}]
     
+    type_ = resolveTypeSpecifier(funDecl.funType, structMap)
+
+    innerMap, innerStructMap = copyidMap(idMap, structMap)
 
     newParams = []
-    innerMap = copyidMap(idMap)
     for id in funDecl.paramNames:
         newParams.append(resolveID(id, innerMap))
 
     
     block = None
     if funDecl.block:
-        block = resolveBlock(funDecl.block, innerMap, structMap)
+        block = resolveBlock(funDecl.block, innerMap, innerStructMap)
         
-    type_ = resolveTypeSpecifier(funDecl.funType, structMap)
     return parser.FunctionDecl(funDecl.iden, type_, newParams, block, funDecl.storageClass)
     
 
@@ -178,11 +179,11 @@ def resolveInitializer(initializer, idMap):
             print("Invalid initializer type: {0}".format(type(initializer)))
             sys.exit(1)
 
+#no pasa nada porque solo usas el newTag 
 def resolveTypeSpecifier(type_, structMap):
     match type_:
         case parser.StuctureType(tag = tag):
             if tag in structMap:
-                #print("Ale: ", tag)
                 uniqueTag = structMap[tag].newTag
                 return parser.StuctureType(uniqueTag)
             
@@ -247,6 +248,12 @@ class MapEntry():
         self.newTag = newTag
         self.fromCurrentScope = fromCurrentScope
 
+    def __str__(self):
+        return "MapEntry({self.newTag}, {self.fromCurrentScope})".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
+
 def resolveStructDeclaration(structDecl, structMap):
     uniqueTag = None
 
@@ -292,17 +299,22 @@ def resolveDeclaration(dec, idMap, structMap, isBlockDecl):
             sys.exit(1)
             
 
-def copyidMap(idMap):
-    #print("VAR map: ", idMap)
+def copyidMap(idMap, structMap):
     
-    newMap = copy.deepcopy(idMap)
+    print("OLD", structMap)
 
+    newMap = copy.deepcopy(idMap)
+    newStructMap = copy.deepcopy(structMap)
+    
     for i in newMap.values():
         i[1] = {'from_current_scope':False}
     
-    #print("NEW map: ", newMap)
+    for i in newStructMap.values():
+        i.fromCurrentScope = False
 
-    return newMap
+    print("NEW", newStructMap)
+
+    return newMap, newStructMap
 
 def resolveForInit(forInit, idMap, structMap):
     #print(type(forInit))
@@ -329,19 +341,19 @@ def resolveStatement(statement, idMap, structMap):
             return parser.ContinueStatement()
 
         case parser.ForStatement(forInit=forInit, condExp=condExp, postExp=postExp, statement=statement, identifier=identifier):
-            newidMap = copyidMap(idMap)
+            newidMap, newStructMap = copyidMap(idMap, structMap)
 
-            f = resolveForInit(forInit, newidMap, structMap)
+            f = resolveForInit(forInit, newidMap, newStructMap)
             
             c = None
             if condExp:
-                c = resolveExpression(condExp, newidMap, structMap)
+                c = resolveExpression(condExp, newidMap, newStructMap)
 
             p = None
             if postExp:
-                p = resolveExpression(postExp, newidMap, structMap)
+                p = resolveExpression(postExp, newidMap, newStructMap)
 
-            s = resolveStatement(statement, newidMap, structMap)
+            s = resolveStatement(statement, newidMap, newStructMap)
 
             return parser.ForStatement(f, s, c, p)
             
@@ -374,8 +386,8 @@ def resolveStatement(statement, idMap, structMap):
             return parser.IfStatement(p, t, e)
         
         case parser.CompoundStatement(block=block):
-            newidMap = copyidMap(idMap)
-            return parser.CompoundStatement(resolveBlock(block, newidMap, structMap))
+            newidMap, newStructMap = copyidMap(idMap, structMap)
+            return parser.CompoundStatement(resolveBlock(block, newidMap, newStructMap))
             
         case parser.NullStatement():
             return parser.NullStatement()
