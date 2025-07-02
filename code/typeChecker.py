@@ -1138,18 +1138,36 @@ def typeCheckStructDeclaration(structDecl, typeTable):
     
     validateStructDefinition(structDecl, typeTable)
 
+    memberEntries = []
+
     structSize = 0
     structAlignment = 1
 
+
     for member in structDecl.members:
         memberAlignment, other = assemblyGenerator.matchCType(member.memberType)
-        print("memberAlignment:",memberAlignment)
-        memberOffset = structSize + structSize % memberAlignment
-        print("memberOffset:",memberOffset)
-        
-        structSize = memberOffset + member.memberType.getBaseTypeSize(0)
+        #print("memberAlignment:",memberAlignment)
 
-    typeTable[structDecl.tag] = StructEntry()
+        memberOffset = structSize + (structSize % memberAlignment)
+        print("memberOffset:",memberOffset)
+
+        memberEntries.append(MemberEntry(member.name, member.memberType, memberOffset))
+
+        structAlignment = max(structAlignment, memberAlignment)
+
+        structSize = memberOffset + member.memberType.getBaseTypeSize(0)
+        
+        print("structSize:",structSize)
+
+
+    print("structAlignment:",structAlignment)
+
+    structSize = structSize + (structAlignment - (structSize % structAlignment))
+    
+    print("structSize:",structSize)
+
+    typeTable[structDecl.tag] = StructEntry(structAlignment, structSize, memberEntries)
+
     
         
 def typeCheckDeclaration(dec, symbolTable, typeTable, isBlockScope):
