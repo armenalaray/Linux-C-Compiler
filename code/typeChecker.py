@@ -4,6 +4,8 @@ from enum import Enum
 import ctypes
 import parser
 
+import assemblyGenerator
+
 from semanticAnalysis import makeTemporary
 
 class Entry:
@@ -688,7 +690,11 @@ def typeCheckExpression(exp, symbolTable):
 
             return parser.SizeOf(e, parser.ULongType())
 
-        
+        case parser.Dot(struct = struct, member = member):
+            pass     
+
+        case parser.Arrow(pointer = pointer, member = member):
+            pass   
 
         case _:
             traceback.print_stack()
@@ -1089,9 +1095,64 @@ def typeCheckVarDeclaration(varDecl, symbolTable, isBlockScope):
         return typeCheckLocalVarDecl(varDecl, symbolTable)
     else:
         return typeCheckFileScopeVarDecl(varDecl, symbolTable)
+
+class StructEntry():
+    def __init__(self, alignment, size, members):
+        self.alignment = alignment
+        self.size = size
+        self.members = members
+
+class MemberEntry():
+    def __init__(self, name, type_, offset):
+        self.name = name
+        self.memberType = type_
+        self.offset = offset
+
+def validateStructDefinition(structDecl, typeTable):
+    if structDecl.tag in typeTable:
+        print("Error: Struct {0} already defined.".format(structDecl.tag))
+        sys.exit(1)
+
+    memberTable = []
+    for member in structDecl.members:
+        if member.name in memberTable:
+            print("Error: Duplicate member name {0} in struct {1}.".format(member.name, structDecl.tag))
+            sys.exit(1)
         
+        validateTypeSpecifier(member.memberType)
+
+        if not isComplete(member.memberType):
+            print("Error: Incomplete type {0} in struct {1}.".format(member.memberType, structDecl.tag))
+            sys.exit(1)
+
+        memberTable.append(member.name) 
+
         
-def typeCheckDeclaration(dec, symbolTable, isBlockScope):
+    
+    
+
+def typeCheckStructDeclaration(structDecl, typeTable):
+
+    if structDecl.members == []:
+        return
+    
+    validateStructDefinition(structDecl, typeTable)
+
+    structSize = 0
+    structAlignment = 1
+
+    for member in structDecl.members:
+        memberAlignment, other = assemblyGenerator.matchCType(member.memberType)
+        print("memberAlignment:",memberAlignment)
+        memberOffset = structSize + structSize % memberAlignment
+        print("memberOffset:",memberOffset)
+        
+        structSize = memberOffset + member.memberType.getBaseTypeSize(0)
+
+    typeTable[structDecl.tag] = StructEntry()
+    
+        
+def typeCheckDeclaration(dec, symbolTable, typeTable, isBlockScope):
     match dec:
         case parser.VarDecl(variableDecl = variableDecl):
             variableDecl = typeCheckVarDeclaration(variableDecl, symbolTable, isBlockScope)
@@ -1100,6 +1161,15 @@ def typeCheckDeclaration(dec, symbolTable, isBlockScope):
         case parser.FunDecl(funDecl = funDecl):
             funDecl = typeCheckFunctionDeclaration(funDecl, symbolTable)
             return parser.FunDecl(funDecl)
+        
+        case parser.StructDecl(structDecl = structDecl):
+            typeCheckStructDeclaration(structDecl, typeTable)
+            return parser.StructDecl(structDecl)
+            
+
+        case _:
+            print("Error: Invalid Declaration {0}".format(dec))
+            sys.exit(1)
 
 def typeCheckForInit(forInit, symbolTable):
     match forInit:
@@ -1336,10 +1406,12 @@ def typeCheckFunctionDeclaration(funDec, symbolTable):
 
 def typeCheckProgram(pro):
     symbolTable = {}
+    typeTable = {}
+
     if pro.declList:
         declList = []
         for decl in pro.declList:
-            d = typeCheckDeclaration(decl, symbolTable, False)
+            d = typeCheckDeclaration(decl, symbolTable, typeTable, False)
             declList.append(d)
 
         return parser.Program(declList), symbolTable
