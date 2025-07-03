@@ -1,14 +1,13 @@
-// postfix operators have higher precedence than prefix
-struct inner {
-    int inner_arr[3];
+struct s
+{
+    int member;
+    int arr[3];
 };
 
-struct outer {
-    int a;
-    struct inner b;
-};
+struct s f(void);
 
-int main(void) {
-    struct outer * array;
-    array->ale;
+int main(void)
+{
+    int *arr_pointer = f().arr;
+    return arr_pointer[0];
 }
