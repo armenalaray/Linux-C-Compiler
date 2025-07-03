@@ -278,7 +278,7 @@ class CompoundInit(Initializer, Node):
         self.retType = retType
 
     def __str__(self):
-        return ": {self.exp}".format(self=self)
+        return ": {self.initializerList}".format(self=self)
     
     def printNode(self, level):
         output = '\n'

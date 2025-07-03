@@ -1,13 +1,18 @@
-struct s
-{
-    int member;
-    int arr[3];
+// postfix operators have higher precedence than prefix
+struct inner {
+    int inner_arr[3];
 };
 
-struct s f(void);
+struct outer {
+    int a;
+    struct inner b;
+};
 
-int main(void)
-{
-    int *arr_pointer = f().arr;
-    return arr_pointer[0];
+int main(void) {
+    struct outer array[4] = {{1, {{2, 3, 4}}},
+                             {5, {{6, 7, 8}}},
+                             {9, {{10, 11, 12}}},
+                             {13, {{14, 15, 16}}}};
+
+    
 }

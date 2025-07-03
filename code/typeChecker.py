@@ -508,7 +508,7 @@ def typeCheckExpression(exp, symbolTable, typeTable):
                         print("Error: Can't negate a pointer.")
                         sys.exit(1)
                     
-                    if not isComplete(e.retType):
+                    if not isComplete(e.retType, typeTable):
                         print("Error: Cannot negate void expressions.")
                         sys.exit(1)
 
@@ -675,6 +675,9 @@ def typeCheckExpression(exp, symbolTable, typeTable):
 
             elif type(thenExp.retType) == parser.PointerType or type(elseExp.retType) == parser.PointerType:
                 commonType = getCommonPointerType(thenExp, elseExp)
+
+            elif type(thenExp.retType) == parser.StuctureType and type(elseExp.retType) == parser.StuctureType and thenExp.retType.checkType(elseExp.retType):
+                commonType = thenExp.retType
 
             else:
                 traceback.print_stack()
@@ -1028,6 +1031,9 @@ def zeroInitializer(elementType):
 
             return parser.CompoundInit(initList, elementType)
             
+        case parser.StuctureType(tag = tag):
+            pass
+
         case _:
             print("Error: Cannot create zero initializer for type {0}".format(elementType))
             sys.exit(1)
@@ -1037,6 +1043,37 @@ def typeCheckInitializer(targetType, initializer, symbolTable, typeTable):
     
     match targetType, initializer:
         
+        case parser.StuctureType(tag = tag), parser.CompoundInit(initializerList = initializerList):
+            structDef = typeTable[tag]
+            #print(structDef.members)
+
+            if len(initializerList) > len(structDef.members):
+                print("Error: Too many values in initializer for structure {0}.".format(tag))
+                sys.exit(1)
+            
+            typeCheckedList = []
+            index = 0
+            memberList = list(structDef.members.values())
+            #print(memberList)
+            for i, init in enumerate(initializerList):
+                t = memberList[i].memberType
+                typeCheckedElement = typeCheckInitializer(t, init, symbolTable, typeTable)
+                typeCheckedList.append(typeCheckedElement)
+                index = i
+            
+            print("index:", index)
+            print("memberSize:", len(structDef.members))
+
+            while index < len(structDef.members) - 1:
+                t = memberList[index].memberType
+                typeCheckedList.append(zeroInitializer(t))
+                index += 1
+
+            print(typeCheckedList)
+
+            return parser.CompoundInit(typeCheckedList, targetType)
+
+            
         case parser.ArrayType(elementType = elementType, size = size), parser.SingleInit(exp = exp):
             match exp:
                 case parser.StringExpression(string = string):
@@ -1082,6 +1119,7 @@ def typeCheckInitializer(targetType, initializer, symbolTable, typeTable):
 
 
         case _:
+            traceback.print_stack()
             print("Error: Can't Initialize a scalar object with a compound initializer.")
             sys.exit(1)
 
