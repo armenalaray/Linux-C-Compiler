@@ -268,12 +268,21 @@ def convertByAssignment(exp, targetType):
     sys.exit(1)
 
 
-def typeCheckAndConvert(exp, symbolTable):
-    typedExp = typeCheckExpression(exp, symbolTable)
+def typeCheckAndConvert(exp, symbolTable, typeTable):
+    
+    typedExp = typeCheckExpression(exp, symbolTable, typeTable)
+    
     match typedExp.retType:
         case parser.ArrayType(elementType = elementType, size = size):
             return parser.AddrOf(typedExp, parser.PointerType(elementType))
         
+        case parser.StuctureType(tag = tag):
+            if not tag in typeTable:
+                print("Error: Structure type {0} not defined.".format(tag))
+                sys.exit(1)
+
+            return typedExp
+
         case _:
             return typedExp
 
@@ -324,7 +333,7 @@ def validateTypeSpecifier(t, typeTable):
         case _:
             return
 
-def typeCheckExpression(exp, symbolTable):
+def typeCheckExpression(exp, symbolTable, typeTable):
     match exp:
 
         case parser.FunctionCall_Exp(identifier=id, argumentList = argumentList):
@@ -346,8 +355,7 @@ def typeCheckExpression(exp, symbolTable):
                         convertedArgs = []
                         for exp, targetType in zip(argumentList, paramTypes):
 
-                            exp = typeCheckAndConvert(exp, symbolTable)
-                            #exp = typeCheckExpression(exp, symbolTable)
+                            exp = typeCheckAndConvert(exp, symbolTable, typeTable)
 
                             exp = convertByAssignment(exp, targetType)
 
@@ -367,13 +375,13 @@ def typeCheckExpression(exp, symbolTable):
             return parser.StringExpression(string, parser.ArrayType(parser.CharType(), len(string) + 1))
 
         case parser.Dereference(exp = exp):
-            typedInner = typeCheckAndConvert(exp, symbolTable)
+            typedInner = typeCheckAndConvert(exp, symbolTable, typeTable)
             
             match typedInner.retType:
                 case parser.PointerType(referenceType = referenceType):
 
-                    if not isComplete(referenceType):
-                        print("Error: Cannot dereference pointer to void.")
+                    if not isComplete(referenceType, typeTable):
+                        print("Error: Cannot dereference pointer to Incomplete Type.")
                         sys.exit(1)         
 
                     return parser.Dereference(typedInner, referenceType)
@@ -383,8 +391,8 @@ def typeCheckExpression(exp, symbolTable):
                     sys.exit(1)
 
         case parser.Subscript(ptrExp = e1, indexExp = e2):
-            typedE1 = typeCheckAndConvert(e1, symbolTable)
-            typedE2 = typeCheckAndConvert(e2, symbolTable)
+            typedE1 = typeCheckAndConvert(e1, symbolTable, typeTable)
+            typedE2 = typeCheckAndConvert(e2, symbolTable, typeTable)
 
             ptrType = None
 
@@ -410,12 +418,12 @@ def typeCheckExpression(exp, symbolTable):
                 print("Error: Can't take the address of a non-lvalue.")
                 sys.exit(1)
             
-            typedInner = typeCheckExpression(exp, symbolTable)
+            typedInner = typeCheckExpression(exp, symbolTable, typeTable)
             retType = parser.PointerType(typedInner.retType)
             return parser.AddrOf(typedInner, retType)
 
         case parser.Cast_Expression(targetType = targetType, exp = exp):
-            e = typeCheckAndConvert(exp, symbolTable)
+            e = typeCheckAndConvert(exp, symbolTable, typeTable)
             
             validateTypeSpecifier(targetType)
             validateTypeSpecifier(e.retType)
@@ -446,13 +454,13 @@ def typeCheckExpression(exp, symbolTable):
             return parser.Var_Expression(id, symbolTable[id].type)
         
         case parser.Assignment_Expression(lvalue=lvalue, exp=exp):
-            l = typeCheckAndConvert(lvalue, symbolTable)
+            l = typeCheckAndConvert(lvalue, symbolTable, typeTable)
             
             if not isAnLvalue(l):
                 print("Error: Tried to assign to a non-lvalue.")
                 sys.exit(1)
                 
-            r = typeCheckAndConvert(exp, symbolTable)
+            r = typeCheckAndConvert(exp, symbolTable, typeTable)
             r = convertByAssignment(r, l.retType)
             return parser.Assignment_Expression(l, r, l.retType)
             
@@ -480,7 +488,7 @@ def typeCheckExpression(exp, symbolTable):
                     sys.exit(1)
 
         case parser.Unary_Expression(operator=op, expression=exp_):
-            e = typeCheckAndConvert(exp_, symbolTable)
+            e = typeCheckAndConvert(exp_, symbolTable, typeTable)
             
             match op.operator:
                 case parser.UnopType.COMPLEMENT:
@@ -598,8 +606,8 @@ def typeCheckExpression(exp, symbolTable):
                     print("Error: Invalid operand types for comparison. {0} and {1}".format(l.retType, r.retType))
                     sys.exit(1)
                 
-            l = typeCheckAndConvert(left, symbolTable)
-            r = typeCheckAndConvert(right, symbolTable)
+            l = typeCheckAndConvert(left, symbolTable, typeTable)
+            r = typeCheckAndConvert(right, symbolTable, typeTable)
 
             match op.operator:
                 case parser.BinopType.ADD:
@@ -651,9 +659,9 @@ def typeCheckExpression(exp, symbolTable):
       
         case parser.Conditional_Expression(condExp=condExp, thenExp=thenExp, elseExp=elseExp):
 
-            condExp = typeCheckAndConvert(condExp, symbolTable)
-            thenExp = typeCheckAndConvert(thenExp, symbolTable)
-            elseExp = typeCheckAndConvert(elseExp, symbolTable)
+            condExp = typeCheckAndConvert(condExp, symbolTable, typeTable)
+            thenExp = typeCheckAndConvert(thenExp, symbolTable, typeTable)
+            elseExp = typeCheckAndConvert(elseExp, symbolTable, typeTable)
             
             if not isScalar(condExp.retType):
                 print("Error: Logical operators only apply to scalar expressions.")
@@ -690,7 +698,7 @@ def typeCheckExpression(exp, symbolTable):
             return parser.SizeOfT(typeName, parser.ULongType())
         
         case parser.SizeOf(exp = exp):
-            e = typeCheckExpression(exp, symbolTable)
+            e = typeCheckExpression(exp, symbolTable, typeTable)
             if not isComplete(e.retType):
                 print("Error: Can't get the size of an incomplete type.")
                 sys.exit(1)
@@ -698,10 +706,50 @@ def typeCheckExpression(exp, symbolTable):
             return parser.SizeOf(e, parser.ULongType())
 
         case parser.Dot(struct = struct, member = member):
-            pass     
+            typedStruct = typeCheckAndConvert(struct, symbolTable, typeTable)
+            match typedStruct.retType:
+                case parser.StuctureType(tag = tag):
+                    
+                    structDef = typeTable[tag]
+
+                    if not member in structDef.members:
+                        print("Error: Structure {0} has no member {1}.".format(tag, member))
+                        sys.exit(1)
+
+                    memberType = structDef.members[member].memberType
+                    
+                    return parser.Dot(typedStruct, member, memberType)
+                    
+                case _:
+                    print("Error: Cannot access member of a non-structure type.")
+                    sys.exit(1)
 
         case parser.Arrow(pointer = pointer, member = member):
-            pass   
+            typedStruct = typeCheckAndConvert(pointer, symbolTable, typeTable)
+
+            match typedStruct.retType:
+                case parser.PointerType(referenceType = referenceType):
+                    
+                    match referenceType:
+                        case parser.StuctureType(tag = tag):
+                            structDef = typeTable[tag]
+
+                            if not member in structDef.members:
+                                print("Error: Structure {0} has no member {1}.".format(tag, member))
+                                sys.exit(1)
+
+                            memberType = structDef.members[member].memberType
+                            
+                            return parser.Dot(typedStruct, member, memberType)
+                                
+                        case _:
+                            print("Error: Cannot access member of a non-structure type.")
+                            sys.exit(1)
+                        
+                case _:
+                    print("Error: Cannot access member of a non-structure type.")
+                    sys.exit(1)
+   
 
         case _:
             traceback.print_stack()
@@ -987,7 +1035,7 @@ def zeroInitializer(elementType):
             sys.exit(1)
     pass
 
-def typeCheckInitializer(targetType, initializer, symbolTable):
+def typeCheckInitializer(targetType, initializer, symbolTable, typeTable):
     
     match targetType, initializer:
         
@@ -1014,7 +1062,7 @@ def typeCheckInitializer(targetType, initializer, symbolTable):
 
 
         case _, parser.SingleInit(exp = exp):
-            e = typeCheckAndConvert(exp, symbolTable)
+            e = typeCheckAndConvert(exp, symbolTable, typeTable)
             e = convertByAssignment(e, targetType)
             return parser.SingleInit(e, targetType)
 
@@ -1026,7 +1074,7 @@ def typeCheckInitializer(targetType, initializer, symbolTable):
             typeCheckedList = []
             for i in initializerList:
                 #aqui le faltan bytes en string literals
-                init = typeCheckInitializer(elementType, i, symbolTable)
+                init = typeCheckInitializer(elementType, i, symbolTable, typeTable)
                 typeCheckedList.append(init)
 
             while len(typeCheckedList) < size:
@@ -1091,7 +1139,7 @@ def typeCheckLocalVarDecl(varDecl, symbolTable, typeTable):
         symbolTable[varDecl.identifier] = Entry(varDecl.identifier, LocalAttributes(), varDecl.varType)
         
         if varDecl.initializer:
-            init = typeCheckInitializer(varDecl.varType, varDecl.initializer, symbolTable)
+            init = typeCheckInitializer(varDecl.varType, varDecl.initializer, symbolTable, typeTable)
 
             return parser.VariableDecl(varDecl.identifier, varDecl.varType, init, varDecl.storageClass)
         
@@ -1197,7 +1245,7 @@ def typeCheckStructDeclaration(structDecl, typeTable):
     
     validateStructDefinition(structDecl, typeTable)
 
-    memberEntries = []
+    memberEntries = {}
 
     structSize = 0
     structAlignment = 1
@@ -1211,7 +1259,8 @@ def typeCheckStructDeclaration(structDecl, typeTable):
             
             #memberAlignment, other = assemblyGenerator.matchCType(member.memberType, typeTable)
             memberAlignment = alignment(member.memberType, typeTable)
-            memberEntries.append(MemberEntry(member.name, member.memberType, memberOffset))
+            #memberEntries.append(MemberEntry(member.name, member.memberType, memberOffset))
+            memberEntries[member.name] = MemberEntry(member.name, member.memberType, memberOffset)
             structAlignment = max(structAlignment, memberAlignment)
 
             match member.memberType:
@@ -1228,7 +1277,8 @@ def typeCheckStructDeclaration(structDecl, typeTable):
             else:
                 memberOffset = structSize + (memberAlignment - (structSize % memberAlignment))
                             
-            memberEntries.append(MemberEntry(member.name, member.memberType, memberOffset))
+            #memberEntries.append(MemberEntry(member.name, member.memberType, memberOffset))
+            memberEntries[member.name] = MemberEntry(member.name, member.memberType, memberOffset)
             
             structAlignment = max(structAlignment, memberAlignment)
 
@@ -1274,20 +1324,20 @@ def typeCheckDeclaration(dec, symbolTable, typeTable, isBlockScope):
             print("Error: Invalid Declaration {0}".format(dec))
             sys.exit(1)
 
-def typeCheckForInit(forInit, symbolTable):
+def typeCheckForInit(forInit, symbolTable, typeTable):
     match forInit:
         case parser.InitDecl(varDecl = varDecl):
             if varDecl.storageClass.storageClass != parser.StorageType.NULL:
                 print("Error: Invalid Storage class specifier in variable declaration in for init.")
                 sys.exit(1)
 
-            varDecl = typeCheckVarDeclaration(varDecl, symbolTable, True)
+            varDecl = typeCheckVarDeclaration(varDecl, symbolTable, typeTable, True)
             #este esta bien
             return parser.InitDecl(varDecl)
         
         case parser.InitExp(exp=exp):
             if exp:
-                exp = typeCheckAndConvert(exp, symbolTable)
+                exp = typeCheckAndConvert(exp, symbolTable, typeTable)
                 #exp = typeCheckExpression(exp, symbolTable)
                 return parser.InitExp(exp)
             
@@ -1306,7 +1356,7 @@ def isScalar(t):
         case _:
             return True
 
-def typeCheckStatement(statement, symbolTable, functionParentName):
+def typeCheckStatement(statement, symbolTable, typeTable, functionParentName):
     match statement:
         case parser.BreakStatement():
             return parser.BreakStatement()
@@ -1315,11 +1365,11 @@ def typeCheckStatement(statement, symbolTable, functionParentName):
             return parser.ContinueStatement()
 
         case parser.ForStatement(forInit=forInit, condExp=condExp, postExp=postExp, statement=statement):
-            f = typeCheckForInit(forInit, symbolTable)
+            f = typeCheckForInit(forInit, symbolTable, typeTable)
             
             c = None
             if condExp:
-                c = typeCheckAndConvert(condExp, symbolTable)
+                c = typeCheckAndConvert(condExp, symbolTable, typeTable)
 
                 if not isScalar(c.retType):
                     print("Error: Logical operators only apply to scalar expressions.")
@@ -1327,17 +1377,17 @@ def typeCheckStatement(statement, symbolTable, functionParentName):
 
             p = None
             if postExp:
-                p = typeCheckAndConvert(postExp, symbolTable)
+                p = typeCheckAndConvert(postExp, symbolTable, typeTable)
 
-            s = typeCheckStatement(statement, symbolTable, functionParentName)
+            s = typeCheckStatement(statement, symbolTable, typeTable, functionParentName)
 
             return parser.ForStatement(f, s, c, p)
         
         case parser.DoWhileStatement(statement=statement, condExp=condExp):
-            statement = typeCheckStatement(statement, symbolTable, functionParentName)
+            statement = typeCheckStatement(statement, symbolTable, typeTable, functionParentName)
 
-            condExp = typeCheckAndConvert(condExp, symbolTable)
-            
+            condExp = typeCheckAndConvert(condExp, symbolTable, typeTable)
+
             if not isScalar(condExp.retType):
                 print("Error: Logical operators only apply to scalar expressions.")
                 sys.exit(1)
@@ -1346,18 +1396,18 @@ def typeCheckStatement(statement, symbolTable, functionParentName):
 
         case parser.WhileStatement(condExp=condExp, statement=statement):
 
-            condExp = typeCheckAndConvert(condExp, symbolTable)
+            condExp = typeCheckAndConvert(condExp, symbolTable, typeTable)
 
             if not isScalar(condExp.retType):
                 print("Error: Logical operators only apply to scalar expressions.")
                 sys.exit(1)
 
-            statement = typeCheckStatement(statement, symbolTable, functionParentName)
+            statement = typeCheckStatement(statement, symbolTable, typeTable, functionParentName)
 
             return parser.WhileStatement(condExp, statement)
 
         case parser.ExpressionStmt(exp=exp):
-            e = typeCheckAndConvert(exp, symbolTable)
+            e = typeCheckAndConvert(exp, symbolTable, typeTable)
             #e = typeCheckExpression(exp, symbolTable)
 
             return parser.ExpressionStmt(e)
@@ -1370,7 +1420,7 @@ def typeCheckStatement(statement, symbolTable, functionParentName):
                     print("Error: Function with void return type cannot have return expression.")
                     sys.exit(1)
 
-                e = typeCheckAndConvert(exp, symbolTable)
+                e = typeCheckAndConvert(exp, symbolTable, typeTable)
                 e = convertByAssignment(e, funRetType)
                 return parser.ReturnStmt(e)
             
@@ -1381,22 +1431,22 @@ def typeCheckStatement(statement, symbolTable, functionParentName):
             return parser.ReturnStmt()
             
         case parser.IfStatement(exp=exp, thenS=thenS, elseS=elseS):
-            exp = typeCheckAndConvert(exp, symbolTable)
+            exp = typeCheckAndConvert(exp, symbolTable, typeTable)
 
             if not isScalar(exp.retType):
                 print("Error: Logical operators only apply to scalar expressions.")
                 sys.exit(1)
 
-            thenS = typeCheckStatement(thenS, symbolTable, functionParentName)
+            thenS = typeCheckStatement(thenS, symbolTable, typeTable, functionParentName)
 
             if elseS:
-                elseS = typeCheckStatement(elseS, symbolTable, functionParentName)
+                elseS = typeCheckStatement(elseS, symbolTable, typeTable, functionParentName)
                 return parser.IfStatement(exp, thenS, elseS)
 
             return parser.IfStatement(exp, thenS)
             
         case parser.CompoundStatement(block=block):
-            block = typeCheckBlock(block, symbolTable, functionParentName)
+            block = typeCheckBlock(block, symbolTable, typeTable, functionParentName)
             return parser.CompoundStatement(block)
 
         case parser.NullStatement():
@@ -1420,7 +1470,7 @@ def typeCheckBlock(block, symbolTable, typeTable, functionParentName):
                     blockItemList.append(parser.D(dec))
                     
                 case parser.S(statement=statement):
-                    statement = typeCheckStatement(statement, symbolTable, functionParentName)
+                    statement = typeCheckStatement(statement, symbolTable, typeTable, functionParentName)
                     blockItemList.append(parser.S(statement)) 
                 
         return parser.Block(blockItemList)

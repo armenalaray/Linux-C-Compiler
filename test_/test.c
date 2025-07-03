@@ -1,6 +1,14 @@
-struct s;
+// postfix operators have higher precedence than prefix
+struct inner {
+    int inner_arr[3];
+};
+
+struct outer {
+    int a;
+    struct inner b;
+};
 
 int main(void) {
-    extern struct s my_incomplete_struct;
-    struct s *ptr = &my_incomplete_struct;   
+    struct outer * array;
+    array->ale;
 }

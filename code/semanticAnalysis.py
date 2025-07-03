@@ -172,7 +172,7 @@ def resolveInitializer(initializer, idMap, structMap):
         case parser.CompoundInit(initializerList = initializerList):
             initList = []
             for i in initializerList:
-                init = resolveInitializer(i, idMap)
+                init = resolveInitializer(i, idMap, structMap)
                 initList.append(init)
     
             #print(initList)
