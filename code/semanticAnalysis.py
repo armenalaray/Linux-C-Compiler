@@ -161,12 +161,12 @@ def resolveFileScopeVarDecl(dec, idMap, structMap):
 
     idMap[dec.identifier] = [{'new_name':dec.identifier}, {'from_current_scope':True}, {'has_linkage':True}]
 
-    return parser.VariableDecl(dec.identifier, type, dec.initializer)
+    return parser.VariableDecl(dec.identifier, type, dec.initializer, dec.storageClass)
 
-def resolveInitializer(initializer, idMap):
+def resolveInitializer(initializer, idMap, structMap):
     match initializer:
         case parser.SingleInit(exp=exp):
-            exp = resolveExpression(exp, idMap)
+            exp = resolveExpression(exp, idMap, structMap)
             return parser.SingleInit(exp)
             
         case parser.CompoundInit(initializerList = initializerList):
@@ -227,14 +227,14 @@ def resolveLocalVarDecl(dec, idMap, structMap):
                 sys.exit(1)
 
     if dec.storageClass.storageClass == parser.StorageType.EXTERN:
-        return resolveFileScopeVarDecl(dec, idMap)
+        return resolveFileScopeVarDecl(dec, idMap, structMap)
     else:
         type = resolveTypeSpecifier(dec.varType, structMap)
 
         uniqueName = resolveID(dec.identifier, idMap)
         
         if dec.initializer:
-            init = resolveInitializer(dec.initializer, idMap)
+            init = resolveInitializer(dec.initializer, idMap, structMap)
             return parser.VariableDecl(uniqueName, type, init, dec.storageClass)
     
         return parser.VariableDecl(uniqueName, type, None, dec.storageClass)

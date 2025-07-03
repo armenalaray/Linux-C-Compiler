@@ -1,15 +1,6 @@
-struct example
-{
-    double member4;
-    double member5;
-    double member6;
-    double member7;
-    double member8;
-    double member9;
-};
+struct s;
 
-struct other
-{
-    int member1;
-    struct example member2;
-};
+int main(void) {
+    extern struct s my_incomplete_struct;
+    struct s *ptr = &my_incomplete_struct;   
+}

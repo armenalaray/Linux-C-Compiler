@@ -263,7 +263,7 @@ def convertByAssignment(exp, targetType):
         return convertTo(exp, targetType)
     if type(exp.retType) == parser.PointerType and type(exp.retType.referenceType) == parser.VoidType and type(targetType) == parser.PointerType:
         return convertTo(exp, targetType)
-    
+
     print("Error: Cannot convert type for assignment. {0} and {1}".format(exp.retType, targetType))
     sys.exit(1)
 
@@ -283,11 +283,17 @@ def isAnLvalue(exp):
     
     return False
 
-def isComplete(t):
-    if type(t) != parser.VoidType:
-        return True
-    
-    return False
+def isComplete(t, typeTable):
+    match t:
+        case parser.VoidType():
+            return False
+        case parser.StuctureType(tag = tag):
+            if tag in typeTable:
+                return True
+            else:
+                return False
+        case _:
+            return True
 
 def isPointerToComplete(t):
     match t:
@@ -296,24 +302,24 @@ def isPointerToComplete(t):
         case _:
             return False
 
-def validateTypeSpecifier(t):
+def validateTypeSpecifier(t, typeTable):
 
     match t:
         case parser.ArrayType(elementType = elementType, size = size):
-            if not isComplete(elementType):
+            if not isComplete(elementType, typeTable):
                 print("Error: Illegal array of incomplete type.")
                 sys.exit(1)
 
-            validateTypeSpecifier(elementType)
+            validateTypeSpecifier(elementType, typeTable)
 
         case parser.PointerType(referenceType = referenceType):
-            validateTypeSpecifier(referenceType)
+            validateTypeSpecifier(referenceType, typeTable)
             
         case parser.FunType(paramTypes = paramTypes, retType = retType):
             for paramType in paramTypes:
-                validateTypeSpecifier(paramType)
+                validateTypeSpecifier(paramType, typeTable)
             
-            validateTypeSpecifier(retType)
+            validateTypeSpecifier(retType, typeTable)
 
         case _:
             return
@@ -870,13 +876,13 @@ def AnnotateInitializer(varDecl, type_, init, initList, symbolTable):
             print("Error: Can't Initialize a scalar object with a compound initializer.")
             sys.exit(1)
 
-def typeCheckFileScopeVarDecl(varDecl, symbolTable):
+def typeCheckFileScopeVarDecl(varDecl, symbolTable, typeTable):
 
-    if not isComplete(varDecl.varType):
-        print("Error: Cannot declare variable with void Type.")
+    if not isComplete(varDecl.varType, typeTable) and varDecl.storageClass.storageClass != parser.StorageType.EXTERN and varDecl.initializer != None:
+        print("Error: Cannot declare variable with Incomplete Type.")
         sys.exit(1)
 
-    validateTypeSpecifier(varDecl.varType)
+    validateTypeSpecifier(varDecl.varType, typeTable)
 
     initialValue = None
 
@@ -1033,13 +1039,13 @@ def typeCheckInitializer(targetType, initializer, symbolTable):
             print("Error: Can't Initialize a scalar object with a compound initializer.")
             sys.exit(1)
 
-def typeCheckLocalVarDecl(varDecl, symbolTable):
+def typeCheckLocalVarDecl(varDecl, symbolTable, typeTable):
 
-    if not isComplete(varDecl.varType):
-        print("Error: Cannot declare variable with void Type.")
+    if not isComplete(varDecl.varType, typeTable) and varDecl.storageClass.storageClass != parser.StorageType.EXTERN and varDecl.initializer != None:
+        print("Error: Cannot declare variable with Incomplete Type.")
         sys.exit(1)
 
-    validateTypeSpecifier(varDecl.varType)
+    validateTypeSpecifier(varDecl.varType, typeTable)
 
     if varDecl.storageClass.storageClass == parser.StorageType.EXTERN:
         if varDecl.initializer:
@@ -1091,11 +1097,11 @@ def typeCheckLocalVarDecl(varDecl, symbolTable):
         
         return parser.VariableDecl(varDecl.identifier, varDecl.varType, None, varDecl.storageClass)
 
-def typeCheckVarDeclaration(varDecl, symbolTable, isBlockScope):
+def typeCheckVarDeclaration(varDecl, symbolTable, typeTable, isBlockScope):
     if isBlockScope:
-        return typeCheckLocalVarDecl(varDecl, symbolTable)
+        return typeCheckLocalVarDecl(varDecl, symbolTable, typeTable)
     else:
-        return typeCheckFileScopeVarDecl(varDecl, symbolTable)
+        return typeCheckFileScopeVarDecl(varDecl, symbolTable, typeTable)
 
 class StructEntry():
     def __init__(self, alignment, size, members):
@@ -1132,15 +1138,15 @@ def validateStructDefinition(structDecl, typeTable):
             print("Error: Duplicate member name {0} in struct {1}.".format(member.name, structDecl.tag))
             sys.exit(1)
         
-        validateTypeSpecifier(member.memberType)
+        validateTypeSpecifier(member.memberType, typeTable)
 
-        if not isComplete(member.memberType):
+        if not isComplete(member.memberType, typeTable):
             print("Error: Incomplete type {0} in struct {1}.".format(member.memberType, structDecl.tag))
             sys.exit(1)
 
         memberTable.append(member.name) 
 
-        
+
 def alignment(type_, typeTable):
 
     match type_:
@@ -1175,12 +1181,13 @@ def alignment(type_, typeTable):
         case parser.ArrayType(elementType = elementType, size = size):
             return alignment(elementType, typeTable)
         
-        case parser.StructureType(tag = tag):
+        case parser.StuctureType(tag = tag):
             return typeTable[tag].alignment
 
         case _:
             print("Error: Invalid Type for alignment {0}".format(type_))
             sys.exit(1)
+ 
     
 
 def typeCheckStructDeclaration(structDecl, typeTable):
@@ -1200,8 +1207,10 @@ def typeCheckStructDeclaration(structDecl, typeTable):
         memberOffset = 0
         if i == 0:
             memberOffset = 0 
-            memberAlignment, other = assemblyGenerator.matchCType(member.memberType, typeTable)
-
+            #NOTE: Check if this is for alignment of types
+            
+            #memberAlignment, other = assemblyGenerator.matchCType(member.memberType, typeTable)
+            memberAlignment = alignment(member.memberType, typeTable)
             memberEntries.append(MemberEntry(member.name, member.memberType, memberOffset))
             structAlignment = max(structAlignment, memberAlignment)
 
@@ -1211,7 +1220,8 @@ def typeCheckStructDeclaration(structDecl, typeTable):
                 case _:
                     structSize = memberOffset + member.memberType.getBaseTypeSize(0)
         else:
-            memberAlignment, other = assemblyGenerator.matchCType(member.memberType, typeTable)
+            #memberAlignment, other = assemblyGenerator.matchCType(member.memberType, typeTable)
+            memberAlignment = alignment(member.memberType, typeTable)
 
             if memberAlignment == 1 or structSize % memberAlignment == 0:
                 memberOffset = structSize
@@ -1248,11 +1258,11 @@ def typeCheckStructDeclaration(structDecl, typeTable):
 def typeCheckDeclaration(dec, symbolTable, typeTable, isBlockScope):
     match dec:
         case parser.VarDecl(variableDecl = variableDecl):
-            variableDecl = typeCheckVarDeclaration(variableDecl, symbolTable, isBlockScope)
+            variableDecl = typeCheckVarDeclaration(variableDecl, symbolTable, typeTable, isBlockScope)
             return parser.VarDecl(variableDecl)
             
         case parser.FunDecl(funDecl = funDecl):
-            funDecl = typeCheckFunctionDeclaration(funDecl, symbolTable)
+            funDecl = typeCheckFunctionDeclaration(funDecl, symbolTable, typeTable)
             return parser.FunDecl(funDecl)
         
         case parser.StructDecl(structDecl = structDecl):
@@ -1290,6 +1300,8 @@ def isScalar(t):
         case parser.FunType():
             return False
         case parser.ArrayType():
+            return False
+        case parser.StuctureType():
             return False
         case _:
             return True
@@ -1395,7 +1407,7 @@ def typeCheckStatement(statement, symbolTable, functionParentName):
             sys.exit(1)
 
 
-def typeCheckBlock(block, symbolTable, functionParentName):
+def typeCheckBlock(block, symbolTable, typeTable, functionParentName):
     
     if block.blockItemList:
         
@@ -1404,7 +1416,7 @@ def typeCheckBlock(block, symbolTable, functionParentName):
         for item in block.blockItemList:
             match item:
                 case parser.D(declaration=dec):
-                    dec = typeCheckDeclaration(dec, symbolTable, True)
+                    dec = typeCheckDeclaration(dec, symbolTable, typeTable, True)
                     blockItemList.append(parser.D(dec))
                     
                 case parser.S(statement=statement):
@@ -1415,19 +1427,22 @@ def typeCheckBlock(block, symbolTable, functionParentName):
     
     return parser.Block()      
         
-def typeCheckFunctionDeclaration(funDec, symbolTable):
+def typeCheckFunctionDeclaration(funDec, symbolTable, typeTable):
     
-    validateTypeSpecifier(funDec.funType)
+    validateTypeSpecifier(funDec.funType, typeTable)
 
     if type(funDec.funType.retType) == parser.ArrayType:
         print("Error: A function cannot return an array.")
         sys.exit(1)
 
+    hasBody = funDec.block != None
+    
     adjustedParamTypes = []
+    
     for paramType in funDec.funType.paramTypes:
         
-        if not isComplete(paramType):
-            print("Error: Cannot declare variable with void Type.")
+        if not isComplete(paramType, typeTable) and hasBody:
+            print("Error: Cannot declare variable with Incomplete Type.")
             sys.exit(1)
 
         match paramType:
@@ -1441,7 +1456,6 @@ def typeCheckFunctionDeclaration(funDec, symbolTable):
     funDec.funType.paramTypes = adjustedParamTypes
 
     funType = funDec.funType
-    hasBody = funDec.block != None
     alreadyDefined = False
     global_ = True
     
@@ -1490,7 +1504,7 @@ def typeCheckFunctionDeclaration(funDec, symbolTable):
         for paramName, paramType in zip(funDec.paramNames, funType.paramTypes):
             symbolTable[paramName] = Entry(paramName, LocalAttributes(), paramType)
         
-        block = typeCheckBlock(funDec.block, symbolTable, funDec.iden)
+        block = typeCheckBlock(funDec.block, symbolTable, typeTable, funDec.iden)
 
         return parser.FunctionDecl(funDec.iden, funType, funDec.paramNames, block, funDec.storageClass)
     

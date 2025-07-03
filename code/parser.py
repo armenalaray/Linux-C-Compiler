@@ -306,6 +306,7 @@ class Type:
         self.size = 0
 
     def checkType(self, other):
+        traceback.print_stack()
         print("Not Overloaded.")
         sys.exit(1)
 
@@ -562,12 +563,20 @@ class StuctureType(Type, Node):
     def __init__(self, tag):
         self.tag = tag
 
+    def checkType(self, other):
+        if type(other) == StuctureType and self.tag == other.tag:
+            return True
+        
+        return False
+
     def __str__(self):
         return "StructType({self.tag})".format(self=self)
     
     def printNode(self, level):
         output = "StructType(" + self.tag + ")"
         return output
+    
+
     
 
 class FunType(Type, Node):
