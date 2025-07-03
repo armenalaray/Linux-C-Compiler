@@ -1,3 +1,4 @@
+from re import match
 import sys
 import traceback
 from enum import Enum
@@ -1101,12 +1102,24 @@ class StructEntry():
         self.alignment = alignment
         self.size = size
         self.members = members
+    
+    def __str__(self):
+        return "StructEntry(Alignment: {self.alignment}, Size: {self.size}, Members: {self.members})".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
 
 class MemberEntry():
     def __init__(self, name, type_, offset):
         self.name = name
         self.memberType = type_
         self.offset = offset
+
+    def __str__(self):
+        return "MemberEntry({self.name}, Type: {self.memberType}, Offset: {self.offset})".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
 
 def validateStructDefinition(structDecl, typeTable):
     if structDecl.tag in typeTable:
@@ -1128,7 +1141,46 @@ def validateStructDefinition(structDecl, typeTable):
         memberTable.append(member.name) 
 
         
-    
+def alignment(type_, typeTable):
+
+    match type_:
+        
+        case parser.IntType():
+            return 4
+        
+        case parser.LongType():
+            return 8
+        
+        case parser.UIntType():
+            return 4
+        
+        case parser.ULongType():
+            return 8
+        
+        case parser.DoubleType():
+            return 8
+        
+        case parser.CharType():
+            return 1
+        
+        case parser.SCharType():
+            return 1
+        
+        case parser.UCharType():
+            return 1
+        
+        case parser.PointerType(referenceType = referenceType):
+            return 8
+
+        case parser.ArrayType(elementType = elementType, size = size):
+            return alignment(elementType, typeTable)
+        
+        case parser.StructureType(tag = tag):
+            return typeTable[tag].alignment
+
+        case _:
+            print("Error: Invalid Type for alignment {0}".format(type_))
+            sys.exit(1)
     
 
 def typeCheckStructDeclaration(structDecl, typeTable):
@@ -1143,26 +1195,49 @@ def typeCheckStructDeclaration(structDecl, typeTable):
     structSize = 0
     structAlignment = 1
 
+    for i, member in enumerate(structDecl.members):
 
-    for member in structDecl.members:
-        memberAlignment, other = assemblyGenerator.matchCType(member.memberType)
-        #print("memberAlignment:",memberAlignment)
+        memberOffset = 0
+        if i == 0:
+            memberOffset = 0 
+            memberAlignment, other = assemblyGenerator.matchCType(member.memberType, typeTable)
 
-        memberOffset = structSize + (structSize % memberAlignment)
+            memberEntries.append(MemberEntry(member.name, member.memberType, memberOffset))
+            structAlignment = max(structAlignment, memberAlignment)
+
+            match member.memberType:
+                case parser.StuctureType(tag = tag):
+                    structSize = memberOffset + typeTable[tag].size
+                case _:
+                    structSize = memberOffset + member.memberType.getBaseTypeSize(0)
+        else:
+            memberAlignment, other = assemblyGenerator.matchCType(member.memberType, typeTable)
+
+            if memberAlignment == 1 or structSize % memberAlignment == 0:
+                memberOffset = structSize
+            else:
+                memberOffset = structSize + (memberAlignment - (structSize % memberAlignment))
+                            
+            memberEntries.append(MemberEntry(member.name, member.memberType, memberOffset))
+            
+            structAlignment = max(structAlignment, memberAlignment)
+
+            match member.memberType:
+                case parser.StuctureType(tag = tag):
+                    structSize = memberOffset + typeTable[tag].size
+                case _:
+                    structSize = memberOffset + member.memberType.getBaseTypeSize(0)
+            
         print("memberOffset:",memberOffset)
-
-        memberEntries.append(MemberEntry(member.name, member.memberType, memberOffset))
-
-        structAlignment = max(structAlignment, memberAlignment)
-
-        structSize = memberOffset + member.memberType.getBaseTypeSize(0)
-        
         print("structSize:",structSize)
 
 
     print("structAlignment:",structAlignment)
 
-    structSize = structSize + (structAlignment - (structSize % structAlignment))
+    if structAlignment == 1 or structSize % structAlignment == 0:
+        memberOffset = structSize
+    else:
+        structSize = structSize + (structAlignment - (structSize % structAlignment))
     
     print("structSize:",structSize)
 
@@ -1432,7 +1507,7 @@ def typeCheckProgram(pro):
             d = typeCheckDeclaration(decl, symbolTable, typeTable, False)
             declList.append(d)
 
-        return parser.Program(declList), symbolTable
+        return parser.Program(declList), symbolTable, typeTable
     
-    return parser.Program(), symbolTable
+    return parser.Program(), symbolTable, typeTable
     

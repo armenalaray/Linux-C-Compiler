@@ -1496,7 +1496,7 @@ class FunEntry(asm_symtab_entry):
     def __repr__(self):
         return self.__str__()
 
-def matchCType(cType):
+def matchCType(cType, typeTable):
     match cType:
         case parser.IntType():
             return 4, Longword()
@@ -1529,7 +1529,7 @@ def matchCType(cType):
             while type(cType) == parser.ArrayType:
                 cType = cType.elementType
 
-            alignment, other = matchCType(cType)
+            alignment, other = matchCType(cType, typeTable)
              
             if sizeArray < 16:
                 return alignment, ByteArray(sizeArray, alignment)                
@@ -1545,12 +1545,15 @@ def matchCType(cType):
         case parser.UCharType():
             return 1, Byte()
 
+        case parser.StuctureType(tag = tag):
+            return typeTable[tag].alignment, Quadword()
+
         case _:
             traceback.print_stack()
             print("Error: Invalid C Type to Assembly Conversion. {0}".format(cType))
             sys.exit(1)
 
-def ASM_parseAST(ast, symbolTable):
+def ASM_parseAST(ast, symbolTable, typeTable):
     funcDefList = []
     for topLevel in ast.topLevelList:
         function = ASM_parseTopLevel(topLevel, symbolTable, funcDefList)
@@ -1580,15 +1583,15 @@ def ASM_parseAST(ast, symbolTable):
                 backendSymbolTable[name] = FunEntry(defined=defined)
              
             case typeChecker.LocalAttributes():
-                alignment, type_ = matchCType(entry.type)
+                alignment, type_ = matchCType(entry.type, typeTable)
                 backendSymbolTable[name] = ObjEntry(assType=type_, isStatic=False, isConstant=False)
                 
             case typeChecker.StaticAttributes():
-                alignment, type_ = matchCType(entry.type)
+                alignment, type_ = matchCType(entry.type, typeTable)
                 backendSymbolTable[name] = ObjEntry(assType=type_, isStatic=True, isConstant=False)
 
             case typeChecker.ConstantAttr():
-                alignment, type_ = matchCType(entry.type)
+                alignment, type_ = matchCType(entry.type, typeTable)
                 backendSymbolTable[name] = ObjEntry(assType=type_, isStatic=True, isConstant=True)
 
             case _:

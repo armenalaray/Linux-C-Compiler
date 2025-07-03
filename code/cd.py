@@ -135,11 +135,12 @@ if __name__ == "__main__":
 				print(res.printNode(0))
 			
 
-			typeChekedProgram, symbolTable = typeChecker.typeCheckProgram(res)
+			typeChekedProgram, symbolTable, typeTable = typeChecker.typeCheckProgram(res)
 
 			if printDebugInfo:
 				print(typeChekedProgram.printNode(0))
-				print(symbolTable)
+				print("Type Table:\n", typeTable)
+				print("Symbol Table:\n", symbolTable)
 
 			#loo = loopLabeling.labelProgram(typeChekedProgram)
 
