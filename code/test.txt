@@ -1,3 +1,100 @@
+======================================================================
+FAIL: test_valid/params_and_returns/libraries/access_retval_members_client (test_framework.basic.TestChapter18.test_valid/params_and_returns/libraries/access_retval_members_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_18/valid/params_and_returns/libraries/access_retval_members_client.c failed with error:
+
+
+----------------------------------------------------------------------
+
+
+
+
+
+======================================================================
+FAIL: test_valid/params_and_returns/libraries/retval_struct_sizes_client (test_framework.basic.TestChapter18.test_valid/params_and_returns/libraries/retval_struct_sizes_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_18/valid/params_and_returns/libraries/retval_struct_sizes_client.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 138, in <module>
+  File "typeChecker.py", line 1672, in typeCheckProgram
+  File "typeChecker.py", line 1416, in typeCheckDeclaration
+  File "typeChecker.py", line 1658, in typeCheckFunctionDeclaration
+  File "typeChecker.py", line 1574, in typeCheckBlock
+  File "typeChecker.py", line 1535, in typeCheckStatement
+  File "typeChecker.py", line 273, in typeCheckAndConvert
+  File "typeChecker.py", line 358, in typeCheckExpression
+  File "typeChecker.py", line 273, in typeCheckAndConvert
+  File "typeChecker.py", line 713, in typeCheckExpression
+TypeError: isComplete() missing 1 required positional argument: 'typeTable'
+[PYI-133453:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+----------------------------------------------------------------------
+
+
+
+
+
+======================================================================
+FAIL: test_valid/params_and_returns/return_incomplete_type (test_framework.basic.TestChapter18.test_valid/params_and_returns/return_incomplete_type)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_18/valid/params_and_returns/return_incomplete_type.c failed with error:
+
+
+----------------------------------------------------------------------
+
+
+
+
+
+======================================================================
+FAIL: test_valid/params_and_returns/stack_clobber (test_framework.basic.TestChapter18.test_valid/params_and_returns/stack_clobber)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_18/valid/params_and_returns/stack_clobber.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 138, in <module>
+  File "typeChecker.py", line 1654, in typeCheckProgram
+  File "typeChecker.py", line 1398, in typeCheckDeclaration
+  File "typeChecker.py", line 1640, in typeCheckFunctionDeclaration
+  File "typeChecker.py", line 1556, in typeCheckBlock
+  File "typeChecker.py", line 1517, in typeCheckStatement
+  File "typeChecker.py", line 273, in typeCheckAndConvert
+  File "typeChecker.py", line 364, in typeCheckExpression
+  File "parser.py", line 848, in __repr__
+  File "parser.py", line 962, in __str__
+  File "parser.py", line 848, in __repr__
+  File "parser.py", line 848, in __repr__
+  File "parser.py", line 848, in __repr__
+  [Previous line repeated 987 more times]
+RecursionError: maximum recursion depth exceeded
+[PYI-120018:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+----------------------------------------------------------------------
+
+
+
+
 0
 
 4

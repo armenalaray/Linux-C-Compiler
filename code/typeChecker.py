@@ -454,9 +454,19 @@ def typeCheckExpression(exp, symbolTable, typeTable):
         case parser.Assignment_Expression(lvalue=lvalue, exp=exp):
             l = typeCheckAndConvert(lvalue, symbolTable, typeTable)
             
-            if not isAnLvalue(l):
-                print("Error: Tried to assign to a non-lvalue. {0}".format(l.retType))
-                sys.exit(1)
+            match l:
+                case parser.Dot(struct = struct, member = member):
+                    if not isAnLvalue(struct):
+                        print("Error: Cannot access member of a non-lvalue. \n{0}".format(l))
+                        sys.exit(1)
+                    
+                case parser.Arrow(pointer = pointer, member = member):
+                    pass
+                case _:
+                    if not isAnLvalue(l):
+                        traceback.print_stack()
+                        print("Error: Tried to assign to a non-lvalue. {0}".format(l))
+                        sys.exit(1)
                 
             r = typeCheckAndConvert(exp, symbolTable, typeTable)
             r = convertByAssignment(r, l.retType)
@@ -692,7 +702,7 @@ def typeCheckExpression(exp, symbolTable, typeTable):
 
         case parser.SizeOfT(typeName = typeName):
             validateTypeSpecifier(typeName)
-            if not isComplete(typeName):
+            if not isComplete(typeName, typeTable):
                 print("Error: Can't get the size of an incomplete type.")
                 sys.exit(1)
 
@@ -700,15 +710,23 @@ def typeCheckExpression(exp, symbolTable, typeTable):
         
         case parser.SizeOf(exp = exp):
             e = typeCheckExpression(exp, symbolTable, typeTable)
-            if not isComplete(e.retType):
+            if not isComplete(e.retType, typeTable):
                 print("Error: Can't get the size of an incomplete type.")
                 sys.exit(1)
 
             return parser.SizeOf(e, parser.ULongType())
 
         case parser.Dot(struct = struct, member = member):
+            
+            """
+            if not isAnLvalue(struct):
+                print("Error: Cannot access member of a non-lvalue.")
+                sys.exit(1)
+            """
+
             typedStruct = typeCheckAndConvert(struct, symbolTable, typeTable)
             match typedStruct.retType:
+
                 case parser.StuctureType(tag = tag):
                     
                     structDef = typeTable[tag]
@@ -726,9 +744,9 @@ def typeCheckExpression(exp, symbolTable, typeTable):
                     sys.exit(1)
 
         case parser.Arrow(pointer = pointer, member = member):
-            typedStruct = typeCheckAndConvert(pointer, symbolTable, typeTable)
+            typedPointer = typeCheckAndConvert(pointer, symbolTable, typeTable)
 
-            match typedStruct.retType:
+            match typedPointer.retType:
                 case parser.PointerType(referenceType = referenceType):
                     
                     match referenceType:
@@ -741,7 +759,7 @@ def typeCheckExpression(exp, symbolTable, typeTable):
 
                             memberType = structDef.members[member].memberType
                             
-                            return parser.Dot(typedStruct, member, memberType)
+                            return parser.Arrow(typedPointer, member, memberType)
                                 
                         case _:
                             print("Error: Cannot access member of a non-structure type.")

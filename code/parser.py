@@ -567,7 +567,7 @@ class StuctureType(Type, Node):
         if not self.tag in typeTable:
             print("Error: Structure Type not found in type table: ", self.tag)
             sys.exit(1)
-            
+
         structDef = typeTable[self.tag]
         return structDef.size
 
@@ -853,6 +853,9 @@ class Dot(Expression, Node):
         self.struct = struct
         self.member = member
         self.retType = retType
+
+    def __str__(self):
+        return "({self.struct}.{self.member} RetType: {self.retType})".format(self=self)
     
     def printNode(self, level):
         output = "("
@@ -869,6 +872,9 @@ class Arrow(Expression, Node):
         self.pointer = pointer
         self.member = member
         self.retType = retType
+
+    def __str__(self):
+        return "({self.pointer}->{self.member} RetType: {self.retType})".format(self=self)
 
     def printNode(self, level):
         output = "("
