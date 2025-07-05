@@ -800,7 +800,7 @@ def CreateZeroInitializer(type_, initList):
         case _:
             initList.append(GetStaticInitializer(type_, 0))
             
-def AnnotateInitializer(varDecl, type_, init, initList, symbolTable):
+def AnnotateInitializer(varDecl, type_, init, initList, symbolTable, typeTable):
 
     def AnnotateSingleInit(exp, type_):
         match exp:
@@ -845,6 +845,37 @@ def AnnotateInitializer(varDecl, type_, init, initList, symbolTable):
                 sys.exit(1)
 
     match type_, init:
+
+        case parser.StuctureType(tag = tag), parser.CompoundInit(initializerList = initializerList, retType = retType):
+            structDef = typeTable[tag]
+
+            if len(initializerList) > len(structDef.members):
+                print("Error: Too many values in initializer for structure {0}.".format(tag))
+                sys.exit(1)
+
+            currentOffset = 0
+            members = list(structDef.members.values())
+            for i, init in enumerate(initializerList):
+                member = members[i]
+
+                if member.offset != currentOffset:
+                    initList.append(ZeroInit(member.offset - currentOffset))
+                
+                AnnotateInitializer(varDecl, member.memberType, init, initList, symbolTable, typeTable)
+                
+                currentOffset = member.offset + member.memberType.getBaseTypeSize(0, typeTable)
+                        
+                
+            if structDef.size != currentOffset:
+                initList.append(ZeroInit(structDef.size - currentOffset))
+            
+            return parser.CompoundInit(initializerList, type_)
+
+
+        case parser.StuctureType(tag = tag), parser.SingleInit(exp = exp, retType = retType):
+            print("Error: Cannot initialize structure {0} with a scalar initializer.".format(tag))
+            sys.exit(1)
+
         case parser.ArrayType(elementType = elementType, size = size), parser.SingleInit(exp = exp, retType = retType):
 
             match exp:
@@ -909,11 +940,11 @@ def AnnotateInitializer(varDecl, type_, init, initList, symbolTable):
             astInitList = []
             index  = 0
             for astInit in initializerList:
-                i = AnnotateInitializer(varDecl, elementType, astInit, initList, symbolTable)
+                i = AnnotateInitializer(varDecl, elementType, astInit, initList, symbolTable, typeTable)
                 astInitList.append(i)
                 index += 1
 
-            size = type_.getBaseTypeSize(index)
+            size = type_.getBaseTypeSize(index, typeTable)
 
             if index < type_.size:
                 initList.append(ZeroInit(size))
@@ -922,6 +953,7 @@ def AnnotateInitializer(varDecl, type_, init, initList, symbolTable):
 
 
         case _:
+            traceback.print_stack()
             print("Error: Can't Initialize a scalar object with a compound initializer.")
             sys.exit(1)
 
@@ -937,7 +969,7 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable, typeTable):
 
     if varDecl.initializer:
         initList = []
-        astInit = AnnotateInitializer(varDecl, varDecl.varType, varDecl.initializer, initList, symbolTable)
+        astInit = AnnotateInitializer(varDecl, varDecl.varType, varDecl.initializer, initList, symbolTable, typeTable)
 
         varDecl.initializer = astInit
         initialValue = Initial(initList)
@@ -1121,7 +1153,7 @@ def typeCheckInitializer(targetType, initializer, symbolTable, typeTable):
                 typeCheckedList.append(init)
 
             while len(typeCheckedList) < size:
-                typeCheckedList.append(zeroInitializer(elementType))
+                typeCheckedList.append(zeroInitializer(elementType, typeTable))
 
             return parser.CompoundInit(typeCheckedList, targetType)
 
@@ -1307,11 +1339,15 @@ def typeCheckStructDeclaration(structDecl, typeTable):
             memberEntries[member.name] = MemberEntry(member.name, member.memberType, memberOffset)
             structAlignment = max(structAlignment, memberAlignment)
 
+            """
             match member.memberType:
-                case parser.StuctureType(tag = tag):
+                case parser.StructureType(tag = tag):
                     structSize = memberOffset + typeTable[tag].size
                 case _:
-                    structSize = memberOffset + member.memberType.getBaseTypeSize(0)
+            """
+                    
+            structSize = memberOffset + member.memberType.getBaseTypeSize(0, typeTable)
+
         else:
             #memberAlignment, other = assemblyGenerator.matchCType(member.memberType, typeTable)
             memberAlignment = alignment(member.memberType, typeTable)
@@ -1326,11 +1362,14 @@ def typeCheckStructDeclaration(structDecl, typeTable):
             
             structAlignment = max(structAlignment, memberAlignment)
 
+            """
             match member.memberType:
                 case parser.StuctureType(tag = tag):
                     structSize = memberOffset + typeTable[tag].size
                 case _:
-                    structSize = memberOffset + member.memberType.getBaseTypeSize(0)
+            """
+            
+            structSize = memberOffset + member.memberType.getBaseTypeSize(0, typeTable)
             
         print("memberOffset:",memberOffset)
         print("structSize:",structSize)

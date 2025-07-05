@@ -310,7 +310,7 @@ class Type:
         print("Not Overloaded.")
         sys.exit(1)
 
-    def getBaseTypeSize(self, occupied):
+    def getBaseTypeSize(self, occupied, typeTable):
         pass
 
     def getSize():
@@ -326,7 +326,7 @@ class VoidType(Type, Node):
     def printNode(self, level):
         return "void"
     
-    def getBaseTypeSize(self, occupied):
+    def getBaseTypeSize(self, occupied, typeTable):
         print("Error: Cannot get Size of void Type.")
         sys.exit(1)
 
@@ -347,7 +347,7 @@ class CharType(Type, Node):
         self.size = 1
         self.isSigned = True
 
-    def getBaseTypeSize(self, occupied):
+    def getBaseTypeSize(self, occupied, typeTable):
         return self.size
 
     def __str__(self):
@@ -369,7 +369,7 @@ class SCharType(Type, Node):
         self.size = 1
         self.isSigned = True
 
-    def getBaseTypeSize(self, occupied):
+    def getBaseTypeSize(self, occupied, typeTable):
         return self.size
 
     def __str__(self):
@@ -391,7 +391,7 @@ class UCharType(Type, Node):
         self.size = 1
         self.isSigned = False
 
-    def getBaseTypeSize(self, occupied):
+    def getBaseTypeSize(self, occupied, typeTable):
         return self.size
 
     def __str__(self):
@@ -413,7 +413,7 @@ class IntType(Type, Node):
         self.size = 4
         self.isSigned = True
 
-    def getBaseTypeSize(self, occupied):
+    def getBaseTypeSize(self, occupied, typeTable):
         return self.size
 
     def __str__(self):
@@ -435,7 +435,7 @@ class LongType(Type, Node):
         self.size = 8
         self.isSigned = True
 
-    def getBaseTypeSize(self, occupied):
+    def getBaseTypeSize(self, occupied, typeTable):
         return self.size
     
     def __str__(self):
@@ -456,7 +456,7 @@ class UIntType(Type, Node):
         self.size = 4
         self.isSigned = False
 
-    def getBaseTypeSize(self, occupied):
+    def getBaseTypeSize(self, occupied, typeTable):
         return self.size
     
     def __str__(self):
@@ -477,7 +477,7 @@ class ULongType(Type, Node):
         self.size = 8
         self.isSigned = False
 
-    def getBaseTypeSize(self, occupied):
+    def getBaseTypeSize(self, occupied, typeTable):
         return self.size
     
     def __str__(self):
@@ -496,7 +496,7 @@ class DoubleType(Type, Node):
     def __str__(self):
         return "double"
     
-    def getBaseTypeSize(self, occupied):
+    def getBaseTypeSize(self, occupied, typeTable):
         return 8
     
     def printNode(self, level):
@@ -513,7 +513,7 @@ class PointerType(Type, Node):
     def __init__(self, referenceType):
         self.referenceType = referenceType
 
-    def getBaseTypeSize(self, occupied):
+    def getBaseTypeSize(self, occupied, typeTable):
         return 8
     
     def __str__(self):
@@ -537,8 +537,8 @@ class ArrayType(Type, Node):
         self.elementType = elementType
         self.size = size
     
-    def getBaseTypeSize(self, occupied):
-        return self.elementType.getBaseTypeSize(0) * self.size - occupied * self.elementType.getBaseTypeSize(0)
+    def getBaseTypeSize(self, occupied, typeTable):
+        return self.elementType.getBaseTypeSize(0, typeTable) * self.size - occupied * self.elementType.getBaseTypeSize(0, typeTable)
     
     def checkType(self, other):
         
@@ -562,6 +562,14 @@ class StuctureType(Type, Node):
 
     def __init__(self, tag):
         self.tag = tag
+
+    def getBaseTypeSize(self, occupied, typeTable):
+        if not self.tag in typeTable:
+            print("Error: Structure Type not found in type table: ", self.tag)
+            sys.exit(1)
+            
+        structDef = typeTable[self.tag]
+        return structDef.size
 
     def checkType(self, other):
         if type(other) == StuctureType and self.tag == other.tag:
