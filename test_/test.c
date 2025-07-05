@@ -6,6 +6,7 @@ struct inner {
 struct outer {
     int a;
     struct inner b;
+    struct inner c;
 };
 
 int main(void) {

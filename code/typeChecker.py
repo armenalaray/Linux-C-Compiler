@@ -993,7 +993,7 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable, typeTable):
     return parser.VariableDecl(varDecl.identifier, varDecl.varType, varDecl.initializer, varDecl.storageClass)
 
 #esta funcion es para locales
-def zeroInitializer(elementType):
+def zeroInitializer(elementType, typeTable):
     match elementType:
 
         case parser.CharType():
@@ -1026,13 +1026,21 @@ def zeroInitializer(elementType):
         case parser.ArrayType(elementType = elementType_, size = size):
             initList = []
             for i in range(size):
-                init = zeroInitializer(elementType_)
+                init = zeroInitializer(elementType_, typeTable)
                 initList.append(init)
 
             return parser.CompoundInit(initList, elementType)
             
         case parser.StuctureType(tag = tag):
-            pass
+            structDef = typeTable[tag]
+            
+            initList = []
+            members = list(structDef.members.values())
+            for member in members:
+                init = zeroInitializer(member.memberType, typeTable)
+                initList.append(init)
+
+            return parser.CompoundInit(initList, elementType)
 
         case _:
             print("Error: Cannot create zero initializer for type {0}".format(elementType))
@@ -1066,7 +1074,7 @@ def typeCheckInitializer(targetType, initializer, symbolTable, typeTable):
 
             while index < len(structDef.members) - 1:
                 t = memberList[index].memberType
-                typeCheckedList.append(zeroInitializer(t))
+                typeCheckedList.append(zeroInitializer(t, typeTable))
                 index += 1
 
             print(typeCheckedList)
