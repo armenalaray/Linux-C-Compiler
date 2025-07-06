@@ -1,4 +1,19 @@
 ======================================================================
+FAIL: test_invalid_types/void/assign_to_void_var (test_framework.basic.TestChapter17.test_invalid_types/void/assign_to_void_var)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 580, in test_invalid
+    self.compile_failure(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 334, in compile_failure
+    with self.assertRaises(
+AssertionError: Didn't catch error in /home/alejandro/writing-a-c-compiler-tests/tests/chapter_17/invalid_types/void/assign_to_void_var.c
+
+----------------------------------------------------------------------
+
+
+
+
+======================================================================
 FAIL: test_valid/params_and_returns/return_incomplete_type (test_framework.basic.TestChapter18.test_valid/params_and_returns/return_incomplete_type)
 ----------------------------------------------------------------------
 Traceback (most recent call last):

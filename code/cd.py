@@ -142,10 +142,10 @@ if __name__ == "__main__":
 				print("Type Table:\n", typeTable)
 				print("Symbol Table:\n", symbolTable)
 
-			#loo = loopLabeling.labelProgram(typeChekedProgram)
+			loo = loopLabeling.labelProgram(typeChekedProgram)
 
-			#if printDebugInfo:
-			#	print(loo.printNode(0))
+			if printDebugInfo:
+				print(loo.printNode(0))
 
 			if LastStage == 'validate':
 				sys.exit(0)

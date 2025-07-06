@@ -1028,6 +1028,10 @@ def typeCheckFileScopeVarDecl(varDecl, symbolTable, typeTable):
         print("Error: Cannot declare variable with Incomplete Type.")
         sys.exit(1)
 
+    if type(varDecl.varType) == parser.VoidType:
+        print("Error: Cannot declare variables with void type.")
+        sys.exit(1)
+
     validateTypeSpecifier(varDecl.varType, typeTable)
 
     initialValue = None
@@ -1232,6 +1236,10 @@ def typeCheckLocalVarDecl(varDecl, symbolTable, typeTable):
 
     if not isComplete(varDecl.varType, typeTable) and varDecl.storageClass.storageClass != parser.StorageType.EXTERN:
         print("Error: Cannot declare variable with Incomplete Type.")
+        sys.exit(1)
+
+    if type(varDecl.varType) == parser.VoidType:
+        print("Error: Cannot declare variables with void type.")
         sys.exit(1)
 
     validateTypeSpecifier(varDecl.varType, typeTable)
