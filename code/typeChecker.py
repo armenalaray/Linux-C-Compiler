@@ -65,6 +65,7 @@ class InitialValue:
 class Tentative(InitialValue):
     pass
 
+
 class Initial(InitialValue):
     def __init__(self, initList):
         self.initList = initList
@@ -287,10 +288,18 @@ def typeCheckAndConvert(exp, symbolTable, typeTable):
             return typedExp
 
 def isAnLvalue(exp):
-    if type(exp) == parser.StringExpression or type(exp) == parser.Var_Expression or type(exp) == parser.Dereference or type(exp) == parser.Subscript:
-        return True
+    match exp:
+        case parser.Dot(struct = struct, member = member):
+            return isAnLvalue(struct)
+            
+        case parser.Arrow(pointer = pointer, member = member):
+            return True
+        
+        case _:
+            if type(exp) == parser.StringExpression or type(exp) == parser.Var_Expression or type(exp) == parser.Dereference or type(exp) == parser.Subscript:
+                return True
     
-    return False
+            return False
 
 def isComplete(t, typeTable):
     match t:
@@ -310,6 +319,7 @@ def isPointerToComplete(t, typeTable):
             return isComplete(referenceType, typeTable)
         case _:
             return False
+
 
 def validateTypeSpecifier(t, typeTable):
 
@@ -381,7 +391,8 @@ def typeCheckExpression(exp, symbolTable, typeTable):
                 case parser.PointerType(referenceType = referenceType):
 
                     if not isComplete(referenceType, typeTable):
-                        print("Error: Cannot dereference pointer to Incomplete Type.")
+                        traceback.print_stack()
+                        print("Error: Cannot dereference pointer to Incomplete Type. {0}".format(referenceType))
                         sys.exit(1)         
 
                     return parser.Dereference(typedInner, referenceType)
@@ -416,15 +427,31 @@ def typeCheckExpression(exp, symbolTable, typeTable):
                 print("Error: Can't take the address of a non-lvalue.")
                 sys.exit(1)
             
-            typedInner = typeCheckExpression(exp, symbolTable, typeTable)
+            typedInner = None
+
+            match exp:
+                case parser.Dereference(exp = exp):
+                    typedInner = typeCheckAndConvert(exp, symbolTable, typeTable)
+
+                    match typedInner.retType:
+                        case parser.PointerType(referenceType = referenceType):
+                            typedInner = parser.Dereference(typedInner, referenceType)
+                        
+                        case _:
+                            print("Error: Cannot Dereference the address of a non-pointer.")
+                            sys.exit(1)
+                case _:
+                    typedInner = typeCheckExpression(exp, symbolTable, typeTable)
+
+
             retType = parser.PointerType(typedInner.retType)
             return parser.AddrOf(typedInner, retType)
 
         case parser.Cast_Expression(targetType = targetType, exp = exp):
             e = typeCheckAndConvert(exp, symbolTable, typeTable)
             
-            validateTypeSpecifier(targetType)
-            validateTypeSpecifier(e.retType)
+            validateTypeSpecifier(targetType, typeTable)
+            validateTypeSpecifier(e.retType, typeTable)
 
             if (type(e.retType) == parser.PointerType and type(targetType) == parser.DoubleType) or (type(e.retType) == parser.DoubleType and type(targetType) == parser.PointerType):
                 print("Error: Casting pointer to double or a double to a pointer.")
@@ -453,20 +480,23 @@ def typeCheckExpression(exp, symbolTable, typeTable):
         
         case parser.Assignment_Expression(lvalue=lvalue, exp=exp):
             l = typeCheckAndConvert(lvalue, symbolTable, typeTable)
-            
+
+            """
             match l:
                 case parser.Dot(struct = struct, member = member):
                     if not isAnLvalue(struct):
-                        print("Error: Cannot access member of a non-lvalue. \n{0}".format(l))
+                        print("Error: Cannot access member of a non-lvalue. \n{0}".format(type(struct)))
                         sys.exit(1)
                     
                 case parser.Arrow(pointer = pointer, member = member):
                     pass
                 case _:
-                    if not isAnLvalue(l):
-                        traceback.print_stack()
-                        print("Error: Tried to assign to a non-lvalue. {0}".format(l))
-                        sys.exit(1)
+            """
+
+            if not isAnLvalue(l):
+                traceback.print_stack()
+                print("Error: Tried to assign to a non-lvalue. \n{0} {1}".format(l, type(l)))
+                sys.exit(1)
                 
             r = typeCheckAndConvert(exp, symbolTable, typeTable)
             r = convertByAssignment(r, l.retType)
@@ -701,7 +731,7 @@ def typeCheckExpression(exp, symbolTable, typeTable):
 
 
         case parser.SizeOfT(typeName = typeName):
-            validateTypeSpecifier(typeName)
+            validateTypeSpecifier(typeName, typeTable)
             if not isComplete(typeName, typeTable):
                 print("Error: Can't get the size of an incomplete type.")
                 sys.exit(1)
@@ -718,12 +748,6 @@ def typeCheckExpression(exp, symbolTable, typeTable):
 
         case parser.Dot(struct = struct, member = member):
             
-            """
-            if not isAnLvalue(struct):
-                print("Error: Cannot access member of a non-lvalue.")
-                sys.exit(1)
-            """
-
             typedStruct = typeCheckAndConvert(struct, symbolTable, typeTable)
             match typedStruct.retType:
 
@@ -806,17 +830,33 @@ def GetStaticInitializer(varType, int):
             return UCharInit(int)
 
         case _:
+            traceback.print_stack()
             print("Error: Invalid Variable Type. {0}".format(varType))
             sys.exit(1)
 
-def CreateZeroInitializer(type_, initList):
+def CreateZeroInitializer(type_, initList, typeTable):
+
+    initList.append(ZeroInit(type_.getBaseTypeSize(0, typeTable)))
+
+    """
     match type_:
         case parser.ArrayType(elementType = elementType, size = size):
-            for i in range(size):    
-                CreateZeroInitializer(elementType, initList)
-            
+            initList.append(ZeroInit(type_.getBaseTypeSize(0, typeTable)))
+
+            #for i in range(size):    
+            #    CreateZeroInitializer(elementType, initList, typeTable)
+        
+        case parser.StuctureType(tag = tag):
+            structDef = typeTable[tag]
+            initList.append(ZeroInit(structDef.size))
+
+            #members = list(structDef.members.values())
+            #for member in members:
+            #    CreateZeroInitializer(member.memberType, initList, typeTable)
+
         case _:
             initList.append(GetStaticInitializer(type_, 0))
+    """
             
 def AnnotateInitializer(varDecl, type_, init, initList, symbolTable, typeTable):
 
@@ -1216,12 +1256,13 @@ def typeCheckLocalVarDecl(varDecl, symbolTable, typeTable):
         
         if varDecl.initializer:
             initList = []
-            astInit = AnnotateInitializer(varDecl, varDecl.varType, varDecl.initializer, initList, symbolTable)
+            astInit = AnnotateInitializer(varDecl, varDecl.varType, varDecl.initializer, initList, symbolTable, typeTable)
             varDecl.initializer = astInit
             initialValue = Initial(initList)
         else:
+            #estas no tienen initializer
             initList = []
-            CreateZeroInitializer(varDecl.varType, initList)
+            CreateZeroInitializer(varDecl.varType, initList, typeTable)
             initialValue = Initial(initList)
         
         symbolTable[varDecl.identifier] = Entry(varDecl.identifier, StaticAttributes(initialVal=initialValue, global_=False), varDecl.varType)

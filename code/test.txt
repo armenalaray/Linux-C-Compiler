@@ -1,4 +1,82 @@
 ======================================================================
+FAIL: test_valid/no_structure_parameters/semantic_analysis/incomplete_structs (test_framework.basic.TestChapter18.test_valid/no_structure_parameters/semantic_analysis/incomplete_structs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_18/valid/no_structure_parameters/semantic_analysis/incomplete_structs.c failed with error:
+
+
+----------------------------------------------------------------------
+Ran 946 tests in 139.514s
+
+
+
+
+
+
+
+======================================================================
+FAIL: test_valid/no_structure_parameters/struct_copy/stack_clobber (test_framework.basic.TestChapter18.test_valid/no_structure_parameters/struct_copy/stack_clobber)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_18/valid/no_structure_parameters/struct_copy/stack_clobber.c failed with error:
+
+
+----------------------------------------------------------------------
+
+
+
+
+
+======================================================================
+FAIL: test_valid/params_and_returns/libraries/access_retval_members_client (test_framework.basic.TestChapter18.test_valid/params_and_returns/libraries/access_retval_members_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_18/valid/params_and_returns/libraries/access_retval_members_client.c failed with error:
+  File "cd.py", line 138, in <module>
+  File "typeChecker.py", line 1679, in typeCheckProgram
+  File "typeChecker.py", line 1423, in typeCheckDeclaration
+  File "typeChecker.py", line 1665, in typeCheckFunctionDeclaration
+  File "typeChecker.py", line 1581, in typeCheckBlock
+  File "typeChecker.py", line 1518, in typeCheckStatement
+  File "typeChecker.py", line 274, in typeCheckAndConvert
+  File "typeChecker.py", line 480, in typeCheckExpression
+
+
+----------------------------------------------------------------------
+
+
+
+
+======================================================================
+FAIL: test_valid/parameters/libraries/modify_param (test_framework.basic.TestChapter18.test_valid/parameters/libraries/modify_param)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_18/valid/parameters/libraries/modify_param.c failed with error:
+
+
+----------------------------------------------------------------------
+
+
+
+
+
+======================================================================
 FAIL: test_valid/params_and_returns/libraries/access_retval_members_client (test_framework.basic.TestChapter18.test_valid/params_and_returns/libraries/access_retval_members_client)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
