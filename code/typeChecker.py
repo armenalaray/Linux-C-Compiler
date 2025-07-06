@@ -1650,8 +1650,9 @@ def typeCheckFunctionDeclaration(funDec, symbolTable, typeTable):
             print("Error: Cannot define variable with Incomplete Structure Type.")
             sys.exit(1)
 
-        if not isComplete(paramType, typeTable):
-            print("Error: Cannot declare variable with void Type.")
+        if type(paramType) == parser.VoidType:
+            traceback.print_stack()
+            print("Error: Cannot declare variable with void Type. {0}".format(paramType))
             sys.exit(1)
 
         match paramType:
