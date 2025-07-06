@@ -384,6 +384,7 @@ def typeCheckExpression(exp, symbolTable, typeTable):
         case parser.StringExpression(string = string):
             return parser.StringExpression(string, parser.ArrayType(parser.CharType(), len(string) + 1))
 
+
         case parser.Dereference(exp = exp):
             typedInner = typeCheckAndConvert(exp, symbolTable, typeTable)
             
@@ -530,6 +531,10 @@ def typeCheckExpression(exp, symbolTable, typeTable):
             
             match op.operator:
                 case parser.UnopType.COMPLEMENT:
+                    if type(e.retType) == parser.StuctureType:
+                        print("Error: Can't take the bitwise complement of a structure.")
+                        sys.exit(1)
+
                     if type(e.retType) == parser.DoubleType:
                         print("Error: Can't take the bitwise complement of a double.")
                         sys.exit(1)
@@ -537,6 +542,8 @@ def typeCheckExpression(exp, symbolTable, typeTable):
                     if type(e.retType) == parser.PointerType:
                         print("Error: Can't take the bitwise complement of a pointer.")
                         sys.exit(1)
+
+                    
                     
                     if isCharacterType(e.retType):
                         e = convertTo(e, parser.IntType())
@@ -1017,7 +1024,7 @@ def AnnotateInitializer(varDecl, type_, init, initList, symbolTable, typeTable):
 
 def typeCheckFileScopeVarDecl(varDecl, symbolTable, typeTable):
 
-    if not isComplete(varDecl.varType, typeTable) and varDecl.storageClass.storageClass != parser.StorageType.EXTERN and varDecl.initializer != None:
+    if not isComplete(varDecl.varType, typeTable) and varDecl.storageClass.storageClass != parser.StorageType.EXTERN:
         print("Error: Cannot declare variable with Incomplete Type.")
         sys.exit(1)
 
@@ -1223,7 +1230,7 @@ def typeCheckInitializer(targetType, initializer, symbolTable, typeTable):
 
 def typeCheckLocalVarDecl(varDecl, symbolTable, typeTable):
 
-    if not isComplete(varDecl.varType, typeTable) and varDecl.storageClass.storageClass != parser.StorageType.EXTERN and varDecl.initializer != None:
+    if not isComplete(varDecl.varType, typeTable) and varDecl.storageClass.storageClass != parser.StorageType.EXTERN:
         print("Error: Cannot declare variable with Incomplete Type.")
         sys.exit(1)
 
@@ -1623,18 +1630,28 @@ def typeCheckFunctionDeclaration(funDec, symbolTable, typeTable):
     
     validateTypeSpecifier(funDec.funType, typeTable)
 
+    hasBody = funDec.block != None
+
+    if type(funDec.funType.retType) == parser.StuctureType and not isComplete(funDec.funType.retType, typeTable) and hasBody:
+        traceback.print_stack()
+        print("Error: Cannot define a function with Incomplete Structure Return Type. {0}".format(funDec))
+        sys.exit(1)
+
     if type(funDec.funType.retType) == parser.ArrayType:
         print("Error: A function cannot return an array.")
         sys.exit(1)
 
-    hasBody = funDec.block != None
     
     adjustedParamTypes = []
     
     for paramType in funDec.funType.paramTypes:
         
-        if not isComplete(paramType, typeTable) and hasBody:
-            print("Error: Cannot declare variable with Incomplete Type.")
+        if type(paramType) == parser.StuctureType and not isComplete(paramType, typeTable) and hasBody:
+            print("Error: Cannot define variable with Incomplete Structure Type.")
+            sys.exit(1)
+
+        if not isComplete(paramType, typeTable):
+            print("Error: Cannot declare variable with void Type.")
             sys.exit(1)
 
         match paramType:

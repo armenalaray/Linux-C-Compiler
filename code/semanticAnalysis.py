@@ -3,6 +3,7 @@ import sys
 import traceback
 import parser
 
+
 def resolveExpression(expression, idMap, structMap):
     match expression:        
         case parser.Assignment_Expression(lvalue=lvalue, exp=exp):
@@ -330,7 +331,7 @@ def resolveForInit(forInit, idMap, structMap):
         case parser.InitExp(exp=exp):
             e = None
             if exp:
-                e = resolveExpression(exp, idMap)
+                e = resolveExpression(exp, idMap, structMap)
 
             return parser.InitExp(e)
             
