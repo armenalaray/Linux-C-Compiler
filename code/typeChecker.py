@@ -1232,6 +1232,7 @@ def typeCheckInitializer(targetType, initializer, symbolTable, typeTable):
             print("Error: Can't Initialize a scalar object with a compound initializer.")
             sys.exit(1)
 
+
 def typeCheckLocalVarDecl(varDecl, symbolTable, typeTable):
 
     if not isComplete(varDecl.varType, typeTable) and varDecl.storageClass.storageClass != parser.StorageType.EXTERN:

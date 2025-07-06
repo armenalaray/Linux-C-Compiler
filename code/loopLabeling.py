@@ -96,6 +96,13 @@ def labelDeclaration(decl):
         case parser.FunDecl(funDecl = funDecl):
             f = labelFunctionDeclaration(funDecl, None)
             return parser.FunDecl(f)
+        
+        case parser.StructDecl(structDecl = structDecl):
+            return parser.StructDecl(structDecl)
+            
+        case _:
+            print("Error:")
+            sys.exit(1)
 
 def labelProgram(pro):
 
