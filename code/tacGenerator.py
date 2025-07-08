@@ -705,10 +705,11 @@ def TAC_parseInstructions(expression, instructions, symbolTable, typeTable):
             global memberOffset
             
             match retType:
-                case parser.StuctureType():
-
+                case parser.StuctureType(tag = tag):
+                    #aqui es estructura
                     s_ = TAC_emitTackyAndConvert(struct, instructions, symbolTable, typeTable)
 
+                    #aqui estas asumiendo que struct es una estructura
                     tag = struct.retType.tag
 
                     structDef = typeTable[tag] 
@@ -728,14 +729,21 @@ def TAC_parseInstructions(expression, instructions, symbolTable, typeTable):
                     s = makeTempVariable(struct.retType, symbolTable)
 
                     instructions.append(TAC_CopyInstruction(s_, s))
-                    
+
                     result = makeTempVariable(retType, symbolTable)
+
+                    tag = struct.retType.tag
+
+                    structDef = typeTable[tag] 
+
+                    member = structDef.members[member]
+
+                    memberOffset += member.offset 
 
                     instructions.append(TAC_copyFromOffset(s, memberOffset, result))
 
                     return PlainOperand(result)
                 
-                    pass
 
             """
             match struct_:

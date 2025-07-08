@@ -1,6 +1,7 @@
 struct c_struct
 {
-    int ale;
+    int a;
+    long j;
 };
 
 
@@ -20,5 +21,5 @@ struct a_struct
 int main(void)
 {
     struct a_struct a;
-    a.member2.a.ale;
+    a.member2.a.j;
 }

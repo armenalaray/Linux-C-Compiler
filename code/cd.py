@@ -154,6 +154,7 @@ if __name__ == "__main__":
 
 			if printDebugInfo:
 				print(tac)
+				print("Type Table:\n", typeTable)
 				print("Symbol Table:\n", symbolTable)
 
 			if LastStage == 'tac':
