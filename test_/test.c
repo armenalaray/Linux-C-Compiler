@@ -26,5 +26,6 @@ struct a_struct foo(void)
 
 int main(void)
 {
-    foo().member2.a.j;
+    struct a_struct a;
+    &a.member2.a.j;
 }
