@@ -1,18 +1,24 @@
-/* A non-lvalue structure that contains an array has temporary lifetime;
- * test that you can get this array's address implicitly (even though
- * you can't load it explicitly)
- * Adapted from Listing 18-27
- * */
+struct c_struct
+{
+    int ale;
+};
 
-struct s {
-    char arr[3];
-    long a;
-    int c;
+
+struct b_struct
+{
+    char c;
+    int i;
+    struct c_struct a;
+};
+
+struct a_struct
+{
+    int member1;
+    struct b_struct member2;
 };
 
 int main(void)
 {
-    struct s a;
-
-    a.a = 0;
+    struct a_struct a;
+    a.member2.a.ale;
 }
