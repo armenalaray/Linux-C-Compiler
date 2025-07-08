@@ -495,6 +495,12 @@ def TAC_emitTackyAndConvert(exp, instructions, symbolTable, typeTable):
     result = TAC_parseInstructions(exp, instructions, symbolTable, typeTable)
 
     match result:
+        
+        case SubObject(base = base, offset = offset):
+            dst = makeTempVariable(exp.retType, symbolTable)
+            instructions.append(TAC_copyFromOffset(base, offset, dst))
+            return dst
+            
         case PlainOperand(val=val):
             return val
             
@@ -502,6 +508,10 @@ def TAC_emitTackyAndConvert(exp, instructions, symbolTable, typeTable):
             tmp = makeTempVariable(exp.retType, symbolTable)
             instructions.append(TAC_Load(ptr, tmp))
             return tmp
+        
+        case _:
+            print("Error: Invalid Lvalue conversion.")
+            sys.exit(1)
 
 memberOffset = 0
 
@@ -947,6 +957,11 @@ def TAC_parseInstructions(expression, instructions, symbolTable, typeTable):
             rval = TAC_emitTackyAndConvert(exp, instructions, symbolTable, typeTable)
             
             match lval:
+
+                case SubObject(base = base, offset = offset):
+                    instructions.append(TAC_copyToOffset(rval, base, offset))
+                    return PlainOperand(rval)
+
                 case PlainOperand(val=obj):
                     instructions.append(TAC_CopyInstruction(rval, obj))
                     return lval
