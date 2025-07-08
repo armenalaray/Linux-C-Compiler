@@ -745,50 +745,6 @@ def TAC_parseInstructions(expression, instructions, symbolTable, typeTable):
                     return PlainOperand(result)
                 
 
-            """
-            match struct_:
-
-                case parser.Dot(struct = struct, member = member, retType = retType):
-                    s_ = TAC_emitTackyAndConvert(struct, instructions, symbolTable, typeTable)
-
-                    s = makeTempVariable(struct.retType, symbolTable)
-
-                    instructions.append(TAC_CopyInstruction(s_, s))
-
-                    
-                    #tag = struct.retType.tag
-
-                    #structDef = typeTable[tag] 
-
-                    #member = structDef.members[member]
-                    
-                    #result = TAC_ConstantValue(parser.ConstULong(member.offset))
-
-                    return PlainOperand(s)
-                
-                case _:
-
-                    print("Ale:", type(struct_))
-
-                    s_ = TAC_emitTackyAndConvert(struct_, instructions, symbolTable, typeTable)
-
-                    s = makeTempVariable(struct_.retType, symbolTable)
-
-                    instructions.append(TAC_CopyInstruction(s_, s))
-
-                    tag = struct_.retType.tag
-
-                    structDef = typeTable[tag] 
-
-                    member = structDef.members[member_]
-                    
-                    result = makeTempVariable(retType_, symbolTable)
-
-                    instructions.append(TAC_copyFromOffset(s, member.offset, result))
-
-                    return PlainOperand(result)
-            """
-
         case parser.Arrow():
             pass
 

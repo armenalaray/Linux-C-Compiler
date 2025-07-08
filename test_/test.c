@@ -18,8 +18,13 @@ struct a_struct
     struct b_struct member2;
 };
 
-int main(void)
+struct a_struct foo(void)
 {
     struct a_struct a;
-    a.member2.a.j;
+    return a;
+}
+
+int main(void)
+{
+    foo().member2.a.j;
 }
