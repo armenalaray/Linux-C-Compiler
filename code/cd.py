@@ -150,11 +150,11 @@ if __name__ == "__main__":
 			if LastStage == 'validate':
 				sys.exit(0)
 
-			tac = tacGenerator.TAC_parseProgram(loo, symbolTable)
+			tac = tacGenerator.TAC_parseProgram(loo, symbolTable, typeTable)
 
 			if printDebugInfo:
 				print(tac)
-				print(symbolTable)
+				print("Symbol Table:\n", symbolTable)
 
 			if LastStage == 'tac':
 				sys.exit(0)

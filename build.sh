@@ -4,7 +4,7 @@
 # My compiler
 
 
-lastStage="--validate"
+lastStage="--tacky"
 #noLink="-c"
 library="-lmath.h"
 
