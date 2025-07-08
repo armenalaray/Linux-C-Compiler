@@ -396,6 +396,13 @@ class PlainOperand(ExpResult):
 class DereferencedPointer(ExpResult):
     def __init__(self, val):
         self.val = val
+
+class SubObject(ExpResult):
+    def __init__(self, base, offset):
+        self.base = base
+        self.offset = offset
+
+
     
 def makeTemp():
     name = "tmp.{0}".format(semanticAnalysis.global_value) 
@@ -701,48 +708,26 @@ def TAC_parseInstructions(expression, instructions, symbolTable, typeTable):
             return PlainOperand(dst)
 
         case parser.Dot(struct = struct, member = member, retType = retType):
-            
-            global memberOffset
-            
-            match retType:
-                case parser.StuctureType(tag = tag):
-                    #aqui es estructura
-                    s_ = TAC_emitTackyAndConvert(struct, instructions, symbolTable, typeTable)
+            structDef = typeTable[struct.retType.tag]
+            memberOffset = structDef.members[member].offset
+            innerObject = TAC_parseInstructions(struct, instructions, symbolTable, typeTable)
 
-                    #aqui estas asumiendo que struct es una estructura
-                    tag = struct.retType.tag
+            match innerObject:
+                case PlainOperand(val = val):
+                    return SubObject(val.identifier, memberOffset)
+                    pass
 
-                    structDef = typeTable[tag] 
+                case SubObject(base = base, offset = offset):
+                    return SubObject(base, offset + memberOffset)
+                    pass
 
-                    member = structDef.members[member]
+                case DereferencedPointer(val = ptr):
+                    dstPtr = makeTempVariable(parser.PointerType(retType), symbolTable)
 
-                    memberOffset += member.offset 
+                    instructions.append(TAC_addPtr(ptr, TAC_ConstantValue(parser.ConstLong(memberOffset)), 1, dstPtr))
+
+                    return DereferencedPointer(dstPtr)
                     
-                    return PlainOperand(s_)
-                    
-                case _:
-
-                    memberOffset = 0
-
-                    s_ = TAC_emitTackyAndConvert(struct, instructions, symbolTable, typeTable)
-
-                    s = makeTempVariable(struct.retType, symbolTable)
-
-                    instructions.append(TAC_CopyInstruction(s_, s))
-
-                    result = makeTempVariable(retType, symbolTable)
-
-                    tag = struct.retType.tag
-
-                    structDef = typeTable[tag] 
-
-                    member = structDef.members[member]
-
-                    memberOffset += member.offset 
-
-                    instructions.append(TAC_copyFromOffset(s, memberOffset, result))
-
-                    return PlainOperand(result)
                 
 
         case parser.Arrow():
@@ -958,90 +943,17 @@ def TAC_parseInstructions(expression, instructions, symbolTable, typeTable):
             
         case parser.Assignment_Expression(lvalue=lvalue, exp=exp):
 
-            def accumulateOffsetFromLvalue(struct, exp, instructions, symbolTable, typeTable):
+            lval = TAC_parseInstructions(lvalue, instructions, symbolTable, typeTable)
+            rval = TAC_emitTackyAndConvert(exp, instructions, symbolTable, typeTable)
+            
+            match lval:
+                case PlainOperand(val=obj):
+                    instructions.append(TAC_CopyInstruction(rval, obj))
+                    return lval
                 
-                global memberOffset
-
-                match struct.retType:
-                    case parser.StuctureType(tag = tag):
-
-                        match struct:
-                            case parser.Dot(struct = struct, member = member, retType = retType):
-                                s = accumulateOffsetFromLvalue(struct, exp, instructions, symbolTable, typeTable)
-                                
-                                tag = struct.retType.tag
-                                structDef = typeTable[tag] 
-                                member = structDef.members[member]   
-
-                                memberOffset += member.offset 
-
-                                return s
-                            
-                            case _:
-                                s = TAC_emitTackyAndConvert(struct, instructions, symbolTable, typeTable)
-
-                                dst = makeTempVariable(struct.retType, symbolTable)
-                                
-                                instructions.append(TAC_CopyInstruction(s, dst))
-
-                                return dst
-
-                    case _:
-                        memberOffset = 0
-
-                        dst = None
-
-                        match struct:
-                            case parser.Dot(struct = struct, member = member, retType = retType):
-                                dst = accumulateOffsetFromLvalue(struct, exp, instructions, symbolTable, typeTable)
-                                
-                            case _:
-                                print("Error:")
-                                sys.exit(1)
-
-                        if dst == None:
-                            print("Error:")
-                            sys.exit(1)
-
-
-                        rval = TAC_emitTackyAndConvert(exp, instructions, symbolTable, typeTable)
-
-                        tag = struct.retType.tag
-                        structDef = typeTable[tag] 
-                        member = structDef.members[member]   
-
-                        memberOffset += member.offset 
-
-                        src = makeTempVariable(exp.retType, symbolTable)
-
-                        instructions.append(TAC_CopyInstruction(rval, src))
-
-                        instructions.append(TAC_copyToOffset(src, dst, memberOffset))
-
-                        return dst
-
-            match lvalue:
-                case parser.Dot(struct = struct, member = member, retType = retType):
-                                
-                    dst = accumulateOffsetFromLvalue(lvalue, exp, instructions, symbolTable, typeTable)
-
-                    return PlainOperand(dst)
-
-                case parser.Arrow(pointer = pointer, member = member, retType = retType):
-                    pass
-                    
-                case _:
-                    lval = TAC_parseInstructions(lvalue, instructions, symbolTable, typeTable)
-                    rval = TAC_emitTackyAndConvert(exp, instructions, symbolTable, typeTable)
-                    
-                    match lval:
-                        case PlainOperand(val=obj):
-                            instructions.append(TAC_CopyInstruction(rval, obj))
-                            return lval
-                        
-                        case DereferencedPointer(val=ptr):
-                            instructions.append(TAC_Store(rval, ptr))
-                            return PlainOperand(rval)
+                case DereferencedPointer(val=ptr):
+                    instructions.append(TAC_Store(rval, ptr))
+                    return PlainOperand(rval)
 
         case parser.FunctionCall_Exp(identifier=id, argumentList = argumentList):
             a = []
@@ -1129,72 +1041,20 @@ def TAC_parseInstructions(expression, instructions, symbolTable, typeTable):
                 return PlainOperand(result)
         
         case parser.AddrOf(exp = exp):
-            
-            
-            match exp:
-                case parser.Dot(struct = struct, member = member, retType = retType):
-                    
-
-                    def accumulateOffsetFromExp(struct, instructions, symbolTable, typeTable):
-                        global memberOffset
-
-                        match struct:
-                            case parser.Dot(struct = struct, member = member, retType = retType):
-                                s = accumulateOffsetFromExp(struct, instructions, symbolTable, typeTable)
-
-                                tag = struct.retType.tag
-                                structDef = typeTable[tag] 
-                                member = structDef.members[member]
-
-                                memberOffset += member.offset
-
-                                return s
-                                
-                            case _:
-                                s = TAC_emitTackyAndConvert(struct, instructions, symbolTable, typeTable)
-
-                                return s
-                            
-
-                    memberOffset = 0
-
-                    s_ = accumulateOffsetFromExp(exp, instructions, symbolTable, typeTable)
-
-                    s = makeTempVariable(struct.retType, symbolTable)
-
-                    instructions.append(TAC_CopyInstruction(s_, s))
-
-                    result = makeTempVariable(retType, symbolTable)
-
-                    instructions.append(TAC_GetAddress(s, result))
-
-                    """
-                    tag = struct.retType.tag
-                    structDef = typeTable[tag] 
-                    member = structDef.members[member]
-                    """
-
-                    instructions.append(TAC_addPtr(result, memberOffset, 1, result))
-
-                    return PlainOperand(result)
                 
-                case parser.Arrow():
-                    pass
+            v = TAC_parseInstructions(exp, instructions, symbolTable, typeTable)
 
-                case _:
-                    v = TAC_parseInstructions(exp, instructions, symbolTable, typeTable)
-
-                    match v:
-                        case PlainOperand(val=obj):
-                            dst = makeTempVariable(expression.retType, symbolTable)
-                            instructions.append(TAC_GetAddress(obj, dst))
-                            return PlainOperand(dst)
-                        
-                        case DereferencedPointer(val=ptr):
-                            return PlainOperand(ptr)
+            match v:
+                case PlainOperand(val=obj):
+                    dst = makeTempVariable(expression.retType, symbolTable)
+                    instructions.append(TAC_GetAddress(obj, dst))
+                    return PlainOperand(dst)
+                
+                case DereferencedPointer(val=ptr):
+                    return PlainOperand(ptr)
                     
         case parser.Dereference(exp=exp):
-            dst = TAC_emitTackyAndConvert(exp, instructions, symbolTable)
+            dst = TAC_emitTackyAndConvert(exp, instructions, symbolTable, typeTable)
             return DereferencedPointer(dst)
 
         case parser.StringExpression(string = string, retType = retType):
