@@ -408,8 +408,9 @@ class MemoryOperand:
         return "Memory({self.reg}, {self.int})".format(self=self)
 
 class DataOperand:
-    def __init__(self, identifier):
+    def __init__(self, identifier, offset):
         self.identifier = identifier
+        self.offset = offset
 
     def __str__(self):
         return "Data({self.identifier})".format(self=self)
@@ -452,6 +453,8 @@ class BinopType(Enum):
     And = 5
     Or = 6
     Xor = 7
+    Shl = 8
+    ShrTwoOp = 9
 
 
 class UnaryOperator:
@@ -574,7 +577,7 @@ class Register:
             case _:
                 return "_"
 
-def parseValue(v, symbolTable, topLevelList):
+def parseValue(v, symbolTable, typeTable, topLevelList):
     asmType = None
     cType = None
     alignment = 0
@@ -620,7 +623,7 @@ def parseValue(v, symbolTable, topLevelList):
                     
                     asmType = Double()
                     cType = parser.DoubleType()
-                    return asmType, cType, DataOperand(name)
+                    return asmType, cType, DataOperand(name, 0)
                 
                 
                 case _:
@@ -673,13 +676,13 @@ def parseValue(v, symbolTable, topLevelList):
                     asmType = None
                     cType = symbolTable[i].type
                     
-                    sizeArray = cType.getBaseTypeSize(0)
+                    sizeArray = cType.getBaseTypeSize(0, typeTable)
                     print(sizeArray)
 
                     while type(cType) == parser.ArrayType:
                         cType = cType.elementType
 
-                    alignment, other = matchCType(cType)
+                    alignment, other = matchCType(cType, typeTable)
                         
                     if sizeArray < 16:
                         asmType = ByteArray(sizeArray, alignment)                
@@ -688,6 +691,12 @@ def parseValue(v, symbolTable, topLevelList):
 
                     return asmType, cType, PseudoMem(i, 0)
                 
+                case parser.StuctureType(tag = tag):
+                    structDef = typeTable[tag]
+                    asmType = ByteArray(structDef.size, structDef.alignment)
+                    cType = parser.StuctureType(tag)
+
+                    return asmType, cType, PseudoMem(i, 0)
                 
                 case _:
                     print("Error: Invalid Assembly Variable_. {0}".format(symbolTable[i].type))
@@ -809,13 +818,13 @@ def parseUnaryInstructionGeneral(src_, dst_, o, symbolTable, ASM_Instructions, t
     ASM_Instructions.append(instruction0)
     ASM_Instructions.append(instruction1)
 
-def classifyParameters(values, symbolTable, topLevelList):
+def classifyParameters(values, symbolTable, typeTable, topLevelList):
     intRegArgs = []
     doubleRegArgs = []
     stackArgs = []
 
     for arg in values:
-        t, cType1, operand = parseValue(arg, symbolTable, topLevelList)
+        t, cType1, operand = parseValue(arg, symbolTable, typeTable, topLevelList)
         typedOperand = (t, operand)
 
         if type(cType1) == parser.DoubleType:
@@ -831,7 +840,7 @@ def classifyParameters(values, symbolTable, topLevelList):
                 
     return intRegArgs, doubleRegArgs, stackArgs  
 
-def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLevelList):
+def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeTable, topLevelList):
 
     for i in TAC_Instructions:
         match i:
@@ -839,9 +848,9 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
             #scale is a number
             case tacGenerator.TAC_addPtr(ptr = ptr_, index = index_, scale = scale, dst = dst_):
                 
-                type1, cType1, ptr = parseValue(ptr_, symbolTable, topLevelList)
-                type2, cType2, index = parseValue(index_, symbolTable, topLevelList)
-                type3, cType3, dst = parseValue(dst_, symbolTable, topLevelList)
+                type1, cType1, ptr = parseValue(ptr_, symbolTable, typeTable, topLevelList)
+                type2, cType2, index = parseValue(index_, symbolTable, typeTable, topLevelList)
+                type3, cType3, dst = parseValue(dst_, symbolTable, typeTable, topLevelList)
                 
                 match index_:
                     case tacGenerator.TAC_ConstantValue(const = const):
@@ -904,14 +913,17 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                         print("Error: Invalid TAC Value.")
                         sys.exit(1)
 
+            case tacGenerator.TAC_copyFromOffset():
+                pass
+
             #dest is a string
             case tacGenerator.TAC_copyToOffset(src = src, dst = dst, offset = offset):
-                type1, cType1, src = parseValue(src, symbolTable, topLevelList)
+                type1, cType1, src = parseValue(src, symbolTable, typeTable, topLevelList)
                 ASM_Instructions.append(MovInstruction(type1, src, PseudoMem(dst, offset)))
 
             case tacGenerator.TAC_returnInstruction(Value=v):
                 if v:
-                    type1, cType1, src = parseValue(v, symbolTable, topLevelList)
+                    type1, cType1, src = parseValue(v, symbolTable, typeTable, topLevelList)
 
                     if typeChecker.isIntegerType(cType1):
                         instruction0 = MovInstruction(type1, src, RegisterOperand(Register(RegisterType.AX)))
@@ -998,7 +1010,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
 
             case tacGenerator.TAC_FunCallInstruction(funName = funName, arguments = arguments, dst = dst):
 
-                intArgs, doubleArgs, stackArgs = classifyParameters(arguments, symbolTable, topLevelList)
+                intArgs, doubleArgs, stackArgs = classifyParameters(arguments, symbolTable, typeTable, topLevelList)
 
                 print("IntArgs:", intArgs)
                 print("DoubleArgs:", doubleArgs)
@@ -1056,7 +1068,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     ASM_Instructions.append(instruction0)
 
                 if dst:
-                    type1, cType1, asmDst = parseValue(dst, symbolTable, topLevelList)
+                    type1, cType1, asmDst = parseValue(dst, symbolTable, typeTable, topLevelList)
 
                     if type(cType1) == parser.DoubleType:
                         ASM_Instructions.append(MovInstruction(Double(), RegisterOperand(Register(SSERegisterType.XMM0)), asmDst))
@@ -1069,9 +1081,9 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 
                 if op.operator == tacGenerator.BinopType.EQUAL or op.operator == tacGenerator.BinopType.GREATERTHAN or op.operator == tacGenerator.BinopType.LESSTHAN or op.operator == tacGenerator.BinopType.GREATEROREQUAL or op.operator == tacGenerator.BinopType.LESSOREQUAL or op.operator == tacGenerator.BinopType.NOTEQUAL:
                     #print(op.operator)
-                    type1, cType1, src1 = parseValue(src1_, symbolTable, topLevelList)
-                    type2, cType2, src2 = parseValue(src2_, symbolTable, topLevelList)
-                    type3, cType3, dst = parseValue(dst_, symbolTable, topLevelList)
+                    type1, cType1, src1 = parseValue(src1_, symbolTable, typeTable, topLevelList)
+                    type2, cType2, src2 = parseValue(src2_, symbolTable, typeTable, topLevelList)
+                    type3, cType3, dst = parseValue(dst_, symbolTable, typeTable, topLevelList)
 
                     print(type(cType1))
 
@@ -1166,9 +1178,9 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                         case _:
                             #parseBinaryInstructionGeneral(src1_, src2_, dst_, op, symbolTable, ASM_Instructions, topLevelList)
 
-                            type1, alignment1, src1 = parseValue(src1_, symbolTable, topLevelList)
-                            type2, alignment2, src2 = parseValue(src2_, symbolTable, topLevelList)
-                            type3, alignment3, dst = parseValue(dst_, symbolTable, topLevelList)
+                            type1, alignment1, src1 = parseValue(src1_, symbolTable, typeTable, topLevelList)
+                            type2, alignment2, src2 = parseValue(src2_, symbolTable, typeTable, topLevelList)
+                            type3, alignment3, dst = parseValue(dst_, symbolTable, typeTable, topLevelList)
                             
                             Expect(type1, type2, type3)
 
@@ -1184,7 +1196,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 ASM_Instructions.append(JumpInst(label))
 
             case tacGenerator.TAC_JumpIfZeroInst(condition=cond, label=label):
-                type1, cType1, c = parseValue(cond, symbolTable, topLevelList)
+                type1, cType1, c = parseValue(cond, symbolTable, typeTable, topLevelList)
 
                 if typeChecker.isIntegerType(cType1):
                     instruction0 = CompInst(type1, ImmediateOperand(0), c)
@@ -1209,7 +1221,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                     ASM_Instructions.append(instruction2)
 
             case tacGenerator.TAC_JumpIfNotZeroInst(condition=cond, label=label):
-                type1, cType1, c = parseValue(cond, symbolTable, topLevelList)
+                type1, cType1, c = parseValue(cond, symbolTable, typeTable, topLevelList)
 
                 if typeChecker.isIntegerType(cType1):
                     instruction0 = CompInst(type1, ImmediateOperand(0), c)
@@ -1336,16 +1348,16 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
 
 
             case tacGenerator.TAC_signExtendInstruction(src = src, dst = dst):
-                type1, alignment1, src = parseValue(src, symbolTable, topLevelList)
-                type2, alignment2, dst = parseValue(dst, symbolTable, topLevelList)
+                type1, alignment1, src = parseValue(src, symbolTable, typeTable, topLevelList)
+                type2, alignment2, dst = parseValue(dst, symbolTable, typeTable, topLevelList)
 
                 instruction0 = MovSXInstruction(type1, type2, src, dst)
 
                 ASM_Instructions.append(instruction0)
 
             case tacGenerator.TAC_truncateInstruction(src = src, dst = dst):
-                type1, alignment1, src = parseValue(src, symbolTable, topLevelList)
-                type2, alignment2, dst = parseValue(dst, symbolTable, topLevelList)
+                type1, alignment1, src = parseValue(src, symbolTable, typeTable, topLevelList)
+                type2, alignment2, dst = parseValue(dst, symbolTable, typeTable, topLevelList)
 
                 instruction0 = MovInstruction(type2, src, dst)
 
@@ -1354,8 +1366,8 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
             
 
             case tacGenerator.TAC_CopyInstruction(src=src_, dst=dst_):
-                type1, alignment1, src = parseValue(src_, symbolTable, topLevelList)
-                type2, alignment2, dst = parseValue(dst_, symbolTable, topLevelList)
+                type1, alignment1, src = parseValue(src_, symbolTable, typeTable, topLevelList)
+                type2, alignment2, dst = parseValue(dst_, symbolTable, typeTable, topLevelList)
 
                 instruction0 = MovInstruction(type1, src, dst)
 
@@ -1372,8 +1384,8 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 ASM_Instructions.append(MovZeroExtendIns(type1, type2, src, dst))
 
             case tacGenerator.TAC_DoubleToInt(src = src_, dst = dst_):
-                type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
-                type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
+                type1, cType1, src = parseValue(src_, symbolTable, typeTable, topLevelList)
+                type2, cType2, dst = parseValue(dst_, symbolTable, typeTable, topLevelList)
                 
                 if type(cType2) == parser.IntType or type(cType2) == parser.LongType: 
                     ASM_Instructions.append(Cvttsd2si(type2, src, dst))
@@ -1394,8 +1406,8 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 
 
             case tacGenerator.TAC_GetAddress(src = src_, dst = dst_):
-                type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
-                type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
+                type1, cType1, src = parseValue(src_, symbolTable, typeTable, topLevelList)
+                type2, cType2, dst = parseValue(dst_, symbolTable, typeTable, topLevelList)
 
                 ASM_Instructions.append(LeaInstruction(src, dst))
 
@@ -1413,8 +1425,8 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 
 
             case tacGenerator.TAC_Load(src = src_, dst = dst_):
-                type1, cType1, ptr = parseValue(src_, symbolTable, topLevelList)
-                type2, cType2, dst = parseValue(dst_, symbolTable, topLevelList)
+                type1, cType1, ptr = parseValue(src_, symbolTable, typeTable, topLevelList)
+                type2, cType2, dst = parseValue(dst_, symbolTable, typeTable, topLevelList)
                 
                 instruction0 = MovInstruction(Quadword(), ptr, RegisterOperand(Register(RegisterType.AX)))
                 
@@ -1429,19 +1441,19 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, topLe
                 sys.exit(1)
 
 
-def ASM_parseTopLevel(topLevel, symbolTable, topLevelList):
+def ASM_parseTopLevel(topLevel, symbolTable, typeTable, topLevelList):
     match topLevel:
         case tacGenerator.StaticConstant(identifier = identifier, type = type, staticInit = staticInit):
-            alignment, other = matchCType(type)
+            alignment, other = matchCType(type, typeTable)
             return StaticConstant(identifier, alignment, staticInit)
 
         case tacGenerator.StaticVariable(identifier = identifier, global_ = global_, type = type_, initList = initList):
-            alignment, other = matchCType(type_)
+            alignment, other = matchCType(type_, typeTable)
             return StaticVariable(identifier, global_, alignment, initList)
         
         case tacGenerator.TAC_FunctionDef(identifier = identifier, global_ = global_, params = params, instructions = instructions):
             
-            intParams, doubleParams, stackParams = classifyParameters(params, symbolTable, topLevelList)
+            intParams, doubleParams, stackParams = classifyParameters(params, symbolTable, typeTable, topLevelList)
 
             ASM_Instructions = []
             
@@ -1464,7 +1476,7 @@ def ASM_parseTopLevel(topLevel, symbolTable, topLevelList):
                 ASM_Instructions.append(i0)
                 offset += 8
                 
-            ASM_parseInstructions(instructions, ASM_Instructions, symbolTable, topLevelList)
+            ASM_parseInstructions(instructions, ASM_Instructions, symbolTable, typeTable, topLevelList)
             return Function(identifier, global_, ASM_Instructions)
 
         case _:
@@ -1523,7 +1535,7 @@ def matchCType(cType, typeTable):
             return 8, AssemblySize(AssemblyType.QUADWORD)
 
         case parser.ArrayType(elementType = elementType, size = size):
-            sizeArray = cType.getBaseTypeSize(0)
+            sizeArray = cType.getBaseTypeSize(0, typeTable)
             print(sizeArray)
 
             while type(cType) == parser.ArrayType:
@@ -1546,7 +1558,8 @@ def matchCType(cType, typeTable):
             return 1, Byte()
 
         case parser.StuctureType(tag = tag):
-            return typeTable[tag].alignment, Quadword()
+            structDef = typeTable[tag]
+            return structDef.alignment, ByteArray(structDef.size, structDef.alignment)
 
         case _:
             traceback.print_stack()
@@ -1556,7 +1569,7 @@ def matchCType(cType, typeTable):
 def ASM_parseAST(ast, symbolTable, typeTable):
     funcDefList = []
     for topLevel in ast.topLevelList:
-        function = ASM_parseTopLevel(topLevel, symbolTable, funcDefList)
+        function = ASM_parseTopLevel(topLevel, symbolTable, typeTable, funcDefList)
         funcDefList.append(function)
 
     backendSymbolTable = {}

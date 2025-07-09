@@ -161,12 +161,14 @@ if __name__ == "__main__":
 			if LastStage == 'tac':
 				sys.exit(0)
 
-			ass, backSymbolTable = assemblyGenerator.ASM_parseAST(tac, symbolTable)
+			ass, backSymbolTable = assemblyGenerator.ASM_parseAST(tac, symbolTable, typeTable)
 
 			if printDebugInfo:
 				print(ass)
-				print(backSymbolTable)
-			
+				print("Type Table:\n", typeTable)
+				print("Backend Symbol Table:\n", backSymbolTable)
+
+			"""
 			ReplacePseudoRegisters.ReplacePseudoRegisters(ass, backSymbolTable)
 
 			if printDebugInfo:
@@ -176,6 +178,7 @@ if __name__ == "__main__":
 
 			if printDebugInfo:
 				print(ass)
+			"""			
 		
 
 			if LastStage == 'assemblyGeneration':

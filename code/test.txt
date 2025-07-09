@@ -1,3 +1,89 @@
+movl $0, %edi
+movl $1, %esi
+movl $2, %edx
+524   Chapter 18
+movl $3, %ecx
+movl $4, %r8d
+movl $5, %r9d
+1 pushq arg+8(%rip) b
+pushq arg(%rip) a
+call a_bunch_of_arguments
+
+
+
+-8  char
+-16 double
+
+-16 -> xmm0
+-8 -> rdi
+
+1 eightbyte int
+struct two_ints
+{
+    int i;
+    int i2;
+};
+
+8 bytes double 
+struct nested_double
+{
+    double array[1];
+};
+
+sse int 
+struct two_eightbytes
+{
+    8
+    double d;
+    8 
+    char c;
+};
+
+struct twelve_bytes
+{
+    int i;
+    char arr[8];
+};
+
+// both are int
+
+struct inner
+{
+    int i;
+    char ch2;
+};
+
+struct nested_ints
+{
+    char ch1;
+    struct inner nested;
+};
+
+struct flattened_ints
+{
+    char c;
+    int i;
+    char a;
+};
+
+struct large
+{
+    int i;
+    double d;
+    char arr[10];
+};
+
+struct nested_ints a;
+
+//
+struct flattened_ints b;
+
+// 4 eight bytes all eight bytes are classiffied as memory
+struct large c;
+
+
+
+
 ======================================================================
 FAIL: test_valid/params_and_returns/stack_clobber (test_framework.basic.TestChapter18.test_valid/params_and_returns/stack_clobber)
 ----------------------------------------------------------------------
