@@ -1293,41 +1293,58 @@ def TAC_parseStatement(statement, instructions, symbolTable, typeTable, end=None
 
 def TAC_emitInitializer(variableDecl, init, instructions, symbolTable, typeTable, offset):
     
-    match init:
-        case parser.SingleInit(exp = exp, retType = retType):
-            
+    match init, init.retType:
+        case parser.SingleInit(exp = exp, retType = retType), parser.ArrayType(elementType = elementType, size = size):
             match exp:
                 case parser.StringExpression(string = string, retType = retType_):
-                    
+                    #tu estas modificando otro offset!
                     for char in string:            
                         #print(retType)
-                        typeSize = retType.elementType.getBaseTypeSize(0)
+                        typeSize = elementType.getBaseTypeSize(0, typeTable)
                         instructions.append(TAC_copyToOffset(TAC_ConstantValue(parser.ConstChar(ord(char))), variableDecl.identifier, offset[0]))
                         offset[0] += typeSize
 
                     #add zero padding
                     
-                    print(retType.size)
-                    at = retType.size
+                    print(size)
+                    at = size
 
                     while at > len(string):
-                        typeSize = retType.elementType.getBaseTypeSize(0)
+                        typeSize = elementType.getBaseTypeSize(0, typeTable)
                         instructions.append(TAC_copyToOffset(TAC_ConstantValue(parser.ConstChar(0)), variableDecl.identifier, offset[0]))
                         offset[0] += typeSize
                         at -= 1
 
                 case _:
-                    src = TAC_emitTackyAndConvert(exp, instructions, symbolTable, typeTable)
-                    typeSize = retType.getBaseTypeSize(0, typeTable)
-                    instructions.append(TAC_copyToOffset(src, variableDecl.identifier, offset[0]))
-                    offset[0] += typeSize
+                    print("Error: Invalid")
+                    sys.exit(1)
+                    
             
-        case parser.CompoundInit(initializerList = initializerList, retType = retType):
+
+        case parser.SingleInit(exp = exp, retType = retType), _:
+            src = TAC_emitTackyAndConvert(exp, instructions, symbolTable, typeTable)
+            instructions.append(TAC_copyToOffset(src, variableDecl.identifier, offset[0]))
+
+        case parser.CompoundInit(initializerList = initializerList, retType = retType), parser.StuctureType(tag = tag):
+
+            members = typeTable[tag].members
+            members = list(members.values())
+
+            for memInit, member in zip(initializerList, members):
+                temp = [offset[0] + member.offset]
+                TAC_emitInitializer(variableDecl, memInit, instructions, symbolTable, typeTable, temp)
+                
+
+        case parser.CompoundInit(initializerList = initializerList, retType = retType), parser.ArrayType(elementType = elementType, size = size):
 
             for i in initializerList:
-                TAC_emitInitializer(variableDecl, i, instructions, symbolTable, typeTable, offset)
+                temp = [offset[0]]
+                TAC_emitInitializer(variableDecl, i, instructions, symbolTable, typeTable, temp)
+                offset[0] = offset[0] + elementType.getBaseTypeSize(0, typeTable)
             
-        
+        case _,_:
+            print("Error: {0} {1}".format(init, init.retType))
+            sys.exit(1)
     
 
 def TAC_parseVarDeclarations(variableDecl, instructions, symbolTable, typeTable):

@@ -1170,10 +1170,11 @@ def typeCheckInitializer(targetType, initializer, symbolTable, typeTable):
                 typeCheckedList.append(typeCheckedElement)
                 index = i
             
+            index += 1
             print("index:", index)
             print("memberSize:", len(structDef.members))
 
-            while index < len(structDef.members) - 1:
+            while index < len(structDef.members):
                 t = memberList[index].memberType
                 typeCheckedList.append(zeroInitializer(t, typeTable))
                 index += 1
