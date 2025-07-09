@@ -152,6 +152,7 @@ if __name__ == "__main__":
 
 			tac = tacGenerator.TAC_parseProgram(loo, symbolTable, typeTable)
 
+
 			if printDebugInfo:
 				print(tac)
 				print("Type Table:\n", typeTable)

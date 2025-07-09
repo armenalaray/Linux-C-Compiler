@@ -1,3 +1,21 @@
+======================================================================
+FAIL: test_valid/params_and_returns/stack_clobber (test_framework.basic.TestChapter18.test_valid/params_and_returns/stack_clobber)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_18/valid/params_and_returns/stack_clobber.c failed with error:
+
+
+----------------------------------------------------------------------
+
+
+
+
+
+
 8
 +
 8

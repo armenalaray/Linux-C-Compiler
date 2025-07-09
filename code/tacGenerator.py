@@ -1440,6 +1440,13 @@ def TAC_convertSymbolsToTAC(symbolTable, typeTable):
                             case parser.ArrayType(elementType = elementType, size = size):
                                 size = entry.type.getBaseTypeSize(0, typeTable)
                                 init = typeChecker.ZeroInit(size)
+
+                            case parser.StuctureType(tag = tag):
+                                size = entry.type.getBaseTypeSize(0, typeTable)
+                                init = typeChecker.ZeroInit(size)
+
+                                #structDef = typeTable[tag]
+                                #init = typeChecker.ZeroInit(structDef.size)
                                 
                             case _:
                                 print("Error: Invalid Tentative Initializer. {0}".format(entry.type))
