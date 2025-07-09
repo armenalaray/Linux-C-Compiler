@@ -740,8 +740,25 @@ def TAC_parseInstructions(expression, instructions, symbolTable, typeTable):
                     
                 
 
-        case parser.Arrow():
-            pass
+        case parser.Arrow(pointer = pointer, member = member, retType = retType):
+            #retype no es un puntero
+            match pointer.retType:
+                case parser.PointerType(referenceType = referenceType):
+                    structDef = typeTable[referenceType.tag]
+                    memberOffset = structDef.members[member].offset
+                    
+                    dstPtr = makeTempVariable(parser.PointerType(retType), symbolTable)
+
+                    ptr = TAC_emitTackyAndConvert(pointer, instructions, symbolTable, typeTable)
+            
+                    instructions.append(TAC_addPtr(ptr, TAC_ConstantValue(parser.ConstLong(memberOffset)), 1, dstPtr))
+
+                    return DereferencedPointer(dstPtr)
+
+                case _:
+                    print("Error: Must be a pointer.")
+                    sys.exit(1)
+
 
         case parser.Unary_Expression(operator=op, expression=inner):
 
@@ -969,6 +986,10 @@ def TAC_parseInstructions(expression, instructions, symbolTable, typeTable):
                 case DereferencedPointer(val=ptr):
                     instructions.append(TAC_Store(rval, ptr))
                     return PlainOperand(rval)
+                
+                case _:
+                    print("Error: Invalid Exp Result.")
+                    sys.exit(1)
 
         case parser.FunctionCall_Exp(identifier=id, argumentList = argumentList):
             a = []
@@ -1055,13 +1076,20 @@ def TAC_parseInstructions(expression, instructions, symbolTable, typeTable):
 
                 return PlainOperand(result)
         
-        case parser.AddrOf(exp = exp):
+        case parser.AddrOf(exp = exp, retType = retType):
                 
             v = TAC_parseInstructions(exp, instructions, symbolTable, typeTable)
 
             match v:
+                case SubObject(base = base, offset = offset):
+                    dst = makeTempVariable(retType, symbolTable)
+                    instructions.append(TAC_GetAddress(TAC_VariableValue(base), dst))
+                    instructions.append(TAC_addPtr(dst, TAC_ConstantValue(parser.ConstLong(offset)), 1, dst))
+                    return PlainOperand(dst)
+                    
+
                 case PlainOperand(val=obj):
-                    dst = makeTempVariable(expression.retType, symbolTable)
+                    dst = makeTempVariable(retType, symbolTable)
                     instructions.append(TAC_GetAddress(obj, dst))
                     return PlainOperand(dst)
                 

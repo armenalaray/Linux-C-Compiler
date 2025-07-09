@@ -1,7 +1,7 @@
 struct c_struct
 {
     int a;
-    long j;
+    long * j;
 };
 
 
@@ -9,13 +9,13 @@ struct b_struct
 {
     char c;
     int i;
-    struct c_struct a;
+    struct c_struct * a;
 };
 
 struct a_struct
 {
     int member1;
-    struct b_struct member2;
+    struct b_struct * member2;
 };
 
 struct a_struct foo(void)
@@ -27,5 +27,5 @@ struct a_struct foo(void)
 int main(void)
 {
     struct a_struct * a;
-    (*a).member1;
+    *a->member2->a->j = 2;
 }
