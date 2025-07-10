@@ -887,6 +887,75 @@ def classifyStructure(struct, typeTable):
     else:
         return [ABI_StructType.INTEGER]
 
+def classifyReturnValue(retVal, symbolTable, typeTable, topLevelList):
+    retVal.i
+
+    t, cType1, operand = parseValue(retVal, symbolTable, typeTable, topLevelList)
+
+    operand.pseudo
+
+    if type(cType1) == parser.Double:
+        return ([], [operand], False)
+    
+    elif typeChecker.isScalar(cType1):
+        typedOperand = (t, operand)
+        return ([typedOperand], [], False)
+
+    else:
+        match cType1:
+            case parser.StuctureType(tag = tag):
+                structDef = typeTable[tag]
+                classes = classifyStructure(structDef, typeTable)
+                structSize = structDef.size
+
+                if classes[0] == ABI_StructType.MEMORY:
+                    return ([], [], True)
+                
+                else:
+
+                    intRetVals = []
+                    doubleRetVals = []
+                    offset = 0
+                    for class_ in classes:
+
+                        operand = PseudoMem(operand.pseudo, offset)
+
+                        match class_:
+                            case ABI_StructType.SSE:
+                                doubleRetVals.append(operand)
+                                
+                            case ABI_StructType.INTEGER:
+                                eightByteType = getEightByteType(offset, structSize)
+                                intRetVals.append((eightByteType, operand))
+
+                                pass
+                            case ABI_StructType.MEMORY:
+                                print("Error: Invalid ABI.")
+                                sys.exit(1)
+
+                        offset += 8  
+
+                    return (intRetVals, doubleRetVals, False)
+
+                
+            case _:
+                print("Error:")
+                sys.exit(1)
+
+def getEightByteType(offset, structSize):
+    bytesFromEnd = structSize - offset
+    print("bytesFromEnd:", bytesFromEnd)
+
+    if bytesFromEnd >= 8:
+        return Quadword()
+    
+    if bytesFromEnd == 4:
+        return Longword()
+    
+    if bytesFromEnd == 1:
+        return Byte()
+    
+    return ByteArray(bytesFromEnd, 8)    
 
 def classifyParameters(values, symbolTable, typeTable, topLevelList, returnInMemory):
     
@@ -926,20 +995,7 @@ def classifyParameters(values, symbolTable, typeTable, topLevelList, returnInMem
             match cType1:
                 case parser.StuctureType(tag = tag):
 
-                    def getEightByteType(offset, structSize):
-                        bytesFromEnd = structSize - offset
-                        print("bytesFromEnd:", bytesFromEnd)
-
-                        if bytesFromEnd >= 8:
-                            return Quadword()
-                        
-                        if bytesFromEnd == 4:
-                            return Longword()
-                        
-                        if bytesFromEnd == 1:
-                            return Byte()
-                        
-                        return ByteArray(bytesFromEnd, 8)
+                    
                         
 
                     structDef = typeTable[tag]
