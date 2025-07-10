@@ -1,17 +1,17 @@
-struct two_eightbytes
+struct first
 {
     char d[21];
 };
 
-struct two_eightbytes foo(struct two_eightbytes a)
+struct two_eightbytes
 {
-    return a;
-}
+    char d[21];
+    struct first a;
+};
 
 int main(void)
 {
-    struct two_eightbytes * b;
-    struct two_eightbytes a = foo(*b);
-
-
+    struct two_eightbytes b;
+    struct first a;
+    b.a = a;
 }

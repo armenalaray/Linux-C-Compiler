@@ -923,8 +923,47 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
             #dest is a string
             case tacGenerator.TAC_copyToOffset(src = src, dst = dst, offset = offset):
+                #breakpoint()
                 type1, cType1, src = parseValue(src, symbolTable, typeTable, topLevelList)
-                ASM_Instructions.append(MovInstruction(type1, src, PseudoMem(dst, offset)))
+
+                match cType1:
+                    case parser.StuctureType(tag = tag):
+                        size = typeTable[tag].size
+
+                        dst = PseudoMem(dst, offset)
+                        
+                        while src.offset < size:
+
+                            dif = size - src.offset
+                            print("DIF:", dif)
+
+                            bytes = None
+                            type_ = None
+
+                            if dif >= 8:
+                                type_ = Quadword()
+                                bytes = 8
+                            elif dif >= 4:
+                                type_ = Longword()
+                                bytes = 4
+                            else:
+                                type_ = Byte()
+                                bytes = 1
+
+                            if type == None:
+                                print("Error: Invalid Copy Instruction.")
+                                sys.exit(1)
+
+                            s = copy.deepcopy(src)
+                            d = copy.deepcopy(dst)
+                            
+                            ASM_Instructions.append(MovInstruction(type_, s, d))
+
+                            src.offset += bytes
+                            dst.offset += bytes
+                        
+                    case _:
+                        ASM_Instructions.append(MovInstruction(type1, src, PseudoMem(dst, offset)))
 
             case tacGenerator.TAC_returnInstruction(Value=v):
                 if v:
@@ -1454,15 +1493,56 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
             
             case tacGenerator.TAC_Store(src = src_, dst = dst_):
-                type1, cType1, src = parseValue(src_, symbolTable, topLevelList)
-                type2, cType2, ptr = parseValue(dst_, symbolTable, topLevelList)
-                
-                instruction0 = MovInstruction(Quadword(), ptr, RegisterOperand(Register(RegisterType.AX)))
-                
-                instruction1 = MovInstruction(type1, src, MemoryOperand(Register(RegisterType.AX), 0))
+                type1, cType1, src = parseValue(src_, symbolTable, typeTable, topLevelList)
 
-                ASM_Instructions.append(instruction0)
-                ASM_Instructions.append(instruction1)
+                type2, cType2, ptr = parseValue(dst_, symbolTable, typeTable, topLevelList)
+                
+                match cType1:
+                    case parser.StuctureType(tag = tag):
+                        
+                        ASM_Instructions.append(MovInstruction(Quadword(), ptr, RegisterOperand(Register(RegisterType.AX))))
+
+                        ptr = MemoryOperand(Register(RegisterType.AX), 0)
+
+                        size = typeTable[tag].size
+
+                        while ptr.int < size:
+
+                            dif = size - ptr.int
+                            print("DIF:", dif)
+
+                            bytes = None
+                            type_ = None
+
+                            if dif >= 8:
+                                type_ = Quadword()
+                                bytes = 8
+                            elif dif >= 4:
+                                type_ = Longword()
+                                bytes = 4
+                            else:
+                                type_ = Byte()
+                                bytes = 1
+
+                            if type == None:
+                                print("Error: Invalid Copy Instruction.")
+                                sys.exit(1)
+
+                            s = copy.deepcopy(src)
+                            p = copy.deepcopy(ptr)
+                            
+                            ASM_Instructions.append(MovInstruction(type_, s, p))
+
+                            src.offset += bytes
+                            ptr.int += bytes
+
+                    case _:
+                        instruction0 = MovInstruction(Quadword(), ptr, RegisterOperand(Register(RegisterType.AX)))
+                        
+                        instruction1 = MovInstruction(type1, src, MemoryOperand(Register(RegisterType.AX), 0))
+
+                        ASM_Instructions.append(instruction0)
+                        ASM_Instructions.append(instruction1)
                 
 
             case tacGenerator.TAC_Load(src = src_, dst = dst_):
