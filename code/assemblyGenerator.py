@@ -823,25 +823,107 @@ def parseUnaryInstructionGeneral(src_, dst_, o, symbolTable, ASM_Instructions, t
     ASM_Instructions.append(instruction0)
     ASM_Instructions.append(instruction1)
 
-def classifyParameters(values, symbolTable, typeTable, topLevelList):
+class ABI_StructType(Enum):
+    MEMORY = 1
+    SSE = 2
+    INTEGER = 3
+
+def flattenMembers(members, outList):
+
+    members = list(members.values())
+
+    for member in members:
+        match member.memberType:
+            case parser.StuctureType(tag = tag):
+
+                flattenMembers(outList)
+                pass
+            case parser.ArrayType(elementType = elementType, size = size):
+                pass
+            case _:
+                pass
+
+    print(members)
+    
+
+def classifyStructure(struct):
+    size = struct.size
+    if size > 16:
+        result = []
+        while size > 0:
+            result.append(ABI_StructType.MEMORY)
+            size -= 8
+
+        return result
+    
+    members = []
+    flattenMembers(struct.members, members)
+
+    if size > 8:
+        if members[0] == parser.DoubleType() and members[-1] == parser.DoubleType():
+            return [ABI_StructType.SSE, ABI_StructType.SSE]
+        
+        if members[0] == parser.DoubleType():
+            return [ABI_StructType.SSE, ABI_StructType.INTEGER]
+            pass
+
+        if members[-1] == parser.DoubleType():
+            return [ABI_StructType.INTEGER, ABI_StructType.SSE]
+            pass
+
+        return [ABI_StructType.INTEGER, ABI_StructType.INTEGER]
+
+
+    if members[0] == parser.DoubleType():
+        return [ABI_StructType.SSE]
+
+    else:
+        return [ABI_StructType.INTEGER]
+
+
+def classifyParameters(values, symbolTable, typeTable, topLevelList, returnInMemory):
+    
     intRegArgs = []
     doubleRegArgs = []
     stackArgs = []
+
+    intRegsAvailable = 6
+
+    if returnInMemory:
+        intRegsAvailable = 5
+
+    else:
+        intRegsAvailable = 6
+
 
     for arg in values:
         t, cType1, operand = parseValue(arg, symbolTable, typeTable, topLevelList)
         typedOperand = (t, operand)
 
         if type(cType1) == parser.DoubleType:
+
             if len(doubleRegArgs) < 8:
                 doubleRegArgs.append(operand)
             else:
                 stackArgs.append(typedOperand)
-        else:
-            if len(intRegArgs) < 6:
+
+        elif typeChecker.isScalar(cType1):
+
+            if len(intRegArgs) < intRegsAvailable:
                 intRegArgs.append(typedOperand)
             else:
                 stackArgs.append(typedOperand)
+            
+        else:
+            
+            match cType1:
+                case parser.StuctureType(tag = tag):
+                    structDef = typeTable[tag]
+                    a = classifyStructure(structDef)
+                    print(a)
+                case _:
+                    print("Error:")
+                    sys.exit(1)
                 
     return intRegArgs, doubleRegArgs, stackArgs  
 
@@ -1091,7 +1173,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
             case tacGenerator.TAC_FunCallInstruction(funName = funName, arguments = arguments, dst = dst):
 
-                intArgs, doubleArgs, stackArgs = classifyParameters(arguments, symbolTable, typeTable, topLevelList)
+                intArgs, doubleArgs, stackArgs = classifyParameters(arguments, symbolTable, typeTable, topLevelList, False)
 
                 print("IntArgs:", intArgs)
                 print("DoubleArgs:", doubleArgs)
@@ -1653,7 +1735,7 @@ def ASM_parseTopLevel(topLevel, symbolTable, typeTable, topLevelList):
         
         case tacGenerator.TAC_FunctionDef(identifier = identifier, global_ = global_, params = params, instructions = instructions):
             
-            intParams, doubleParams, stackParams = classifyParameters(params, symbolTable, typeTable, topLevelList)
+            intParams, doubleParams, stackParams = classifyParameters(params, symbolTable, typeTable, topLevelList, False)
 
             ASM_Instructions = []
             
