@@ -77,7 +77,7 @@ class TAC_copyFromOffset(instruction):
         self.dst = dst
 
     def __str__(self):
-        return "{self.dst} = ({self.src} + {self.offset})".format(self=self)
+        return "CopyFromOffset {self.dst} = ({self.src} + {self.offset})".format(self=self)
     
     def __repr__(self):
         return self.__str__()

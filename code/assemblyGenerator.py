@@ -918,8 +918,49 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                         print("Error: Invalid TAC Value.")
                         sys.exit(1)
 
-            case tacGenerator.TAC_copyFromOffset():
-                pass
+            case tacGenerator.TAC_copyFromOffset(src = src, offset = offset, dst = dst):
+
+                type1, cType1, dst = parseValue(dst, symbolTable, typeTable, topLevelList)
+
+                match cType1:
+                    case parser.StuctureType(tag = tag):
+                        size = typeTable[tag].size
+
+                        src = PseudoMem(src, offset)
+
+                        while dst.offset < size:
+
+                            dif = size - dst.offset
+                            print("DIF:", dif)
+
+                            bytes = None
+                            type_ = None
+
+                            if dif >= 8:
+                                type_ = Quadword()
+                                bytes = 8
+                            elif dif >= 4:
+                                type_ = Longword()
+                                bytes = 4
+                            else:
+                                type_ = Byte()
+                                bytes = 1
+
+                            if type == None:
+                                print("Error: Invalid Copy Instruction.")
+                                sys.exit(1)
+
+                            s = copy.deepcopy(src)
+                            d = copy.deepcopy(dst)
+                            
+                            ASM_Instructions.append(MovInstruction(type_, s, d))
+
+                            src.offset += bytes
+                            dst.offset += bytes
+                        
+                    case _:
+                        ASM_Instructions.append(MovInstruction(type1, PseudoMem(src, offset), dst))
+
 
             #dest is a string
             case tacGenerator.TAC_copyToOffset(src = src, dst = dst, offset = offset):
@@ -931,7 +972,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                         size = typeTable[tag].size
 
                         dst = PseudoMem(dst, offset)
-                        
+
                         while src.offset < size:
 
                             dif = size - src.offset

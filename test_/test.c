@@ -5,7 +5,7 @@ struct first
 
 struct two_eightbytes
 {
-    char d[21];
+    char d;
     struct first a;
 };
 
@@ -13,5 +13,5 @@ int main(void)
 {
     struct two_eightbytes b;
     struct first a;
-    b.a = a;
+    char d = b.d;
 }
