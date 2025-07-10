@@ -1,12 +1,12 @@
 struct other
 {
-    int b;
+    int c;
 };
 
 struct large_struct
 {
-    char array[2];
-    struct other a;
+    int array[1];
+    long c;
 };
 
 struct large_struct return_a_struct(struct large_struct i)

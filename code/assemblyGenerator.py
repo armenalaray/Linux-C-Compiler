@@ -828,25 +828,27 @@ class ABI_StructType(Enum):
     SSE = 2
     INTEGER = 3
 
-def flattenMembers(members, outList):
+def flattenMembers(members, typeTable, outList):
 
     members = list(members.values())
 
     for member in members:
+
         match member.memberType:
             case parser.StuctureType(tag = tag):
-
-                flattenMembers(outList)
-                pass
+                structDef = typeTable[tag]
+                flattenMembers(structDef.members, typeTable, outList)
+                
             case parser.ArrayType(elementType = elementType, size = size):
-                pass
-            case _:
-                pass
+                for i in range(size):
+                    outList.append(elementType)
 
-    print(members)
+            case _:
+                outList.append(member.memberType)
+
     
 
-def classifyStructure(struct):
+def classifyStructure(struct, typeTable):
     size = struct.size
     if size > 16:
         result = []
@@ -857,24 +859,26 @@ def classifyStructure(struct):
         return result
     
     members = []
-    flattenMembers(struct.members, members)
+    flattenMembers(struct.members, typeTable, members)
+
+    print(members)
 
     if size > 8:
-        if members[0] == parser.DoubleType() and members[-1] == parser.DoubleType():
+        if type(members[0]) == parser.DoubleType and type(members[-1]) == parser.DoubleType:
             return [ABI_StructType.SSE, ABI_StructType.SSE]
         
-        if members[0] == parser.DoubleType():
+        if type(members[0]) == parser.DoubleType:
             return [ABI_StructType.SSE, ABI_StructType.INTEGER]
             pass
 
-        if members[-1] == parser.DoubleType():
+        if type(members[-1]) == parser.DoubleType:
             return [ABI_StructType.INTEGER, ABI_StructType.SSE]
             pass
 
         return [ABI_StructType.INTEGER, ABI_StructType.INTEGER]
 
 
-    if members[0] == parser.DoubleType():
+    if type(members[0]) == parser.DoubleType:
         return [ABI_StructType.SSE]
 
     else:
@@ -919,7 +923,7 @@ def classifyParameters(values, symbolTable, typeTable, topLevelList, returnInMem
             match cType1:
                 case parser.StuctureType(tag = tag):
                     structDef = typeTable[tag]
-                    a = classifyStructure(structDef)
+                    a = classifyStructure(structDef, typeTable)
                     print(a)
                 case _:
                     print("Error:")
