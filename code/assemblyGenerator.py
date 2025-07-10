@@ -3,7 +3,7 @@ import tacGenerator
 import sys
 import parser
 import typeChecker
-
+import copy
 import traceback
 
 from tacGenerator import makeTemp
@@ -668,7 +668,6 @@ def parseValue(v, symbolTable, typeTable, topLevelList):
                 
                 case parser.PointerType(referenceType = referenceType):
                     asmType = Quadword()
-                    #asmType = AssemblySize(AssemblyType.QUADWORD)
                     cType = parser.ULongType()
 
                 case parser.ArrayType(elementType = elementType, size = size):
@@ -764,7 +763,13 @@ def parseValue(v, symbolTable, typeTable, topLevelList):
 
                     return asmType, cType, PseudoMem(v, 0)
                 
+                case parser.StuctureType(tag = tag):
+                    structDef = typeTable[tag]
+                    asmType = ByteArray(structDef.size, structDef.alignment)
+                    cType = parser.StuctureType(tag)
 
+                    return asmType, cType, PseudoMem(v, 0)
+                
                 case _:
                     print("Error: Invalid Assembly Variable. {0}".format(symbolTable[v].type))
                     sys.exit(1)
@@ -1366,12 +1371,48 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
             
 
             case tacGenerator.TAC_CopyInstruction(src=src_, dst=dst_):
-                type1, alignment1, src = parseValue(src_, symbolTable, typeTable, topLevelList)
-                type2, alignment2, dst = parseValue(dst_, symbolTable, typeTable, topLevelList)
+                #breakpoint()
+                
+                type1, cType1, src = parseValue(src_, symbolTable, typeTable, topLevelList)
+                type2, cType2, dst = parseValue(dst_, symbolTable, typeTable, topLevelList)
 
-                instruction0 = MovInstruction(type1, src, dst)
+                match cType1:
+                    case parser.StuctureType(tag = tag):
+                        size = typeTable[tag].size
+                        while src.offset < size:
 
-                ASM_Instructions.append(instruction0)
+                            dif = size - src.offset
+                            print("DIF:", dif)
+
+                            bytes = None
+                            type_ = None
+
+                            if dif >= 8:
+                                type_ = Quadword()
+                                bytes = 8
+                            elif dif >= 4:
+                                type_ = Longword()
+                                bytes = 4
+                            else:
+                                type_ = Byte()
+                                bytes = 1
+
+                            if type == None:
+                                print("Error: Invalid Copy Instruction.")
+                                sys.exit(1)
+
+                            s = copy.deepcopy(src)
+                            d = copy.deepcopy(dst)
+                            
+                            ASM_Instructions.append(MovInstruction(type_, s, d))
+
+                            src.offset += bytes
+                            dst.offset += bytes
+                                                
+                        
+                    case _:
+                        instruction0 = MovInstruction(type1, src, dst)
+                        ASM_Instructions.append(instruction0)
                 
             case tacGenerator.TAC_LabelInst(identifier=id):
                 
@@ -1425,15 +1466,57 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                 
 
             case tacGenerator.TAC_Load(src = src_, dst = dst_):
+                #breakpoint()
                 type1, cType1, ptr = parseValue(src_, symbolTable, typeTable, topLevelList)
                 type2, cType2, dst = parseValue(dst_, symbolTable, typeTable, topLevelList)
                 
-                instruction0 = MovInstruction(Quadword(), ptr, RegisterOperand(Register(RegisterType.AX)))
-                
-                instruction1 = MovInstruction(type2, MemoryOperand(Register(RegisterType.AX), 0), dst)
+                match cType2:
+                    case parser.StuctureType(tag = tag):
+                        
+                        ASM_Instructions.append(MovInstruction(Quadword(), ptr, RegisterOperand(Register(RegisterType.AX))))
 
-                ASM_Instructions.append(instruction0)
-                ASM_Instructions.append(instruction1)
+                        src = MemoryOperand(Register(RegisterType.AX), 0)
+
+                        size = typeTable[tag].size
+
+                        while src.int < size:
+
+                            dif = size - src.int
+                            print("DIF:", dif)
+
+                            bytes = None
+                            type_ = None
+
+                            if dif >= 8:
+                                type_ = Quadword()
+                                bytes = 8
+                            elif dif >= 4:
+                                type_ = Longword()
+                                bytes = 4
+                            else:
+                                type_ = Byte()
+                                bytes = 1
+
+                            if type == None:
+                                print("Error: Invalid Copy Instruction.")
+                                sys.exit(1)
+
+                            s = copy.deepcopy(src)
+                            d = copy.deepcopy(dst)
+                            
+                            ASM_Instructions.append(MovInstruction(type_, s, d))
+
+                            src.int += bytes
+                            dst.offset += bytes
+                    
+                    case _:
+                        instruction0 = MovInstruction(Quadword(), ptr, RegisterOperand(Register(RegisterType.AX)))
+                        
+                        instruction1 = MovInstruction(type2, MemoryOperand(Register(RegisterType.AX), 0), dst)
+
+                        ASM_Instructions.append(instruction0)
+                        ASM_Instructions.append(instruction1)
+                        
                 
 
             case _:
@@ -1567,6 +1650,7 @@ def matchCType(cType, typeTable):
             sys.exit(1)
 
 def ASM_parseAST(ast, symbolTable, typeTable):
+    
     funcDefList = []
     for topLevel in ast.topLevelList:
         function = ASM_parseTopLevel(topLevel, symbolTable, typeTable, funcDefList)
