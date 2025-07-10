@@ -1079,11 +1079,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                                     
                                     instruction0 = MovInstruction(Double(), src, dst)
                                     
-                                    #instruction0 = MovInstruction(AssemblySize(AssemblyType.DOUBLE), src, dst)
-
-                                    instruction1 = BinaryInstruction(BinaryOperator(BinopType.Xor), Double(), DataOperand(name), dst)
-                                    
-                                    #instruction1 = BinaryInstruction(BinaryOperator(BinopType.Xor), AssemblySize(AssemblyType.DOUBLE), DataOperand(name), dst)
+                                    instruction1 = BinaryInstruction(BinaryOperator(BinopType.Xor), Double(), DataOperand(name, 0), dst)
 
                                     ASM_Instructions.append(instruction0)
                                     ASM_Instructions.append(instruction1)
@@ -1405,7 +1401,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                     upperBound = makeTemp()
                     topLevelList.append(StaticConstant(upperBound, 8, typeChecker.DoubleInit(9223372036854775808.0)))
 
-                    ASM_Instructions.append(CompInst(Double(), DataOperand(upperBound), src))
+                    ASM_Instructions.append(CompInst(Double(), DataOperand(upperBound, 0), src))
                     
                     label1 = makeTemp()
                     
@@ -1421,7 +1417,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                     
                     ASM_Instructions.append(MovInstruction(Double(), src, RegisterOperand(Register(SSERegisterType.XMM1))))
 
-                    ASM_Instructions.append(BinaryInstruction(BinaryOperator(BinopType.Sub), Double(), DataOperand(upperBound), RegisterOperand(Register(SSERegisterType.XMM1))))
+                    ASM_Instructions.append(BinaryInstruction(BinaryOperator(BinopType.Sub), Double(), DataOperand(upperBound, 0), RegisterOperand(Register(SSERegisterType.XMM1))))
                     
                     ASM_Instructions.append(Cvttsd2si(Quadword(), RegisterOperand(Register(SSERegisterType.XMM1)), dst))
 
