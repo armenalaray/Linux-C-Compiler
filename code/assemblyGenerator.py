@@ -40,6 +40,9 @@ class ByteArray(AssemblyType):
     
     def __str__(self):
         return "ByteArray(Size = {self.size}, Alignment = {self.alignment})".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
 
 class TopLevel:
     pass
@@ -922,9 +925,60 @@ def classifyParameters(values, symbolTable, typeTable, topLevelList, returnInMem
             
             match cType1:
                 case parser.StuctureType(tag = tag):
+
+                    def getEightByteType(offset, structSize):
+                        bytesFromEnd = structSize - offset
+                        print("bytesFromEnd:", bytesFromEnd)
+
+                        if bytesFromEnd >= 8:
+                            return Quadword()
+                        
+                        if bytesFromEnd == 4:
+                            return Longword()
+                        
+                        if bytesFromEnd == 1:
+                            return Byte()
+                        
+                        return ByteArray(bytesFromEnd, 8)
+                        
+
                     structDef = typeTable[tag]
-                    a = classifyStructure(structDef, typeTable)
-                    print(a)
+                    classes = classifyStructure(structDef, typeTable)
+
+                    useStack = True
+                    structSize = structDef.size
+
+                    if classes[0] != ABI_StructType.MEMORY:
+                        
+                        tentativeInts = []
+                        tentativeDoubles = []
+                        offset = 0
+
+                        for class_ in classes:
+                            operand = PseudoMem(arg, offset)
+
+                            if class_ == ABI_StructType.SSE:
+                                tentativeDoubles.append(operand)
+                            else:
+                                eightByteType = getEightByteType(offset, structSize)
+                                tentativeInts.append((eightByteType, operand))
+                                
+                            offset += 8
+
+                        
+                        if len(tentativeDoubles) + len(doubleRegArgs) <= 8 and len(tentativeInts) + len(intRegArgs) <= intRegsAvailable:
+                            doubleRegArgs.extend(tentativeDoubles)
+                            intRegArgs.extend(tentativeInts)
+                            useStack = False
+
+                    if useStack:
+                        offset = 0
+                        for class_ in classes:
+                            operand = PseudoMem(arg, offset)
+                            eightByteType = getEightByteType(offset, structSize)
+                            stackArgs.append((eightByteType, operand))
+                            offset += 8
+
                 case _:
                     print("Error:")
                     sys.exit(1)

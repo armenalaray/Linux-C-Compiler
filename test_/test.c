@@ -5,8 +5,8 @@ struct other
 
 struct large_struct
 {
-    int array[1];
-    long c;
+    double a;
+    double b;
 };
 
 struct large_struct return_a_struct(struct large_struct i)
