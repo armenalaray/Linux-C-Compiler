@@ -5,7 +5,7 @@ struct other
 
 struct large_struct
 {
-    char a[11];
+    char a[18];
 };
 
 struct large_struct return_a_struct(struct large_struct i)
