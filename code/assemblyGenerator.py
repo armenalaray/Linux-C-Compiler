@@ -888,11 +888,8 @@ def classifyStructure(struct, typeTable):
         return [ABI_StructType.INTEGER]
 
 def classifyReturnValue(retVal, symbolTable, typeTable, topLevelList):
-    retVal.i
 
     t, cType1, operand = parseValue(retVal, symbolTable, typeTable, topLevelList)
-
-    operand.pseudo
 
     if type(cType1) == parser.Double:
         return ([], [operand], False)
@@ -918,7 +915,7 @@ def classifyReturnValue(retVal, symbolTable, typeTable, topLevelList):
                     offset = 0
                     for class_ in classes:
 
-                        operand = PseudoMem(operand.pseudo, offset)
+                        operand = PseudoMem(retVal.identifier, offset)
 
                         match class_:
                             case ABI_StructType.SSE:
@@ -1287,7 +1284,24 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
             case tacGenerator.TAC_FunCallInstruction(funName = funName, arguments = arguments, dst = dst):
 
-                intArgs, doubleArgs, stackArgs = classifyParameters(arguments, symbolTable, typeTable, topLevelList, False)
+                returnInMemory = False
+                intDests = []
+                doubleDests = []
+                regIndex = 0
+
+                if dst:
+                    intDests, doubleDests, returnInMemory = classifyReturnValue(dst, symbolTable, typeTable, topLevelList)
+
+                    print("IntDests:", intDests)
+                    print("DoubleDests:", doubleDests)
+                    print("ReturnInMemory:", returnInMemory)
+
+                if returnInMemory:
+                    a, b, dst_ = parseValue(dst, symbolTable, typeTable, topLevelList)
+                    ASM_Instructions.append(LeaInstruction(dst_, RegisterOperand(Register(RegisterType.DI))))
+                    regIndex = 1
+                
+                intArgs, doubleArgs, stackArgs = classifyParameters(arguments, symbolTable, typeTable, topLevelList, returnInMemory)
 
                 print("IntArgs:", intArgs)
                 print("DoubleArgs:", doubleArgs)
@@ -1301,13 +1315,41 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                     
                     instruction0 = BinaryInstruction(BinaryOperator(BinopType.Sub), Quadword(), ImmediateOperand(stackPadding), RegisterOperand(Register(RegisterType.SP)))                    
                     
-                    #instruction0 = BinaryInstruction(BinaryOperator(BinopType.Sub), AssemblySize(AssemblyType.QUADWORD), ImmediateOperand(stackPadding), RegisterOperand(Register(RegisterType.SP)))                    
-
                     ASM_Instructions.append(instruction0)
 
+                def addOffset(operand, offset):
+                    match operand:
+                        case PseudoMem(identifier = identifier, offset = offset_):
+                            return PseudoMem(identifier, offset_ + offset)
+                            
+                        case _:
+                            print("Error: Invalid Operand.")
+                            sys.exit(1)
+
+                def copyBytesToReg(srcOp, dstReg, byteCount, ASM_Instructions):
+                    offset = byteCount - 1
+
+                    while offset >= 0:
+                        srcByte = addOffset(srcOp, offset)
+                        ASM_Instructions.append(MovInstruction(Byte(), srcByte, RegisterOperand(Register(dstReg))))
+                        
+                        #Los esta shifteando e insertando!
+                        if offset > 0:
+                            ASM_Instructions.append(BinaryInstruction(BinopType.Shl, Quadword(), ImmediateOperand(8), RegisterOperand(Register(dstReg))))
+
+                        offset -= 1
+
+                    
+
                 for i, (assType, assArg) in enumerate(intArgs):
-                    #estas cosas tienen los tipos de los parametros
-                    ASM_Instructions.append(MovInstruction(assType, assArg, RegisterOperand(Register(list(RegisterType)[i]))))
+                    r = list(RegisterType)[i]
+                    match assType:
+                        case ByteArray(size = size, alignment = alignment):
+                            copyBytesToReg(assArg, r, size, ASM_Instructions)
+                            
+                        case _:
+                            ASM_Instructions.append(MovInstruction(assType, assArg, RegisterOperand(Register(r))))
+
                 
                 for i, assArg in enumerate(doubleArgs):
 
