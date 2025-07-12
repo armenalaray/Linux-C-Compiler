@@ -1301,7 +1301,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
                 match cType1:
                     case parser.StuctureType(tag = tag):
-                        
+
                         dst = PseudoMem(dst, offset)
                         copyBytes(src, dst, typeTable[tag].size, ASM_Instructions)
 
@@ -2086,15 +2086,46 @@ def ASM_parseTopLevel(topLevel, symbolTable, typeTable, topLevelList):
         
         case tacGenerator.TAC_FunctionDef(identifier = identifier, global_ = global_, params = params, instructions = instructions):
             
-            intParams, doubleParams, stackParams = classifyParameters(params, symbolTable, typeTable, topLevelList, False)
+            funcDef = symbolTable[identifier]
+            
+            returnInMemory = False
+
+            match funcDef.type:
+                case parser.FunType(paramTypes = paramTypes, retType = retType):
+                    dst = tacGenerator.makeTempVariable(retType, symbolTable)
+                    
+                    intDests, doubleDests, returnInMemory = classifyReturnValue(dst, symbolTable, typeTable, topLevelList)
+                    
+                case _:
+                    print("Error: Not fun type.")
+                    sys.exit(1)
+
+            intParams, doubleParams, stackParams = classifyParameters(params, symbolTable, typeTable, topLevelList, returnInMemory)
 
             ASM_Instructions = []
+
+            intRegisters = [RegisterType.DI, RegisterType.SI, RegisterType.DX, RegisterType.CX, RegisterType.R8, RegisterType.R9]
+
+            regIndex = 0
+
+            if returnInMemory:
+                ASM_Instructions.append(MovInstruction(Quadword(), RegisterOperand(Register(RegisterType.DI)), MemoryOperand(Register(RegisterType.BP), -8)))
+
+                regIndex = 1
+
+                
             
             for i, (paramType, param) in enumerate(intParams):
-                print(paramType, param)
-                i0 = MovInstruction(paramType, RegisterOperand(Register(list(RegisterType)[i])), param)
-                ASM_Instructions.append(i0)
+
+                match paramType:
+                    case ByteArray(size = size, alignment = alignment):
+                        pass
+
+                    case _:
+                        i0 = MovInstruction(paramType, RegisterOperand(Register(list(RegisterType)[i])), param)
+                        ASM_Instructions.append(i0)
             
+            #este no se modifica
             for i, param in enumerate(doubleParams):
                 print(param)
                 i0 = MovInstruction(Double(), RegisterOperand(Register(list(SSERegisterType)[i])), param)
@@ -2110,6 +2141,7 @@ def ASM_parseTopLevel(topLevel, symbolTable, typeTable, topLevelList):
                 offset += 8
                 
             ASM_parseInstructions(instructions, ASM_Instructions, symbolTable, typeTable, topLevelList)
+
             return Function(identifier, global_, ASM_Instructions)
 
         case _:
