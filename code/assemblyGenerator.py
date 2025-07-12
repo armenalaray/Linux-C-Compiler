@@ -1194,6 +1194,19 @@ def addOffset(operand, offset):
             sys.exit(1)
 
 
+def copyBytesToReg(srcOp, dstReg, byteCount, ASM_Instructions):
+    offset = byteCount - 1
+
+    while offset >= 0:
+        srcByte = addOffset(srcOp, offset)
+        ASM_Instructions.append(MovInstruction(Byte(), srcByte, RegisterOperand(Register(dstReg))))
+        
+        #Los esta shifteando e insertando!
+        if offset > 0:
+            ASM_Instructions.append(BinaryInstruction(BinopType.Shl, Quadword(), ImmediateOperand(8), RegisterOperand(Register(dstReg))))
+
+        offset -= 1
+
 def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeTable, topLevelList):
 
     for i in TAC_Instructions:
@@ -1391,8 +1404,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
                         match t:
                             case ByteArray(size = size, alignment = alignment):
-                                
-                                pass
+                                copyBytesToReg(op, r, size, ASM_Instructions)
 
                             case _:
                                 ASM_Instructions.append(MovInstruction(t, op, RegisterOperand(Register(r))))
@@ -1525,20 +1537,6 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                     
                     ASM_Instructions.append(instruction0)
 
-                
-
-                def copyBytesToReg(srcOp, dstReg, byteCount, ASM_Instructions):
-                    offset = byteCount - 1
-
-                    while offset >= 0:
-                        srcByte = addOffset(srcOp, offset)
-                        ASM_Instructions.append(MovInstruction(Byte(), srcByte, RegisterOperand(Register(dstReg))))
-                        
-                        #Los esta shifteando e insertando!
-                        if offset > 0:
-                            ASM_Instructions.append(BinaryInstruction(BinopType.Shl, Quadword(), ImmediateOperand(8), RegisterOperand(Register(dstReg))))
-
-                        offset -= 1
 
                 intRegisters = [RegisterType.DI, RegisterType.SI, RegisterType.DX, RegisterType.CX, RegisterType.R8, RegisterType.R9]
 
@@ -1561,9 +1559,6 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
                     ASM_Instructions.append(MovInstruction(Double(), assArg, RegisterOperand(Register(r))))
 
-                
-
-                
                 stackArgs.reverse()
                 
                 for assType, asmArg in stackArgs:
@@ -1598,11 +1593,6 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                     instruction0 = BinaryInstruction(BinaryOperator(BinopType.Add), Quadword(), ImmediateOperand(bytesToRemove), RegisterOperand(Register(RegisterType.SP)))
                     
                     ASM_Instructions.append(instruction0)
-
-
-                
-
-
 
                 if dst and not returnInMemory:
                     intReturnRegisters = [RegisterType.AX, RegisterType.DX]
@@ -2218,11 +2208,12 @@ class ObjEntry(asm_symtab_entry):
         return self.__str__()
 
 class FunEntry(asm_symtab_entry):
-    def __init__(self, defined):
+    def __init__(self, defined, returnOnStack):
         self.defined = defined
+        self.returnOnStack = returnOnStack
 
     def __str__(self):
-        return "Defined: {self.defined}".format(self=self)
+        return "Defined: {self.defined} ReturnOnStack: {self.returnOnStack}".format(self=self)
     
     def __repr__(self):
         return self.__str__()
@@ -2309,11 +2300,27 @@ def ASM_parseAST(ast, symbolTable, typeTable):
                     #    print("Invalid Static Constant.")
                     #    sys.exit(1)
                         
+    newTable = copy.deepcopy(symbolTable)
 
     for name, entry in symbolTable.items():
         match entry.attrs:
             case typeChecker.FunAttributes(defined = defined, global_ = global_):
-                backendSymbolTable[name] = FunEntry(defined=defined)
+
+                funcDef = symbolTable[name]
+                
+                returnOnStack = False
+
+                match funcDef.type:
+                    case parser.FunType(paramTypes = paramTypes, retType = retType):
+                        dst = tacGenerator.makeTempVariable(retType, newTable)
+                        
+                        intDests, doubleDests, returnOnStack = classifyReturnValue(dst, newTable, typeTable, funcDefList)
+                        
+                    case _:
+                        print("Error: Not fun type.")
+                        sys.exit(1)
+
+                backendSymbolTable[name] = FunEntry(defined=defined, returnOnStack=returnOnStack)
              
             case typeChecker.LocalAttributes():
                 alignment, type_ = matchCType(entry.type, typeTable)
