@@ -1038,6 +1038,140 @@ def classifyParameters(values, symbolTable, typeTable, topLevelList, returnInMem
                 
     return intRegArgs, doubleRegArgs, stackArgs  
 
+def copyBytes(src, dst, size, ASM_Instructions):
+                    
+    match src, dst:
+        case MemoryOperand(reg = reg1, int = int1), MemoryOperand(reg = reg2, int = int2):
+            base1 = int1
+            base2 = int2
+
+            target = base1 + size
+
+            while base1 < target:
+                dif = target - base1
+
+                bytes = None
+                type_ = None
+
+                if dif >= 8:
+                    type_ = Quadword()
+                    bytes = 8
+                elif dif >= 4:
+                    type_ = Longword()
+                    bytes = 4
+                else:
+                    type_ = Byte()
+                    bytes = 1
+
+                if type == None:
+                    print("Error: Invalid Copy Instruction.")
+                    sys.exit(1)
+                
+                ASM_Instructions.append(MovInstruction(type_, MemoryOperand(reg1, base1), MemoryOperand(reg2, base2)))
+
+                base1 += bytes
+                base2 += bytes
+
+        case MemoryOperand(reg = reg, int = int), PseudoMem(identifier = identifier, offset = offset):
+            
+            base1 = int
+            base2 = offset
+
+            target = base1 + size
+
+            while base1 < target:
+                dif = target - base1
+
+                bytes = None
+                type_ = None
+
+                if dif >= 8:
+                    type_ = Quadword()
+                    bytes = 8
+                elif dif >= 4:
+                    type_ = Longword()
+                    bytes = 4
+                else:
+                    type_ = Byte()
+                    bytes = 1
+
+                if type == None:
+                    print("Error: Invalid Copy Instruction.")
+                    sys.exit(1)
+                
+                ASM_Instructions.append(MovInstruction(type_, MemoryOperand(reg, base1), PseudoMem(identifier, base2)))
+
+                base1 += bytes
+                base2 += bytes
+            
+        case PseudoMem(identifier = identifier, offset = offset), MemoryOperand(reg = reg, int = int):
+            
+            base1 = offset
+            base2 = int
+
+            target = base1 + size
+
+            while base1 < target:
+                dif = target - base1
+
+                bytes = None
+                type_ = None
+
+                if dif >= 8:
+                    type_ = Quadword()
+                    bytes = 8
+                elif dif >= 4:
+                    type_ = Longword()
+                    bytes = 4
+                else:
+                    type_ = Byte()
+                    bytes = 1
+
+                if type == None:
+                    print("Error: Invalid Copy Instruction.")
+                    sys.exit(1)
+                
+                ASM_Instructions.append(MovInstruction(type_, PseudoMem(identifier, base1), MemoryOperand(reg, base2)))
+
+                base1 += bytes
+                base2 += bytes
+
+        case PseudoMem(identifier = identifier1, offset = offset1), PseudoMem(identifier = identifier2, offset = offset2):
+
+            base1 = offset1
+            base2 = offset2
+
+            target = base1 + size
+
+            while base1 < target:
+                dif = target - base1
+
+                bytes = None
+                type_ = None
+
+                if dif >= 8:
+                    type_ = Quadword()
+                    bytes = 8
+                elif dif >= 4:
+                    type_ = Longword()
+                    bytes = 4
+                else:
+                    type_ = Byte()
+                    bytes = 1
+
+                if type == None:
+                    print("Error: Invalid Copy Instruction.")
+                    sys.exit(1)
+                
+                ASM_Instructions.append(MovInstruction(type_, PseudoMem(identifier1, base1), PseudoMem(identifier2, base2)))
+
+                base1 += bytes
+                base2 += bytes
+            
+        case _:
+            print("Error: Invalid memory Operand.")
+            sys.exit(1)
+
 def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeTable, topLevelList):
 
     for i in TAC_Instructions:
@@ -1117,9 +1251,13 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
                 match cType1:
                     case parser.StuctureType(tag = tag):
-                        size = typeTable[tag].size
 
                         src = PseudoMem(src, offset)
+
+                        copyBytes(src, dst, typeTable[tag].size, ASM_Instructions)
+
+                        """
+                        size = typeTable[tag].size
 
                         while dst.offset < size:
 
@@ -1150,6 +1288,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
                             src.offset += bytes
                             dst.offset += bytes
+                        """
                         
                     case _:
                         ASM_Instructions.append(MovInstruction(type1, PseudoMem(src, offset), dst))
@@ -1162,10 +1301,12 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
                 match cType1:
                     case parser.StuctureType(tag = tag):
-                        size = typeTable[tag].size
-
+                        
                         dst = PseudoMem(dst, offset)
+                        copyBytes(src, dst, typeTable[tag].size, ASM_Instructions)
 
+                        """
+                        size = typeTable[tag].size
                         while src.offset < size:
 
                             dif = size - src.offset
@@ -1195,6 +1336,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
                             src.offset += bytes
                             dst.offset += bytes
+                        """
                         
                     case _:
                         ASM_Instructions.append(MovInstruction(type1, src, PseudoMem(dst, offset)))
@@ -1339,10 +1481,14 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
                         offset -= 1
 
-                    
+                intRegisters = [RegisterType.DI, RegisterType.SI, RegisterType.DX, RegisterType.CX, RegisterType.R8, RegisterType.R9]
+
+                doubleRegisters = [SSERegisterType.XMM0, SSERegisterType.XMM1, SSERegisterType.XMM2, SSERegisterType.XMM3, SSERegisterType.XMM4, SSERegisterType.XMM5, SSERegisterType.XMM6, SSERegisterType.XMM7]
 
                 for i, (assType, assArg) in enumerate(intArgs):
-                    r = list(RegisterType)[i]
+                    
+                    r = intRegisters[i]
+
                     match assType:
                         case ByteArray(size = size, alignment = alignment):
                             copyBytesToReg(assArg, r, size, ASM_Instructions)
@@ -1352,141 +1498,11 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
                 
                 for i, assArg in enumerate(doubleArgs):
-                    ASM_Instructions.append(MovInstruction(Double(), assArg, RegisterOperand(Register(list(SSERegisterType)[i]))))
+                    r = doubleRegisters[i]
 
-                def copyBytes(src, dst, size):
-                    
-                    match src, dst:
-                        case MemoryOperand(reg = reg1, int = int1), MemoryOperand(reg = reg2, int = int2):
-                            base1 = int1
-                            base2 = int2
+                    ASM_Instructions.append(MovInstruction(Double(), assArg, RegisterOperand(Register(r))))
 
-                            target = base1 + size
-
-                            while base1 < target:
-                                dif = target - base1
-
-                                bytes = None
-                                type_ = None
-
-                                if dif >= 8:
-                                    type_ = Quadword()
-                                    bytes = 8
-                                elif dif >= 4:
-                                    type_ = Longword()
-                                    bytes = 4
-                                else:
-                                    type_ = Byte()
-                                    bytes = 1
-
-                                if type == None:
-                                    print("Error: Invalid Copy Instruction.")
-                                    sys.exit(1)
-                                
-                                ASM_Instructions.append(MovInstruction(type_, MemoryOperand(reg1, base1), MemoryOperand(reg2, base2)))
-
-                                base1 += bytes
-                                base2 += bytes
-
-                        case MemoryOperand(reg = reg, int = int), PseudoMem(identifier = identifier, offset = offset):
-                            
-                            base1 = int
-                            base2 = offset
-
-                            target = base1 + size
-
-                            while base1 < target:
-                                dif = target - base1
-
-                                bytes = None
-                                type_ = None
-
-                                if dif >= 8:
-                                    type_ = Quadword()
-                                    bytes = 8
-                                elif dif >= 4:
-                                    type_ = Longword()
-                                    bytes = 4
-                                else:
-                                    type_ = Byte()
-                                    bytes = 1
-
-                                if type == None:
-                                    print("Error: Invalid Copy Instruction.")
-                                    sys.exit(1)
-                                
-                                ASM_Instructions.append(MovInstruction(type_, MemoryOperand(reg, base1), PseudoMem(identifier, base2)))
-
-                                base1 += bytes
-                                base2 += bytes
-                            
-                        case PseudoMem(identifier = identifier, offset = offset), MemoryOperand(reg = reg, int = int):
-                            
-                            base1 = offset
-                            base2 = int
-
-                            target = base1 + size
-
-                            while base1 < target:
-                                dif = target - base1
-
-                                bytes = None
-                                type_ = None
-
-                                if dif >= 8:
-                                    type_ = Quadword()
-                                    bytes = 8
-                                elif dif >= 4:
-                                    type_ = Longword()
-                                    bytes = 4
-                                else:
-                                    type_ = Byte()
-                                    bytes = 1
-
-                                if type == None:
-                                    print("Error: Invalid Copy Instruction.")
-                                    sys.exit(1)
-                                
-                                ASM_Instructions.append(MovInstruction(type_, PseudoMem(identifier, base1), MemoryOperand(reg, base2)))
-
-                                base1 += bytes
-                                base2 += bytes
-
-                        case PseudoMem(identifier = identifier1, offset = offset1), PseudoMem(identifier = identifier2, offset = offset2):
-
-                            base1 = offset1
-                            base2 = offset2
-
-                            target = base1 + size
-
-                            while base1 < target:
-                                dif = target - base1
-
-                                bytes = None
-                                type_ = None
-
-                                if dif >= 8:
-                                    type_ = Quadword()
-                                    bytes = 8
-                                elif dif >= 4:
-                                    type_ = Longword()
-                                    bytes = 4
-                                else:
-                                    type_ = Byte()
-                                    bytes = 1
-
-                                if type == None:
-                                    print("Error: Invalid Copy Instruction.")
-                                    sys.exit(1)
-                                
-                                ASM_Instructions.append(MovInstruction(type_, PseudoMem(identifier1, base1), PseudoMem(identifier2, base2)))
-
-                                base1 += bytes
-                                base2 += bytes
-                            
-                        case _:
-                            print("Error: Invalid memory Operand.")
-                            sys.exit(1)
+                
 
                 
                 stackArgs.reverse()
@@ -1498,7 +1514,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                             #print("Ale")
                             ASM_Instructions.append(BinaryInstruction(BinopType.Sub, Quadword(), ImmediateOperand(8), RegisterOperand(Register(RegisterType.SP))))
 
-                            copyBytes(asmArg, MemoryOperand(Register(RegisterType.SP), 0), size)
+                            copyBytes(asmArg, MemoryOperand(Register(RegisterType.SP), 0), size, ASM_Instructions)
 
                         case _:
                             if type(asmArg) == ImmediateOperand or type(asmArg) == RegisterOperand or type(assType) == Quadword or type(assType) == Double:
@@ -1524,14 +1540,43 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                     
                     ASM_Instructions.append(instruction0)
 
-                if dst:
-                    type1, cType1, asmDst = parseValue(dst, symbolTable, typeTable, topLevelList)
 
-                    if type(cType1) == parser.DoubleType:
-                        ASM_Instructions.append(MovInstruction(Double(), RegisterOperand(Register(SSERegisterType.XMM0)), asmDst))
+                def copyBytesFromReg(srcReg, destOp, byteCount, ASM_Instructions):
+                    offset = 0
+                    while offset < byteCount:
+                        dstByte = addOffset(destOp, offset)
+                        ASM_Instructions.append(MovInstruction(Byte(), RegisterOperand(Register(srcReg)), dstByte))
+
+                        if offset < byteCount - 1:
+                            ASM_Instructions.append(BinaryInstruction(BinopType.ShrTwoOp, Quadword(), ImmediateOperand(8), RegisterOperand(Register(srcReg))))
+
+                        offset += 1
+
+
+
+                if dst and not returnInMemory:
+                    intReturnRegisters = [RegisterType.AX, RegisterType.DX]
+                    doubleReturnRegisters = [SSERegisterType.XMM0, SSERegisterType.XMM1]
+
+                    for i, (t, op) in enumerate(intDests):
+                        #print("T:", i, t, op)
+
+                        r = intReturnRegisters[i]
+
+                        match t:
+                            case ByteArray(size = size, alignment = alignment):
+                                copyBytesFromReg(r, op, size, ASM_Instructions)
+                                
+                            case _:
+                                ASM_Instructions.append(MovInstruction(t, RegisterOperand(Register(r)), op))
                         
-                    else:
-                        ASM_Instructions.append(MovInstruction(type1, RegisterOperand(Register(RegisterType.AX)), asmDst))
+
+                    for i, op in enumerate(doubleDests):
+                        print("T:", i, op)
+
+                        r = doubleReturnRegisters[i]
+                        ASM_Instructions.append(MovInstruction(Double(), RegisterOperand(Register(r)), op))
+
 
 
             case tacGenerator.TAC_BinaryInstruction(operator=op, src1=src1_, src2=src2_, dst=dst_):
@@ -1830,6 +1875,10 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
                 match cType1:
                     case parser.StuctureType(tag = tag):
+
+                        copyBytes(src, dst, typeTable[tag].size, ASM_Instructions)
+
+                        """
                         size = typeTable[tag].size
                         while src.offset < size:
 
@@ -1860,6 +1909,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
                             src.offset += bytes
                             dst.offset += bytes
+                        """
                                                 
                         
                     case _:
@@ -1917,8 +1967,10 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
                         ptr = MemoryOperand(Register(RegisterType.AX), 0)
 
-                        size = typeTable[tag].size
+                        copyBytes(src, ptr, typeTable[tag].size, ASM_Instructions)
 
+                        """
+                        size = typeTable[tag].size
                         while ptr.int < size:
 
                             dif = size - ptr.int
@@ -1948,6 +2000,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
                             src.offset += bytes
                             ptr.int += bytes
+                        """
 
                     case _:
                         instruction0 = MovInstruction(Quadword(), ptr, RegisterOperand(Register(RegisterType.AX)))
@@ -1970,6 +2023,9 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
                         src = MemoryOperand(Register(RegisterType.AX), 0)
 
+                        copyBytes(src, dst, typeTable[tag].size, ASM_Instructions)
+
+                        """
                         size = typeTable[tag].size
 
                         while src.int < size:
@@ -2001,6 +2057,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
                             src.int += bytes
                             dst.offset += bytes
+                        """
                     
                     case _:
                         instruction0 = MovInstruction(Quadword(), ptr, RegisterOperand(Register(RegisterType.AX)))
