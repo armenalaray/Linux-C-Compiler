@@ -6,23 +6,19 @@ struct other
 struct large_struct
 {
     char a[20];
-    struct other b;
+    //struct other b;
 };
 
-/*
-struct large_struct return_a_struct(struct large_struct i)
+
+struct large_struct return_a_struct(void)
 {
-    return i;
+    struct large_struct callee_result;
+    return callee_result;
 }
-*/
+
 
 
 int main(void)
 {
-    struct large_struct * callee_result;
-
-    struct other * b;
-    //struct large_struct caller_result = return_a_struct(callee_result);
-
-    *b = callee_result->b;
+    struct large_struct caller_result = return_a_struct();
 }

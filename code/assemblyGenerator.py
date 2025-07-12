@@ -1172,6 +1172,18 @@ def copyBytes(src, dst, size, ASM_Instructions):
             print("Error: Invalid memory Operand.")
             sys.exit(1)
 
+def copyBytesFromReg(srcReg, destOp, byteCount, ASM_Instructions):
+    offset = 0
+    while offset < byteCount:
+        dstByte = addOffset(destOp, offset)
+        ASM_Instructions.append(MovInstruction(Byte(), RegisterOperand(Register(srcReg)), dstByte))
+
+        if offset < byteCount - 1:
+            ASM_Instructions.append(BinaryInstruction(BinopType.ShrTwoOp, Quadword(), ImmediateOperand(8), RegisterOperand(Register(srcReg))))
+
+        offset += 1
+
+
 def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeTable, topLevelList):
 
     for i in TAC_Instructions:
@@ -1342,6 +1354,30 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                         ASM_Instructions.append(MovInstruction(type1, src, PseudoMem(dst, offset)))
 
             case tacGenerator.TAC_returnInstruction(Value=v):
+
+                if v == None:
+                    ASM_Instructions.append(ReturnInstruction())
+                    return
+
+                intRetVals, doubleRetVals, returnInMemory = classifyReturnValue(v, symbolTable, typeTable, topLevelList)
+
+                if returnInMemory:
+                    
+                    ASM_Instructions.append(MovInstruction(Quadword(), MemoryOperand(Register(RegisterType.BP), -8), RegisterOperand(Register(RegisterType.AX))))
+
+                    dst = MemoryOperand(Register(RegisterType.AX), 0)
+
+                    assType, cType1, src = parseValue(v, symbolTable, typeTable, topLevelList)
+
+                    copyBytes(src, dst, assType.size, ASM_Instructions)
+
+                else:
+                    pass
+
+                
+                ASM_Instructions.append(ReturnInstruction())
+
+                """
                 if v:
                     type1, cType1, src = parseValue(v, symbolTable, typeTable, topLevelList)
 
@@ -1363,6 +1399,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                 else:
                     instruction0 = ReturnInstruction()    
                     ASM_Instructions.append(instruction0)
+                """
                  
             case tacGenerator.TAC_UnaryInstruction(operator=o, src=src_, dst=dst_):
                 
@@ -1541,16 +1578,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                     ASM_Instructions.append(instruction0)
 
 
-                def copyBytesFromReg(srcReg, destOp, byteCount, ASM_Instructions):
-                    offset = 0
-                    while offset < byteCount:
-                        dstByte = addOffset(destOp, offset)
-                        ASM_Instructions.append(MovInstruction(Byte(), RegisterOperand(Register(srcReg)), dstByte))
-
-                        if offset < byteCount - 1:
-                            ASM_Instructions.append(BinaryInstruction(BinopType.ShrTwoOp, Quadword(), ImmediateOperand(8), RegisterOperand(Register(srcReg))))
-
-                        offset += 1
+                
 
 
 
@@ -2106,6 +2134,8 @@ def ASM_parseTopLevel(topLevel, symbolTable, typeTable, topLevelList):
 
             intRegisters = [RegisterType.DI, RegisterType.SI, RegisterType.DX, RegisterType.CX, RegisterType.R8, RegisterType.R9]
 
+            doubleRegisters = [SSERegisterType.XMM0, SSERegisterType.XMM1, SSERegisterType.XMM2, SSERegisterType.XMM3, SSERegisterType.XMM4, SSERegisterType.XMM5, SSERegisterType.XMM6, SSERegisterType.XMM7]
+
             regIndex = 0
 
             if returnInMemory:
@@ -2113,31 +2143,33 @@ def ASM_parseTopLevel(topLevel, symbolTable, typeTable, topLevelList):
 
                 regIndex = 1
 
-                
-            
             for i, (paramType, param) in enumerate(intParams):
+                
+                r = intRegisters[i]
 
                 match paramType:
                     case ByteArray(size = size, alignment = alignment):
-                        pass
+                        copyBytesFromReg(r, param, size)
 
                     case _:
-                        i0 = MovInstruction(paramType, RegisterOperand(Register(list(RegisterType)[i])), param)
-                        ASM_Instructions.append(i0)
+                        ASM_Instructions.append(MovInstruction(paramType, RegisterOperand(Register(r)), param))
             
-            #este no se modifica
             for i, param in enumerate(doubleParams):
-                print(param)
-                i0 = MovInstruction(Double(), RegisterOperand(Register(list(SSERegisterType)[i])), param)
-                ASM_Instructions.append(i0)
-            
-
+                r = doubleRegisters[i]
+                ASM_Instructions.append(MovInstruction(Double(), RegisterOperand(Register(r)), param))
+                
             offset = 16 
 
             for i, (paramType, param) in enumerate(stackParams):
-                print(paramType, param)
-                i0 = MovInstruction(paramType, MemoryOperand(Register(RegisterType.BP), offset), param)
-                ASM_Instructions.append(i0)
+                #print(paramType, param)
+
+                match paramType:
+                    case ByteArray(size = size, alignment = alignment):
+                        copyBytes(MemoryOperand(Register(RegisterType.BP), offset), param, size)
+                    
+                    case _:
+                        ASM_Instructions.append(MovInstruction(paramType, MemoryOperand(Register(RegisterType.BP), offset), param))
+                
                 offset += 8
                 
             ASM_parseInstructions(instructions, ASM_Instructions, symbolTable, typeTable, topLevelList)
