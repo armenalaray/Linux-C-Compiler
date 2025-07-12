@@ -1184,6 +1184,16 @@ def copyBytesFromReg(srcReg, destOp, byteCount, ASM_Instructions):
         offset += 1
 
 
+def addOffset(operand, offset):
+    match operand:
+        case PseudoMem(identifier = identifier, offset = offset_):
+            return PseudoMem(identifier, offset_ + offset)
+            
+        case _:
+            print("Error: Invalid Operand.")
+            sys.exit(1)
+
+
 def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeTable, topLevelList):
 
     for i in TAC_Instructions:
@@ -1372,7 +1382,26 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                     copyBytes(src, dst, assType.size, ASM_Instructions)
 
                 else:
-                    pass
+                    intReturnRegisters = [RegisterType.AX, RegisterType.DX]
+                    doubleReturnRegisters = [SSERegisterType.XMM0, SSERegisterType.XMM1]
+
+                    for i, (t, op) in enumerate(intRetVals):
+                        
+                        r = intReturnRegisters[i]
+
+                        match t:
+                            case ByteArray(size = size, alignment = alignment):
+                                
+                                pass
+
+                            case _:
+                                ASM_Instructions.append(MovInstruction(t, op, RegisterOperand(Register(r))))
+                                
+
+                    
+                    for i, op in enumerate(doubleRetVals):
+                        r = doubleReturnRegisters[i]
+                        ASM_Instructions.append(MovInstruction(Double(), op, RegisterOperand(Register(r))))
 
                 
                 ASM_Instructions.append(ReturnInstruction())
@@ -1496,14 +1525,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                     
                     ASM_Instructions.append(instruction0)
 
-                def addOffset(operand, offset):
-                    match operand:
-                        case PseudoMem(identifier = identifier, offset = offset_):
-                            return PseudoMem(identifier, offset_ + offset)
-                            
-                        case _:
-                            print("Error: Invalid Operand.")
-                            sys.exit(1)
+                
 
                 def copyBytesToReg(srcOp, dstReg, byteCount, ASM_Instructions):
                     offset = byteCount - 1

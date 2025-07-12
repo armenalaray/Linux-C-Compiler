@@ -5,8 +5,8 @@ struct other
 
 struct large_struct
 {
-    char a[20];
-    //struct other b;
+    double a;
+    double b;
 };
 
 
@@ -15,8 +15,6 @@ struct large_struct return_a_struct(void)
     struct large_struct callee_result;
     return callee_result;
 }
-
-
 
 int main(void)
 {
