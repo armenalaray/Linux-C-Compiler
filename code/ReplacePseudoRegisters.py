@@ -68,7 +68,7 @@ def ReplaceOperand(operand, table, offset, symbolTable):
                             pass
                         case assemblyGenerator.ObjEntry(assType = assType, isStatic = isStatic):
                             if isStatic:
-                                return offset, assemblyGenerator.DataOperand(id)
+                                return offset, assemblyGenerator.DataOperand(id, offset_)
                             
                 #stack allocation
                 match symbolTable[id]:
@@ -144,11 +144,17 @@ def ReplaceTopLevel(topLevel, symbolTable):
         case assemblyGenerator.StaticVariable():
             pass
         case assemblyGenerator.Function(identifier = identifier, global_ = global_, insList = insList, stackOffset = stackOffset):
+            
+            funcDef = symbolTable[identifier]
+
             offset = 0
+            if funcDef.returnOnStack:
+                offset -= 8
+
             table = {}
-            #esto es por funcion 
+            
             for i in insList:
-                #print(type(i))
+                
                 match i:
                     case assemblyGenerator.MovSXInstruction(sourceO=src, destO=dst):
                         offset, object = ReplaceOperand(src, table, offset, symbolTable)

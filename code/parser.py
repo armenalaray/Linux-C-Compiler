@@ -584,9 +584,6 @@ class StuctureType(Type, Node):
         output = "StructType(" + self.tag + ")"
         return output
     
-
-    
-
 class FunType(Type, Node):
     def __init__(self, paramTypes, retType):
         self.paramTypes = paramTypes

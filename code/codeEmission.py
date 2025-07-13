@@ -661,11 +661,10 @@ def printTopLevel(topLevel, output, symbolTable):
                                 output += ', '
 
                                 output = matchOperand(op1, output, operandSize)
-                                
-
-                                            
+                                                                            
                     case assemblyGenerator.JumpInst(identifier=id):
                         output += '\n\tjmp .L{0}'.format(id)
+
 
                     case assemblyGenerator.JumpCCInst(conc_code=code, identifier=id):
                         output += '\n\tj{0} .L{1}'.format(code.name, id)

@@ -168,17 +168,17 @@ if __name__ == "__main__":
 				print("Type Table:\n", typeTable)
 				print("Backend Symbol Table:\n", backSymbolTable)
 
-			"""
 			ReplacePseudoRegisters.ReplacePseudoRegisters(ass, backSymbolTable)
 
 			if printDebugInfo:
 				print(ass)
 
+			
 			FixingUpInstructions.FixingUpInstructions(ass)
 
 			if printDebugInfo:
 				print(ass)
-			"""			
+						
 		
 
 			if LastStage == 'assemblyGeneration':
