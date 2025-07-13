@@ -1,9 +1,10 @@
 import sys
 import typeChecker
 import assemblyGenerator
-
+import traceback
 
 def ReplaceOperand(operand, table, offset, symbolTable):
+    
     match operand:
         
         case assemblyGenerator.PseudoRegisterOperand(pseudo=id):
@@ -16,7 +17,7 @@ def ReplaceOperand(operand, table, offset, symbolTable):
                             pass
                         case assemblyGenerator.ObjEntry(assType = assType, isStatic = isStatic):
                             if isStatic:
-                                return offset, assemblyGenerator.DataOperand(id)
+                                return offset, assemblyGenerator.DataOperand(id, 0)
                             
                 #stack allocation
                 match symbolTable[id]:
@@ -60,6 +61,10 @@ def ReplaceOperand(operand, table, offset, symbolTable):
     
         case assemblyGenerator.PseudoMem(identifier = id, offset = offset_):
 
+            #if id == 'tmp.14':
+            #    traceback.print_stack()
+            #    breakpoint()
+
             if table.get(id) == None:
 
                 if id in symbolTable:
@@ -71,6 +76,7 @@ def ReplaceOperand(operand, table, offset, symbolTable):
                                 return offset, assemblyGenerator.DataOperand(id, offset_)
                             
                 #stack allocation
+                
                 match symbolTable[id]:
                     case assemblyGenerator.ObjEntry(assType = assType, isStatic = isStatic):
                         allocateSize = 0
@@ -256,13 +262,13 @@ def ReplaceTopLevel(topLevel, symbolTable):
 
 
                     case assemblyGenerator.LeaInstruction(sourceO = sourceO, destO = destO):
-                        offset, object = ReplaceOperand(sourceO, table, offset, symbolTable)
-                        if object:
-                            i.sourceO = object
+                        offset, object1 = ReplaceOperand(sourceO, table, offset, symbolTable)
+                        if object1:
+                            i.sourceO = object1
 
-                        offset, object = ReplaceOperand(destO, table, offset, symbolTable)
-                        if object:
-                            i.destO = object
+                        offset, object2 = ReplaceOperand(destO, table, offset, symbolTable)
+                        if object2:
+                            i.destO = object2
                         
 
                     #These are not changed

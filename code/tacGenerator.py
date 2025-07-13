@@ -468,6 +468,10 @@ def makeTempVariable(type, symbolTable):
     symbolTable[dstName] = typeChecker.Entry(dstName, typeChecker.LocalAttributes(), type)
     return TAC_VariableValue(dstName)
 
+#def makeDummyVariable(type):
+#    dstName = makeTemp()
+#    return TAC_VariableValue(dstName)
+
 def CastBetweenIntegers(targetType, sourceType, result, dst, instructions):
 
     if type(targetType) == parser.PointerType:

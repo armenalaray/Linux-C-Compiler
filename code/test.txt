@@ -1,4 +1,27 @@
+TAC Program:[Function: double_members (['p.2']) instructions:[CopyFromOffset tmp.6 = (p.2 + 0), tmp.7 = tmp.6 * 2, IntToDouble tmp.8 = tmp.7, CopyToOffset(retval.3 + 0) = tmp.8 , CopyFromOffset tmp.9 = (p.2 + 4), SignExtend tmp.10 = tmp.9, tmp.11 = tmp.10 * 2, SignExtend tmp.12 = tmp.11, CopyToOffset(retval.3 + 8) = tmp.12 , Return retval.3, Return 0], Function: main ([]) instructions:[CopyToOffset(arg.4 + 0) = 1 , Truncate tmp.13 = 4, CopyToOffset(arg.4 + 4) = tmp.13 , Copy tmp.14 = arg.4, tmp.15 = double_members([tmp.14]), CopyToOffset(result.5 + 0) = tmp.15 , CopyFromOffset tmp.16 = (result.5 + 0), tmp.17 = tmp.16 _ 2.0, JumpIfNotZero(tmp.17, tmp.18), CopyFromOffset tmp.19 = (result.5 + 8), SignExtend tmp.20 = 8, tmp.21 = tmp.19 _ tmp.20, JumpIfNotZero(tmp.21, tmp.18), Copy tmp.22 = 0, Jump(tmp.23), Label(tmp.18), Copy tmp.22 = 1, Label(tmp.23), Copy tmp.24 = tmp.22, JumpIfZero(tmp.24, tmp.25), Return 1, Label(tmp.25), Return 0, Return 0]]
 
+
+
+
+======================================================================
+FAIL: test_valid/params_and_returns/simple (test_framework.basic.TestChapter18.test_valid/params_and_returns/simple)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 592, in test_valid
+    self.compile_success(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 359, in compile_success
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_18/valid/params_and_returns/simple.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 171, in <module>
+  File "ReplacePseudoRegisters.py", line 292, in ReplacePseudoRegisters
+  File "ReplacePseudoRegisters.py", line 170, in ReplaceTopLevel
+  File "ReplacePseudoRegisters.py", line 74, in ReplaceOperand
+KeyError: tmp.14
+[PYI-517847:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+----------------------------------------------------------------------
 
 
 ======================================================================

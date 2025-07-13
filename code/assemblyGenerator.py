@@ -889,6 +889,7 @@ def classifyStructure(struct, typeTable):
 
 def classifyReturnValue(retVal, symbolTable, typeTable, topLevelList):
 
+    #assemblyTypeOf(retVal)
     t, cType1, operand = parseValue(retVal, symbolTable, typeTable, topLevelList)
 
     if type(cType1) == parser.Double:
@@ -971,6 +972,9 @@ def classifyParameters(values, symbolTable, typeTable, topLevelList, returnInMem
 
     for arg in values:
         t, cType1, operand = parseValue(arg, symbolTable, typeTable, topLevelList)
+
+        print("Operand:", operand)
+
         typedOperand = (t, operand)
 
         if type(cType1) == parser.DoubleType:
@@ -992,9 +996,6 @@ def classifyParameters(values, symbolTable, typeTable, topLevelList, returnInMem
             match cType1:
                 case parser.StuctureType(tag = tag):
 
-                    
-                        
-
                     structDef = typeTable[tag]
                     classes = classifyStructure(structDef, typeTable)
 
@@ -1003,18 +1004,21 @@ def classifyParameters(values, symbolTable, typeTable, topLevelList, returnInMem
 
                     if classes[0] != ABI_StructType.MEMORY:
                         
+                        #breakpoint()
+
                         tentativeInts = []
                         tentativeDoubles = []
                         offset = 0
 
                         for class_ in classes:
-                            operand = PseudoMem(arg, offset)
+                            operand_ = addOffset(operand, offset)
+                            #operand_ = PseudoMem(operand, offset)
 
                             if class_ == ABI_StructType.SSE:
-                                tentativeDoubles.append(operand)
+                                tentativeDoubles.append(operand_)
                             else:
                                 eightByteType = getEightByteType(offset, structSize)
-                                tentativeInts.append((eightByteType, operand))
+                                tentativeInts.append((eightByteType, operand_))
                                 
                             offset += 8
 
@@ -1027,9 +1031,10 @@ def classifyParameters(values, symbolTable, typeTable, topLevelList, returnInMem
                     if useStack:
                         offset = 0
                         for class_ in classes:
-                            operand = PseudoMem(arg, offset)
+                            operand_ = addOffset(operand, offset)
+                            #operand_ = PseudoMem(operand, offset)
                             eightByteType = getEightByteType(offset, structSize)
-                            stackArgs.append((eightByteType, operand))
+                            stackArgs.append((eightByteType, operand_))
                             offset += 8
 
                 case _:
@@ -2133,17 +2138,24 @@ def ASM_parseTopLevel(topLevel, symbolTable, typeTable, topLevelList):
             match funcDef.type:
                 case parser.FunType(paramTypes = paramTypes, retType = retType):
                     
-                    if type(retType) == parser.VoidType:
-                        returnInMemory = False
-                    else:
-                        dst = tacGenerator.makeTempVariable(retType, symbolTable)
-                        intDests, doubleDests, returnInMemory = classifyReturnValue(dst, symbolTable, typeTable, topLevelList)
+                    match retType:
+                        case parser.StuctureType(tag = tag):
+                            structDef = typeTable[tag]
+                            if structDef.size > 16:
+                                returnInMemory = True
+                            else:
+                                returnInMemory = False
+                                        
+                        case _:
+                            returnInMemory = False
                     
                 case _:
                     print("Error: Not fun type.")
                     sys.exit(1)
 
             intParams, doubleParams, stackParams = classifyParameters(params, symbolTable, typeTable, topLevelList, returnInMemory)
+
+            print("IntParams:",intParams)
 
             ASM_Instructions = []
 
@@ -2303,8 +2315,7 @@ def ASM_parseAST(ast, symbolTable, typeTable):
                     #    print("Invalid Static Constant.")
                     #    sys.exit(1)
                         
-    newTable = copy.deepcopy(symbolTable)
-
+    #la viejita
     for name, entry in symbolTable.items():
         match entry.attrs:
             case typeChecker.FunAttributes(defined = defined, global_ = global_):
@@ -2316,11 +2327,16 @@ def ASM_parseAST(ast, symbolTable, typeTable):
                 match funcDef.type:
                     case parser.FunType(paramTypes = paramTypes, retType = retType):
                         
-                        if type(retType) == parser.VoidType:
-                            returnOnStack = False
-                        else:
-                            dst = tacGenerator.makeTempVariable(retType, newTable)
-                            intDests, doubleDests, returnOnStack = classifyReturnValue(dst, newTable, typeTable, funcDefList)
+                        match retType:
+                            case parser.StuctureType(tag = tag):
+                                structDef = typeTable[tag]
+                                if structDef.size > 16:
+                                    returnOnStack = True
+                                else:
+                                    returnOnStack = False
+                                            
+                            case _:
+                                returnOnStack = False
                         
                     case _:
                         print("Error: Not fun type.")

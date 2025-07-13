@@ -168,6 +168,8 @@ if __name__ == "__main__":
 				print("Type Table:\n", typeTable)
 				print("Backend Symbol Table:\n", backSymbolTable)
 
+			#breakpoint()
+			#a = backSymbolTable['tmp.14']
 			ReplacePseudoRegisters.ReplacePseudoRegisters(ass, backSymbolTable)
 
 			if printDebugInfo:
