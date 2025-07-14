@@ -693,11 +693,15 @@ def parseValue(v, symbolTable, typeTable, topLevelList):
                     return asmType, cType, PseudoMem(i, 0)
                 
                 case parser.StuctureType(tag = tag):
-                    structDef = typeTable[tag]
-                    asmType = ByteArray(structDef.size, structDef.alignment)
                     cType = parser.StuctureType(tag)
+                    
+                    if tag in typeTable:
+                        structDef = typeTable[tag]
+                        asmType = ByteArray(structDef.size, structDef.alignment)
 
-                    return asmType, cType, PseudoMem(i, 0)
+                        return asmType, cType, PseudoMem(i, 0)
+                    
+                    return None, cType, PseudoMem(i, 0)
                 
                 case _:
                     traceback.print_stack()
@@ -1012,7 +1016,6 @@ def classifyParameters(values, symbolTable, typeTable, topLevelList, returnInMem
 
                         for class_ in classes:
                             operand_ = addOffset(operand, offset)
-                            #operand_ = PseudoMem(operand, offset)
 
                             if class_ == ABI_StructType.SSE:
                                 tentativeDoubles.append(operand_)
@@ -1032,7 +1035,7 @@ def classifyParameters(values, symbolTable, typeTable, topLevelList, returnInMem
                         offset = 0
                         for class_ in classes:
                             operand_ = addOffset(operand, offset)
-                            #operand_ = PseudoMem(operand, offset)
+
                             eightByteType = getEightByteType(offset, structSize)
                             stackArgs.append((eightByteType, operand_))
                             offset += 8
@@ -2140,6 +2143,22 @@ def ASM_parseTopLevel(topLevel, symbolTable, typeTable, topLevelList):
                     
                     match retType:
                         case parser.StuctureType(tag = tag):
+                            if tag in typeTable:
+                                structDef = typeTable[tag]
+                                if structDef.size > 16:
+                                    returnInMemory = True
+                                else:
+                                    returnInMemory = False
+
+                            else:
+                                returnInMemory = False
+                                        
+                        case _:
+                            returnInMemory = False
+
+                    """
+                    match retType:
+                        case parser.StuctureType(tag = tag):
                             structDef = typeTable[tag]
                             if structDef.size > 16:
                                 returnInMemory = True
@@ -2148,6 +2167,7 @@ def ASM_parseTopLevel(topLevel, symbolTable, typeTable, topLevelList):
                                         
                         case _:
                             returnInMemory = False
+                    """
                     
                 case _:
                     print("Error: Not fun type.")
@@ -2176,7 +2196,7 @@ def ASM_parseTopLevel(topLevel, symbolTable, typeTable, topLevelList):
 
                 match paramType:
                     case ByteArray(size = size, alignment = alignment):
-                        copyBytesFromReg(r, param, size)
+                        copyBytesFromReg(r, param, size, ASM_Instructions)
 
                     case _:
                         ASM_Instructions.append(MovInstruction(paramType, RegisterOperand(Register(r)), param))
@@ -2192,7 +2212,7 @@ def ASM_parseTopLevel(topLevel, symbolTable, typeTable, topLevelList):
 
                 match paramType:
                     case ByteArray(size = size, alignment = alignment):
-                        copyBytes(MemoryOperand(Register(RegisterType.BP), offset), param, size)
+                        copyBytes(MemoryOperand(Register(RegisterType.BP), offset), param, size, ASM_Instructions)
                     
                     case _:
                         ASM_Instructions.append(MovInstruction(paramType, MemoryOperand(Register(RegisterType.BP), offset), param))
@@ -2221,9 +2241,9 @@ class ObjEntry(asm_symtab_entry):
     
     def __repr__(self):
         return self.__str__()
-
 class FunEntry(asm_symtab_entry):
     def __init__(self, defined, returnOnStack):
+
         self.defined = defined
         self.returnOnStack = returnOnStack
 
@@ -2283,8 +2303,11 @@ def matchCType(cType, typeTable):
             return 1, Byte()
 
         case parser.StuctureType(tag = tag):
-            structDef = typeTable[tag]
-            return structDef.alignment, ByteArray(structDef.size, structDef.alignment)
+            if tag in typeTable:
+                structDef = typeTable[tag]
+                return structDef.alignment, ByteArray(structDef.size, structDef.alignment)
+            
+            return 0, ByteArray(0,0)
 
         case _:
             traceback.print_stack()
@@ -2317,7 +2340,9 @@ def ASM_parseAST(ast, symbolTable, typeTable):
                         
     #la viejita
     for name, entry in symbolTable.items():
+
         match entry.attrs:
+
             case typeChecker.FunAttributes(defined = defined, global_ = global_):
 
                 funcDef = symbolTable[name]
@@ -2329,9 +2354,13 @@ def ASM_parseAST(ast, symbolTable, typeTable):
                         
                         match retType:
                             case parser.StuctureType(tag = tag):
-                                structDef = typeTable[tag]
-                                if structDef.size > 16:
-                                    returnOnStack = True
+                                if tag in typeTable:
+                                    structDef = typeTable[tag]
+                                    if structDef.size > 16:
+                                        returnOnStack = True
+                                    else:
+                                        returnOnStack = False
+
                                 else:
                                     returnOnStack = False
                                             
