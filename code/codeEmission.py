@@ -163,8 +163,8 @@ def matchOperand(operand, output, operandSize):
             output += ')'
             
 
-        case assemblyGenerator.DataOperand(identifier = identifier):
-            output += '{0}(%rip)'.format(identifier)
+        case assemblyGenerator.DataOperand(identifier = identifier, offset = offset):
+            output += '{0}+{1}(%rip)'.format(identifier, offset)
             pass
             
         case assemblyGenerator.RegisterOperand(register=reg):
@@ -327,6 +327,7 @@ def printTopLevel(topLevel, output, symbolTable):
             varType = symbolTable[identifier].assType
             print(type(varType))
 
+
             match varType:
                 case assemblyGenerator.Double():
                     if global_ == True:
@@ -393,7 +394,6 @@ def printTopLevel(topLevel, output, symbolTable):
             
             output = printStaticInit(staticInit, output)
 
-        
         case assemblyGenerator.Function(identifier = identifier, global_ = global_, insList = insList, stackOffset = stackOffset):
             if global_ == True:
                 output += '\t.globl {0}\n'.format(identifier)
@@ -549,6 +549,12 @@ def printTopLevel(topLevel, output, symbolTable):
                                                 output += '\n\timul'
                                                 pass
 
+                                            case assemblyGenerator.BinopType.Shl:
+                                                output += '\n\tshl'
+
+                                            case assemblyGenerator.BinopType.ShrTwoOp:
+                                                output += '\n\tshr'
+
                                             case _:
                                                 print("Error: Invalid Binary Instruction for integers. {0}".format(o))
                                                 sys.exit(1)
@@ -698,9 +704,6 @@ def printTopLevel(topLevel, output, symbolTable):
                 
             output += '\n'
         
-        
-        
-
         case _:
             print("Invalid Top Level {0}".format(topLevel))
             sys.exit(1)

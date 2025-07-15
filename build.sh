@@ -4,7 +4,7 @@
 # My compiler
 
 
-lastStage="--codegen"
+#lastStage="--tacky"
 #noLink="-c"
 library="-lmath.h"
 
@@ -18,10 +18,11 @@ fi
 
 ################################
 #BUILD SYSTEM
-cd ./../
-echo "$(pwd)"
-pyinstaller --onefile "$(pwd)"/CComp/code/cd.py
-./writing-a-c-compiler-tests/test_compiler "$(pwd)"/dist/cd --chapter 18 --stage codegen
+#cd ./../
+#echo "$(pwd)"
+#pyinstaller --onefile "$(pwd)"/CComp/code/cd.py
+#./writing-a-c-compiler-tests/test_compiler "$(pwd)"/dist/cd --chapter 18 --stage codegen
+
 
 
 
@@ -38,8 +39,8 @@ echo $?
 # assembler
 
 
-#gcc "$(pwd)"/bin/return.s -o bin/return
-#./bin/return
+#gcc "$(pwd)"/bin/main.s "$(pwd)"/bin/other.s -o bin/main
+#./bin/main
 #echo $?
 
 
