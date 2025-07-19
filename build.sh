@@ -4,11 +4,19 @@
 # My compiler
 
 
-#lastStage="--tacky"
 #noLink="-c"
+lastStage="--lex"
+notAssembly="-S"
+
+fC="--fold-constants"
+pC="--propagate-copies"
+eUC="--eliminate-unreachable-code"
+eDS="--eliminate-dead-stores"
+o="--optimize"
+
 library="-lmath.h"
 
-python3 "$(pwd)"/code/cd.py $lastStage $noLink $library "$(pwd)"/test_/test.c
+python3 "$(pwd)"/code/cd.py $lastStage $noLink $notAssembly $library $fC $pC $eUC $eDS $o "$(pwd)"/test_/test.c
 echo $?
 
 if test -f test_/test; then
@@ -26,13 +34,15 @@ fi
 
 
 
+
 #python3 "$(pwd)"/code/test.py
 
 # Real compiler
-: '
-gcc -S -O -fno-asynchronous-unwind-tables -fcf-protection=none test/test.c -o test/test.s
-echo $?
-'
+
+#gcc -S -fno-asynchronous-unwind-tables -fcf-protection=none test_/test.c -o test_/test.s
+#gcc -S -O -fno-asynchronous-unwind-tables -fcf-protection=none test_/test.c -o test_/optimizedtest.s
+#echo $?
+
 
 
 

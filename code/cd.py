@@ -20,6 +20,17 @@ printDebugInfo = True
 file = ''
 LastStage = "codeEmission"
 NoLink = False
+NotAssembly = False
+
+
+foldConstants = False
+propagateCopies = False
+eliminateUnreachableCode = False
+eliminateDeadStores = False
+optimize = False
+
+
+
 library = None
 
 def matchCommands(argument):
@@ -27,9 +38,18 @@ def matchCommands(argument):
 	global LastStage
 	global library
 	global NoLink
+	global NotAssembly
+
+	global foldConstants
+	global propagateCopies
+	global eliminateUnreachableCode
+	global eliminateDeadStores
+	global optimize
+
 
 	cCommand = argument
 	isLibary = r"-l"
+
 	lMatch = re.match(isLibary, cCommand)
 	if lMatch:
 		cCommand = lMatch.string[lMatch.span()[1]:]
@@ -49,6 +69,24 @@ def matchCommands(argument):
 				LastStage = "assemblyGeneration"
 			case "-c":
 				NoLink = True
+			case "-S":
+				NotAssembly = True
+
+			case "--fold-constants":
+				foldConstants = True
+			
+			case "--propagate-copies":
+				propagateCopies = True
+
+			case "--eliminate-unreachable-code":
+				eliminateUnreachableCode = True
+
+			case "--eliminate-dead-stores":
+				eliminateDeadStores = True
+
+			case "--optimize":
+				optimize = True
+
 			case _:
 				print("Error Invalid command option.")
 				sys.exit(1)
@@ -57,6 +95,8 @@ def matchCommands(argument):
 if __name__ == "__main__":	
 	print(sys.float_info)
 
+	print(len(sys.argv))
+	print(sys.argv)
 	match len(sys.argv):
 		case 1:
 			#NOTE: no arguments
@@ -78,8 +118,52 @@ if __name__ == "__main__":
 			matchCommands(sys.argv[1])
 			matchCommands(sys.argv[2])
 			matchCommands(sys.argv[3])
-			
-			pass
+
+		case 6:
+			file = sys.argv[5]
+			matchCommands(sys.argv[1])
+			matchCommands(sys.argv[2])
+			matchCommands(sys.argv[3])
+			matchCommands(sys.argv[4])
+		
+		case 7:
+			file = sys.argv[6]
+			matchCommands(sys.argv[1])
+			matchCommands(sys.argv[2])
+			matchCommands(sys.argv[3])
+			matchCommands(sys.argv[4])
+			matchCommands(sys.argv[5])
+
+		case 8:
+			file = sys.argv[7]
+			matchCommands(sys.argv[1])
+			matchCommands(sys.argv[2])
+			matchCommands(sys.argv[3])
+			matchCommands(sys.argv[4])
+			matchCommands(sys.argv[5])
+			matchCommands(sys.argv[6])
+
+		case 9:
+			file = sys.argv[8]
+			matchCommands(sys.argv[1])
+			matchCommands(sys.argv[2])
+			matchCommands(sys.argv[3])
+			matchCommands(sys.argv[4])
+			matchCommands(sys.argv[5])
+			matchCommands(sys.argv[6])
+			matchCommands(sys.argv[7])
+
+		case 10:
+			file = sys.argv[9]
+			matchCommands(sys.argv[1])
+			matchCommands(sys.argv[2])
+			matchCommands(sys.argv[3])
+			matchCommands(sys.argv[4])
+			matchCommands(sys.argv[5])
+			matchCommands(sys.argv[6])
+			matchCommands(sys.argv[7])
+			matchCommands(sys.argv[8])
+
 		case _:
 			print("Error Invalid command option.")
 			sys.exit(1)
@@ -89,6 +173,14 @@ if __name__ == "__main__":
 	print("File:", file)
 	print("Last Stage:", LastStage)
 	print("NoLink:", NoLink)
+	print("NotAssembly:", NotAssembly)
+
+	print("--fold-constants", foldConstants)
+	print("--propagate-copies", propagateCopies)
+	print("--eliminate-unreachable-code", eliminateUnreachableCode)
+	print("--eliminate-dead-stores", eliminateDeadStores)
+	print("--optimize", optimize)
+
 	print("Libary:", library)
 
 	#NOTE: you have an archive
@@ -199,7 +291,9 @@ if __name__ == "__main__":
 			aFile.write(output)
 			aFile.close()
 
-			
+			if NotAssembly:
+				sys.exit(0)
+
 			if NoLink:
 				assC = "gcc -ggdb -c " + asmFile + " -o " + os.path.dirname(file) + "/" + os.path.basename(file).split('.')[0] + '.o'
 
