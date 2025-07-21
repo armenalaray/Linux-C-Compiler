@@ -376,17 +376,41 @@ class TAC_BinaryOperator(Operator):
 
     def __str__(self):
         match self.operator:
+            
             case BinopType.ADD:
                 return "+"
+            
             case BinopType.SUBTRACT:
                 return "-"
+            
             case BinopType.DIVIDE:
                 return "/"
+            
             case BinopType.MULTIPLY:
                 return "*"
+            
             case BinopType.REMAINDER:
                 return "%"
             
+            case BinopType.EQUAL:
+                return "=="
+            
+            case BinopType.NOTEQUAL:
+                return "!="
+            
+            case BinopType.GREATERTHAN:
+                return ">"
+            
+            case BinopType.GREATEROREQUAL:
+                return ">="
+            
+            case BinopType.LESSTHAN:
+                return "<"
+            
+            case BinopType.LESSOREQUAL:
+                return "<="
+            
+
             
             case _:
                 return "_"

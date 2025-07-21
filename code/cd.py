@@ -128,16 +128,19 @@ def constantFolding(functionBody):
 										
 										print(operator.operator, -int)
 
-										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(-const.int))
+										temp = ctypes.c_int32(convertToInt(-int))
+
+										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
 										
 										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
 
 									case tacGenerator.UnopType.COMPLEMENT:
 										
-										#a = ctypes.c_int32(const.int)
 										print(operator.operator, ~int)
 
-										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(~const.int))
+										temp = ctypes.c_int32(convertToInt(~int))
+
+										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
 										
 										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
 										
@@ -146,16 +149,16 @@ def constantFolding(functionBody):
 
 										print(operator.operator, not int)
 
-										value = 0
+										a = ctypes.c_int32(not int)
 
-										if not int:
-											value = 1
-										else:
-											value = 0
-
-										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(value))
+										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(a.value))
 										
 										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
+
+
+									case _:
+										print("Error: Invalid Unary Operator.")
+										sys.exit(1)
 
 								
 
@@ -213,7 +216,10 @@ def constantFolding(functionBody):
 									case tacGenerator.BinopType.DIVIDE:
 										print(operator.operator, type(const1), type(const2))
 										
-										temp = ctypes.c_int32(convertToInt(int1 / int2))
+										if int2 == 0:
+											temp = ctypes.c_int32(convertToInt(int1))
+										else:
+											temp = ctypes.c_int32(convertToInt(int1 / int2))
 
 										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
 										
@@ -228,10 +234,52 @@ def constantFolding(functionBody):
 										
 										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
 
-								
+									case tacGenerator.BinopType.EQUAL:
+										temp = ctypes.c_int32(int1 == int2)
+										
+										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
+										
+										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
+										
+										
+									case tacGenerator.BinopType.NOTEQUAL:
+										temp = ctypes.c_int32(int1 != int2)
+										
+										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
+										
+										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
 
-								
-						
+									case tacGenerator.BinopType.GREATERTHAN:
+										temp = ctypes.c_int32(int1 > int2)
+										
+										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
+										
+										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
+
+									case tacGenerator.BinopType.GREATEROREQUAL:
+										temp = ctypes.c_int32(int1 >= int2)
+										
+										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
+										
+										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
+
+									case tacGenerator.BinopType.LESSTHAN:
+										temp = ctypes.c_int32(int1 < int2)
+										
+										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
+										
+										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
+
+									case tacGenerator.BinopType.LESSOREQUAL:
+										temp = ctypes.c_int32(int1 <= int2)
+										
+										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
+										
+										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
+
+									case _:
+										print("Error: Invalid Binary Operator.")
+										sys.exit(1)
 				
 
 			case tacGenerator.TAC_JumpIfZeroInst():
