@@ -183,7 +183,7 @@ class TAC_truncateInstruction(instruction):
     def __repr__(self):
         return self.__str__()
 
-
+#tienes q cambiar las unary por copy!
 class TAC_UnaryInstruction(instruction):
     def __init__(self, operator, src, dst):
         self.operator = operator
@@ -360,8 +360,13 @@ class TAC_UnaryOperator(Operator):
         match self.operator:
             case UnopType.NEGATE:
                 return "-"
+            
             case UnopType.COMPLEMENT:
                 return "~"
+            
+            case UnopType.NOT:
+                return "!"
+            
             case _:
                 return "_"
 
@@ -381,6 +386,8 @@ class TAC_BinaryOperator(Operator):
                 return "*"
             case BinopType.REMAINDER:
                 return "%"
+            
+            
             case _:
                 return "_"
 
