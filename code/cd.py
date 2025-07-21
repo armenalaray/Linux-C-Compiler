@@ -182,8 +182,8 @@ def constantFolding(functionBody):
 					case tacGenerator.TAC_ConstantValue(const = const1), tacGenerator.TAC_ConstantValue(const = const2):
 						#aqui todos son int!
 						match const1, const2:
+							
 							case parser.ConstInt(int = int1), parser.ConstInt(int = int2):
-								
 								
 								match operator.operator:
 									case tacGenerator.BinopType.ADD:
@@ -280,10 +280,20 @@ def constantFolding(functionBody):
 									case _:
 										print("Error: Invalid Binary Operator.")
 										sys.exit(1)
-				
 
-			case tacGenerator.TAC_JumpIfZeroInst():
-				pass
+							case _,_:
+								newList.append(i)
+
+					case _,_:
+						newList.append(i)
+
+			case tacGenerator.TAC_JumpIfZeroInst(condition = condition, label = label):
+				print(type(condition))
+
+				match condition:
+					case tacGenerator.TAC_ConstantValue(const = const):
+
+						pass
 			
 			case tacGenerator.TAC_JumpIfNotZeroInst():
 				pass
