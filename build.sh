@@ -5,7 +5,7 @@
 
 
 #noLink="-c"
-lastStage="--lex"
+lastStage="--tacky"
 notAssembly="-S"
 
 fC="--fold-constants"

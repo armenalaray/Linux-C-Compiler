@@ -91,6 +91,57 @@ def matchCommands(argument):
 				print("Error Invalid command option.")
 				sys.exit(1)
 
+def constantFolding(functionBody):
+	pass
+
+def makeControlFlowGraph(functionBody):
+	pass
+
+def unreachableCodeElimination(cfg):
+	pass
+
+def copyPropagation(cfg):
+	pass
+
+def deadStoreElimination(cfg):
+	pass
+
+def cfgToInstructions(cfg):
+	pass
+
+
+def optimizeFunction(functionBody):
+	if functionBody.instructions == []:
+		return functionBody
+	
+	while True:
+		postConstantFolding = None
+
+		if foldConstants:
+			postConstantFolding = constantFolding(functionBody)
+		else:
+			postConstantFolding = functionBody
+
+		cfg = makeControlFlowGraph(postConstantFolding)
+
+		if eliminateUnreachableCode:
+			cfg = unreachableCodeElimination(cfg)
+		
+		if propagateCopies:
+			cfg = copyPropagation(cfg)
+
+		if eliminateDeadStores:
+			cfg = deadStoreElimination(cfg)
+
+		
+		optimizedFunctionBody = cfgToInstructions(cfg)
+
+		if optimizedFunctionBody == functionBody or optimizedFunctionBody.instructions == []:
+			return optimizedFunctionBody
+
+		functionBody = optimizedFunctionBody
+
+
 
 if __name__ == "__main__":	
 	print(sys.float_info)
@@ -249,6 +300,14 @@ if __name__ == "__main__":
 				print(tac)
 				print("Type Table:\n", typeTable)
 				print("Symbol Table:\n", symbolTable)
+
+			
+			for i in tac.topLevelList:
+				print(type(i))
+				match i:
+					case tacGenerator.TAC_FunctionDef():
+						optimizeFunction(i)
+
 
 			if LastStage == 'tac':
 				sys.exit(0)
