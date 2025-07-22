@@ -316,30 +316,15 @@ class CDQInstruction:
     def __repr__(self):
         return self.__str__()
 
-"""
-class AllocateStackInstruction:
-    def __init__(self, offset):
-        self.offset = offset
+class Pop():
+    def __init__(self, reg):
+        self.reg = reg
     
     def __str__(self):
-        return "AllocateStack({self.offset})".format(self=self)
-    
+        return "Pop({self.reg})".format(self=self)
     
     def __repr__(self):
         return self.__str__()
-
-
-class DeallocateStackInstruction():
-    def __init__(self, offset):
-        self.offset = offset
-
-    def __str__(self):
-        return "De allocate Stack({self.offset})".format(self=self)
-    
-    def __repr__(self):
-        return self.__str__()    
-
-"""
     
 class PushInstruction():
     def __init__(self, operand):
@@ -508,10 +493,17 @@ class RegisterType(Enum):
     R9 = 5
     
     AX = 6
-    R10 = 7
-    R11 = 8
-    SP = 9
-    BP = 10
+    BX = 7
+
+    R10 = 8
+    R11 = 9
+    R12 = 10
+    R13 = 11
+    R14 = 12
+    R15 = 13
+
+    SP = 14
+    BP = 15
 
 class SSERegisterType(Enum):
     XMM0 = 0
@@ -522,8 +514,15 @@ class SSERegisterType(Enum):
     XMM5 = 5
     XMM6 = 6
     XMM7 = 7
-    XMM14 = 8
-    XMM15 = 9
+    XMM8 = 8
+    XMM9 = 9
+    XMM10 = 10
+    XMM11 = 11
+    XMM12 = 12
+    XMM13 = 13
+    XMM14 = 14
+    XMM15 = 15
+
 
 class Register:
     def __init__(self, register):

@@ -1,3 +1,13 @@
+movl $3, %ecx
+imull %esi, %ecx
+addl %edi, %ecx
+movl $10, %eax
+subl %ecx, %eax
+ret
+
+
+
+
 ======================================================================
 FAIL: test_valid/no_structure_parameters/libraries/opaque_struct_client (test_framework.basic.TestChapter18.test_valid/no_structure_parameters/libraries/opaque_struct_client)
 ----------------------------------------------------------------------

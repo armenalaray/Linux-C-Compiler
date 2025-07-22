@@ -15,6 +15,7 @@ import loopLabeling
 import ReplacePseudoRegisters
 import FixingUpInstructions
 import ASTDebug
+import optimizations
 
 
 printDebugInfo = True
@@ -93,262 +94,25 @@ def matchCommands(argument):
 				print("Error Invalid command option.")
 				sys.exit(1)
 
-def convertToInt(value):
-	return int(value)
-
-def constantFolding(functionBody):
-
-	print("OLD LIST", functionBody)
-
-	newList = []
-
-	for i in functionBody.instructions:
-
-		match i:
-			case tacGenerator.TAC_UnaryInstruction(operator = operator, src = src,dst = dst):
-
-				match src:
-					case tacGenerator.TAC_ConstantValue(const = const):
-						
-						match const:
-							case parser.ConstDouble():
-								pass
-
-							case parser.ConstChar():
-								pass
-
-							case parser.ConstUChar():
-								pass
-
-							case parser.ConstInt(int = int):
-
-								match operator.operator:
-
-									case tacGenerator.UnopType.NEGATE:
-										
-										print(operator.operator, -int)
-
-										temp = ctypes.c_int32(convertToInt(-int))
-
-										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
-										
-										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
-
-									case tacGenerator.UnopType.COMPLEMENT:
-										
-										print(operator.operator, ~int)
-
-										temp = ctypes.c_int32(convertToInt(~int))
-
-										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
-										
-										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
-										
-
-									case tacGenerator.UnopType.NOT:
-
-										print(operator.operator, not int)
-
-										a = ctypes.c_int32(not int)
-
-										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(a.value))
-										
-										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
-
-
-									case _:
-										print("Error: Invalid Unary Operator.")
-										sys.exit(1)
-
-								
-
-							case parser.ConstLong():
-								pass
-							
-							case parser.ConstUInt():
-								pass
-
-							case parser.ConstULong():
-								pass
-
-						#estos son todos los const
-
-					case _:
-						newList.append(i)
-						
-
-			case tacGenerator.TAC_BinaryInstruction(operator = operator, src1 = src1, src2 = src2, dst = dst):
-				match src1, src2:
-					case tacGenerator.TAC_ConstantValue(const = const1), tacGenerator.TAC_ConstantValue(const = const2):
-						#aqui todos son int!
-						match const1, const2:
-							
-							case parser.ConstInt(int = int1), parser.ConstInt(int = int2):
-								
-								match operator.operator:
-									case tacGenerator.BinopType.ADD:
-										print(operator.operator, type(const1), type(const2))
-
-										temp = ctypes.c_int32(convertToInt(int1 + int2))
-
-										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
-										
-										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
-
-									case tacGenerator.BinopType.SUBTRACT:
-										print(operator.operator, type(const1), type(const2))
-
-										temp = ctypes.c_int32(convertToInt(int1 - int2))
-
-										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
-										
-										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
-
-									case tacGenerator.BinopType.MULTIPLY:
-										print(operator.operator, type(const1), type(const2))
-
-										temp = ctypes.c_int32(convertToInt(int1 * int2))
-
-										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
-										
-										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
-
-									case tacGenerator.BinopType.DIVIDE:
-										print(operator.operator, type(const1), type(const2))
-										
-										if int2 == 0:
-											temp = ctypes.c_int32(convertToInt(int1))
-										else:
-											temp = ctypes.c_int32(convertToInt(int1 / int2))
-
-										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
-										
-										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
-
-									case tacGenerator.BinopType.REMAINDER:
-										print(operator.operator, type(const1), type(const2))
-										
-										temp = ctypes.c_int32(convertToInt(int1 % int2))
-
-										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
-										
-										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
-
-									case tacGenerator.BinopType.EQUAL:
-										temp = ctypes.c_int32(int1 == int2)
-										
-										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
-										
-										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
-										
-										
-									case tacGenerator.BinopType.NOTEQUAL:
-										temp = ctypes.c_int32(int1 != int2)
-										
-										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
-										
-										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
-
-									case tacGenerator.BinopType.GREATERTHAN:
-										temp = ctypes.c_int32(int1 > int2)
-										
-										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
-										
-										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
-
-									case tacGenerator.BinopType.GREATEROREQUAL:
-										temp = ctypes.c_int32(int1 >= int2)
-										
-										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
-										
-										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
-
-									case tacGenerator.BinopType.LESSTHAN:
-										temp = ctypes.c_int32(int1 < int2)
-										
-										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
-										
-										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
-
-									case tacGenerator.BinopType.LESSOREQUAL:
-										temp = ctypes.c_int32(int1 <= int2)
-										
-										new = tacGenerator.TAC_ConstantValue(parser.ConstInt(temp.value))
-										
-										newList.append(tacGenerator.TAC_CopyInstruction(new, dst))
-
-									case _:
-										print("Error: Invalid Binary Operator.")
-										sys.exit(1)
-
-							case _,_:
-								newList.append(i)
-
-					case _,_:
-						newList.append(i)
-
-			case tacGenerator.TAC_JumpIfZeroInst(condition = condition, label = label):
-				print(type(condition))
-
-				match condition:
-					case tacGenerator.TAC_ConstantValue(const = const):
-
-						pass
 			
-			case tacGenerator.TAC_JumpIfNotZeroInst():
-				pass
-
-			case _:
-				newList.append(i)
-
-	functionBody.instructions = newList
-
-	print("NEW LIST", functionBody)
-
-			
-	
-
-def makeControlFlowGraph(functionBody):
-	pass
-
-def unreachableCodeElimination(cfg):
-	pass
-
-def copyPropagation(cfg):
-	pass
-
-def deadStoreElimination(cfg):
-	pass
-
-def cfgToInstructions(cfg):
-	pass
-
-
 def optimizeFunction(functionBody):
 	if functionBody.instructions == []:
 		return functionBody
 	
 	while True:
-		postConstantFolding = None
-
-		if foldConstants:
-			postConstantFolding = constantFolding(functionBody)
-		else:
-			postConstantFolding = functionBody
-
-		cfg = makeControlFlowGraph(postConstantFolding)
+		cfg = optimizations.makeControlFlowGraph(functionBody)
 
 		if eliminateUnreachableCode:
-			cfg = unreachableCodeElimination(cfg)
+			cfg = optimizations.unreachableCodeElimination(cfg)
 		
 		if propagateCopies:
-			cfg = copyPropagation(cfg)
+			cfg = optimizations.copyPropagation(cfg)
 
 		if eliminateDeadStores:
-			cfg = deadStoreElimination(cfg)
+			cfg = optimizations.deadStoreElimination(cfg)
 
 		
-		optimizedFunctionBody = cfgToInstructions(cfg)
+		optimizedFunctionBody = optimizations.cfgToInstructions(cfg)
 
 		if optimizedFunctionBody == functionBody or optimizedFunctionBody.instructions == []:
 			return optimizedFunctionBody
@@ -521,6 +285,7 @@ if __name__ == "__main__":
 				match i:
 					case tacGenerator.TAC_FunctionDef():
 						optimizeFunction(i)
+			
 
 
 			if LastStage == 'tac':

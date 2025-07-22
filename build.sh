@@ -5,15 +5,16 @@
 
 
 #noLink="-c"
-lastStage="--tacky"
-notAssembly="-S"
 
-fC="--fold-constants"
+#fC="--fold-constants"
+
+notAssembly="-S"
 pC="--propagate-copies"
 eUC="--eliminate-unreachable-code"
 eDS="--eliminate-dead-stores"
 o="--optimize"
 
+#lastStage="--codegen"
 library="-lmath.h"
 
 python3 "$(pwd)"/code/cd.py $lastStage $noLink $notAssembly $library $fC $pC $eUC $eDS $o "$(pwd)"/test_/test.c
