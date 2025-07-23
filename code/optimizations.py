@@ -3,28 +3,34 @@ import tacGenerator
 import matplotlib.pyplot as plt
 import numpy as np
 
+class DebugNode():
+    def printNode(self):
+        return ""
 
 class Node_ID():
     pass
 
-class ENTRY(Node_ID):
+class ENTRY(Node_ID, DebugNode):
     pass
 
-class EXIT(Node_ID):
+class EXIT(Node_ID, DebugNode):
     pass
 
-class BlockID(Node_ID):
+class BlockID(Node_ID, DebugNode):
     def __init__(self, num):
         self.num = num
 
     def __str__(self):
         return "{self.num}".format(self=self)
+    
+    def printNode(self):
+        return str(self.num)
 
 
 class Node():
     pass
 
-class BasicBlock(Node):
+class BasicBlock(Node, DebugNode):
 
     def __init__(self, id, instructions, predecessors = None, successors = None):
         self.id = id
@@ -37,21 +43,32 @@ class BasicBlock(Node):
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self):
+        output = ""
+
+        output += self.id.printNode() + "\n\n"
+
+        for i in self.instructions:
+            output += i.printNode() + "\n"
 
 
-class Entry(Node):
+        return output
+
+
+class Entry(Node, DebugNode):
 
     def __init__(self, successors):
         self.successors = successors
         
 
-class Exit(Node):
+class Exit(Node, DebugNode):
 
     def __init__(self, predecessors):
         self.predecessors = predecessors
 
 
-class Graph:
+class Graph(DebugNode):
     def __init__(self, nodes):
         self.nodes = nodes
 
@@ -109,29 +126,23 @@ def makeControlFlowGraph(functionBody):
     iBlocks = partitionIntoBasicBlocks(functionBody.instructions)
 
     blocks = []
-    
-    vis = nx.DiGraph()
-    vis.add_node("Alejandro")
-    vis.add_node("B")
-    vis.add_node("C")
-    vis.add_edge("Alejandro", "B")
-    vis.add_edge("B", "C")
-
-    nx.draw(vis, with_labels=True, node_color='skyblue', node_size=1000, edge_color='gray')
-
-    plt.show()
+    adjacency_dict = {}
 
     for i, instructions in enumerate(iBlocks):
         blocks.append(BasicBlock(BlockID(i), instructions))
-        
-        #vis.add_node(BasicBlock(BlockID(i), instructions))
+        adjacency_dict[i] = ()
 
-    #nx.draw(vis)
+    names = {}
+    for block in blocks:
+        names[block.id.num] = block.printNode()
 
+    print(adjacency_dict)
 
+    DG = nx.Graph(adjacency_dict, day="Friday")
 
-
-    #print(blocks)
+    nx.draw_networkx(DG, with_labels=True, node_color="pink", node_shape="s", labels=names, font_size=20)
+    
+    plt.show()
 	
 
 def unreachableCodeElimination(cfg):

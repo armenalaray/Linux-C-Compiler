@@ -4,6 +4,8 @@ import parser
 import semanticAnalysis
 import typeChecker
 
+from optimizations import DebugNode
+
 from typeChecker import isIntegerType
 
 class TAC_Program:
@@ -57,7 +59,7 @@ class TAC_FunctionDef(TopLevel):
 class instruction:
     pass
 
-class TAC_addPtr(instruction):
+class TAC_addPtr(instruction, DebugNode):
     def __init__(self, ptr, index, scale, dst):
         self.ptr = ptr
         self.index = index
@@ -69,8 +71,11 @@ class TAC_addPtr(instruction):
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self):
+        return self.__str__()
 
-class TAC_copyFromOffset(instruction):
+class TAC_copyFromOffset(instruction, DebugNode):
     def __init__(self, src, offset, dst):
         self.src = src
         self.offset = offset
@@ -82,8 +87,10 @@ class TAC_copyFromOffset(instruction):
     def __repr__(self):
         return self.__str__()
     
+    def printNode(self):
+        return self.__str__()
 
-class TAC_copyToOffset(instruction):
+class TAC_copyToOffset(instruction, DebugNode):
     def __init__(self, src, dst, offset):
         self.src = src
         self.dst = dst
@@ -94,8 +101,12 @@ class TAC_copyToOffset(instruction):
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self):
+        return self.__str__()
+        return "CopyToOffset({self.dst} + {self.offset}) = {self.src} ".format(self=self)
 
-class TAC_returnInstruction(instruction):
+class TAC_returnInstruction(instruction, DebugNode):
     def __init__(self, Value = None):
         self.Value = Value
     
@@ -104,8 +115,11 @@ class TAC_returnInstruction(instruction):
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self):
+        return self.__str__()
 
-class TAC_signExtendInstruction(instruction):
+class TAC_signExtendInstruction(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src
         self.dst = dst
@@ -116,7 +130,10 @@ class TAC_signExtendInstruction(instruction):
     def __repr__(self):
         return self.__str__()
     
-class TAC_zeroExtendInstruction(instruction):
+    def printNode(self):
+        return self.__str__()
+    
+class TAC_zeroExtendInstruction(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src
         self.dst = dst
@@ -126,8 +143,11 @@ class TAC_zeroExtendInstruction(instruction):
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self):
+        return self.__str__()
 
-class TAC_DoubleToInt(instruction):
+class TAC_DoubleToInt(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src
         self.dst = dst
@@ -137,8 +157,11 @@ class TAC_DoubleToInt(instruction):
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self):
+        return self.__str__()
 
-class TAC_DoubleToUInt(instruction):
+class TAC_DoubleToUInt(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src
         self.dst = dst
@@ -148,8 +171,11 @@ class TAC_DoubleToUInt(instruction):
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self):
+        return self.__str__()
 
-class TAC_IntToDouble(instruction):
+class TAC_IntToDouble(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src
         self.dst = dst
@@ -159,8 +185,11 @@ class TAC_IntToDouble(instruction):
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self):
+        return self.__str__()
 
-class TAC_UIntToDouble(instruction):
+class TAC_UIntToDouble(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src
         self.dst = dst
@@ -170,9 +199,12 @@ class TAC_UIntToDouble(instruction):
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self):
+        return self.__str__()
 
 
-class TAC_truncateInstruction(instruction):
+class TAC_truncateInstruction(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src
         self.dst = dst
@@ -182,9 +214,12 @@ class TAC_truncateInstruction(instruction):
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self):
+        return self.__str__()
 
 #tienes q cambiar las unary por copy!
-class TAC_UnaryInstruction(instruction):
+class TAC_UnaryInstruction(instruction, DebugNode):
     def __init__(self, operator, src, dst):
         self.operator = operator
         self.src = src 
@@ -195,8 +230,11 @@ class TAC_UnaryInstruction(instruction):
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self):
+        return self.__str__()
 
-class TAC_CopyInstruction(instruction):
+class TAC_CopyInstruction(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src 
         self.dst = dst   
@@ -206,8 +244,11 @@ class TAC_CopyInstruction(instruction):
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self):
+        return self.__str__()
 
-class TAC_GetAddress(instruction):
+class TAC_GetAddress(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src 
         self.dst = dst
@@ -218,7 +259,10 @@ class TAC_GetAddress(instruction):
     def __repr__(self):
         return self.__str__()
     
-class TAC_Load(instruction):
+    def printNode(self):
+        return self.__str__()
+    
+class TAC_Load(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src 
         self.dst = dst
@@ -228,8 +272,11 @@ class TAC_Load(instruction):
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self):
+        return self.__str__()
 
-class TAC_Store(instruction):
+class TAC_Store(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src 
         self.dst = dst
@@ -239,8 +286,11 @@ class TAC_Store(instruction):
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self):
+        return self.__str__()
 
-class TAC_JumpIfZeroInst(instruction):
+class TAC_JumpIfZeroInst(instruction, DebugNode):
     def __init__(self, condition, label):
         self.condition = condition
         self.label = label
@@ -250,8 +300,11 @@ class TAC_JumpIfZeroInst(instruction):
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self):
+        return self.__str__()
 
-class TAC_JumpIfNotZeroInst(instruction):
+class TAC_JumpIfNotZeroInst(instruction, DebugNode):
     def __init__(self, condition, label):
         self.condition = condition
         self.label = label
@@ -261,8 +314,11 @@ class TAC_JumpIfNotZeroInst(instruction):
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self):
+        return self.__str__()
 
-class TAC_JumpInst(instruction):
+class TAC_JumpInst(instruction, DebugNode):
     def __init__(self, label):
         self.label = label
     
@@ -271,8 +327,11 @@ class TAC_JumpInst(instruction):
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self):
+        return self.__str__()
 
-class TAC_LabelInst(instruction):
+class TAC_LabelInst(instruction, DebugNode):
     def __init__(self, identifier):
         self.identifier = identifier
     
@@ -281,8 +340,11 @@ class TAC_LabelInst(instruction):
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self):
+        return self.__str__()
 
-class TAC_BinaryInstruction:
+class TAC_BinaryInstruction(DebugNode):
     def __init__(self, operator, src1, src2, dst):
         self.operator = operator
         self.src1 = src1 
@@ -294,8 +356,11 @@ class TAC_BinaryInstruction:
     
     def __repr__(self):
         return self.__str__()
+    
+    def printNode(self):
+        return self.__str__()
 
-class TAC_FunCallInstruction:
+class TAC_FunCallInstruction(DebugNode):
     def __init__(self, funName, arguments, dst = None):
         self.funName = funName
         self.arguments = arguments
@@ -305,6 +370,9 @@ class TAC_FunCallInstruction:
         return "{self.dst} = {self.funName}({self.arguments})".format(self=self)
     
     def __repr__(self):
+        return self.__str__()
+    
+    def printNode(self):
         return self.__str__()
 
 class Value:
