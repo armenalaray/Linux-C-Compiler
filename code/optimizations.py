@@ -13,6 +13,12 @@ class Node_ID():
 class ENTRY(Node_ID, DebugNode):
     def __init__(self):
         self.num = -2
+
+    def __str__(self):
+        return "ENTRY"
+    
+    def __repr__(self):
+        return self.__str__()
     
     def __hash__(self):
         return self.num
@@ -33,6 +39,12 @@ class EXIT(Node_ID, DebugNode):
     def __init__(self):
         self.num = -1
     
+    def __str__(self):
+        return "EXIT"
+    
+    def __repr__(self):
+        return self.__str__()
+
     def __hash__(self):
         return self.num
             
@@ -70,11 +82,11 @@ class Node():
 
 class BasicBlock(Node, DebugNode):
 
-    def __init__(self, id, instructions, predecessors = None, successors = None):
+    def __init__(self, id, instructions):
         self.id = id
         self.instructions = instructions
-        self.predecessors = predecessors
-        self.successors = successors
+        self.predecessors = set()
+        self.successors = set()
 
     def __str__(self):
         return "{self.id}: {self.instructions} {self.predecessors} {self.successors}".format(self=self)
@@ -96,18 +108,21 @@ class BasicBlock(Node, DebugNode):
 
 class Entry(Node, DebugNode):
 
-    def __init__(self, successors = None):
-        self.successors = successors
+    def __init__(self):
+        self.successors = set()
         self.id = ENTRY()
 
     def __str__(self):
         return "Entry: {self.id} {self.successors}".format(self=self)
+    
+    def __repr__(self):
+        return self.__str__()
         
 
 class Exit(Node, DebugNode):
 
-    def __init__(self, predecessors = None):
-        self.predecessors = predecessors
+    def __init__(self):
+        self.predecessors = set()
         self.id = EXIT()
 
     def __str__(self):
@@ -166,19 +181,44 @@ def partitionIntoBasicBlocks(instructions):
 
     return finishedBlocks
 
+#va de la direccion 0 a 1
 def addEdge(nodeID0, nodeID1, graph):
 
-    print(graph[nodeID0])
+    print()
+    print(graph[nodeID1])
 
-    
+    entry0 = graph[nodeID0]
+    entry1 = graph[nodeID1]
+
+    match entry0:
+        case Entry(successors = s):
+            entry0.successors.add(nodeID1)
+            
+
+        case BasicBlock(id = id, instructions = instructions, successors = s):
+            entry0.successors.add(nodeID1)
+
+        case Exit():
+            print("Error: Exit has no successors.")
+            sys.exit(1)
+
+    match entry1:
+        case Entry():
+            print("Error: Entry has no predecessors.")
+            sys.exit(1)
+
+        case BasicBlock(id = id, instructions = instructions, predecessors = p):
+            entry1.predecessors.add(nodeID0)
+
+        case Exit(predecessors = p):
+            entry1.predecessors.add(nodeID0)
     
 
 def addAllEdges(graph):
 
     addEdge(ENTRY(), BlockID(0), graph)
 
-
-    pass
+    print(graph)
 
 def makeControlFlowGraph(functionBody):
     iBlocks = partitionIntoBasicBlocks(functionBody.instructions)
