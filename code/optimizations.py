@@ -1,7 +1,11 @@
 import networkx as nx
 import tacGenerator
+import parser
 import matplotlib.pyplot as plt
 import numpy as np
+
+import traceback
+import sys
 
 import copy
 
@@ -482,15 +486,70 @@ def cfgToInstructions(cfg):
 
 def constantFolding(tac):
     print("CONSTANT FOLDING PASS")
+
+    print("OLD LIST", tac)
+
+    newList = []
+
     for i in tac:
-        print(i)
 
         match i:
             case tacGenerator.TAC_JumpIfZeroInst(condition = condition, label = label):
-                pass
 
-            case tacGenerator.TAC_JumpIfNotZeroInst():
-                pass
+                match condition:
+                    case tacGenerator.TAC_ConstantValue(const = const):
 
-    return tac
+                        match const:
+                            case parser.ConstInt(int = int):
+
+                                #traceback.print_stack()
+                                #print(type(int))
+                                #sys.exit(1)
+
+
+                                if int == 0:
+                                    newList.append(tacGenerator.TAC_JumpInst(label))
+                                else:
+                                    #aqui no se hace el append
+                                    pass
+                            
+                            case _:
+                                newList.append(i)        
+
+                    case _:
+                        newList.append(i)        
+                        
+
+            case tacGenerator.TAC_JumpIfNotZeroInst(condition = condition, label = label):
+                match condition:
+                    case tacGenerator.TAC_ConstantValue(const = const):
+
+                        match const:
+                            case parser.ConstInt(int = int):
+
+                                #traceback.print_stack()
+                                #print(type(int))
+                                #sys.exit(1)
+
+
+                                if int != 0:
+                                    newList.append(tacGenerator.TAC_JumpInst(label))
+                                else:
+                                    #aqui no se hace el append
+                                    pass
+                            
+                            case _:
+                                newList.append(i)        
+
+                    case _:
+                        newList.append(i)        
+
+            case _:
+                newList.append(i)
+
+    #traceback.print_stack()
+    print("NEW LIST", newList)
+    #sys.exit(1)
+
+    return newList
     
