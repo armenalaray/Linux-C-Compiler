@@ -353,12 +353,61 @@ def unreachableCodeElimination(cfg):
         else:
             pass
 
-    for k, n in newBlocks.items():
-        print(k, n)
 
+    for k, n in newBlocks.items():
+        #print(k, n)
+
+        match k:
+            case ENTRY():
+                newSet = set()
+                for i in n.successors:
+                    if i in visitedList:
+                        newSet.add(i)
+                    else:
+                        pass
+                        #n.successors.discard(i)
+                
+                n.successors = newSet
+                        
+            case BlockID():
+                newSet = set()
+                for i in n.successors:
+                    if i in visitedList:
+                        newSet.add(i)
+                    else:
+                        pass
+                        #n.successors.discard(i)
+                n.successors = newSet
+
+                newSet = set()
+                for i in n.predecessors:
+                    if i in visitedList:
+                        newSet.add(i)
+                    else:
+                        pass
+                        #n.predecessors.discard(i)
+                
+                n.predecessors = newSet
+
+            case EXIT():
+
+                newSet = set()
+                for i in n.predecessors:
+                    if i in visitedList:
+                        newSet.add(i)
+                        pass
+                    else:
+                        pass
+                        #n.predecessors.discard(i)
+
+                n.predecessors = newSet
+                
+
+    
     cfg.blocks = newBlocks
 
-    print(cfg.blocks)
+    for k, n in cfg.blocks.items():
+        print(k,n)
 
     return cfg
 
