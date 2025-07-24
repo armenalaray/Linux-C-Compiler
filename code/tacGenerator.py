@@ -233,6 +233,14 @@ class TAC_UnaryInstruction(instruction, DebugNode):
     
     def printNode(self):
         return self.__str__()
+    """
+    def __eq__(self, value):
+        if type(value) == TAC_UnaryInstruction and self.operator == value.operator and self.src == value.src and self.dst == value.dst:
+            print("Unary equal")
+            return True
+        
+        return False
+    """
 
 class TAC_CopyInstruction(instruction, DebugNode):
     def __init__(self, src, dst):
@@ -247,6 +255,14 @@ class TAC_CopyInstruction(instruction, DebugNode):
     
     def printNode(self):
         return self.__str__()
+    """
+    def __eq__(self, value):
+        if type(value) == TAC_CopyInstruction and self.src == value.src and self.dst == value.dst:
+            print("Copy equal")
+            return True
+        
+        return False
+    """
 
 class TAC_GetAddress(instruction, DebugNode):
     def __init__(self, src, dst):
@@ -262,6 +278,15 @@ class TAC_GetAddress(instruction, DebugNode):
     def printNode(self):
         return self.__str__()
     
+    """
+    def __eq__(self, value):
+        if type(value) == TAC_GetAddress and self.src == value.src and self.dst == value.dst:
+            print("GetAddress equal")
+            return True
+        
+        return False
+    """
+    
 class TAC_Load(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src 
@@ -276,6 +301,15 @@ class TAC_Load(instruction, DebugNode):
     def printNode(self):
         return self.__str__()
 
+    """
+    def __eq__(self, value):
+        if type(value) == TAC_Load and self.src == value.src and self.dst == value.dst:
+            print("Load equal")
+            return True
+        
+        return False
+    """
+
 class TAC_Store(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src 
@@ -289,6 +323,14 @@ class TAC_Store(instruction, DebugNode):
     
     def printNode(self):
         return self.__str__()
+    """
+    def __eq__(self, value):
+        if type(value) == TAC_Store and self.src == value.src and self.dst == value.dst:
+            print("Store equal")
+            return True
+        
+        return False
+    """
 
 class TAC_JumpIfZeroInst(instruction, DebugNode):
     def __init__(self, condition, label):
@@ -303,6 +345,15 @@ class TAC_JumpIfZeroInst(instruction, DebugNode):
     
     def printNode(self):
         return self.__str__()
+    
+    """
+    def __eq__(self, value):
+        if type(value) == TAC_JumpIfZeroInst and self.condition == value.condition and self.label == value.label:
+            print("jumpifzero equal")
+            return True
+        
+        return False
+    """
 
 class TAC_JumpIfNotZeroInst(instruction, DebugNode):
     def __init__(self, condition, label):
@@ -317,6 +368,15 @@ class TAC_JumpIfNotZeroInst(instruction, DebugNode):
     
     def printNode(self):
         return self.__str__()
+    
+    """
+    def __eq__(self, value):
+        if type(value) == TAC_JumpIfNotZeroInst and self.condition == value.condition and self.label == value.label:
+            print("jumpifnotzero equal")
+            return True
+        
+        return False
+    """
 
 class TAC_JumpInst(instruction, DebugNode):
     def __init__(self, label):
@@ -330,6 +390,15 @@ class TAC_JumpInst(instruction, DebugNode):
     
     def printNode(self):
         return self.__str__()
+    
+    """
+    def __eq__(self, value):
+        if type(value) == TAC_JumpInst and self.label == value.label:
+            print("jump equal")
+            return True
+        
+        return False
+    """
 
 class TAC_LabelInst(instruction, DebugNode):
     def __init__(self, identifier):
@@ -343,6 +412,15 @@ class TAC_LabelInst(instruction, DebugNode):
     
     def printNode(self):
         return self.__str__()
+    
+    """
+    def __eq__(self, value):
+        if type(value) == TAC_LabelInst and self.identifier == value.identifier:
+            print("label equal")
+            return True
+        
+        return False
+    """
 
 class TAC_BinaryInstruction(DebugNode):
     def __init__(self, operator, src1, src2, dst):
@@ -359,6 +437,15 @@ class TAC_BinaryInstruction(DebugNode):
     
     def printNode(self):
         return self.__str__()
+    
+    """
+    def __eq__(self, value):
+        if type(value) == TAC_BinaryInstruction and self.operator == value.operator and self.src1 == value.src1 and self.src2 == value.src2:
+            print("Binary equal")
+            return True
+        
+        return False
+    """
 
 class TAC_FunCallInstruction(DebugNode):
     def __init__(self, funName, arguments, dst = None):
@@ -374,6 +461,15 @@ class TAC_FunCallInstruction(DebugNode):
     
     def printNode(self):
         return self.__str__()
+    
+    """
+    def __eq__(self, value):
+        if type(value) == TAC_FunCallInstruction and self.funName == value.funName and self.arguments == value.arguments and self.dst == value.dst:
+            print("funcall equal")
+            return True
+        
+        return False
+    """
 
 class Value:
     pass

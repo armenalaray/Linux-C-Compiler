@@ -93,10 +93,20 @@ def matchCommands(argument):
 			case _:
 				print("Error Invalid command option.")
 				sys.exit(1)
-
+"""
+def listsAreEqual(optimizedFunctionBody,functionBody):
+	for i, j in zip(functionBody, optimizedFunctionBody):
+		if i == j:
+			pass
+		else:
+			return False
+		
+	return True
+"""
+	
 			
 def optimizeFunction(functionBody):
-	if functionBody.instructions == []:
+	if functionBody == []:
 		return functionBody
 	
 	while True:
@@ -114,7 +124,9 @@ def optimizeFunction(functionBody):
 		
 		optimizedFunctionBody = optimizations.cfgToInstructions(cfg)
 
-		if optimizedFunctionBody == functionBody or optimizedFunctionBody.instructions == []:
+		if optimizedFunctionBody == functionBody or optimizedFunctionBody == []:
+			#print(optimizedFunctionBody)
+			#print("Ale")
 			return optimizedFunctionBody
 
 		functionBody = optimizedFunctionBody
@@ -281,13 +293,11 @@ if __name__ == "__main__":
 
 			
 			for i in tac.topLevelList:
-				print(type(i))
+				#print(type(i))
 				match i:
 					case tacGenerator.TAC_FunctionDef():
-						optimizeFunction(i)
+						optimizeFunction(i.instructions)
 			
-
-
 			if LastStage == 'tac':
 				sys.exit(0)
 

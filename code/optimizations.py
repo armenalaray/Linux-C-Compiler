@@ -3,6 +3,8 @@ import tacGenerator
 import matplotlib.pyplot as plt
 import numpy as np
 
+import copy
+
 class DebugNode():
     def printNode(self):
         return ""
@@ -89,7 +91,7 @@ class BasicBlock(Node, DebugNode):
         self.successors = set()
 
     def __str__(self):
-        return "{self.id}: {self.instructions} {self.predecessors} {self.successors}".format(self=self)
+        return "{self.id}: {self.instructions} Pred: {self.predecessors} Suc: {self.successors}".format(self=self)
     
     def __repr__(self):
         return self.__str__()
@@ -185,10 +187,10 @@ def partitionIntoBasicBlocks(instructions):
 def addEdge(nodeID0, nodeID1, graph):
 
     print()
-    print(graph[nodeID1])
+    #print(graph[nodeID1])
 
-    entry0 = graph[nodeID0]
-    entry1 = graph[nodeID1]
+    entry0 = graph.blocks[nodeID0]
+    entry1 = graph.blocks[nodeID1]
 
     match entry0:
         case Entry(successors = s):
@@ -214,29 +216,89 @@ def addEdge(nodeID0, nodeID1, graph):
             entry1.predecessors.add(nodeID0)
     
 
+def maxBlockID(graph):
+    pass
+
 def addAllEdges(graph):
 
     addEdge(ENTRY(), BlockID(0), graph)
 
-    print(graph)
+    #print(graph)
+
+    for k, n in graph.blocks.items():
+
+        if k == ENTRY() or k == EXIT():
+            continue
+        
+        #aqui ya estas trabajando con blockids!
+        if n.id == BlockID(graph.maxID):
+            nextID = EXIT()
+        else:
+            nextID = BlockID(n.id.num + 1)
+
+        i = n.instructions[-1]
+
+        match i:
+            case tacGenerator.TAC_returnInstruction(Value = Value):
+                addEdge(n.id, EXIT(), graph)
+
+            case tacGenerator.TAC_JumpInst(label = label):
+                #print(label, graph.labels[label])
+                obj = graph.labels[label]
+                addEdge(n.id, obj.id, graph)
+
+            case tacGenerator.TAC_JumpIfZeroInst(condition = condition, label = label):
+                obj = graph.labels[label]
+                addEdge(n.id, obj.id, graph)
+                addEdge(n.id, nextID, graph)
+
+            case tacGenerator.TAC_JumpIfNotZeroInst(condition = condition, label = label):
+                obj = graph.labels[label]
+                addEdge(n.id, obj.id, graph)
+                addEdge(n.id, nextID, graph)
+
+            case _:
+                addEdge(n.id, nextID, graph)
+    
+
+    for k, n in graph.blocks.items():
+        print(k, n)
+
+
+class G():
+    def __init__(self):
+        self.maxID = -1
+        self.blocks = {}
+        self.labels = {}
 
 def makeControlFlowGraph(functionBody):
-    iBlocks = partitionIntoBasicBlocks(functionBody.instructions)
+    iBlocks = partitionIntoBasicBlocks(functionBody)
 
-    blocks = {}
+    g = G()
+
+    #blocks = {}
     adjacency_dict = {}
 
-    blocks[ENTRY()] = Entry()
+    g.blocks[ENTRY()] = Entry()
+
+    g.maxID = len(iBlocks) - 1
 
     for i, instructions in enumerate(iBlocks):
-        blocks[BlockID(i)] = BasicBlock(BlockID(i), instructions)
-        #blocks.append(BasicBlock(BlockID(i), instructions))
-        adjacency_dict[i] = ()
+        g.blocks[BlockID(i)] = BasicBlock(BlockID(i), instructions)
 
-    blocks[EXIT()] = Exit()
+        probLabel = instructions[0]
 
+        print(probLabel)
 
-    print(blocks)
+        match probLabel:
+            case tacGenerator.TAC_LabelInst(identifier = identifier):
+                g.labels[identifier] = BasicBlock(BlockID(i), instructions)
+        
+        #adjacency_dict[i] = ()
+
+    g.blocks[EXIT()] = Exit()
+
+    #print(blocks)
     
 
     """
@@ -253,19 +315,70 @@ def makeControlFlowGraph(functionBody):
     plt.show()
     """
 
-    addAllEdges(blocks)
+    addAllEdges(g)
 
+    return g
 
-	
+visitedList = []
+
+def visit(a, cfg):
+    #print(a)
+
+    visitedList.append(a.id)
+
+    if a.id == EXIT():
+        return 
+    
+    for i in a.successors:
+        d = cfg.blocks[i]
+        visit(d, cfg)
 
 def unreachableCodeElimination(cfg):
-	pass
+    #print(cfg.blocks[ENTRY()])
+    global visitedList
+	
+    a = cfg.blocks[ENTRY()]
+
+    visitedList = []
+    
+    visit(a, cfg)
+    
+    #print(visitedList)
+
+    newBlocks = {}
+    
+    for k, n in cfg.blocks.items():
+        if k in visitedList:
+            newBlocks[k] = n
+        else:
+            pass
+
+    for k, n in newBlocks.items():
+        print(k, n)
+
+    cfg.blocks = newBlocks
+
+    print(cfg.blocks)
+
+    return cfg
 
 def copyPropagation(cfg):
+	return cfg
 	pass
 
 def deadStoreElimination(cfg):
+	return cfg
 	pass
 
 def cfgToInstructions(cfg):
-	pass
+    #ya estan sorteados
+    list = []
+    for k, n in cfg.blocks.items():
+        if n.id == ENTRY() or n.id == EXIT():
+            continue
+
+        list.extend(n.instructions)
+
+    #print(list)
+
+    return list
