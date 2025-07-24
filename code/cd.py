@@ -300,6 +300,7 @@ if __name__ == "__main__":
 				#print(type(i))
 				match i:
 					case tacGenerator.TAC_FunctionDef():
+						print("OPTIMIZING FUNCTION {0}".format(i))
 						i.instructions = optimizeFunction(i.instructions)
 			
 			if LastStage == 'tac':

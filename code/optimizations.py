@@ -428,42 +428,9 @@ def visit(a, cfg):
         d = cfg.blocks[i]
         visit(d, cfg)
 
-def removeRedundantJumps(cfg):
+def removeEmptyBlocks(cfg):
     global visitedList
 
-    i = 1
-    nodes = list(cfg.blocks.values())
-    while i < len(nodes) - 2:
-        #print(nodes[i])
-
-        block = nodes[i]
-
-        instruction = block.instructions[-1]
-
-        #print(type(instruction))
-
-        if type(instruction) == tacGenerator.TAC_JumpInst or type(instruction) == tacGenerator.TAC_JumpIfZeroInst or type(instruction) == tacGenerator.TAC_JumpIfNotZeroInst:
-
-            keepJump = False
-            nextBlock = nodes[i + 1]
-
-            for sID in block.successors:
-
-                if sID == nextBlock.id:
-                    pass
-                else:
-                    keepJump = True
-                    break
-            
-
-            if not keepJump:
-                print("POP REDUNDANT JUMP")
-                block.instructions.pop()
-
-        i += 1
-
-    #aqui tu sabes q el nodo vacio solo tiene una conexion al n + 1 lo conectas con n - 1
-    #modificar su sucesor 
     visitedList = []
 
     for k, n in cfg.blocks.items():
@@ -496,9 +463,10 @@ def removeRedundantJumps(cfg):
     
     for k, n in cfg.blocks.items():
         print(k,n)
-    
 
-def removeRedundantLabels(cfg):
+
+def removeRedundantJumps(cfg):
+    
     i = 1
     nodes = list(cfg.blocks.values())
     while i < len(nodes) - 2:
@@ -530,8 +498,44 @@ def removeRedundantLabels(cfg):
 
         i += 1
 
-    for k, n in cfg.blocks.items():
-        print(k,n)
+    removeEmptyBlocks(cfg)
+
+    
+def removeRedundantLabels(cfg):
+    i = 1
+    
+    nodes = list(cfg.blocks.values())
+
+    while i < len(nodes) - 1:
+
+        block = nodes[i]
+
+        instruction = block.instructions[0]
+
+        if type(instruction) == tacGenerator.TAC_LabelInst:
+
+            keepLabel = False
+            prevBlock = nodes[i - 1]
+
+            for sID in block.predecessors:
+
+                if sID == prevBlock.id:
+                    pass
+                else:
+                    keepLabel = True
+                    break
+            
+
+            if not keepLabel:
+                print("POP REDUNDANT LABEL")
+                block.instructions.pop(0)
+
+        i += 1
+
+    removeEmptyBlocks(cfg)
+
+    #for k, n in cfg.blocks.items():
+    #    print(k,n)
     
 
 def unreachableCodeElimination(cfg):
@@ -612,7 +616,7 @@ def unreachableCodeElimination(cfg):
 
     removeRedundantJumps(cfg)
 
-    #removeRedundantLabels(cfg)
+    removeRedundantLabels(cfg)
 
     return cfg
 

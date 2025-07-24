@@ -7,7 +7,7 @@
 #noLink="-c"
 
 
-notAssembly="-S"
+#notAssembly="-S"
 
 fC="--fold-constants"
 pC="--propagate-copies"
