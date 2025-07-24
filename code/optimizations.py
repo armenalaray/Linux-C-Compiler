@@ -219,7 +219,94 @@ def addEdge(nodeID0, nodeID1, graph):
 
         case Exit(predecessors = p):
             entry1.predecessors.add(nodeID0)
-    
+
+def removeEdge(nodeID0, nodeID1, graph):
+
+    entry0 = graph.blocks[nodeID0]
+    entry1 = graph.blocks[nodeID1]
+
+    match entry0:
+        case Entry(successors = s):
+
+            newSet = set()
+            for s in entry0.successors:
+                if nodeID1 == s:
+                    pass
+                else:
+                    newSet.add(s)
+                
+            entry0.successors = newSet
+
+            #entry0.successors.add(nodeID1)
+            
+
+        case BasicBlock(id = id, instructions = instructions, successors = s):
+
+            newSet = set()
+            for s in entry0.successors:
+                if nodeID1 == s:
+                    pass
+                else:
+                    newSet.add(s)
+                
+            entry0.successors = newSet
+
+            """
+            if nodeID1 in entry0.successors:
+                entry0.successors.remove(nodeID1)
+                pass
+            """
+            #entry0.successors.add(nodeID1)
+
+        case Exit():
+            print("Error: Exit has no successors.")
+            sys.exit(1)
+
+    match entry1:
+        case Entry():
+            print("Error: Entry has no predecessors.")
+            sys.exit(1)
+
+        case BasicBlock(id = id, instructions = instructions, predecessors = p):
+
+            newSet = set()
+
+            for p in entry1.predecessors:
+                if nodeID0 == p:
+                    pass
+                else:
+                    newSet.add(p)
+                
+            entry1.predecessors = newSet
+
+            """
+            if nodeID0 in entry1.predecessors:
+                entry1.predecessors.remove(nodeID0)
+                pass
+            """
+
+            #entry1.predecessors.add(nodeID0)
+
+        case Exit(predecessors = p):
+
+            newSet = set()
+            
+            for p in entry1.predecessors:
+                if nodeID0 == p:
+                    pass
+                else:
+                    newSet.add(p)
+                
+            entry1.predecessors = newSet
+
+            """
+            if nodeID0 in entry1.predecessors:
+                entry1.predecessors.remove(nodeID0)
+                pass
+            """
+
+            #entry1.predecessors.add(nodeID0)
+
 
 def maxBlockID(graph):
     pass
@@ -342,6 +429,7 @@ def visit(a, cfg):
         visit(d, cfg)
 
 def removeRedundantJumps(cfg):
+    global visitedList
 
     i = 1
     nodes = list(cfg.blocks.values())
@@ -352,7 +440,7 @@ def removeRedundantJumps(cfg):
 
         instruction = block.instructions[-1]
 
-        print(type(instruction))
+        #print(type(instruction))
 
         if type(instruction) == tacGenerator.TAC_JumpInst or type(instruction) == tacGenerator.TAC_JumpIfZeroInst or type(instruction) == tacGenerator.TAC_JumpIfNotZeroInst:
 
@@ -369,17 +457,81 @@ def removeRedundantJumps(cfg):
             
 
             if not keepJump:
-                print("Ale")
+                print("POP REDUNDANT JUMP")
+                block.instructions.pop()
+
+        i += 1
+
+    #aqui tu sabes q el nodo vacio solo tiene una conexion al n + 1 lo conectas con n - 1
+    #modificar su sucesor 
+    visitedList = []
+
+    for k, n in cfg.blocks.items():
+
+        if k == ENTRY() or k == EXIT():
+            continue
+
+        if n.instructions == []:
+            
+            for p in n.predecessors:
+                removeEdge(p, k, cfg)
+
+                for s in n.successors:
+                    addEdge(p, s, cfg)
+
+            for s in n.successors:
+                removeEdge(k, s, cfg)    
+
+            visitedList.append(k)
+
+    newBlocks = {}
+    
+    for k, n in cfg.blocks.items():
+        if k in visitedList:
+            pass
+        else:
+            newBlocks[k] = n
+
+    cfg.blocks = newBlocks
+    
+    for k, n in cfg.blocks.items():
+        print(k,n)
+    
+
+def removeRedundantLabels(cfg):
+    i = 1
+    nodes = list(cfg.blocks.values())
+    while i < len(nodes) - 2:
+        #print(nodes[i])
+
+        block = nodes[i]
+
+        instruction = block.instructions[-1]
+
+        #print(type(instruction))
+
+        if type(instruction) == tacGenerator.TAC_JumpInst or type(instruction) == tacGenerator.TAC_JumpIfZeroInst or type(instruction) == tacGenerator.TAC_JumpIfNotZeroInst:
+
+            keepJump = False
+            nextBlock = nodes[i + 1]
+
+            for sID in block.successors:
+
+                if sID == nextBlock.id:
+                    pass
+                else:
+                    keepJump = True
+                    break
+            
+
+            if not keepJump:
+                print("POP REDUNDANT JUMP")
                 block.instructions.pop()
 
         i += 1
 
     for k, n in cfg.blocks.items():
         print(k,n)
-
-    
-        
-
     
 
 def unreachableCodeElimination(cfg):
@@ -459,6 +611,8 @@ def unreachableCodeElimination(cfg):
         print(k,n)
 
     removeRedundantJumps(cfg)
+
+    #removeRedundantLabels(cfg)
 
     return cfg
 
