@@ -1,24 +1,10 @@
-int get_input(void);
+/* Test that we eliminate the second clause in 0 && y */
+int putchar(int c);
 
-int process_input(int input);
+int target(void) {
+    return 0 && putchar(97);
+}
 
-int main(void)
-{
-    return 1;
-    
-    int done = 0;
-    do
-    {
-        /* code */
-        int input = get_input();
-
-        if(1)
-        {
-            return -1;
-        }
-
-        int done = process_input(input);
-
-    } while (done);
-    
+int main(void) {
+    return target();
 }

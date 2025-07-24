@@ -6,9 +6,10 @@
 
 #noLink="-c"
 
-#fC="--fold-constants"
 
 notAssembly="-S"
+
+fC="--fold-constants"
 pC="--propagate-copies"
 eUC="--eliminate-unreachable-code"
 eDS="--eliminate-dead-stores"
@@ -30,7 +31,7 @@ fi
 #cd ./../
 #echo "$(pwd)"
 #pyinstaller --onefile "$(pwd)"/CComp/code/cd.py
-#./writing-a-c-compiler-tests/test_compiler "$(pwd)"/dist/cd --chapter 18 --stage codegen
+#./writing-a-c-compiler-tests/test_compiler "$(pwd)"/dist/cd --chapter 19 --eliminate-unreachable-code
 
 
 

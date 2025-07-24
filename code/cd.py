@@ -110,7 +110,13 @@ def optimizeFunction(functionBody):
 		return functionBody
 	
 	while True:
-		cfg = optimizations.makeControlFlowGraph(functionBody)
+
+		if foldConstants:
+			postConstantFolding = optimizations.constantFolding(functionBody)
+		else:
+			postConstantFolding = functionBody
+
+		cfg = optimizations.makeControlFlowGraph(postConstantFolding)
 
 		if eliminateUnreachableCode:
 			cfg = optimizations.unreachableCodeElimination(cfg)
@@ -125,8 +131,6 @@ def optimizeFunction(functionBody):
 		optimizedFunctionBody = optimizations.cfgToInstructions(cfg)
 
 		if optimizedFunctionBody == functionBody or optimizedFunctionBody == []:
-			#print(optimizedFunctionBody)
-			#print("Ale")
 			return optimizedFunctionBody
 
 		functionBody = optimizedFunctionBody
@@ -296,7 +300,7 @@ if __name__ == "__main__":
 				#print(type(i))
 				match i:
 					case tacGenerator.TAC_FunctionDef():
-						optimizeFunction(i.instructions)
+						i.instructions = optimizeFunction(i.instructions)
 			
 			if LastStage == 'tac':
 				sys.exit(0)

@@ -51,6 +51,7 @@ class EXIT(Node_ID, DebugNode):
         return self.num
             
     def __eq__(self, value):
+        #print(type(value))
         if isNodeID(value) and value.num == self.num:
             return True
         
@@ -322,7 +323,10 @@ def makeControlFlowGraph(functionBody):
 visitedList = []
 
 def visit(a, cfg):
-    #print(a)
+    global visitedList
+
+    if a.id in visitedList:
+        return 
 
     visitedList.append(a.id)
 
@@ -332,6 +336,47 @@ def visit(a, cfg):
     for i in a.successors:
         d = cfg.blocks[i]
         visit(d, cfg)
+
+def removeRedundantJumps(cfg):
+
+    i = 1
+    nodes = list(cfg.blocks.values())
+    while i < len(nodes) - 2:
+        #print(nodes[i])
+
+        block = nodes[i]
+
+        instruction = block.instructions[-1]
+
+        print(type(instruction))
+
+        if type(instruction) == tacGenerator.TAC_JumpInst or type(instruction) == tacGenerator.TAC_JumpIfZeroInst or type(instruction) == tacGenerator.TAC_JumpIfNotZeroInst:
+
+            keepJump = False
+            nextBlock = nodes[i + 1]
+
+            for sID in block.successors:
+
+                if sID == nextBlock.id:
+                    pass
+                else:
+                    keepJump = True
+                    break
+            
+
+            if not keepJump:
+                print("Ale")
+                block.instructions.pop()
+
+        i += 1
+
+    for k, n in cfg.blocks.items():
+        print(k,n)
+
+    
+        
+
+    
 
 def unreachableCodeElimination(cfg):
     #print(cfg.blocks[ENTRY()])
@@ -409,6 +454,8 @@ def unreachableCodeElimination(cfg):
     for k, n in cfg.blocks.items():
         print(k,n)
 
+    removeRedundantJumps(cfg)
+
     return cfg
 
 def copyPropagation(cfg):
@@ -431,3 +478,19 @@ def cfgToInstructions(cfg):
     #print(list)
 
     return list
+
+
+def constantFolding(tac):
+    print("CONSTANT FOLDING PASS")
+    for i in tac:
+        print(i)
+
+        match i:
+            case tacGenerator.TAC_JumpIfZeroInst(condition = condition, label = label):
+                pass
+
+            case tacGenerator.TAC_JumpIfNotZeroInst():
+                pass
+
+    return tac
+    
