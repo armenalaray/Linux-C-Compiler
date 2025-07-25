@@ -255,14 +255,17 @@ class TAC_CopyInstruction(instruction, DebugNode):
     
     def printNode(self):
         return self.__str__()
-    """
+    
+    def __hash__(self):
+        return 0
+    
     def __eq__(self, value):
         if type(value) == TAC_CopyInstruction and self.src == value.src and self.dst == value.dst:
-            print("Copy equal")
+            print("EQUAL COPY")
             return True
         
         return False
-    """
+    
 
 class TAC_GetAddress(instruction, DebugNode):
     def __init__(self, src, dst):
@@ -483,6 +486,17 @@ class TAC_ConstantValue(Value):
 
     def __repr__(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return 0
+        
+    def __eq__(self, value):
+        print("EQUAL CONSTANT")
+        #TODO: YOU ARE HERE
+        if type(value) == TAC_ConstantValue and self.const == value.const:
+            return True
+        
+        return False
 
 class TAC_VariableValue(Value):
     def __init__(self, identifier):
@@ -493,6 +507,17 @@ class TAC_VariableValue(Value):
     
     def __repr__(self):
         return self.__str__()
+
+    def __hash__(self):
+        return 0
+        
+    def __eq__(self, value):
+        if type(value) == TAC_VariableValue and self.identifier == value.identifier:
+            print("EQUAL VARIABLE")
+            return True
+        
+        return False
+            
     
 class UnopType(Enum):
     NEGATE = 1

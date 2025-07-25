@@ -1221,6 +1221,16 @@ class ConstInt(Const, Node):
     def printNode(self, level):
         return "{}".format(self.int)
     
+    def __hash__(self):
+        return 0
+    
+    def __eq__(self, value):
+        print("EQUAL INT")
+        if type(value) == ConstInt and self.int == value.int:
+            return True
+        
+        return False
+    
 
 class ConstLong(Const, Node):
     def __init__(self, int):

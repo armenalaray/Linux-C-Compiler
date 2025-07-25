@@ -1,25 +1,16 @@
-/* Test that we recognize call to 'callee' is unreachable;
+/* make sure we don't choke on programs that never terminate
+ * This program _does_ terminate because it indirectly calls exit()
+ * but the compiler doesn't know that.
  * */
 
-int callee(void) {
-    return 100;
-}
+int exit_wrapper(int status); // defined in chapter_19/libraries/exit.c
 
-int target(int a) {
-    if (a) {
-        return 1;
-    } else {
-        return 2;
-    }
-
-    return callee();  // this should be optimized away
-}
 int main(void) {
-    if (target(1) != 1) {
-        return 1; // fail
-    }
-    if (target(0) != 2) {
-        return 2; // fail
-    }
-    return 0; // success
+    int i = 0;
+    do {
+        i = i + 1;
+        if (i > 10) {
+            exit_wrapper(i);
+        }
+    } while(1);
 }

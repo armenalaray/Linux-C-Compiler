@@ -91,9 +91,16 @@ class BasicBlock(Node, DebugNode):
 
     def __init__(self, id, instructions):
         self.id = id
+        
         self.instructions = instructions
         self.predecessors = set()
         self.successors = set()
+
+        newList = []
+        for i in instructions:
+            newList.append((i, []))
+
+        self.iMap = newList
 
     def __str__(self):
         return "{self.id}: {self.instructions} Pred: {self.predecessors} Suc: {self.successors}".format(self=self)
@@ -362,6 +369,7 @@ class G():
         self.maxID = -1
         self.blocks = {}
         self.labels = {}
+        self.iMap = {}
 
 def makeControlFlowGraph(functionBody):
     iBlocks = partitionIntoBasicBlocks(functionBody)
@@ -620,9 +628,42 @@ def unreachableCodeElimination(cfg):
 
     return cfg
 
+def annotateInstruction(i, currentReachingCopies, cfg):
+
+
+    pass
+
+def transfer(block, reachingCopies):
+
+    print("IMAP for block {0}".format(block.id))
+
+    currentReachingCopies = reachingCopies
+
+    for i, list in block.iMap:
+        list.extend(currentReachingCopies)
+        
+        match i:
+            case tacGenerator.TAC_CopyInstruction(src = src, dst = dst):
+
+                if tacGenerator.TAC_CopyInstruction(dst, src) in currentReachingCopies:
+                    continue
+                    pass
+                
+        
+        print(i, list)
+        
+    
+
 def copyPropagation(cfg):
-	return cfg
-	pass
+
+    for k, n in cfg.blocks.items():
+        if k == ENTRY() or k == EXIT():
+            continue
+
+        reachingCopies = [tacGenerator.TAC_CopyInstruction(tacGenerator.TAC_ConstantValue(parser.ConstInt(0)), tacGenerator.TAC_VariableValue("ale"))]
+        transfer(n, reachingCopies)
+	
+    return cfg
 
 def deadStoreElimination(cfg):
 	return cfg
