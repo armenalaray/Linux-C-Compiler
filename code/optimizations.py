@@ -642,15 +642,18 @@ def transfer(block, reachingCopies):
     for i, list in block.iMap:
         list.extend(currentReachingCopies)
         
+        print(i, list)
+
         match i:
             case tacGenerator.TAC_CopyInstruction(src = src, dst = dst):
 
                 if tacGenerator.TAC_CopyInstruction(dst, src) in currentReachingCopies:
+                    print("FOUND OTHER")
                     continue
-                    pass
+                
+                
                 
         
-        print(i, list)
         
     
 
@@ -660,7 +663,7 @@ def copyPropagation(cfg):
         if k == ENTRY() or k == EXIT():
             continue
 
-        reachingCopies = [tacGenerator.TAC_CopyInstruction(tacGenerator.TAC_ConstantValue(parser.ConstInt(0)), tacGenerator.TAC_VariableValue("ale"))]
+        reachingCopies = [tacGenerator.TAC_CopyInstruction(tacGenerator.TAC_VariableValue("i.1"), tacGenerator.TAC_VariableValue("tmp.4"))]
         transfer(n, reachingCopies)
 	
     return cfg

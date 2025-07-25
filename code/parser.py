@@ -1200,6 +1200,16 @@ class ConstChar(Const, Node):
     
     def printNode(self, level):
         return "{}".format(self.int)
+    
+    def __hash__(self):
+        return 0
+    
+    def __eq__(self, value):
+        print("EQUAL CHAR")
+        if type(value) == ConstChar and self.int == value.int:
+            return True
+        
+        return False
 
 class ConstUChar(Const, Node):
     def __init__(self, int):
@@ -1211,6 +1221,16 @@ class ConstUChar(Const, Node):
     def printNode(self, level):
         return "{}".format(self.int)
 
+    def __hash__(self):
+        return 0
+    
+    def __eq__(self, value):
+        print("EQUAL UCHAR")
+        if type(value) == ConstUChar and self.int == value.int:
+            return True
+        
+        return False
+    
 class ConstInt(Const, Node):
     def __init__(self, int):
         self.int = int
@@ -1241,6 +1261,16 @@ class ConstLong(Const, Node):
     
     def printNode(self, level):
         return "{}".format(self.int)
+
+    def __hash__(self):
+        return 0
+    
+    def __eq__(self, value):
+        print("EQUAL LONG")
+        if type(value) == ConstLong and self.int == value.int:
+            return True
+        
+        return False
     
 class ConstUInt(Const, Node):
     def __init__(self, int):
@@ -1252,6 +1282,15 @@ class ConstUInt(Const, Node):
     def printNode(self, level):
         return "{}".format(self.int)
     
+    def __hash__(self):
+        return 0
+    
+    def __eq__(self, value):
+        print("EQUAL UINT")
+        if type(value) == ConstUInt and self.int == value.int:
+            return True
+        
+        return False
 
 class ConstULong(Const, Node):
     def __init__(self, int):
@@ -1263,7 +1302,16 @@ class ConstULong(Const, Node):
     def printNode(self, level):
         return "{}".format(self.int)
 
-
+    def __hash__(self):
+        return 0
+    
+    def __eq__(self, value):
+        print("EQUAL ULONG")
+        if type(value) == ConstULong and self.int == value.int:
+            return True
+        
+        return False
+    
 class ConstDouble(Const, Node):
     def __init__(self, double):
         self.double = double
@@ -1274,6 +1322,15 @@ class ConstDouble(Const, Node):
     def printNode(self, level):
         return "{}".format(self.double)
     
+    def __hash__(self):
+        return 0
+    
+    def __eq__(self, value):
+        print("EQUAL DOUBLE")
+        if type(value) == ConstDouble and math.isclose(self.double, value.double, rel_tol=1e-9):
+            return True
+        
+        return False
 
 class UnopType(Enum):
     NEGATE = 1

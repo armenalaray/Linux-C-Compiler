@@ -260,6 +260,9 @@ class TAC_CopyInstruction(instruction, DebugNode):
         return 0
     
     def __eq__(self, value):
+        print(self.src, value.src)
+        print(self.dst, value.dst)
+
         if type(value) == TAC_CopyInstruction and self.src == value.src and self.dst == value.dst:
             print("EQUAL COPY")
             return True
@@ -492,6 +495,10 @@ class TAC_ConstantValue(Value):
         
     def __eq__(self, value):
         print("EQUAL CONSTANT")
+
+        print(value)
+        print(self)
+
         #TODO: YOU ARE HERE
         if type(value) == TAC_ConstantValue and self.const == value.const:
             return True
