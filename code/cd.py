@@ -105,7 +105,7 @@ def listsAreEqual(optimizedFunctionBody,functionBody):
 """
 	
 			
-def optimizeFunction(functionBody):
+def optimizeFunction(functionBody, symbolTable):
 	if functionBody == []:
 		return functionBody
 	
@@ -122,7 +122,7 @@ def optimizeFunction(functionBody):
 			cfg = optimizations.unreachableCodeElimination(cfg)
 		
 		if propagateCopies:
-			cfg = optimizations.copyPropagation(cfg)
+			cfg = optimizations.copyPropagation(cfg, symbolTable)
 
 		if eliminateDeadStores:
 			cfg = optimizations.deadStoreElimination(cfg)
@@ -301,7 +301,7 @@ if __name__ == "__main__":
 				match i:
 					case tacGenerator.TAC_FunctionDef():
 						print("OPTIMIZING FUNCTION {0}".format(i))
-						i.instructions = optimizeFunction(i.instructions)
+						i.instructions = optimizeFunction(i.instructions, symbolTable)
 			
 			if LastStage == 'tac':
 				sys.exit(0)

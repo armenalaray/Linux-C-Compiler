@@ -1202,14 +1202,15 @@ class ConstChar(Const, Node):
         return "{}".format(self.int)
     
     def __hash__(self):
-        return 0
+        return hash((self.int))
     
     def __eq__(self, value):
-        print("EQUAL CHAR")
-        if type(value) == ConstChar and self.int == value.int:
-            return True
         
-        return False
+        if not isinstance(value, ConstChar):
+            return NotImplemented
+        
+        return self.int == value.int
+    
 
 class ConstUChar(Const, Node):
     def __init__(self, int):
@@ -1222,6 +1223,17 @@ class ConstUChar(Const, Node):
         return "{}".format(self.int)
 
     def __hash__(self):
+        return hash((self.int))
+    
+    def __eq__(self, value):
+        
+        if not isinstance(value, ConstUChar):
+            return NotImplemented
+        
+        return self.int == value.int
+    
+    """
+    def __hash__(self):
         return 0
     
     def __eq__(self, value):
@@ -1230,6 +1242,7 @@ class ConstUChar(Const, Node):
             return True
         
         return False
+    """
     
 class ConstInt(Const, Node):
     def __init__(self, int):
@@ -1242,6 +1255,17 @@ class ConstInt(Const, Node):
         return "{}".format(self.int)
     
     def __hash__(self):
+        return hash((self.int))
+    
+    def __eq__(self, value):
+        
+        if not isinstance(value, ConstInt):
+            return NotImplemented
+        
+        return self.int == value.int
+
+    """
+    def __hash__(self):
         return 0
     
     def __eq__(self, value):
@@ -1250,6 +1274,7 @@ class ConstInt(Const, Node):
             return True
         
         return False
+    """
     
 
 class ConstLong(Const, Node):
@@ -1263,6 +1288,17 @@ class ConstLong(Const, Node):
         return "{}".format(self.int)
 
     def __hash__(self):
+        return hash((self.int))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, ConstLong):
+            return NotImplemented
+        
+        return self.int == value.int
+    
+    """
+    def __hash__(self):
         return 0
     
     def __eq__(self, value):
@@ -1271,6 +1307,7 @@ class ConstLong(Const, Node):
             return True
         
         return False
+    """
     
 class ConstUInt(Const, Node):
     def __init__(self, int):
@@ -1283,6 +1320,17 @@ class ConstUInt(Const, Node):
         return "{}".format(self.int)
     
     def __hash__(self):
+        return hash((self.int))
+    
+    def __eq__(self, value):
+        
+        if not isinstance(value, ConstUInt):
+            return NotImplemented
+        
+        return self.int == value.int
+
+    """
+    def __hash__(self):
         return 0
     
     def __eq__(self, value):
@@ -1291,6 +1339,7 @@ class ConstUInt(Const, Node):
             return True
         
         return False
+    """
 
 class ConstULong(Const, Node):
     def __init__(self, int):
@@ -1303,6 +1352,17 @@ class ConstULong(Const, Node):
         return "{}".format(self.int)
 
     def __hash__(self):
+        return hash((self.int))
+    
+    def __eq__(self, value):
+        
+        if not isinstance(value, ConstULong):
+            return NotImplemented
+        
+        return self.int == value.int
+    
+    """
+    def __hash__(self):
         return 0
     
     def __eq__(self, value):
@@ -1311,6 +1371,7 @@ class ConstULong(Const, Node):
             return True
         
         return False
+    """
     
 class ConstDouble(Const, Node):
     def __init__(self, double):
@@ -1323,14 +1384,15 @@ class ConstDouble(Const, Node):
         return "{}".format(self.double)
     
     def __hash__(self):
-        return 0
+        return hash((self.double))
     
     def __eq__(self, value):
-        print("EQUAL DOUBLE")
-        if type(value) == ConstDouble and math.isclose(self.double, value.double, rel_tol=1e-9):
-            return True
         
-        return False
+        if not isinstance(value, ConstDouble):
+            return NotImplemented
+        
+        return self.double == value.double
+
 
 class UnopType(Enum):
     NEGATE = 1

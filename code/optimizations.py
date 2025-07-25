@@ -1,6 +1,7 @@
 import networkx as nx
 import tacGenerator
 import parser
+import typeChecker
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -98,9 +99,10 @@ class BasicBlock(Node, DebugNode):
 
         newList = []
         for i in instructions:
-            newList.append((i, []))
+            newList.append((i, set()))
 
         self.iMap = newList
+        self.reachingCopies = set()
 
     def __str__(self):
         return "{self.id}: {self.instructions} Pred: {self.predecessors} Suc: {self.successors}".format(self=self)
@@ -369,7 +371,6 @@ class G():
         self.maxID = -1
         self.blocks = {}
         self.labels = {}
-        self.iMap = {}
 
 def makeControlFlowGraph(functionBody):
     iBlocks = partitionIntoBasicBlocks(functionBody)
@@ -633,16 +634,17 @@ def annotateInstruction(i, currentReachingCopies, cfg):
 
     pass
 
-def transfer(block, reachingCopies):
+def transfer(block, reachingCopies, symbolTable):
 
-    print("IMAP for block {0}".format(block.id))
+    print("--------------IMAP for block {0}-------------------".format(block.id))
 
     currentReachingCopies = reachingCopies
 
-    for i, list in block.iMap:
-        list.extend(currentReachingCopies)
+    for i, set0 in block.iMap:
+
+        set0.update(currentReachingCopies)
         
-        print(i, list)
+        print(i, set0)
 
         match i:
             case tacGenerator.TAC_CopyInstruction(src = src, dst = dst):
@@ -650,21 +652,172 @@ def transfer(block, reachingCopies):
                 if tacGenerator.TAC_CopyInstruction(dst, src) in currentReachingCopies:
                     print("FOUND OTHER")
                     continue
+
+                newSet = set()
                 
+                for c in currentReachingCopies:
+                    if c.src == dst or c.dst == dst:
+                        pass
+                    else:
+                        newSet.add(c)
+
+                currentReachingCopies = newSet
+
+                currentReachingCopies.add(i)
                 
+            case tacGenerator.TAC_FunCallInstruction(funName = funName, arguments = arguments, dst = dst):
+
+                def isStatic(variable):
+                    
+                    match variable:
+                        case tacGenerator.TAC_VariableValue(identifier = identifier):
+                            a = symbolTable[identifier]
+                            
+                            #print(type(a.attrs))
+
+                            match a.attrs:
+                                case typeChecker.StaticAttributes(initialVal = initialVal, global_ = global_):
+                                    if global_ == False:
+                                        return True
+
+                    
+                    return False
+
+                newSet = set()
+                
+                for c in currentReachingCopies:
+                    if isStatic(c.src) or isStatic(c.dst) or c.src == dst or c.dst == dst:
+                        pass
+                    else:
+                        newSet.add(c)
+
+                currentReachingCopies = newSet
+
+                """
+                newList = []
+                for c in currentReachingCopies:
+                    if isStatic(c.src) or isStatic(c.dst) or c.src == dst or c.dst == dst:
+                        pass
+                    else:
+                        newList.append(c)
+                
+                currentReachingCopies = newList
+                """
+
+            
+            case tacGenerator.TAC_UnaryInstruction(operator = operator, src = src, dst = dst):
+                
+                newSet = set()
+                
+                for c in currentReachingCopies:
+                    if c.src == dst or c.dst == dst:
+                        pass
+                    else:
+                        newSet.add(c)
+                        #newSet.union({c})
+
+                currentReachingCopies = newSet
+
+                """
+                newList = []
+                for c in currentReachingCopies:
+                    if c.src == dst or c.dst == dst:
+                        pass
+                    else:
+                        newList.append(c)
+                
+                currentReachingCopies = newList
+                """
+
+            case tacGenerator.TAC_BinaryInstruction(operator = operator, src1 = src1, src2 = src2, dst = dst):
+                
+                newSet = set()
+                
+                for c in currentReachingCopies:
+                    if c.src == dst or c.dst == dst:
+                        pass
+                    else:
+                        newSet.add(c)
+                        #newSet.union({c})
+
+                currentReachingCopies = newSet
+                
+                """
+                newList = []
+                for c in currentReachingCopies:
+                    if c.src == dst or c.dst == dst:
+                        pass
+                    else:
+                        newList.append(c)
+                
+                currentReachingCopies = newList
+                """
+
+            case _:
+                continue
+            
+    
+    block.reachingCopies.update(currentReachingCopies)
+
+    print("BLOCK COPIES", block.reachingCopies)
                 
         
+def meet(block, allCopies, cfg):
+
+    incomingCopies = allCopies
+
+    for predID in block.predecessors:
+
+        match predID:
+            case ENTRY():
+                return set()
+            
+            case BlockID(num = num):
+                pass
+                """
+                other = cfg.blocks[predID]
+                predOutCopies = other.reachingCopies
+
+                #se podrian repetir?
+
+                print(predOutCopies)
+                print(incomingCopies)
+
+                #incomingCopies = intersection(incomingCopies, predOutCopies)
+                """
+                
+
+            case EXIT():
+                print("Error: Malformed control graph.")
+                sys.exit(1)
+
+    return incomingCopies
         
     
-
-def copyPropagation(cfg):
-
+def findAllCopyInstructions(cfg):
+    allCopies = set()
     for k, n in cfg.blocks.items():
         if k == ENTRY() or k == EXIT():
             continue
 
-        reachingCopies = [tacGenerator.TAC_CopyInstruction(tacGenerator.TAC_VariableValue("i.1"), tacGenerator.TAC_VariableValue("tmp.4"))]
-        transfer(n, reachingCopies)
+        for i in n.instructions:
+            match i:
+                case tacGenerator.TAC_CopyInstruction():
+                    allCopies.add(i)
+
+    return allCopies
+
+def copyPropagation(cfg, symbolTable):
+
+    allCopies = findAllCopyInstructions(cfg)
+
+    for k, n in cfg.blocks.items():
+        if k == ENTRY() or k == EXIT():
+            continue
+        
+        ##incomingCopies = set()
+        incomingCopies = meet(n, allCopies, cfg)
+        transfer(n, incomingCopies, symbolTable)
 	
     return cfg
 
