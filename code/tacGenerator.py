@@ -75,6 +75,16 @@ class TAC_addPtr(instruction, DebugNode):
     def printNode(self):
         return self.__str__()
 
+    def __hash__(self):
+        return hash((self.ptr, self.index, self.scale, self.dst))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_addPtr):
+            return NotImplemented
+        
+        return self.ptr == value.ptr and self.index == value.index and self.scale == value.scale and self.dst == value.dst
+
 class TAC_copyFromOffset(instruction, DebugNode):
     def __init__(self, src, offset, dst):
         self.src = src
@@ -89,6 +99,16 @@ class TAC_copyFromOffset(instruction, DebugNode):
     
     def printNode(self):
         return self.__str__()
+
+    def __hash__(self):
+        return hash((self.src, self.offset, self.dst))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_copyFromOffset):
+            return NotImplemented
+        
+        return self.src == value.src and self.offset == value.offset and self.dst == value.dst
 
 class TAC_copyToOffset(instruction, DebugNode):
     def __init__(self, src, dst, offset):
@@ -106,6 +126,16 @@ class TAC_copyToOffset(instruction, DebugNode):
         return self.__str__()
         return "CopyToOffset({self.dst} + {self.offset}) = {self.src} ".format(self=self)
 
+    def __hash__(self):
+        return hash((self.src, self.offset, self.dst))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_copyToOffset):
+            return NotImplemented
+        
+        return self.src == value.src and self.offset == value.offset and self.dst == value.dst
+
 class TAC_returnInstruction(instruction, DebugNode):
     def __init__(self, Value = None):
         self.Value = Value
@@ -118,6 +148,16 @@ class TAC_returnInstruction(instruction, DebugNode):
     
     def printNode(self):
         return self.__str__()
+
+    def __hash__(self):
+        return hash((self.Value))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_returnInstruction):
+            return NotImplemented
+        
+        return self.Value == value.Value
 
 class TAC_signExtendInstruction(instruction, DebugNode):
     def __init__(self, src, dst):
@@ -133,6 +173,16 @@ class TAC_signExtendInstruction(instruction, DebugNode):
     def printNode(self):
         return self.__str__()
     
+    def __hash__(self):
+        return hash((self.src, self.dst))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_signExtendInstruction):
+            return NotImplemented
+        
+        return self.src == value.src and self.dst == value.dst
+    
 class TAC_zeroExtendInstruction(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src
@@ -146,6 +196,16 @@ class TAC_zeroExtendInstruction(instruction, DebugNode):
     
     def printNode(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.src, self.dst))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_zeroExtendInstruction):
+            return NotImplemented
+        
+        return self.src == value.src and self.dst == value.dst
 
 class TAC_DoubleToInt(instruction, DebugNode):
     def __init__(self, src, dst):
@@ -160,6 +220,16 @@ class TAC_DoubleToInt(instruction, DebugNode):
     
     def printNode(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.src, self.dst))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_DoubleToInt):
+            return NotImplemented
+        
+        return self.src == value.src and self.dst == value.dst
 
 class TAC_DoubleToUInt(instruction, DebugNode):
     def __init__(self, src, dst):
@@ -174,6 +244,16 @@ class TAC_DoubleToUInt(instruction, DebugNode):
     
     def printNode(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.src, self.dst))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_DoubleToUInt):
+            return NotImplemented
+        
+        return self.src == value.src and self.dst == value.dst
 
 class TAC_IntToDouble(instruction, DebugNode):
     def __init__(self, src, dst):
@@ -188,6 +268,16 @@ class TAC_IntToDouble(instruction, DebugNode):
     
     def printNode(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.src, self.dst))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_IntToDouble):
+            return NotImplemented
+        
+        return self.src == value.src and self.dst == value.dst
 
 class TAC_UIntToDouble(instruction, DebugNode):
     def __init__(self, src, dst):
@@ -203,6 +293,15 @@ class TAC_UIntToDouble(instruction, DebugNode):
     def printNode(self):
         return self.__str__()
 
+    def __hash__(self):
+        return hash((self.src, self.dst))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_UIntToDouble):
+            return NotImplemented
+        
+        return self.src == value.src and self.dst == value.dst
 
 class TAC_truncateInstruction(instruction, DebugNode):
     def __init__(self, src, dst):
@@ -218,7 +317,16 @@ class TAC_truncateInstruction(instruction, DebugNode):
     def printNode(self):
         return self.__str__()
 
-#tienes q cambiar las unary por copy!
+    def __hash__(self):
+        return hash((self.src, self.dst))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_truncateInstruction):
+            return NotImplemented
+        
+        return self.src == value.src and self.dst == value.dst
+
 class TAC_UnaryInstruction(instruction, DebugNode):
     def __init__(self, operator, src, dst):
         self.operator = operator
@@ -233,6 +341,17 @@ class TAC_UnaryInstruction(instruction, DebugNode):
     
     def printNode(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.operator, self.src, self.dst))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_UnaryInstruction):
+            return NotImplemented
+        
+        return self.operator == value.operator and self.src == value.src and self.dst == value.dst
+    
     """
     def __eq__(self, value):
         if type(value) == TAC_UnaryInstruction and self.operator == value.operator and self.src == value.src and self.dst == value.dst:
@@ -280,6 +399,16 @@ class TAC_GetAddress(instruction, DebugNode):
     def printNode(self):
         return self.__str__()
     
+    def __hash__(self):
+        return hash((self.src, self.dst))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_GetAddress):
+            return NotImplemented
+        
+        return self.src == value.src and self.dst == value.dst
+    
     """
     def __eq__(self, value):
         if type(value) == TAC_GetAddress and self.src == value.src and self.dst == value.dst:
@@ -302,6 +431,16 @@ class TAC_Load(instruction, DebugNode):
     
     def printNode(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.src, self.dst))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_Load):
+            return NotImplemented
+        
+        return self.src == value.src and self.dst == value.dst
 
     """
     def __eq__(self, value):
@@ -325,6 +464,16 @@ class TAC_Store(instruction, DebugNode):
     
     def printNode(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.src, self.dst))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_Store):
+            return NotImplemented
+        
+        return self.src == value.src and self.dst == value.dst
     """
     def __eq__(self, value):
         if type(value) == TAC_Store and self.src == value.src and self.dst == value.dst:
@@ -347,6 +496,16 @@ class TAC_JumpIfZeroInst(instruction, DebugNode):
     
     def printNode(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.condition, self.label))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_JumpIfZeroInst):
+            return NotImplemented
+        
+        return self.condition == value.condition and self.label == value.label
     
     """
     def __eq__(self, value):
@@ -371,6 +530,16 @@ class TAC_JumpIfNotZeroInst(instruction, DebugNode):
     def printNode(self):
         return self.__str__()
     
+    def __hash__(self):
+        return hash((self.condition, self.label))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_JumpIfNotZeroInst):
+            return NotImplemented
+        
+        return self.condition == value.condition and self.label == value.label
+    
     """
     def __eq__(self, value):
         if type(value) == TAC_JumpIfNotZeroInst and self.condition == value.condition and self.label == value.label:
@@ -393,6 +562,16 @@ class TAC_JumpInst(instruction, DebugNode):
     def printNode(self):
         return self.__str__()
     
+    def __hash__(self):
+        return hash((self.label))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_JumpInst):
+            return NotImplemented
+        
+        return self.label == value.label
+    
     """
     def __eq__(self, value):
         if type(value) == TAC_JumpInst and self.label == value.label:
@@ -414,6 +593,16 @@ class TAC_LabelInst(instruction, DebugNode):
     
     def printNode(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.identifier))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_LabelInst):
+            return NotImplemented
+        
+        return self.identifier == value.identifier
     
     """
     def __eq__(self, value):
@@ -440,14 +629,15 @@ class TAC_BinaryInstruction(DebugNode):
     def printNode(self):
         return self.__str__()
     
-    """
+    def __hash__(self):
+        return hash((self.operator, self.src1, self.src2, self.dst))
+    
     def __eq__(self, value):
-        if type(value) == TAC_BinaryInstruction and self.operator == value.operator and self.src1 == value.src1 and self.src2 == value.src2:
-            print("Binary equal")
-            return True
+
+        if not isinstance(value, TAC_BinaryInstruction):
+            return NotImplemented
         
-        return False
-    """
+        return self.operator == value.operator and self.src1 == value.src1 and self.src2 == value.src2 and self.dst == value.dst
 
 class TAC_FunCallInstruction(DebugNode):
     def __init__(self, funName, arguments, dst = None):
@@ -464,14 +654,15 @@ class TAC_FunCallInstruction(DebugNode):
     def printNode(self):
         return self.__str__()
     
-    """
+    def __hash__(self):
+        return hash((self.funName, self.arguments, self.dst))
+    
     def __eq__(self, value):
-        if type(value) == TAC_FunCallInstruction and self.funName == value.funName and self.arguments == value.arguments and self.dst == value.dst:
-            print("funcall equal")
-            return True
+
+        if not isinstance(value, TAC_FunCallInstruction):
+            return NotImplemented
         
-        return False
-    """
+        return self.funName == value.funName and self.arguments == value.arguments and self.dst == value.dst
 
 class Value:
     pass
@@ -554,11 +745,31 @@ class TAC_UnaryOperator(Operator):
             
             case _:
                 return "_"
+            
+    def __hash__(self):
+        return hash((self.operator))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_UnaryOperator):
+            return NotImplemented
+        
+        return self.operator == value.operator
 
 class TAC_BinaryOperator(Operator):
     def __init__(self, operator):
         self.operator = operator
 
+    def __hash__(self):
+        return hash((self.operator))
+    
+    def __eq__(self, value):
+
+        if not isinstance(value, TAC_BinaryOperator):
+            return NotImplemented
+        
+        return self.operator == value.operator
+    
     def __str__(self):
         match self.operator:
             
@@ -594,8 +805,6 @@ class TAC_BinaryOperator(Operator):
             
             case BinopType.LESSOREQUAL:
                 return "<="
-            
-
             
             case _:
                 return "_"

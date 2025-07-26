@@ -714,17 +714,6 @@ def transfer(block, reachingCopies, symbolTable):
 
                 currentReachingCopies = newSet
 
-                """
-                newList = []
-                for c in currentReachingCopies:
-                    if isStatic(c.src) or isStatic(c.dst) or c.src == dst or c.dst == dst:
-                        pass
-                    else:
-                        newList.append(c)
-                
-                currentReachingCopies = newList
-                """
-
             
             case tacGenerator.TAC_UnaryInstruction(operator = operator, src = src, dst = dst):
                 
@@ -739,17 +728,6 @@ def transfer(block, reachingCopies, symbolTable):
 
                 currentReachingCopies = newSet
 
-                """
-                newList = []
-                for c in currentReachingCopies:
-                    if c.src == dst or c.dst == dst:
-                        pass
-                    else:
-                        newList.append(c)
-                
-                currentReachingCopies = newList
-                """
-
             case tacGenerator.TAC_BinaryInstruction(operator = operator, src1 = src1, src2 = src2, dst = dst):
                 
                 newSet = set()
@@ -762,25 +740,14 @@ def transfer(block, reachingCopies, symbolTable):
                         #newSet.union({c})
 
                 currentReachingCopies = newSet
-                
-                """
-                newList = []
-                for c in currentReachingCopies:
-                    if c.src == dst or c.dst == dst:
-                        pass
-                    else:
-                        newList.append(c)
-                
-                currentReachingCopies = newList
-                """
 
             case _:
                 continue
             
-    
+    block.reachingCopies.clear()
     block.reachingCopies.update(currentReachingCopies)
 
-    print("BLOCK COPIES", block.reachingCopies)
+    #print("BLOCK COPIES", block.reachingCopies)
                 
         
 def meet(block, allCopies, cfg):
@@ -794,7 +761,6 @@ def meet(block, allCopies, cfg):
                 return set()
             
             case BlockID(num = num):
-                
                 
                 other = cfg.blocks[predID]
                 predOutCopies = other.reachingCopies
@@ -836,11 +802,7 @@ def findReachingCopies(cfg, symbolTable):
         workList.append(n)
 
         n.reachingCopies.update(allCopies)
-    
-    """
-    for n in workList:
-        print(n)
-    """
+
 
     while workList != []:
         n = workList.pop(0)
@@ -849,12 +811,13 @@ def findReachingCopies(cfg, symbolTable):
         incomingCopies = meet(n, allCopies, cfg)
         transfer(n, incomingCopies, symbolTable)
 
-        #print(oldAnnot is n.reachingCopies)
-
-        print(oldAnnot)
-        print(n.reachingCopies)
+        print("OLD ANNOT:", oldAnnot)
+        print("NEW ANNOT:", n.reachingCopies)
 
         if oldAnnot != n.reachingCopies:
+
+            print("ADD SUCCESSORS.")
+
             for sID in n.successors:
 
                 match sID:
@@ -872,16 +835,86 @@ def findReachingCopies(cfg, symbolTable):
 
                         block = cfg.blocks[sID]
 
-
-
-                        pass
+                        if block in workList:
+                            pass
+                        else:
+                            workList.append(block)
                 
-            
+
+def rewriteInstruction(node, ins):
+    reachingCopies = node.iMap[ins]
     
 
 def copyPropagation(cfg, symbolTable):
 
     findReachingCopies(cfg, symbolTable)
+
+    for k, n in cfg.blocks.items():
+        if k == ENTRY() or k == EXIT():
+            continue
+        
+        newList = []
+
+        for i, reachingCopies in n.iMap:
+            #print(i, reachingCopies)
+            
+            removeIns = False
+
+            def replaceOperand(op, reachingCopies):
+                if type(op) == tacGenerator.TAC_ConstantValue:
+                    return op
+
+                for c in reachingCopies:
+                    if c.dst == op:
+                        return c.src
+
+                return op
+
+            match i:
+                case tacGenerator.TAC_CopyInstruction(src = src, dst = dst):
+
+                    for c in reachingCopies:
+                        if c == i or (c.src == dst and c.dst == src):
+                            #tienes que indicar que i se borra
+                            removeIns = True
+                            continue
+                    
+                    if removeIns:
+                        continue
+
+                    newSrc = replaceOperand(src, reachingCopies)
+                    newList.append(tacGenerator.TAC_CopyInstruction(newSrc, dst))
+
+                case tacGenerator.TAC_UnaryInstruction(operator = operator, src = src, dst = dst):
+                    newSrc = replaceOperand(src, reachingCopies)
+                    newList.append(tacGenerator.TAC_UnaryInstruction(operator, newSrc, dst))
+
+                case tacGenerator.TAC_BinaryInstruction(operator = operator, src1 = src1, src2 = src2, dst = dst):
+                    newSrc1 = replaceOperand(src1, reachingCopies)
+                    newSrc2 = replaceOperand(src2, reachingCopies)
+                    newList.append(tacGenerator.TAC_BinaryInstruction(operator, newSrc1, newSrc2, dst))
+
+                case tacGenerator.TAC_JumpIfZeroInst(condition = condition, label = label):
+                    newCondition = replaceOperand(condition, reachingCopies)
+                    newList.append(tacGenerator.TAC_JumpIfZeroInst(newCondition, label))
+                
+                case tacGenerator.TAC_JumpIfNotZeroInst(condition = condition, label = label):
+                    newCondition = replaceOperand(condition, reachingCopies)
+                    newList.append(tacGenerator.TAC_JumpIfNotZeroInst(newCondition, label))
+
+                case tacGenerator.TAC_FunCallInstruction(funName = funName, arguments = arguments, dst = dst):
+
+                    newArgs = []
+                    for arg in arguments:
+                        newArg = replaceOperand(arg, reachingCopies)
+                        newArgs.append(newArg)
+
+                    newList.append(tacGenerator.TAC_FunCallInstruction(funName, newArgs, dst))
+
+                case _:
+                    newList.append(i)
+                    
+        #n.instructions = copy.deepcopy(newList)
 
     return cfg
 

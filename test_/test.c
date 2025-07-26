@@ -6,10 +6,9 @@
 int exit_wrapper(int status); // defined in chapter_19/libraries/exit.c
 
 int main(void) {
+    int i = 0;
     do {
-        int i = 0;
         i = i + 1;
-        int j = i;
         if (i > 10) {
             exit_wrapper(i);
         }
