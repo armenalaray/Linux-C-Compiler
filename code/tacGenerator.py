@@ -655,7 +655,7 @@ class TAC_FunCallInstruction(DebugNode):
         return self.__str__()
     
     def __hash__(self):
-        return hash((self.funName, self.arguments, self.dst))
+        return hash((self.funName, tuple(self.arguments) , self.dst))
     
     def __eq__(self, value):
 

@@ -85,19 +85,36 @@ class Node():
 
 class BasicBlock(Node, DebugNode):
 
+    def regenerateIMAP(self, instructions):
+
+        newDic = {}
+        for i in instructions:
+            newDic[i] = set()
+
+        self.iMap = newDic
+        self.reachingCopies = set()
+
+    def updateInstructions(self, instructions):
+        self.instructions = instructions
+        self.regenerateIMAP(self.instructions)
+
     def __init__(self, id, instructions):
         self.id = id
-        
-        self.instructions = instructions
         self.predecessors = set()
         self.successors = set()
+        self.updateInstructions(instructions)
 
-        newList = []
+        #self.instructions = instructions
+        #self.regenerateIMAP(instructions)
+
+        """
+        newDic = {}
         for i in instructions:
-            newList.append((i, set()))
+            newDic[i] = set()
 
-        self.iMap = newList
+        self.iMap = newDic
         self.reachingCopies = set()
+        """
 
     def __str__(self):
         return "{self.id}: {self.instructions} Pred: {self.predecessors} Suc: {self.successors} iMap: {self.iMap} ReachingCopies: {self.reachingCopies}".format(self=self)
@@ -338,9 +355,6 @@ def removeEdge(nodeID0, nodeID1, graph):
             #entry1.predecessors.add(nodeID0)
 
 
-def maxBlockID(graph):
-    pass
-
 def addAllEdges(graph):
 
     addEdge(ENTRY(), BlockID(0), graph)
@@ -415,27 +429,8 @@ def makeControlFlowGraph(functionBody):
         match probLabel:
             case tacGenerator.TAC_LabelInst(identifier = identifier):
                 g.labels[identifier] = BasicBlock(BlockID(i), instructions)
-        
-        #adjacency_dict[i] = ()
 
     g.blocks[EXIT()] = Exit()
-
-    #print(blocks)
-    
-
-    """
-    names = {}
-    for block in blocks:
-        names[block.id.num] = block.printNode()
-
-    print(adjacency_dict)
-
-    DG = nx.Graph(adjacency_dict, day="Friday")
-
-    nx.draw_networkx(DG, with_labels=True, node_color="pink", node_shape="s", labels=names, font_size=20)
-    
-    plt.show()
-    """
 
     addAllEdges(g)
 
@@ -525,10 +520,13 @@ def removeRedundantJumps(cfg):
             if not keepJump:
                 print("POP REDUNDANT JUMP")
                 block.instructions.pop()
+                block.regenerateIMAP(block.instructions)
 
         i += 1
 
     removeEmptyBlocks(cfg)
+
+    
 
     
 def removeRedundantLabels(cfg):
@@ -559,6 +557,7 @@ def removeRedundantLabels(cfg):
             if not keepLabel:
                 print("POP REDUNDANT LABEL")
                 block.instructions.pop(0)
+                block.regenerateIMAP(block.instructions)
 
         i += 1
 
@@ -650,10 +649,6 @@ def unreachableCodeElimination(cfg):
 
     return cfg
 
-def annotateInstruction(i, currentReachingCopies, cfg):
-
-
-    pass
 
 def transfer(block, reachingCopies, symbolTable):
 
@@ -661,7 +656,7 @@ def transfer(block, reachingCopies, symbolTable):
 
     currentReachingCopies = reachingCopies
 
-    for i, set0 in block.iMap:
+    for i, set0 in block.iMap.items():
 
         set0.update(currentReachingCopies)
         
@@ -746,8 +741,6 @@ def transfer(block, reachingCopies, symbolTable):
             
     block.reachingCopies.clear()
     block.reachingCopies.update(currentReachingCopies)
-
-    #print("BLOCK COPIES", block.reachingCopies)
                 
         
 def meet(block, allCopies, cfg):
@@ -839,82 +832,84 @@ def findReachingCopies(cfg, symbolTable):
                             pass
                         else:
                             workList.append(block)
-                
+
+def replaceOperand(op, reachingCopies):
+    if type(op) == tacGenerator.TAC_ConstantValue:
+        return op
+
+    for c in reachingCopies:
+        if c.dst == op:
+            return c.src
+
+    return op         
 
 def rewriteInstruction(node, ins):
     reachingCopies = node.iMap[ins]
+    print(reachingCopies)
+
+    match ins:
+        case tacGenerator.TAC_CopyInstruction(src = src, dst = dst):
+
+            for c in reachingCopies:
+                if c == ins or (c.src == dst and c.dst == src):
+                    return None
+            
+            newSrc = replaceOperand(src, reachingCopies)
+            return tacGenerator.TAC_CopyInstruction(newSrc, dst)
+
+        case tacGenerator.TAC_UnaryInstruction(operator = operator, src = src, dst = dst):
+            newSrc = replaceOperand(src, reachingCopies)
+            return tacGenerator.TAC_UnaryInstruction(operator, newSrc, dst)
+
+        case tacGenerator.TAC_BinaryInstruction(operator = operator, src1 = src1, src2 = src2, dst = dst):
+            newSrc1 = replaceOperand(src1, reachingCopies)
+            newSrc2 = replaceOperand(src2, reachingCopies)
+            return tacGenerator.TAC_BinaryInstruction(operator, newSrc1, newSrc2, dst)
+
+        case tacGenerator.TAC_JumpIfZeroInst(condition = condition, label = label):
+            newCondition = replaceOperand(condition, reachingCopies)
+            return tacGenerator.TAC_JumpIfZeroInst(newCondition, label)
+        
+        case tacGenerator.TAC_JumpIfNotZeroInst(condition = condition, label = label):
+            newCondition = replaceOperand(condition, reachingCopies)
+            return tacGenerator.TAC_JumpIfNotZeroInst(newCondition, label)
+
+        case tacGenerator.TAC_FunCallInstruction(funName = funName, arguments = arguments, dst = dst):
+
+            newArgs = []
+            for arg in arguments:
+                newArg = replaceOperand(arg, reachingCopies)
+                newArgs.append(newArg)
+
+            return tacGenerator.TAC_FunCallInstruction(funName, newArgs, dst)
+
+        case _:
+            return ins
     
 
 def copyPropagation(cfg, symbolTable):
 
     findReachingCopies(cfg, symbolTable)
 
+    print("------------REPLACE INSTRUCTIONS WITH REACHING COPIES.-------------")
     for k, n in cfg.blocks.items():
         if k == ENTRY() or k == EXIT():
             continue
         
         newList = []
-
-        for i, reachingCopies in n.iMap:
-            #print(i, reachingCopies)
+        for i in n.instructions:
             
-            removeIns = False
+            newI = rewriteInstruction(n, i)
 
-            def replaceOperand(op, reachingCopies):
-                if type(op) == tacGenerator.TAC_ConstantValue:
-                    return op
-
-                for c in reachingCopies:
-                    if c.dst == op:
-                        return c.src
-
-                return op
-
-            match i:
-                case tacGenerator.TAC_CopyInstruction(src = src, dst = dst):
-
-                    for c in reachingCopies:
-                        if c == i or (c.src == dst and c.dst == src):
-                            #tienes que indicar que i se borra
-                            removeIns = True
-                            continue
+            if newI == None:
+                pass
+            else:
+                newList.append(newI)
                     
-                    if removeIns:
-                        continue
+        n.instructions = newList
 
-                    newSrc = replaceOperand(src, reachingCopies)
-                    newList.append(tacGenerator.TAC_CopyInstruction(newSrc, dst))
-
-                case tacGenerator.TAC_UnaryInstruction(operator = operator, src = src, dst = dst):
-                    newSrc = replaceOperand(src, reachingCopies)
-                    newList.append(tacGenerator.TAC_UnaryInstruction(operator, newSrc, dst))
-
-                case tacGenerator.TAC_BinaryInstruction(operator = operator, src1 = src1, src2 = src2, dst = dst):
-                    newSrc1 = replaceOperand(src1, reachingCopies)
-                    newSrc2 = replaceOperand(src2, reachingCopies)
-                    newList.append(tacGenerator.TAC_BinaryInstruction(operator, newSrc1, newSrc2, dst))
-
-                case tacGenerator.TAC_JumpIfZeroInst(condition = condition, label = label):
-                    newCondition = replaceOperand(condition, reachingCopies)
-                    newList.append(tacGenerator.TAC_JumpIfZeroInst(newCondition, label))
-                
-                case tacGenerator.TAC_JumpIfNotZeroInst(condition = condition, label = label):
-                    newCondition = replaceOperand(condition, reachingCopies)
-                    newList.append(tacGenerator.TAC_JumpIfNotZeroInst(newCondition, label))
-
-                case tacGenerator.TAC_FunCallInstruction(funName = funName, arguments = arguments, dst = dst):
-
-                    newArgs = []
-                    for arg in arguments:
-                        newArg = replaceOperand(arg, reachingCopies)
-                        newArgs.append(newArg)
-
-                    newList.append(tacGenerator.TAC_FunCallInstruction(funName, newArgs, dst))
-
-                case _:
-                    newList.append(i)
-                    
-        #n.instructions = copy.deepcopy(newList)
+    for k, n in cfg.blocks.items():
+        print(k, n)
 
     return cfg
 
