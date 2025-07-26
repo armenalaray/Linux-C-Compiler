@@ -28,19 +28,14 @@ class ENTRY(Node_ID, DebugNode):
         return self.__str__()
     
     def __hash__(self):
-        return self.num
-    
-    def __eq__(self, value):
-        if isNodeID(value) and value.num == self.num:
-            return True
-        
-        return False
+        return hash((self.num))
 
-def isNodeID(value):
-    if type(value) == ENTRY or type(value) == EXIT or type(value) == BlockID:
-        return True
+    def __eq__(self, value):
+        if not isinstance(value, ENTRY):
+            return NotImplemented
+        
+        return self.num == value.num
     
-    return False
 
 class EXIT(Node_ID, DebugNode):
     def __init__(self):
@@ -53,14 +48,13 @@ class EXIT(Node_ID, DebugNode):
         return self.__str__()
 
     def __hash__(self):
-        return self.num
-            
+        return hash((self.num))
+    
     def __eq__(self, value):
-        #print(type(value))
-        if isNodeID(value) and value.num == self.num:
-            return True
+        if not isinstance(value, EXIT):
+            return NotImplemented
         
-        return False
+        return self.num == value.num
         
 
 class BlockID(Node_ID, DebugNode):
@@ -77,13 +71,14 @@ class BlockID(Node_ID, DebugNode):
         return str(self.num)
 
     def __hash__(self):
-        return self.num
+        return hash((self.num))
     
     def __eq__(self, value):
-        if isNodeID(value) and value.num == self.num:
-            return True
+        if not isinstance(value, BlockID):
+            return NotImplemented
         
-        return False
+        return self.num == value.num
+    
 
 class Node():
     pass
@@ -105,7 +100,7 @@ class BasicBlock(Node, DebugNode):
         self.reachingCopies = set()
 
     def __str__(self):
-        return "{self.id}: {self.instructions} Pred: {self.predecessors} Suc: {self.successors}".format(self=self)
+        return "{self.id}: {self.instructions} Pred: {self.predecessors} Suc: {self.successors} iMap: {self.iMap} ReachingCopies: {self.reachingCopies}".format(self=self)
     
     def __repr__(self):
         return self.__str__()
@@ -120,6 +115,15 @@ class BasicBlock(Node, DebugNode):
 
 
         return output
+    
+    def __hash__(self):
+        return hash((self.id))
+
+    def __eq__(self, value):
+        if not isinstance(value, BasicBlock):
+            return NotImplemented
+        
+        return self.id == value.id
 
 
 class Entry(Node, DebugNode):
@@ -133,7 +137,15 @@ class Entry(Node, DebugNode):
     
     def __repr__(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.id))
+
+    def __eq__(self, value):
+        if not isinstance(value, Entry):
+            return NotImplemented
         
+        return self.id == value.id
 
 class Exit(Node, DebugNode):
 
@@ -143,6 +155,15 @@ class Exit(Node, DebugNode):
 
     def __str__(self):
         return "Exit: {self.id} {self.predecessors}".format(self=self)
+    
+    def __hash__(self):
+        return hash((self.id))
+
+    def __eq__(self, value):
+        if not isinstance(value, Exit):
+            return NotImplemented
+        
+        return self.id == value.id
 
 
 class Graph(DebugNode):
@@ -773,19 +794,15 @@ def meet(block, allCopies, cfg):
                 return set()
             
             case BlockID(num = num):
-                pass
-                """
+                
+                
                 other = cfg.blocks[predID]
                 predOutCopies = other.reachingCopies
 
-                #se podrian repetir?
+                #print("PRED:", predOutCopies)
+                #print("INCOMING:", incomingCopies)
 
-                print(predOutCopies)
-                print(incomingCopies)
-
-                #incomingCopies = intersection(incomingCopies, predOutCopies)
-                """
-                
+                incomingCopies = incomingCopies & predOutCopies
 
             case EXIT():
                 print("Error: Malformed control graph.")
@@ -807,18 +824,65 @@ def findAllCopyInstructions(cfg):
 
     return allCopies
 
-def copyPropagation(cfg, symbolTable):
-
+def findReachingCopies(cfg, symbolTable):
     allCopies = findAllCopyInstructions(cfg)
+
+    workList = []
 
     for k, n in cfg.blocks.items():
         if k == ENTRY() or k == EXIT():
             continue
         
-        ##incomingCopies = set()
+        workList.append(n)
+
+        n.reachingCopies.update(allCopies)
+    
+    """
+    for n in workList:
+        print(n)
+    """
+
+    while workList != []:
+        n = workList.pop(0)
+        oldAnnot = copy.deepcopy(n.reachingCopies)
+
         incomingCopies = meet(n, allCopies, cfg)
         transfer(n, incomingCopies, symbolTable)
-	
+
+        #print(oldAnnot is n.reachingCopies)
+
+        print(oldAnnot)
+        print(n.reachingCopies)
+
+        if oldAnnot != n.reachingCopies:
+            for sID in n.successors:
+
+                match sID:
+
+                    case EXIT():
+                        continue
+                        
+
+                    case ENTRY():
+                        print("Error: Malformed control flow graph.")
+                        sys.exit(1)
+
+
+                    case BlockID(num = num):
+
+                        block = cfg.blocks[sID]
+
+
+
+                        pass
+                
+            
+    
+
+def copyPropagation(cfg, symbolTable):
+
+    findReachingCopies(cfg, symbolTable)
+
     return cfg
 
 def deadStoreElimination(cfg):
