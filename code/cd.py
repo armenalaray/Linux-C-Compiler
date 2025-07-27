@@ -113,7 +113,7 @@ def optimizeFunction(functionBody, symbolTable):
 		aliasedVars = optimizations.addressTakenAnalysis(functionBody, symbolTable)
 
 		if foldConstants:
-			postConstantFolding = optimizations.constantFolding(functionBody)
+			postConstantFolding = optimizations.constantFolding(functionBody, symbolTable)
 		else:
 			postConstantFolding = functionBody
 
@@ -305,6 +305,7 @@ if __name__ == "__main__":
 						print("OPTIMIZING FUNCTION {0}".format(i))
 						i.instructions = optimizeFunction(i.instructions, symbolTable)
 				
+				#breakpoint()
 				
 			
 			if LastStage == 'tac':

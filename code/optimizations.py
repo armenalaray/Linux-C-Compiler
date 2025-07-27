@@ -696,6 +696,10 @@ def transfer(block, reachingCopies, symbolTable, aliasedVars):
                 t0 = None
                 t1 = None
 
+                if type(dst) == tacGenerator.TAC_VariableValue:
+                    b = symbolTable[dst.identifier]
+                    t1 = b.type
+
                 if type(src) == tacGenerator.TAC_VariableValue:
                     a = symbolTable[src.identifier]
                     t0 = a.type
@@ -710,8 +714,13 @@ def transfer(block, reachingCopies, symbolTable, aliasedVars):
                         case parser.ConstUInt():
                             t0 = parser.UIntType()
                         
-                        case parser.ConstLong():
-                            t0 = parser.LongType()
+                        case parser.ConstLong(int = int):
+                            
+                            if type(t1) == parser.PointerType and int == 0:
+                                t0 = parser.ULongType()
+                            
+                            else:
+                                t0 = parser.LongType()
                         
                         case parser.ConstULong():
                             t0 = parser.ULongType()
@@ -726,11 +735,9 @@ def transfer(block, reachingCopies, symbolTable, aliasedVars):
                             t0 = parser.DoubleType()
 
                     
-                if type(dst) == tacGenerator.TAC_VariableValue:
-                    b = symbolTable[dst.identifier]
-                    t1 = b.type
                 
-                if t0.checkType(t1) or typeChecker.signedNess(t0) == typeChecker.signedNess(t1):
+                
+                if t0.checkType(t1) or (typeChecker.signedNess(t0) == typeChecker.signedNess(t1)):
                     currentReachingCopies.add(i)
                 
             case tacGenerator.TAC_FunCallInstruction(funName = funName, arguments = arguments, dst = dst):
@@ -1323,7 +1330,7 @@ def addressTakenAnalysis(functionBody, symbolTable):
     return aliasedVars
     
 
-def constantFolding(tac):
+def constantFolding(tac, symbolTable):
     print("-------------CONSTANT FOLDING PASS.--------------------")
 
     print("OLD LIST", tac)
@@ -1340,8 +1347,11 @@ def constantFolding(tac):
 
                         match const:
                             case parser.ConstInt(int=int):
-                                print(type(int))
                                 
+                                #print(type(dst.identifier))
+                                #entry = symbolTable[dst.identifier]
+                                #print(entry)                                
+
                                 a = ctypes.c_int64(int)
 
                                 newList.append(tacGenerator.TAC_CopyInstruction(tacGenerator.TAC_ConstantValue(parser.ConstLong(a.value)), dst))
