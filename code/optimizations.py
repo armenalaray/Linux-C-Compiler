@@ -837,15 +837,15 @@ def replaceOperand(op, reachingCopies):
     if type(op) == tacGenerator.TAC_ConstantValue:
         return op
 
-    for c in reachingCopies:
-        if c.dst == op:
-            return c.src
+    for copy in reachingCopies:
+        #breakpoint()
+        if copy.dst == op:
+            return copy.src
 
     return op         
 
 def rewriteInstruction(node, ins):
     reachingCopies = node.iMap[ins]
-    print(reachingCopies)
 
     match ins:
         case tacGenerator.TAC_CopyInstruction(src = src, dst = dst):
@@ -853,7 +853,7 @@ def rewriteInstruction(node, ins):
             for c in reachingCopies:
                 if c == ins or (c.src == dst and c.dst == src):
                     return None
-            
+
             newSrc = replaceOperand(src, reachingCopies)
             return tacGenerator.TAC_CopyInstruction(newSrc, dst)
 
@@ -918,15 +918,13 @@ def deadStoreElimination(cfg):
 	pass
 
 def cfgToInstructions(cfg):
-    #ya estan sorteados
+
     list = []
     for k, n in cfg.blocks.items():
         if n.id == ENTRY() or n.id == EXIT():
             continue
 
         list.extend(n.instructions)
-
-    #print(list)
 
     return list
 
@@ -941,6 +939,23 @@ def constantFolding(tac):
     for i in tac:
 
         match i:
+
+            case tacGenerator.TAC_copyToOffset(src = src, dst = dst, offset = offset):
+                print(type(offset))
+                if offset == 0:
+                    newList.append(tacGenerator.TAC_CopyInstruction(src, tacGenerator.TAC_VariableValue(dst)))
+                    
+                else:
+                    newList.append(i)
+
+            case tacGenerator.TAC_copyFromOffset(src = src, offset = offset,dst = dst):
+
+                if offset == 0:
+                    newList.append(tacGenerator.TAC_CopyInstruction(tacGenerator.TAC_VariableValue(src), dst))
+                    
+                else:
+                    newList.append(i)
+
             case tacGenerator.TAC_JumpIfZeroInst(condition = condition, label = label):
 
                 match condition:
