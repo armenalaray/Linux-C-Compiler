@@ -7,7 +7,7 @@ import numpy as np
 
 import traceback
 import sys
-
+import ctypes
 import copy
 
 class DebugNode():
@@ -1334,8 +1334,26 @@ def constantFolding(tac):
 
         match i:
 
+            case tacGenerator.TAC_signExtendInstruction(src = src, dst = dst):
+                match src:
+                    case tacGenerator.TAC_ConstantValue(const = const):
+
+                        match const:
+                            case parser.ConstInt(int=int):
+                                print(type(int))
+                                
+                                a = ctypes.c_int64(int)
+
+                                newList.append(tacGenerator.TAC_CopyInstruction(tacGenerator.TAC_ConstantValue(parser.ConstLong(a.value)), dst))
+
+                            
+                            case _:
+                                newList.append(i)
+                    
+                    case _:
+                        newList.append(i)
+
             case tacGenerator.TAC_copyToOffset(src = src, dst = dst, offset = offset):
-                print(type(offset))
                 if offset == 0:
                     newList.append(tacGenerator.TAC_CopyInstruction(src, tacGenerator.TAC_VariableValue(dst)))
                     

@@ -138,6 +138,7 @@ def optimizeFunction(functionBody, symbolTable):
 
 
 
+
 if __name__ == "__main__":	
 	print(sys.float_info)
 
@@ -303,6 +304,8 @@ if __name__ == "__main__":
 					case tacGenerator.TAC_FunctionDef():
 						print("OPTIMIZING FUNCTION {0}".format(i))
 						i.instructions = optimizeFunction(i.instructions, symbolTable)
+				
+				
 			
 			if LastStage == 'tac':
 				sys.exit(0)
