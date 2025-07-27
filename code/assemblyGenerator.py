@@ -895,7 +895,7 @@ def classifyReturnValue(retVal, symbolTable, typeTable, topLevelList):
     #assemblyTypeOf(retVal)
     t, cType1, operand = parseValue(retVal, symbolTable, typeTable, topLevelList)
 
-    if type(cType1) == parser.Double:
+    if type(cType1) == parser.DoubleType:
         return ([], [operand], False)
     
     elif typeChecker.isScalar(cType1):
@@ -1388,8 +1388,11 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                 if v == None:
                     ASM_Instructions.append(ReturnInstruction())
                     return
+                
+                #breakpoint()
 
                 intRetVals, doubleRetVals, returnInMemory = classifyReturnValue(v, symbolTable, typeTable, topLevelList)
+
 
                 if returnInMemory:
                     

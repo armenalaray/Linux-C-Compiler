@@ -306,7 +306,11 @@ if __name__ == "__main__":
 						i.instructions = optimizeFunction(i.instructions, symbolTable)
 				
 				#breakpoint()
-				
+			
+			if printDebugInfo:
+				print(tac)
+				print("Type Table:\n", typeTable)
+				print("Symbol Table:\n", symbolTable)
 			
 			if LastStage == 'tac':
 				sys.exit(0)

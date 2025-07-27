@@ -1,13 +1,27 @@
-/* Test that we can propagate 0 between integer and
- * different pointer types
+/* Test that we eliminate y = x and y = x if we can prove that x and y
+ * already have the same values.
+ * After copy propagation and cleanup unreachable code elimination,
+ * target should contain no control-flow instructions.
+ * Similar to int_only/redundant_copies.c but with doubles
  * */
-long *target(void) {
-    int *ptr = 0;
-    long *ptr2 = (long *)ptr;
-    return ptr2;  // this should be rewritten as 'return 0'
+
+double target(int flag, int flag2, double y) {
+    double x = y;
+
+    if (flag) {
+        y = x;  // we can remove this because x and y already have the same
+                // value
+    }
+    if (flag2) {
+        x = y;  // we can remove this because x and y already have the same
+                // value
+    }
+    return x + y;
 }
 
 int main(void) {
-    long *result = target();
-    return (!result);
+    if (target(0, 1, 10.0) != 20.0) {
+        return 1; // fail
+    }
+    return 0;
 }
