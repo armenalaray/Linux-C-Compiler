@@ -650,7 +650,21 @@ def unreachableCodeElimination(cfg):
     return cfg
 
 
-def transfer(block, reachingCopies, symbolTable):
+def isStatic(variable, symbolTable):
+                    
+    match variable:
+        case tacGenerator.TAC_VariableValue(identifier = identifier):
+            a = symbolTable[identifier]
+
+            match a.attrs:
+                case typeChecker.StaticAttributes(initialVal = initialVal, global_ = global_):
+                    if global_ == False:
+                        return True
+
+    
+    return False
+
+def transfer(block, reachingCopies, symbolTable, aliasedVars):
 
     print("--------------IMAP for block {0}-------------------".format(block.id))
 
@@ -683,32 +697,28 @@ def transfer(block, reachingCopies, symbolTable):
                 
             case tacGenerator.TAC_FunCallInstruction(funName = funName, arguments = arguments, dst = dst):
 
-                def isStatic(variable):
-                    
-                    match variable:
-                        case tacGenerator.TAC_VariableValue(identifier = identifier):
-                            a = symbolTable[identifier]
-                            
-                            #print(type(a.attrs))
-
-                            match a.attrs:
-                                case typeChecker.StaticAttributes(initialVal = initialVal, global_ = global_):
-                                    if global_ == False:
-                                        return True
-
-                    
-                    return False
-
                 newSet = set()
                 
                 for c in currentReachingCopies:
-                    if isStatic(c.src) or isStatic(c.dst) or c.src == dst or c.dst == dst:
+                    if (c.src in aliasedVars) or (c.dst in aliasedVars) or (dst != None and (c.src == dst or c.dst == dst)):
                         pass
                     else:
                         newSet.add(c)
 
                 currentReachingCopies = newSet
 
+            case tacGenerator.TAC_Store(src = src, dst = dst):
+                
+                newSet = set()
+                
+                for c in currentReachingCopies:
+                    #tiene que ser un variable value y tiene que estar en la symbol table
+                    if (c.src in aliasedVars) or (c.dst in aliasedVars):
+                        pass
+                    else:
+                        newSet.add(c)
+                
+                currentReachingCopies = newSet
             
             case tacGenerator.TAC_UnaryInstruction(operator = operator, src = src, dst = dst):
                 
@@ -735,6 +745,43 @@ def transfer(block, reachingCopies, symbolTable):
                         #newSet.union({c})
 
                 currentReachingCopies = newSet
+
+            
+            case tacGenerator.TAC_copyToOffset(src = src, dst = dst, offset = offset):
+                pass
+            
+            case tacGenerator.TAC_copyFromOffset(src = src, dst = dst, offset = offset):
+                pass
+
+            case tacGenerator.TAC_GetAddress(src = src, dst = dst):
+                pass
+
+            case tacGenerator.TAC_addPtr(ptr = ptr, index = index, scale = scale, dst = dst):
+                pass
+            
+            case tacGenerator.TAC_signExtendInstruction(src = src, dst = dst):
+                pass
+            
+            case tacGenerator.TAC_truncateInstruction(src = src, dst = dst):
+                pass
+            
+            case tacGenerator.TAC_zeroExtendInstruction(src = src, dst = dst):
+                pass
+            
+            case tacGenerator.TAC_DoubleToInt(src = src, dst = dst):
+                pass
+            
+            case tacGenerator.TAC_DoubleToUInt(src = src, dst = dst):
+                pass
+            
+            case tacGenerator.TAC_IntToDouble(src = src, dst = dst):
+                pass
+            
+            case tacGenerator.TAC_UIntToDouble(src = src, dst = dst):
+                pass
+            
+            case tacGenerator.TAC_Load(src = src, dst = dst):
+                pass
 
             case _:
                 continue
@@ -783,7 +830,7 @@ def findAllCopyInstructions(cfg):
 
     return allCopies
 
-def findReachingCopies(cfg, symbolTable):
+def findReachingCopies(cfg, symbolTable, aliasedVars):
     allCopies = findAllCopyInstructions(cfg)
 
     workList = []
@@ -802,7 +849,7 @@ def findReachingCopies(cfg, symbolTable):
         oldAnnot = copy.deepcopy(n.reachingCopies)
 
         incomingCopies = meet(n, allCopies, cfg)
-        transfer(n, incomingCopies, symbolTable)
+        transfer(n, incomingCopies, symbolTable, aliasedVars)
 
         print("OLD ANNOT:", oldAnnot)
         print("NEW ANNOT:", n.reachingCopies)
@@ -882,14 +929,71 @@ def rewriteInstruction(node, ins):
                 newArgs.append(newArg)
 
             return tacGenerator.TAC_FunCallInstruction(funName, newArgs, dst)
+        
+        case tacGenerator.TAC_returnInstruction(Value = Value):
+            if Value:
+                newValue = replaceOperand(Value, reachingCopies)
+                return tacGenerator.TAC_returnInstruction(newValue)
+            
+            return tacGenerator.TAC_returnInstruction()
 
+        case tacGenerator.TAC_copyToOffset(src = src, dst = dst, offset = offset):
+            newSrc = replaceOperand(src, reachingCopies)
+            return tacGenerator.TAC_copyToOffset(newSrc, dst, offset)
+        
+        #case tacGenerator.TAC_copyFromOffset(src = src, dst = dst, offset = offset):
+            #newSrc = replaceOperand(src, reachingCopies)
+            #return tacGenerator.TAC_copyToOffset(newSrc, dst, offset)
+
+        case tacGenerator.TAC_addPtr(ptr = ptr, index = index, scale = scale,dst = dst):
+            newPtr = replaceOperand(ptr, reachingCopies)
+            newIndex = replaceOperand(index, reachingCopies)
+
+            return tacGenerator.TAC_addPtr(newPtr, newIndex, scale, dst)
+        
+        case tacGenerator.TAC_signExtendInstruction(src = src, dst = dst):
+            newSrc = replaceOperand(src, reachingCopies)
+            return tacGenerator.TAC_signExtendInstruction(newSrc, dst)
+        
+        case tacGenerator.TAC_truncateInstruction(src = src, dst = dst):
+            newSrc = replaceOperand(src, reachingCopies)
+            return tacGenerator.TAC_truncateInstruction(newSrc, dst)
+        
+        case tacGenerator.TAC_zeroExtendInstruction(src = src, dst = dst):
+            newSrc = replaceOperand(src, reachingCopies)
+            return tacGenerator.TAC_zeroExtendInstruction(newSrc, dst)
+        
+        case tacGenerator.TAC_DoubleToInt(src = src, dst = dst):
+            newSrc = replaceOperand(src, reachingCopies)
+            return tacGenerator.TAC_DoubleToInt(newSrc, dst)
+        
+        case tacGenerator.TAC_DoubleToUInt(src = src, dst = dst):
+            newSrc = replaceOperand(src, reachingCopies)
+            return tacGenerator.TAC_DoubleToUInt(newSrc, dst)
+        
+        case tacGenerator.TAC_IntToDouble(src = src, dst = dst):
+            newSrc = replaceOperand(src, reachingCopies)
+            return tacGenerator.TAC_IntToDouble(newSrc, dst)
+        
+        case tacGenerator.TAC_UIntToDouble(src = src, dst = dst):
+            newSrc = replaceOperand(src, reachingCopies)
+            return tacGenerator.TAC_UIntToDouble(newSrc, dst)
+        
+        case tacGenerator.TAC_Load(src = src, dst = dst):
+            newSrc = replaceOperand(src, reachingCopies)
+            return tacGenerator.TAC_Load(newSrc, dst)
+        
+        case tacGenerator.TAC_Store(src = src, dst = dst):
+            newSrc = replaceOperand(src, reachingCopies)
+            return tacGenerator.TAC_Store(newSrc, dst)
+        
         case _:
             return ins
     
 
-def copyPropagation(cfg, symbolTable):
+def copyPropagation(cfg, symbolTable, aliasedVars):
 
-    findReachingCopies(cfg, symbolTable)
+    findReachingCopies(cfg, symbolTable, aliasedVars)
 
     print("------------REPLACE INSTRUCTIONS WITH REACHING COPIES.-------------")
     for k, n in cfg.blocks.items():
@@ -928,9 +1032,154 @@ def cfgToInstructions(cfg):
 
     return list
 
+def addressTakenAnalysis(functionBody, symbolTable):
+
+    print("--------------ADDRESS TAKEN ANALYSIS.------------------")
+
+
+    aliasedVars = set()
+
+    for i in functionBody:
+
+        #print(i)
+
+        match i:
+            case tacGenerator.TAC_CopyInstruction(src = src, dst = dst):
+                if isStatic(src, symbolTable):
+                    aliasedVars.add(src)
+
+                if isStatic(dst, symbolTable):
+                    aliasedVars.add(dst)
+
+            case tacGenerator.TAC_UnaryInstruction(operator = operator, src = src, dst = dst):
+                if isStatic(src, symbolTable):
+                    aliasedVars.add(src)
+
+                if isStatic(dst, symbolTable):
+                    aliasedVars.add(dst)
+
+            case tacGenerator.TAC_BinaryInstruction(operator = operator, src1 = src1, src2 = src2, dst = dst):
+                if isStatic(src1, symbolTable):
+                    aliasedVars.add(src1)
+                
+                if isStatic(src2, symbolTable):
+                    aliasedVars.add(src2)
+
+                if isStatic(dst, symbolTable):
+                    aliasedVars.add(dst)
+
+            case tacGenerator.TAC_JumpIfZeroInst(condition = condition, label = label):
+                if isStatic(condition, symbolTable):
+                    aliasedVars.add(condition)
+            
+            case tacGenerator.TAC_JumpIfNotZeroInst(condition = condition, label = label):
+                if isStatic(condition, symbolTable):
+                    aliasedVars.add(condition)
+
+            case tacGenerator.TAC_FunCallInstruction(funName = funName, arguments = arguments, dst = dst):
+                for i in arguments:
+                    if isStatic(i, symbolTable):
+                        aliasedVars.add(i)
+
+                if isStatic(dst, symbolTable):
+                    aliasedVars.add(dst)
+            
+            case tacGenerator.TAC_returnInstruction(Value = Value):
+                if isStatic(Value, symbolTable):
+                    aliasedVars.add(Value)
+
+            case tacGenerator.TAC_copyToOffset(src = src, dst = dst, offset = offset):
+                if isStatic(src, symbolTable):
+                    aliasedVars.add(src)
+            
+            case tacGenerator.TAC_copyFromOffset(src = src, dst = dst, offset = offset):
+                if isStatic(dst, symbolTable):
+                    aliasedVars.add(dst)
+
+            case tacGenerator.TAC_GetAddress(src = src, dst = dst):
+                aliasedVars.add(src)
+
+            case tacGenerator.TAC_addPtr(ptr = ptr, index = index, scale = scale, dst = dst):
+                if isStatic(ptr, symbolTable):
+                    aliasedVars.add(ptr)
+
+                if isStatic(index, symbolTable):
+                    aliasedVars.add(index)
+                
+                if isStatic(dst, symbolTable):
+                    aliasedVars.add(dst)
+            
+            case tacGenerator.TAC_signExtendInstruction(src = src, dst = dst):
+                if isStatic(src, symbolTable):
+                    aliasedVars.add(src)
+
+                if isStatic(dst, symbolTable):
+                    aliasedVars.add(dst)
+                pass
+            
+            case tacGenerator.TAC_truncateInstruction(src = src, dst = dst):
+                if isStatic(src, symbolTable):
+                    aliasedVars.add(src)
+
+                if isStatic(dst, symbolTable):
+                    aliasedVars.add(dst)
+            
+            case tacGenerator.TAC_zeroExtendInstruction(src = src, dst = dst):
+                if isStatic(src, symbolTable):
+                    aliasedVars.add(src)
+
+                if isStatic(dst, symbolTable):
+                    aliasedVars.add(dst)
+            
+            case tacGenerator.TAC_DoubleToInt(src = src, dst = dst):
+                if isStatic(src, symbolTable):
+                    aliasedVars.add(src)
+
+                if isStatic(dst, symbolTable):
+                    aliasedVars.add(dst)
+            
+            case tacGenerator.TAC_DoubleToUInt(src = src, dst = dst):
+                if isStatic(src, symbolTable):
+                    aliasedVars.add(src)
+
+                if isStatic(dst, symbolTable):
+                    aliasedVars.add(dst)
+            
+            case tacGenerator.TAC_IntToDouble(src = src, dst = dst):
+                if isStatic(src, symbolTable):
+                    aliasedVars.add(src)
+
+                if isStatic(dst, symbolTable):
+                    aliasedVars.add(dst)
+            
+            case tacGenerator.TAC_UIntToDouble(src = src, dst = dst):
+                if isStatic(src, symbolTable):
+                    aliasedVars.add(src)
+
+                if isStatic(dst, symbolTable):
+                    aliasedVars.add(dst)
+            
+            case tacGenerator.TAC_Load(src = src, dst = dst):
+                if isStatic(src, symbolTable):
+                    aliasedVars.add(src)
+
+                if isStatic(dst, symbolTable):
+                    aliasedVars.add(dst)
+            
+            case tacGenerator.TAC_Store(src = src, dst = dst):
+                if isStatic(src, symbolTable):
+                    aliasedVars.add(src)
+
+                if isStatic(dst, symbolTable):
+                    aliasedVars.add(dst)
+    
+    print(aliasedVars)
+
+    return aliasedVars
+    
 
 def constantFolding(tac):
-    print("CONSTANT FOLDING PASS")
+    print("-------------CONSTANT FOLDING PASS.--------------------")
 
     print("OLD LIST", tac)
 
@@ -1015,3 +1264,4 @@ def constantFolding(tac):
 
     return newList
     
+

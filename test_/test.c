@@ -1,12 +1,13 @@
-/* A basic test of constant propagation in a function with no control flow
- * structures
- * */
-int target(void) {
-    int x = 3;
-    int y = x;
-    return x + y;  // should become return 6
-}
+struct ale
+{
+    int a;
+};
 
-int main(void) {
-    return target();
+int main(void)
+{
+    static struct ale a = {2};
+    int y = a.a;
+    int * x = &y;
+    *x = 4;
+    return *x;
 }
