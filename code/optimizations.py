@@ -1372,11 +1372,15 @@ def constantFolding(tac, symbolTable):
 
             case tacGenerator.TAC_copyFromOffset(src = src, offset = offset,dst = dst):
 
+                newList.append(i)
+                
+                """
                 if offset == 0:
                     newList.append(tacGenerator.TAC_CopyInstruction(tacGenerator.TAC_VariableValue(src), dst))
                     
                 else:
                     newList.append(i)
+                """
 
             case tacGenerator.TAC_JumpIfZeroInst(condition = condition, label = label):
 

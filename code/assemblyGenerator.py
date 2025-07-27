@@ -400,7 +400,7 @@ class DataOperand:
         self.offset = offset
 
     def __str__(self):
-        return "Data({self.identifier})".format(self=self)
+        return "Data({self.identifier}, {self.offset})".format(self=self)
 
 class RegisterOperand:
 
@@ -806,6 +806,7 @@ def Expect(*args):
     for i in args:
         if other:
             if type(i) != type(other):
+                traceback.print_stack()
                 print("Types are not equal.")
                 sys.exit(1)
         other = i
@@ -1176,7 +1177,8 @@ def copyBytes(src, dst, size, ASM_Instructions):
                 base2 += bytes
             
         case _:
-            print("Error: Invalid memory Operand.")
+            traceback.print_stack()
+            print("Error: Invalid memory Operand. {0} {1}".format(src, dst))
             sys.exit(1)
 
 def copyBytesFromReg(srcReg, destOp, byteCount, ASM_Instructions):
@@ -1734,7 +1736,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                             type2, alignment2, src2 = parseValue(src2_, symbolTable, typeTable, topLevelList)
                             type3, alignment3, dst = parseValue(dst_, symbolTable, typeTable, topLevelList)
                             
-                            Expect(type1, type2, type3)
+                            #Expect(type1, type2, type3)
 
                             operator = parseOperator(op)
                                     
@@ -1926,41 +1928,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                 match cType1:
                     case parser.StuctureType(tag = tag):
 
-                        copyBytes(src, dst, typeTable[tag].size, ASM_Instructions)
-
-                        """
-                        size = typeTable[tag].size
-                        while src.offset < size:
-
-                            dif = size - src.offset
-                            print("DIF:", dif)
-
-                            bytes = None
-                            type_ = None
-
-                            if dif >= 8:
-                                type_ = Quadword()
-                                bytes = 8
-                            elif dif >= 4:
-                                type_ = Longword()
-                                bytes = 4
-                            else:
-                                type_ = Byte()
-                                bytes = 1
-
-                            if type == None:
-                                print("Error: Invalid Copy Instruction.")
-                                sys.exit(1)
-
-                            s = copy.deepcopy(src)
-                            d = copy.deepcopy(dst)
-                            
-                            ASM_Instructions.append(MovInstruction(type_, s, d))
-
-                            src.offset += bytes
-                            dst.offset += bytes
-                        """
-                                                
+                        copyBytes(src, dst, typeTable[tag].size, ASM_Instructions)                                                
                         
                     case _:
                         instruction0 = MovInstruction(type1, src, dst)
