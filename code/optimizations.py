@@ -693,7 +693,45 @@ def transfer(block, reachingCopies, symbolTable, aliasedVars):
 
                 currentReachingCopies = newSet
 
-                currentReachingCopies.add(i)
+                t0 = None
+                t1 = None
+
+                if type(src) == tacGenerator.TAC_VariableValue:
+                    a = symbolTable[src.identifier]
+                    t0 = a.type
+                elif type(src) == tacGenerator.TAC_ConstantValue:
+                    print(type(src.const))
+
+                    match src.const:
+                        
+                        case parser.ConstInt():
+                            t0 = parser.IntType()
+                        
+                        case parser.ConstUInt():
+                            t0 = parser.UIntType()
+                        
+                        case parser.ConstLong():
+                            t0 = parser.LongType()
+                        
+                        case parser.ConstULong():
+                            t0 = parser.ULongType()
+                        
+                        case parser.ConstChar():
+                            t0 = parser.CharType()
+                        
+                        case parser.ConstUChar():
+                            t0 = parser.UCharType()
+
+                        case parser.ConstDouble():
+                            t0 = parser.DoubleType()
+
+                    
+                if type(dst) == tacGenerator.TAC_VariableValue:
+                    b = symbolTable[dst.identifier]
+                    t1 = b.type
+                
+                if t0.checkType(t1) or typeChecker.signedNess(t0) == typeChecker.signedNess(t1):
+                    currentReachingCopies.add(i)
                 
             case tacGenerator.TAC_FunCallInstruction(funName = funName, arguments = arguments, dst = dst):
 
@@ -748,40 +786,147 @@ def transfer(block, reachingCopies, symbolTable, aliasedVars):
 
             
             case tacGenerator.TAC_copyToOffset(src = src, dst = dst, offset = offset):
-                pass
+                newSet = set()
+                
+                for c in currentReachingCopies:
+                    if c.src == tacGenerator.TAC_VariableValue(dst) or c.dst == tacGenerator.TAC_VariableValue(dst):
+                        pass
+                    else:
+                        newSet.add(c)
+
+                currentReachingCopies = newSet
             
             case tacGenerator.TAC_copyFromOffset(src = src, dst = dst, offset = offset):
-                pass
+                newSet = set()
+                
+                for c in currentReachingCopies:
+                    if c.src == dst or c.dst == dst:
+                        pass
+                    else:
+                        newSet.add(c)
+                        #newSet.union({c})
+
+                currentReachingCopies = newSet
 
             case tacGenerator.TAC_GetAddress(src = src, dst = dst):
-                pass
+                newSet = set()
+                
+                for c in currentReachingCopies:
+                    if c.src == dst or c.dst == dst:
+                        pass
+                    else:
+                        newSet.add(c)
+                        #newSet.union({c})
+
+                currentReachingCopies = newSet
 
             case tacGenerator.TAC_addPtr(ptr = ptr, index = index, scale = scale, dst = dst):
-                pass
+                newSet = set()
+                
+                for c in currentReachingCopies:
+                    if c.src == dst or c.dst == dst:
+                        pass
+                    else:
+                        newSet.add(c)
+                        #newSet.union({c})
+
+                currentReachingCopies = newSet
             
             case tacGenerator.TAC_signExtendInstruction(src = src, dst = dst):
-                pass
+                newSet = set()
+                
+                for c in currentReachingCopies:
+                    if c.src == dst or c.dst == dst:
+                        pass
+                    else:
+                        newSet.add(c)
+                        #newSet.union({c})
+
+                currentReachingCopies = newSet
             
             case tacGenerator.TAC_truncateInstruction(src = src, dst = dst):
-                pass
+                newSet = set()
+                
+                for c in currentReachingCopies:
+                    if c.src == dst or c.dst == dst:
+                        pass
+                    else:
+                        newSet.add(c)
+                        #newSet.union({c})
+
+                currentReachingCopies = newSet
             
             case tacGenerator.TAC_zeroExtendInstruction(src = src, dst = dst):
-                pass
+                newSet = set()
+                
+                for c in currentReachingCopies:
+                    if c.src == dst or c.dst == dst:
+                        pass
+                    else:
+                        newSet.add(c)
+                        #newSet.union({c})
+
+                currentReachingCopies = newSet
             
             case tacGenerator.TAC_DoubleToInt(src = src, dst = dst):
-                pass
+                newSet = set()
+                
+                for c in currentReachingCopies:
+                    if c.src == dst or c.dst == dst:
+                        pass
+                    else:
+                        newSet.add(c)
+                        #newSet.union({c})
+
+                currentReachingCopies = newSet
             
             case tacGenerator.TAC_DoubleToUInt(src = src, dst = dst):
-                pass
+                newSet = set()
+                
+                for c in currentReachingCopies:
+                    if c.src == dst or c.dst == dst:
+                        pass
+                    else:
+                        newSet.add(c)
+                        #newSet.union({c})
+
+                currentReachingCopies = newSet
             
             case tacGenerator.TAC_IntToDouble(src = src, dst = dst):
-                pass
+                newSet = set()
+                
+                for c in currentReachingCopies:
+                    if c.src == dst or c.dst == dst:
+                        pass
+                    else:
+                        newSet.add(c)
+                        #newSet.union({c})
+
+                currentReachingCopies = newSet
             
             case tacGenerator.TAC_UIntToDouble(src = src, dst = dst):
-                pass
+                newSet = set()
+                
+                for c in currentReachingCopies:
+                    if c.src == dst or c.dst == dst:
+                        pass
+                    else:
+                        newSet.add(c)
+                        #newSet.union({c})
+
+                currentReachingCopies = newSet
             
             case tacGenerator.TAC_Load(src = src, dst = dst):
-                pass
+                newSet = set()
+                
+                for c in currentReachingCopies:
+                    if c.src == dst or c.dst == dst:
+                        pass
+                    else:
+                        newSet.add(c)
+                        #newSet.union({c})
+
+                currentReachingCopies = newSet
 
             case _:
                 continue

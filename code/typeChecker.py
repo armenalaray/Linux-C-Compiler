@@ -247,7 +247,49 @@ def isArithmeticType(targetType):
         return True
     
     return False
-    
+
+def signedNess(targetType):
+    print(type(targetType))
+        
+    match targetType:
+        case parser.IntType():
+            return True
+
+        case parser.LongType():
+            return True
+
+        case parser.UIntType():
+            return False
+
+        case parser.ULongType():
+            return False
+
+        case parser.CharType():
+            return True
+
+        case parser.UCharType():
+            return False
+        
+        case parser.SCharType():
+            return True
+
+        case parser.VoidType():
+            return False
+
+        case parser.DoubleType():
+            return False
+            
+        case parser.PointerType():
+            return False
+
+        case parser.ArrayType():
+            return False
+
+        case parser.StuctureType():
+            return False
+
+        case parser.FunType():
+            return False
 
 def convertByAssignment(exp, targetType):
     
