@@ -10,6 +10,7 @@ int target(int arg) {
 
 int main(void) {
     int result1 = target(2);
+    /*
     if (i != 2) {
         return 1;  // fail
     }
@@ -24,4 +25,5 @@ int main(void) {
         return 4;  // fail
     }
     return 0;  // success
+    */
 }

@@ -126,7 +126,7 @@ def optimizeFunction(functionBody, symbolTable):
 			cfg = optimizations.copyPropagation(cfg, symbolTable, aliasedVars)
 
 		if eliminateDeadStores:
-			cfg = optimizations.deadStoreElimination(cfg)
+			cfg = optimizations.deadStoreElimination(cfg, symbolTable)
 
 		
 		optimizedFunctionBody = optimizations.cfgToInstructions(cfg)

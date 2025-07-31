@@ -1235,9 +1235,24 @@ def copyPropagation(cfg, symbolTable, aliasedVars):
 
     return cfg
 
-def deadStoreElimination(cfg):
+def addAllStaticVariables(cfg, symbolTable):
+    print("--------------ADDING ALL STATIC VARIABLES.------------------")
 
+    allStaticVariables = set()
 
+    for k, v in symbolTable.items():
+
+        print(k,v)
+
+        match v.attrs:
+            case typeChecker.StaticAttributes():
+                allStaticVariables.add(tacGenerator.TAC_VariableValue(v.name))
+
+    return allStaticVariables
+
+def deadStoreElimination(cfg, symbolTable):
+
+    allStaticVariables = addAllStaticVariables(cfg, symbolTable)
 
     for k, n in cfg.blocks.items():
         
@@ -1245,7 +1260,6 @@ def deadStoreElimination(cfg):
             continue
 
         endLiveVariables = set()
-        allStaticVariables = set()
         transferLive(n, endLiveVariables, allStaticVariables)
 
     return cfg
