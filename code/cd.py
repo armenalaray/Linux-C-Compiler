@@ -306,11 +306,18 @@ if __name__ == "__main__":
 						i.instructions = optimizeFunction(i.instructions, symbolTable)
 				
 				#breakpoint()
+
+			#optimizationsFile = os.path.dirname(file) + "/" + os.path.basename(file).split('.')[0] + '.txt'
+			#aFile = open(optimizationsFile, 'w')
+			#aFile.write(output)
+			#aFile.close()
 			
+			"""
 			if printDebugInfo:
 				print(tac)
 				print("Type Table:\n", typeTable)
 				print("Symbol Table:\n", symbolTable)
+			"""
 			
 			if LastStage == 'tac':
 				sys.exit(0)

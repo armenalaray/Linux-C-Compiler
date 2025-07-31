@@ -1,0 +1,723 @@
+sys.float_info(max=1.7976931348623157e+308, max_exp=1024, max_10_exp=308, min=2.2250738585072014e-308, min_exp=-1021, min_10_exp=-307, dig=15, mant_dig=53, epsilon=2.220446049250313e-16, radix=2, rounds=1)
+9
+['/home/alejandro/CComp/code/cd.py', '--tacky', '-lmath.h', '--fold-constants', '--propagate-copies', '--eliminate-unreachable-code', '--eliminate-dead-stores', '--optimize', '/home/alejandro/CComp/test_/test.c']
+File: /home/alejandro/CComp/test_/test.c
+Last Stage: tac
+NoLink: False
+NotAssembly: False
+--fold-constants True
+--propagate-copies True
+--eliminate-unreachable-code True
+--eliminate-dead-stores True
+--optimize True
+Libary: math.h
+[('int', <TokenType.INT_KW: 4>, 1), ('i', <TokenType.IDENTIFIER: 2>, 1), ('=', <TokenType.EQUAL: 28>, 1), ('0', <TokenType.INT_CONSTANT: 3>, 1), (';', <TokenType.SEMICOLON: 11>, 1), ('int', <TokenType.INT_KW: 4>, 2), ('target', <TokenType.IDENTIFIER: 2>, 2), ('(', <TokenType.OPEN_PAREN: 7>, 2), ('int', <TokenType.INT_KW: 4>, 2), ('arg', <TokenType.IDENTIFIER: 2>, 2), (')', <TokenType.CLOSE_PAREN: 8>, 2), ('{', <TokenType.OPEN_BRACE: 9>, 2), ('i', <TokenType.IDENTIFIER: 2>, 3), ('=', <TokenType.EQUAL: 28>, 3), ('5', <TokenType.INT_CONSTANT: 3>, 3), (';', <TokenType.SEMICOLON: 11>, 3), ('i', <TokenType.IDENTIFIER: 2>, 4), ('=', <TokenType.EQUAL: 28>, 4), ('arg', <TokenType.IDENTIFIER: 2>, 4), (';', <TokenType.SEMICOLON: 11>, 4), ('return', <TokenType.RETURN_KW: 6>, 5), ('i', <TokenType.IDENTIFIER: 2>, 5), ('+', <TokenType.PLUS: 18>, 5), ('1', <TokenType.INT_CONSTANT: 3>, 5), (';', <TokenType.SEMICOLON: 11>, 5), ('}', <TokenType.CLOSE_BRACE: 10>, 6), ('int', <TokenType.INT_KW: 4>, 7), ('main', <TokenType.IDENTIFIER: 2>, 7), ('(', <TokenType.OPEN_PAREN: 7>, 7), ('void', <TokenType.VOID_KW: 5>, 7), (')', <TokenType.CLOSE_PAREN: 8>, 7), ('{', <TokenType.OPEN_BRACE: 9>, 7), ('int', <TokenType.INT_KW: 4>, 8), ('result1', <TokenType.IDENTIFIER: 2>, 8), ('=', <TokenType.EQUAL: 28>, 8), ('target', <TokenType.IDENTIFIER: 2>, 8), ('(', <TokenType.OPEN_PAREN: 7>, 8), ('2', <TokenType.INT_CONSTANT: 3>, 8), (')', <TokenType.CLOSE_PAREN: 8>, 8), (';', <TokenType.SEMICOLON: 11>, 8), ('if', <TokenType.IF_KW: 31>, 9), ('(', <TokenType.OPEN_PAREN: 7>, 9), ('i', <TokenType.IDENTIFIER: 2>, 9), ('!=', <TokenType.EXCLAMATIONEQUAL: 25>, 9), ('2', <TokenType.INT_CONSTANT: 3>, 9), (')', <TokenType.CLOSE_PAREN: 8>, 9), ('{', <TokenType.OPEN_BRACE: 9>, 9), ('return', <TokenType.RETURN_KW: 6>, 10), ('1', <TokenType.INT_CONSTANT: 3>, 10), (';', <TokenType.SEMICOLON: 11>, 10), ('}', <TokenType.CLOSE_BRACE: 10>, 11), ('if', <TokenType.IF_KW: 31>, 12), ('(', <TokenType.OPEN_PAREN: 7>, 12), ('result1', <TokenType.IDENTIFIER: 2>, 12), ('!=', <TokenType.EXCLAMATIONEQUAL: 25>, 12), ('3', <TokenType.INT_CONSTANT: 3>, 12), (')', <TokenType.CLOSE_PAREN: 8>, 12), ('{', <TokenType.OPEN_BRACE: 9>, 12), ('return', <TokenType.RETURN_KW: 6>, 13), ('2', <TokenType.INT_CONSTANT: 3>, 13), (';', <TokenType.SEMICOLON: 11>, 13), ('}', <TokenType.CLOSE_BRACE: 10>, 14), ('int', <TokenType.INT_KW: 4>, 15), ('result2', <TokenType.IDENTIFIER: 2>, 15), ('=', <TokenType.EQUAL: 28>, 15), ('target', <TokenType.IDENTIFIER: 2>, 15), ('(', <TokenType.OPEN_PAREN: 7>, 15), ('-', <TokenType.HYPHEN: 13>, 15), ('1', <TokenType.INT_CONSTANT: 3>, 15), (')', <TokenType.CLOSE_PAREN: 8>, 15), (';', <TokenType.SEMICOLON: 11>, 15), ('if', <TokenType.IF_KW: 31>, 16), ('(', <TokenType.OPEN_PAREN: 7>, 16), ('i', <TokenType.IDENTIFIER: 2>, 16), ('!=', <TokenType.EXCLAMATIONEQUAL: 25>, 16), ('-', <TokenType.HYPHEN: 13>, 16), ('1', <TokenType.INT_CONSTANT: 3>, 16), (')', <TokenType.CLOSE_PAREN: 8>, 16), ('{', <TokenType.OPEN_BRACE: 9>, 16), ('return', <TokenType.RETURN_KW: 6>, 17), ('3', <TokenType.INT_CONSTANT: 3>, 17), (';', <TokenType.SEMICOLON: 11>, 17), ('}', <TokenType.CLOSE_BRACE: 10>, 18), ('if', <TokenType.IF_KW: 31>, 19), ('(', <TokenType.OPEN_PAREN: 7>, 19), ('result2', <TokenType.IDENTIFIER: 2>, 19), ('!=', <TokenType.EXCLAMATIONEQUAL: 25>, 19), ('0', <TokenType.INT_CONSTANT: 3>, 19), (')', <TokenType.CLOSE_PAREN: 8>, 19), ('{', <TokenType.OPEN_BRACE: 9>, 19), ('return', <TokenType.RETURN_KW: 6>, 20), ('4', <TokenType.INT_CONSTANT: 3>, 20), (';', <TokenType.SEMICOLON: 11>, 20), ('}', <TokenType.CLOSE_BRACE: 10>, 21), ('return', <TokenType.RETURN_KW: 6>, 22), ('0', <TokenType.INT_CONSTANT: 3>, 22), (';', <TokenType.SEMICOLON: 11>, 22), ('}', <TokenType.CLOSE_BRACE: 10>, 23)]
+<parser.Int object at 0x7f414b40e930>
+[<parser.TypeS object at 0x7f414b3234d0>]
+[<class 'parser.Int'>]
+int
+int (IdenDeclarator: i)
+int
+<parser.Int object at 0x7f414b40e930>
+[<parser.TypeS object at 0x7f414b323770>]
+[<class 'parser.Int'>]
+int
+[<class 'parser.Int'>]
+int (FunDeclarator: (IdenDeclarator: target) [int (IdenDeclarator: arg)])
+FunType: ParamTypes: [int] Return Type: int
+<parser.Int object at 0x7f414b2f39b0>
+[<parser.TypeS object at 0x7f414b40e930>]
+[<class 'parser.Int'>]
+int
+int (FunDeclarator: (IdenDeclarator: main) [])
+FunType: ParamTypes: [] Return Type: int
+<parser.Int object at 0x7f414b323e60>
+[<parser.TypeS object at 0x7f414b323e90>]
+[<class 'parser.Int'>]
+int
+int (IdenDeclarator: result1)
+int
+<parser.Int object at 0x7f414b3644a0>
+[<parser.TypeS object at 0x7f414b3644d0>]
+[<class 'parser.Int'>]
+int
+int (IdenDeclarator: result2)
+int
+0
+0
+1
+1
+1
+1
+AST Program:
+VarDecl: NULL int i = SI: (0)
+FunDecl: NULL target (arg, ) ParamTypes: (int, ) ReturnType: int
+Statement: Expression: ((i) = (5))
+Statement: Expression: ((i) = (arg))
+Statement: return ((i) ADD (1))
+FunDecl: NULL main () ParamTypes: () ReturnType: int
+Declaration:
+VarDecl: NULL int result1 = SI: (target((2), ))
+Statement: if (((i) NOTEQUAL (2)))
+	Statement: return (1)
+Statement: if (((result1) NOTEQUAL (3)))
+	Statement: return (2)
+Declaration:
+VarDecl: NULL int result2 = SI: (target((NEGATE (1)), ))
+Statement: if (((i) NOTEQUAL (NEGATE (1))))
+	Statement: return (3)
+Statement: if (((result2) NOTEQUAL (0)))
+	Statement: return (4)
+Statement: return (0)
+
+OLD {}
+NEW {}
+OLD {}
+NEW {}
+OLD {}
+NEW {}
+OLD {}
+NEW {}
+OLD {}
+NEW {}
+OLD {}
+NEW {}
+0
+0
+1
+1
+1
+1
+AST Program:
+VarDecl: NULL int i = SI: (0)
+FunDecl: NULL target (arg.0, ) ParamTypes: (int, ) ReturnType: int
+Statement: Expression: ((i) = (5))
+Statement: Expression: ((i) = (arg.0))
+Statement: return ((i) ADD (1))
+FunDecl: NULL main () ParamTypes: () ReturnType: int
+Declaration:
+VarDecl: NULL int result1.1 = SI: (target((2), ))
+Statement: if (((i) NOTEQUAL (2)))
+	Statement: return (1)
+Statement: if (((result1.1) NOTEQUAL (3)))
+	Statement: return (2)
+Declaration:
+VarDecl: NULL int result2.2 = SI: (target((NEGATE (1)), ))
+Statement: if (((i) NOTEQUAL (NEGATE (1))))
+	Statement: return (3)
+Statement: if (((result2.2) NOTEQUAL (0)))
+	Statement: return (4)
+Statement: return (0)
+
+[(2 RetType: int)]
+[(Unary Expression: Operator: UnopType.NEGATEExpression: (1 RetType: int) RetType: int)]
+0
+0
+1
+1
+1
+1
+AST Program:
+VarDecl: NULL int i = SI: (0 : int) : int
+FunDecl: NULL target (arg.0, ) ParamTypes: (int, ) ReturnType: int
+Statement: Expression: ((i : int) = (5 : int) : int)
+Statement: Expression: ((i : int) = (arg.0 : int) : int)
+Statement: return ((i : int) ADD (1 : int) : int)
+FunDecl: NULL main () ParamTypes: () ReturnType: int
+Declaration:
+VarDecl: NULL int result1.1 = SI: (target((2 : int), ) : int) : int
+Statement: if (((i : int) NOTEQUAL (2 : int) : int))
+	Statement: return (1 : int)
+Statement: if (((result1.1 : int) NOTEQUAL (3 : int) : int))
+	Statement: return (2 : int)
+Declaration:
+VarDecl: NULL int result2.2 = SI: (target((NEGATE (1 : int) : int), ) : int) : int
+Statement: if (((i : int) NOTEQUAL (NEGATE (1 : int) : int) : int))
+	Statement: return (3 : int)
+Statement: if (((result2.2 : int) NOTEQUAL (0 : int) : int))
+	Statement: return (4 : int)
+Statement: return (0 : int)
+
+Type Table:
+ {}
+Symbol Table:
+ {'i': i int InitialVal: InitialList: [c_int(0)] Global: True, 'target': target FunType: ParamTypes: [int] Return Type: int Defined: True Global: True, 'arg.0': arg.0 int <typeChecker.LocalAttributes object at 0x7f414b366360>, 'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'result1.1': result1.1 int <typeChecker.LocalAttributes object at 0x7f414b366810>, 'result2.2': result2.2 int <typeChecker.LocalAttributes object at 0x7f414b366f30>}
+0
+0
+1
+1
+1
+1
+AST Program:
+VarDecl: NULL int i = SI: (0 : int) : int
+FunDecl: NULL target (arg.0, ) ParamTypes: (int, ) ReturnType: int
+Statement: Expression: ((i : int) = (5 : int) : int)
+Statement: Expression: ((i : int) = (arg.0 : int) : int)
+Statement: return ((i : int) ADD (1 : int) : int)
+FunDecl: NULL main () ParamTypes: () ReturnType: int
+Declaration:
+VarDecl: NULL int result1.1 = SI: (target((2 : int), ) : int) : int
+Statement: if (((i : int) NOTEQUAL (2 : int) : int))
+	Statement: return (1 : int)
+Statement: if (((result1.1 : int) NOTEQUAL (3 : int) : int))
+	Statement: return (2 : int)
+Declaration:
+VarDecl: NULL int result2.2 = SI: (target((NEGATE (1 : int) : int), ) : int) : int
+Statement: if (((i : int) NOTEQUAL (NEGATE (1 : int) : int) : int))
+	Statement: return (3 : int)
+Statement: if (((result2.2 : int) NOTEQUAL (0 : int) : int))
+	Statement: return (4 : int)
+Statement: return (0 : int)
+
+i int InitialVal: InitialList: [c_int(0)] Global: True
+target FunType: ParamTypes: [int] Return Type: int Defined: True Global: True
+arg.0 int <typeChecker.LocalAttributes object at 0x7f414b366360>
+main FunType: ParamTypes: [] Return Type: int Defined: True Global: True
+result1.1 int <typeChecker.LocalAttributes object at 0x7f414b366810>
+result2.2 int <typeChecker.LocalAttributes object at 0x7f414b366f30>
+tmp.3 int <typeChecker.LocalAttributes object at 0x7f414b380170>
+tmp.4 int <typeChecker.LocalAttributes object at 0x7f414b3806e0>
+tmp.5 int <typeChecker.LocalAttributes object at 0x7f414b380620>
+tmp.6 int <typeChecker.LocalAttributes object at 0x7f414b380800>
+tmp.7 int <typeChecker.LocalAttributes object at 0x7f414b380470>
+tmp.9 int <typeChecker.LocalAttributes object at 0x7f414b380b60>
+tmp.10 int <typeChecker.LocalAttributes object at 0x7f414b380950>
+tmp.12 int <typeChecker.LocalAttributes object at 0x7f414b381130>
+tmp.13 int <typeChecker.LocalAttributes object at 0x7f414b380fe0>
+tmp.14 int <typeChecker.LocalAttributes object at 0x7f414b380f20>
+tmp.15 int <typeChecker.LocalAttributes object at 0x7f414b381490>
+tmp.16 int <typeChecker.LocalAttributes object at 0x7f414b381220>
+tmp.17 int <typeChecker.LocalAttributes object at 0x7f414b380e00>
+tmp.19 int <typeChecker.LocalAttributes object at 0x7f414b3816d0>
+tmp.20 int <typeChecker.LocalAttributes object at 0x7f414b3811f0>
+TAC Program:[Function: target (['arg.0']) instructions:[Copy i = 5, Copy i = arg.0, tmp.3 = i + 1, Return tmp.3, Return 0], Function: main ([]) instructions:[Copy tmp.4 = 2, tmp.5 = target([tmp.4]), CopyToOffset(result1.1 + 0) = tmp.5 , tmp.6 = i != 2, Copy tmp.7 = tmp.6, JumpIfZero(tmp.7, tmp.8), Return 1, Label(tmp.8), tmp.9 = result1.1 != 3, Copy tmp.10 = tmp.9, JumpIfZero(tmp.10, tmp.11), Return 2, Label(tmp.11), tmp.12 = -1, Copy tmp.13 = tmp.12, tmp.14 = target([tmp.13]), CopyToOffset(result2.2 + 0) = tmp.14 , tmp.15 = -1, tmp.16 = i != tmp.15, Copy tmp.17 = tmp.16, JumpIfZero(tmp.17, tmp.18), Return 3, Label(tmp.18), tmp.19 = result2.2 != 0, Copy tmp.20 = tmp.19, JumpIfZero(tmp.20, tmp.21), Return 4, Label(tmp.21), Return 0, Return 0], Global: True i = [c_int(0)]]
+Type Table:
+ {}
+Symbol Table:
+ {'i': i int InitialVal: InitialList: [c_int(0)] Global: True, 'target': target FunType: ParamTypes: [int] Return Type: int Defined: True Global: True, 'arg.0': arg.0 int <typeChecker.LocalAttributes object at 0x7f414b366360>, 'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'result1.1': result1.1 int <typeChecker.LocalAttributes object at 0x7f414b366810>, 'result2.2': result2.2 int <typeChecker.LocalAttributes object at 0x7f414b366f30>, 'tmp.3': tmp.3 int <typeChecker.LocalAttributes object at 0x7f414b380170>, 'tmp.4': tmp.4 int <typeChecker.LocalAttributes object at 0x7f414b3806e0>, 'tmp.5': tmp.5 int <typeChecker.LocalAttributes object at 0x7f414b380620>, 'tmp.6': tmp.6 int <typeChecker.LocalAttributes object at 0x7f414b380800>, 'tmp.7': tmp.7 int <typeChecker.LocalAttributes object at 0x7f414b380470>, 'tmp.9': tmp.9 int <typeChecker.LocalAttributes object at 0x7f414b380b60>, 'tmp.10': tmp.10 int <typeChecker.LocalAttributes object at 0x7f414b380950>, 'tmp.12': tmp.12 int <typeChecker.LocalAttributes object at 0x7f414b381130>, 'tmp.13': tmp.13 int <typeChecker.LocalAttributes object at 0x7f414b380fe0>, 'tmp.14': tmp.14 int <typeChecker.LocalAttributes object at 0x7f414b380f20>, 'tmp.15': tmp.15 int <typeChecker.LocalAttributes object at 0x7f414b381490>, 'tmp.16': tmp.16 int <typeChecker.LocalAttributes object at 0x7f414b381220>, 'tmp.17': tmp.17 int <typeChecker.LocalAttributes object at 0x7f414b380e00>, 'tmp.19': tmp.19 int <typeChecker.LocalAttributes object at 0x7f414b3816d0>, 'tmp.20': tmp.20 int <typeChecker.LocalAttributes object at 0x7f414b3811f0>}
+OPTIMIZING FUNCTION Function: target (['arg.0']) instructions:[Copy i = 5, Copy i = arg.0, tmp.3 = i + 1, Return tmp.3, Return 0]
+--------------ADDRESS TAKEN ANALYSIS.------------------
+set()
+-------------CONSTANT FOLDING PASS.--------------------
+OLD LIST [Copy i = 5, Copy i = arg.0, tmp.3 = i + 1, Return tmp.3, Return 0]
+NEW LIST [Copy i = 5, Copy i = arg.0, tmp.3 = i + 1, Return tmp.3, Return 0]
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_returnInstruction'>
+<class 'tacGenerator.TAC_returnInstruction'>
+Copy i = 5
+Return 0
+
+
+
+ENTRY Entry: ENTRY {0}
+0 0: [Copy i = 5, Copy i = arg.0, tmp.3 = i + 1, Return tmp.3] Pred: {ENTRY} Suc: {EXIT} iMap: {Copy i = 5: set(), Copy i = arg.0: set(), tmp.3 = i + 1: set(), Return tmp.3: set()} ReachingCopies: set()
+1 1: [Return 0] Pred: set() Suc: {EXIT} iMap: {Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0, 1}
+ENTRY Entry: ENTRY {0}
+0 0: [Copy i = 5, Copy i = arg.0, tmp.3 = i + 1, Return tmp.3] Pred: {ENTRY} Suc: {EXIT} iMap: {Copy i = 5: set(), Copy i = arg.0: set(), tmp.3 = i + 1: set(), Return tmp.3: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0}
+ENTRY Entry: ENTRY {0}
+0 0: [Copy i = 5, Copy i = arg.0, tmp.3 = i + 1, Return tmp.3] Pred: {ENTRY} Suc: {EXIT} iMap: {Copy i = 5: set(), Copy i = arg.0: set(), tmp.3 = i + 1: set(), Return tmp.3: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0}
+ENTRY Entry: ENTRY {0}
+0 0: [Copy i = 5, Copy i = arg.0, tmp.3 = i + 1, Return tmp.3] Pred: {ENTRY} Suc: {EXIT} iMap: {Copy i = 5: set(), Copy i = arg.0: set(), tmp.3 = i + 1: set(), Return tmp.3: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0}
+--------------IMAP for block 0-------------------
+Copy i = 5 set()
+<class 'parser.ConstInt'>
+Copy i = arg.0 {Copy i = 5}
+tmp.3 = i + 1 {Copy i = arg.0}
+Return tmp.3 {Copy i = arg.0}
+OLD ANNOT: {Copy i = 5, Copy i = arg.0}
+NEW ANNOT: {Copy i = arg.0}
+ADD SUCCESSORS.
+------------REPLACE INSTRUCTIONS WITH REACHING COPIES.-------------
+ENTRY Entry: ENTRY {0}
+0 0: [Copy i = 5, Copy i = arg.0, tmp.3 = arg.0 + 1, Return tmp.3] Pred: {ENTRY} Suc: {EXIT} iMap: {Copy i = 5: set(), Copy i = arg.0: {Copy i = 5}, tmp.3 = i + 1: {Copy i = arg.0}, Return tmp.3: {Copy i = arg.0}} ReachingCopies: {Copy i = arg.0}
+EXIT Exit: EXIT {0}
+--------------LIVE for block 0-------------------
+Return tmp.3 set()
+tmp.3 = arg.0 + 1 {tmp.3}
+Copy i = arg.0 {arg.0}
+Copy i = 5 {arg.0}
+--------------ADDRESS TAKEN ANALYSIS.------------------
+set()
+-------------CONSTANT FOLDING PASS.--------------------
+OLD LIST [Copy i = 5, Copy i = arg.0, tmp.3 = arg.0 + 1, Return tmp.3]
+NEW LIST [Copy i = 5, Copy i = arg.0, tmp.3 = arg.0 + 1, Return tmp.3]
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_returnInstruction'>
+Copy i = 5
+
+
+ENTRY Entry: ENTRY {0}
+0 0: [Copy i = 5, Copy i = arg.0, tmp.3 = arg.0 + 1, Return tmp.3] Pred: {ENTRY} Suc: {EXIT} iMap: {Copy i = 5: set(), Copy i = arg.0: set(), tmp.3 = arg.0 + 1: set(), Return tmp.3: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0}
+ENTRY Entry: ENTRY {0}
+0 0: [Copy i = 5, Copy i = arg.0, tmp.3 = arg.0 + 1, Return tmp.3] Pred: {ENTRY} Suc: {EXIT} iMap: {Copy i = 5: set(), Copy i = arg.0: set(), tmp.3 = arg.0 + 1: set(), Return tmp.3: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0}
+ENTRY Entry: ENTRY {0}
+0 0: [Copy i = 5, Copy i = arg.0, tmp.3 = arg.0 + 1, Return tmp.3] Pred: {ENTRY} Suc: {EXIT} iMap: {Copy i = 5: set(), Copy i = arg.0: set(), tmp.3 = arg.0 + 1: set(), Return tmp.3: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0}
+ENTRY Entry: ENTRY {0}
+0 0: [Copy i = 5, Copy i = arg.0, tmp.3 = arg.0 + 1, Return tmp.3] Pred: {ENTRY} Suc: {EXIT} iMap: {Copy i = 5: set(), Copy i = arg.0: set(), tmp.3 = arg.0 + 1: set(), Return tmp.3: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0}
+--------------IMAP for block 0-------------------
+Copy i = 5 set()
+<class 'parser.ConstInt'>
+Copy i = arg.0 {Copy i = 5}
+tmp.3 = arg.0 + 1 {Copy i = arg.0}
+Return tmp.3 {Copy i = arg.0}
+OLD ANNOT: {Copy i = 5, Copy i = arg.0}
+NEW ANNOT: {Copy i = arg.0}
+ADD SUCCESSORS.
+------------REPLACE INSTRUCTIONS WITH REACHING COPIES.-------------
+ENTRY Entry: ENTRY {0}
+0 0: [Copy i = 5, Copy i = arg.0, tmp.3 = arg.0 + 1, Return tmp.3] Pred: {ENTRY} Suc: {EXIT} iMap: {Copy i = 5: set(), Copy i = arg.0: {Copy i = 5}, tmp.3 = arg.0 + 1: {Copy i = arg.0}, Return tmp.3: {Copy i = arg.0}} ReachingCopies: {Copy i = arg.0}
+EXIT Exit: EXIT {0}
+--------------LIVE for block 0-------------------
+Return tmp.3 set()
+tmp.3 = arg.0 + 1 {tmp.3}
+Copy i = arg.0 {arg.0}
+Copy i = 5 {arg.0}
+OPTIMIZING FUNCTION Function: main ([]) instructions:[Copy tmp.4 = 2, tmp.5 = target([tmp.4]), CopyToOffset(result1.1 + 0) = tmp.5 , tmp.6 = i != 2, Copy tmp.7 = tmp.6, JumpIfZero(tmp.7, tmp.8), Return 1, Label(tmp.8), tmp.9 = result1.1 != 3, Copy tmp.10 = tmp.9, JumpIfZero(tmp.10, tmp.11), Return 2, Label(tmp.11), tmp.12 = -1, Copy tmp.13 = tmp.12, tmp.14 = target([tmp.13]), CopyToOffset(result2.2 + 0) = tmp.14 , tmp.15 = -1, tmp.16 = i != tmp.15, Copy tmp.17 = tmp.16, JumpIfZero(tmp.17, tmp.18), Return 3, Label(tmp.18), tmp.19 = result2.2 != 0, Copy tmp.20 = tmp.19, JumpIfZero(tmp.20, tmp.21), Return 4, Label(tmp.21), Return 0, Return 0]
+--------------ADDRESS TAKEN ANALYSIS.------------------
+set()
+-------------CONSTANT FOLDING PASS.--------------------
+OLD LIST [Copy tmp.4 = 2, tmp.5 = target([tmp.4]), CopyToOffset(result1.1 + 0) = tmp.5 , tmp.6 = i != 2, Copy tmp.7 = tmp.6, JumpIfZero(tmp.7, tmp.8), Return 1, Label(tmp.8), tmp.9 = result1.1 != 3, Copy tmp.10 = tmp.9, JumpIfZero(tmp.10, tmp.11), Return 2, Label(tmp.11), tmp.12 = -1, Copy tmp.13 = tmp.12, tmp.14 = target([tmp.13]), CopyToOffset(result2.2 + 0) = tmp.14 , tmp.15 = -1, tmp.16 = i != tmp.15, Copy tmp.17 = tmp.16, JumpIfZero(tmp.17, tmp.18), Return 3, Label(tmp.18), tmp.19 = result2.2 != 0, Copy tmp.20 = tmp.19, JumpIfZero(tmp.20, tmp.21), Return 4, Label(tmp.21), Return 0, Return 0]
+NEW LIST [Copy tmp.4 = 2, tmp.5 = target([tmp.4]), Copy result1.1 = tmp.5, tmp.6 = i != 2, Copy tmp.7 = tmp.6, JumpIfZero(tmp.7, tmp.8), Return 1, Label(tmp.8), tmp.9 = result1.1 != 3, Copy tmp.10 = tmp.9, JumpIfZero(tmp.10, tmp.11), Return 2, Label(tmp.11), tmp.12 = -1, Copy tmp.13 = tmp.12, tmp.14 = target([tmp.13]), Copy result2.2 = tmp.14, tmp.15 = -1, tmp.16 = i != tmp.15, Copy tmp.17 = tmp.16, JumpIfZero(tmp.17, tmp.18), Return 3, Label(tmp.18), tmp.19 = result2.2 != 0, Copy tmp.20 = tmp.19, JumpIfZero(tmp.20, tmp.21), Return 4, Label(tmp.21), Return 0, Return 0]
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_FunCallInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_JumpIfZeroInst'>
+<class 'tacGenerator.TAC_returnInstruction'>
+<class 'tacGenerator.TAC_LabelInst'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_JumpIfZeroInst'>
+<class 'tacGenerator.TAC_returnInstruction'>
+<class 'tacGenerator.TAC_LabelInst'>
+<class 'tacGenerator.TAC_UnaryInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_FunCallInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_UnaryInstruction'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_JumpIfZeroInst'>
+<class 'tacGenerator.TAC_returnInstruction'>
+<class 'tacGenerator.TAC_LabelInst'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_JumpIfZeroInst'>
+<class 'tacGenerator.TAC_returnInstruction'>
+<class 'tacGenerator.TAC_LabelInst'>
+<class 'tacGenerator.TAC_returnInstruction'>
+<class 'tacGenerator.TAC_returnInstruction'>
+Copy tmp.4 = 2
+Return 1
+Label(tmp.8)
+Return 2
+Label(tmp.11)
+Return 3
+Label(tmp.18)
+Return 4
+Label(tmp.21)
+Return 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ENTRY Entry: ENTRY {0}
+0 0: [Copy tmp.4 = 2, tmp.5 = target([tmp.4]), Copy result1.1 = tmp.5, tmp.6 = i != 2, Copy tmp.7 = tmp.6, JumpIfZero(tmp.7, tmp.8)] Pred: {ENTRY} Suc: {1, 2} iMap: {Copy tmp.4 = 2: set(), tmp.5 = target([tmp.4]): set(), Copy result1.1 = tmp.5: set(), tmp.6 = i != 2: set(), Copy tmp.7 = tmp.6: set(), JumpIfZero(tmp.7, tmp.8): set()} ReachingCopies: set()
+1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
+2 2: [Label(tmp.8), tmp.9 = result1.1 != 3, Copy tmp.10 = tmp.9, JumpIfZero(tmp.10, tmp.11)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.8): set(), tmp.9 = result1.1 != 3: set(), Copy tmp.10 = tmp.9: set(), JumpIfZero(tmp.10, tmp.11): set()} ReachingCopies: set()
+3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
+4 4: [Label(tmp.11), tmp.12 = -1, Copy tmp.13 = tmp.12, tmp.14 = target([tmp.13]), Copy result2.2 = tmp.14, tmp.15 = -1, tmp.16 = i != tmp.15, Copy tmp.17 = tmp.16, JumpIfZero(tmp.17, tmp.18)] Pred: {2} Suc: {5, 6} iMap: {Label(tmp.11): set(), tmp.12 = -1: set(), Copy tmp.13 = tmp.12: set(), tmp.14 = target([tmp.13]): set(), Copy result2.2 = tmp.14: set(), tmp.15 = -1: set(), tmp.16 = i != tmp.15: set(), Copy tmp.17 = tmp.16: set(), JumpIfZero(tmp.17, tmp.18): set()} ReachingCopies: set()
+5 5: [Return 3] Pred: {4} Suc: {EXIT} iMap: {Return 3: set()} ReachingCopies: set()
+6 6: [Label(tmp.18), tmp.19 = result2.2 != 0, Copy tmp.20 = tmp.19, JumpIfZero(tmp.20, tmp.21)] Pred: {4} Suc: {8, 7} iMap: {Label(tmp.18): set(), tmp.19 = result2.2 != 0: set(), Copy tmp.20 = tmp.19: set(), JumpIfZero(tmp.20, tmp.21): set()} ReachingCopies: set()
+7 7: [Return 4] Pred: {6} Suc: {EXIT} iMap: {Return 4: set()} ReachingCopies: set()
+8 8: [Label(tmp.21), Return 0] Pred: {6} Suc: {EXIT} iMap: {Label(tmp.21): set(), Return 0: set()} ReachingCopies: set()
+9 9: [Return 0] Pred: set() Suc: {EXIT} iMap: {Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {1, 3, 5, 7, 8, 9}
+ENTRY Entry: ENTRY {0}
+0 0: [Copy tmp.4 = 2, tmp.5 = target([tmp.4]), Copy result1.1 = tmp.5, tmp.6 = i != 2, Copy tmp.7 = tmp.6, JumpIfZero(tmp.7, tmp.8)] Pred: {ENTRY} Suc: {1, 2} iMap: {Copy tmp.4 = 2: set(), tmp.5 = target([tmp.4]): set(), Copy result1.1 = tmp.5: set(), tmp.6 = i != 2: set(), Copy tmp.7 = tmp.6: set(), JumpIfZero(tmp.7, tmp.8): set()} ReachingCopies: set()
+1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
+2 2: [Label(tmp.8), tmp.9 = result1.1 != 3, Copy tmp.10 = tmp.9, JumpIfZero(tmp.10, tmp.11)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.8): set(), tmp.9 = result1.1 != 3: set(), Copy tmp.10 = tmp.9: set(), JumpIfZero(tmp.10, tmp.11): set()} ReachingCopies: set()
+3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
+4 4: [Label(tmp.11), tmp.12 = -1, Copy tmp.13 = tmp.12, tmp.14 = target([tmp.13]), Copy result2.2 = tmp.14, tmp.15 = -1, tmp.16 = i != tmp.15, Copy tmp.17 = tmp.16, JumpIfZero(tmp.17, tmp.18)] Pred: {2} Suc: {5, 6} iMap: {Label(tmp.11): set(), tmp.12 = -1: set(), Copy tmp.13 = tmp.12: set(), tmp.14 = target([tmp.13]): set(), Copy result2.2 = tmp.14: set(), tmp.15 = -1: set(), tmp.16 = i != tmp.15: set(), Copy tmp.17 = tmp.16: set(), JumpIfZero(tmp.17, tmp.18): set()} ReachingCopies: set()
+5 5: [Return 3] Pred: {4} Suc: {EXIT} iMap: {Return 3: set()} ReachingCopies: set()
+6 6: [Label(tmp.18), tmp.19 = result2.2 != 0, Copy tmp.20 = tmp.19, JumpIfZero(tmp.20, tmp.21)] Pred: {4} Suc: {8, 7} iMap: {Label(tmp.18): set(), tmp.19 = result2.2 != 0: set(), Copy tmp.20 = tmp.19: set(), JumpIfZero(tmp.20, tmp.21): set()} ReachingCopies: set()
+7 7: [Return 4] Pred: {6} Suc: {EXIT} iMap: {Return 4: set()} ReachingCopies: set()
+8 8: [Label(tmp.21), Return 0] Pred: {6} Suc: {EXIT} iMap: {Label(tmp.21): set(), Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {1, 3, 5, 7, 8}
+ENTRY Entry: ENTRY {0}
+0 0: [Copy tmp.4 = 2, tmp.5 = target([tmp.4]), Copy result1.1 = tmp.5, tmp.6 = i != 2, Copy tmp.7 = tmp.6, JumpIfZero(tmp.7, tmp.8)] Pred: {ENTRY} Suc: {1, 2} iMap: {Copy tmp.4 = 2: set(), tmp.5 = target([tmp.4]): set(), Copy result1.1 = tmp.5: set(), tmp.6 = i != 2: set(), Copy tmp.7 = tmp.6: set(), JumpIfZero(tmp.7, tmp.8): set()} ReachingCopies: set()
+1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
+2 2: [Label(tmp.8), tmp.9 = result1.1 != 3, Copy tmp.10 = tmp.9, JumpIfZero(tmp.10, tmp.11)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.8): set(), tmp.9 = result1.1 != 3: set(), Copy tmp.10 = tmp.9: set(), JumpIfZero(tmp.10, tmp.11): set()} ReachingCopies: set()
+3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
+4 4: [Label(tmp.11), tmp.12 = -1, Copy tmp.13 = tmp.12, tmp.14 = target([tmp.13]), Copy result2.2 = tmp.14, tmp.15 = -1, tmp.16 = i != tmp.15, Copy tmp.17 = tmp.16, JumpIfZero(tmp.17, tmp.18)] Pred: {2} Suc: {5, 6} iMap: {Label(tmp.11): set(), tmp.12 = -1: set(), Copy tmp.13 = tmp.12: set(), tmp.14 = target([tmp.13]): set(), Copy result2.2 = tmp.14: set(), tmp.15 = -1: set(), tmp.16 = i != tmp.15: set(), Copy tmp.17 = tmp.16: set(), JumpIfZero(tmp.17, tmp.18): set()} ReachingCopies: set()
+5 5: [Return 3] Pred: {4} Suc: {EXIT} iMap: {Return 3: set()} ReachingCopies: set()
+6 6: [Label(tmp.18), tmp.19 = result2.2 != 0, Copy tmp.20 = tmp.19, JumpIfZero(tmp.20, tmp.21)] Pred: {4} Suc: {8, 7} iMap: {Label(tmp.18): set(), tmp.19 = result2.2 != 0: set(), Copy tmp.20 = tmp.19: set(), JumpIfZero(tmp.20, tmp.21): set()} ReachingCopies: set()
+7 7: [Return 4] Pred: {6} Suc: {EXIT} iMap: {Return 4: set()} ReachingCopies: set()
+8 8: [Label(tmp.21), Return 0] Pred: {6} Suc: {EXIT} iMap: {Label(tmp.21): set(), Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {1, 3, 5, 7, 8}
+ENTRY Entry: ENTRY {0}
+0 0: [Copy tmp.4 = 2, tmp.5 = target([tmp.4]), Copy result1.1 = tmp.5, tmp.6 = i != 2, Copy tmp.7 = tmp.6, JumpIfZero(tmp.7, tmp.8)] Pred: {ENTRY} Suc: {1, 2} iMap: {Copy tmp.4 = 2: set(), tmp.5 = target([tmp.4]): set(), Copy result1.1 = tmp.5: set(), tmp.6 = i != 2: set(), Copy tmp.7 = tmp.6: set(), JumpIfZero(tmp.7, tmp.8): set()} ReachingCopies: set()
+1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
+2 2: [Label(tmp.8), tmp.9 = result1.1 != 3, Copy tmp.10 = tmp.9, JumpIfZero(tmp.10, tmp.11)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.8): set(), tmp.9 = result1.1 != 3: set(), Copy tmp.10 = tmp.9: set(), JumpIfZero(tmp.10, tmp.11): set()} ReachingCopies: set()
+3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
+4 4: [Label(tmp.11), tmp.12 = -1, Copy tmp.13 = tmp.12, tmp.14 = target([tmp.13]), Copy result2.2 = tmp.14, tmp.15 = -1, tmp.16 = i != tmp.15, Copy tmp.17 = tmp.16, JumpIfZero(tmp.17, tmp.18)] Pred: {2} Suc: {5, 6} iMap: {Label(tmp.11): set(), tmp.12 = -1: set(), Copy tmp.13 = tmp.12: set(), tmp.14 = target([tmp.13]): set(), Copy result2.2 = tmp.14: set(), tmp.15 = -1: set(), tmp.16 = i != tmp.15: set(), Copy tmp.17 = tmp.16: set(), JumpIfZero(tmp.17, tmp.18): set()} ReachingCopies: set()
+5 5: [Return 3] Pred: {4} Suc: {EXIT} iMap: {Return 3: set()} ReachingCopies: set()
+6 6: [Label(tmp.18), tmp.19 = result2.2 != 0, Copy tmp.20 = tmp.19, JumpIfZero(tmp.20, tmp.21)] Pred: {4} Suc: {8, 7} iMap: {Label(tmp.18): set(), tmp.19 = result2.2 != 0: set(), Copy tmp.20 = tmp.19: set(), JumpIfZero(tmp.20, tmp.21): set()} ReachingCopies: set()
+7 7: [Return 4] Pred: {6} Suc: {EXIT} iMap: {Return 4: set()} ReachingCopies: set()
+8 8: [Label(tmp.21), Return 0] Pred: {6} Suc: {EXIT} iMap: {Label(tmp.21): set(), Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {1, 3, 5, 7, 8}
+--------------IMAP for block 0-------------------
+Copy tmp.4 = 2 set()
+<class 'parser.ConstInt'>
+tmp.5 = target([tmp.4]) {Copy tmp.4 = 2}
+Copy result1.1 = tmp.5 {Copy tmp.4 = 2}
+tmp.6 = i != 2 {Copy tmp.4 = 2, Copy result1.1 = tmp.5}
+Copy tmp.7 = tmp.6 {Copy tmp.4 = 2, Copy result1.1 = tmp.5}
+JumpIfZero(tmp.7, tmp.8) {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}
+OLD ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+NEW ANNOT: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}
+ADD SUCCESSORS.
+--------------IMAP for block 1-------------------
+Return 1 {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}
+OLD ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+NEW ANNOT: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}
+ADD SUCCESSORS.
+--------------IMAP for block 2-------------------
+Label(tmp.8) {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}
+tmp.9 = result1.1 != 3 {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}
+Copy tmp.10 = tmp.9 {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}
+JumpIfZero(tmp.10, tmp.11) {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}
+OLD ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+NEW ANNOT: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}
+ADD SUCCESSORS.
+--------------IMAP for block 3-------------------
+Return 2 {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}
+OLD ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+NEW ANNOT: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}
+ADD SUCCESSORS.
+--------------IMAP for block 4-------------------
+Label(tmp.11) {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}
+tmp.12 = -1 {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}
+Copy tmp.13 = tmp.12 {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}
+tmp.14 = target([tmp.13]) {Copy tmp.10 = tmp.9, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}
+Copy result2.2 = tmp.14 {Copy tmp.10 = tmp.9, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}
+tmp.15 = -1 {Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}
+tmp.16 = i != tmp.15 {Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}
+Copy tmp.17 = tmp.16 {Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}
+JumpIfZero(tmp.17, tmp.18) {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}
+OLD ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+NEW ANNOT: {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}
+ADD SUCCESSORS.
+--------------IMAP for block 5-------------------
+Return 3 {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}
+OLD ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+NEW ANNOT: {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}
+ADD SUCCESSORS.
+--------------IMAP for block 6-------------------
+Label(tmp.18) {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}
+tmp.19 = result2.2 != 0 {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}
+Copy tmp.20 = tmp.19 {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}
+JumpIfZero(tmp.20, tmp.21) {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+OLD ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+NEW ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+--------------IMAP for block 7-------------------
+Return 4 {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+OLD ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+NEW ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+--------------IMAP for block 8-------------------
+Label(tmp.21) {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+Return 0 {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+OLD ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+NEW ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+------------REPLACE INSTRUCTIONS WITH REACHING COPIES.-------------
+ENTRY Entry: ENTRY {0}
+0 0: [Copy tmp.4 = 2, tmp.5 = target([2]), Copy result1.1 = tmp.5, tmp.6 = i != 2, Copy tmp.7 = tmp.6, JumpIfZero(tmp.6, tmp.8)] Pred: {ENTRY} Suc: {1, 2} iMap: {Copy tmp.4 = 2: set(), tmp.5 = target([tmp.4]): {Copy tmp.4 = 2}, Copy result1.1 = tmp.5: {Copy tmp.4 = 2}, tmp.6 = i != 2: {Copy tmp.4 = 2, Copy result1.1 = tmp.5}, Copy tmp.7 = tmp.6: {Copy tmp.4 = 2, Copy result1.1 = tmp.5}, JumpIfZero(tmp.7, tmp.8): {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}} ReachingCopies: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}
+1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}} ReachingCopies: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}
+2 2: [Label(tmp.8), tmp.9 = tmp.5 != 3, Copy tmp.10 = tmp.9, JumpIfZero(tmp.9, tmp.11)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.8): {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}, tmp.9 = result1.1 != 3: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}, Copy tmp.10 = tmp.9: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}, JumpIfZero(tmp.10, tmp.11): {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}} ReachingCopies: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}
+3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}} ReachingCopies: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}
+4 4: [Label(tmp.11), tmp.12 = -1, Copy tmp.13 = tmp.12, tmp.14 = target([tmp.12]), Copy result2.2 = tmp.14, tmp.15 = -1, tmp.16 = i != tmp.15, Copy tmp.17 = tmp.16, JumpIfZero(tmp.16, tmp.18)] Pred: {2} Suc: {5, 6} iMap: {Label(tmp.11): {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}, tmp.12 = -1: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}, Copy tmp.13 = tmp.12: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}, tmp.14 = target([tmp.13]): {Copy tmp.10 = tmp.9, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}, Copy result2.2 = tmp.14: {Copy tmp.10 = tmp.9, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}, tmp.15 = -1: {Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}, tmp.16 = i != tmp.15: {Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}, Copy tmp.17 = tmp.16: {Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}, JumpIfZero(tmp.17, tmp.18): {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}} ReachingCopies: {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}
+5 5: [Return 3] Pred: {4} Suc: {EXIT} iMap: {Return 3: {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}} ReachingCopies: {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}
+6 6: [Label(tmp.18), tmp.19 = tmp.14 != 0, Copy tmp.20 = tmp.19, JumpIfZero(tmp.19, tmp.21)] Pred: {4} Suc: {8, 7} iMap: {Label(tmp.18): {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}, tmp.19 = result2.2 != 0: {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}, Copy tmp.20 = tmp.19: {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}, JumpIfZero(tmp.20, tmp.21): {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}} ReachingCopies: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+7 7: [Return 4] Pred: {6} Suc: {EXIT} iMap: {Return 4: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}} ReachingCopies: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+8 8: [Label(tmp.21), Return 0] Pred: {6} Suc: {EXIT} iMap: {Label(tmp.21): {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}, Return 0: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}} ReachingCopies: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+EXIT Exit: EXIT {1, 3, 5, 7, 8}
+--------------LIVE for block 0-------------------
+JumpIfZero(tmp.6, tmp.8) set()
+Copy tmp.7 = tmp.6 {tmp.6}
+tmp.6 = i != 2 {tmp.6}
+Copy result1.1 = tmp.5 {i}
+tmp.5 = target([2]) {i, tmp.5}
+<class 'tacGenerator.TAC_ConstantValue'>
+Copy tmp.4 = 2 {i}
+--------------LIVE for block 1-------------------
+Return 1 set()
+--------------LIVE for block 2-------------------
+JumpIfZero(tmp.9, tmp.11) set()
+Copy tmp.10 = tmp.9 {tmp.9}
+tmp.9 = tmp.5 != 3 {tmp.9}
+Label(tmp.8) {tmp.5}
+--------------LIVE for block 3-------------------
+Return 2 set()
+--------------LIVE for block 4-------------------
+JumpIfZero(tmp.16, tmp.18) set()
+Copy tmp.17 = tmp.16 {tmp.16}
+tmp.16 = i != tmp.15 {tmp.16}
+tmp.15 = -1 {i, tmp.15}
+Copy result2.2 = tmp.14 {i}
+tmp.14 = target([tmp.12]) {tmp.14, i}
+<class 'tacGenerator.TAC_VariableValue'>
+Copy tmp.13 = tmp.12 {i, tmp.12}
+tmp.12 = -1 {i, tmp.12}
+Label(tmp.11) {i}
+--------------LIVE for block 5-------------------
+Return 3 set()
+--------------LIVE for block 6-------------------
+JumpIfZero(tmp.19, tmp.21) set()
+Copy tmp.20 = tmp.19 {tmp.19}
+tmp.19 = tmp.14 != 0 {tmp.19}
+Label(tmp.18) {tmp.14}
+--------------LIVE for block 7-------------------
+Return 4 set()
+--------------LIVE for block 8-------------------
+Return 0 set()
+Label(tmp.21) set()
+--------------ADDRESS TAKEN ANALYSIS.------------------
+set()
+-------------CONSTANT FOLDING PASS.--------------------
+OLD LIST [Copy tmp.4 = 2, tmp.5 = target([2]), Copy result1.1 = tmp.5, tmp.6 = i != 2, Copy tmp.7 = tmp.6, JumpIfZero(tmp.6, tmp.8), Return 1, Label(tmp.8), tmp.9 = tmp.5 != 3, Copy tmp.10 = tmp.9, JumpIfZero(tmp.9, tmp.11), Return 2, Label(tmp.11), tmp.12 = -1, Copy tmp.13 = tmp.12, tmp.14 = target([tmp.12]), Copy result2.2 = tmp.14, tmp.15 = -1, tmp.16 = i != tmp.15, Copy tmp.17 = tmp.16, JumpIfZero(tmp.16, tmp.18), Return 3, Label(tmp.18), tmp.19 = tmp.14 != 0, Copy tmp.20 = tmp.19, JumpIfZero(tmp.19, tmp.21), Return 4, Label(tmp.21), Return 0]
+NEW LIST [Copy tmp.4 = 2, tmp.5 = target([2]), Copy result1.1 = tmp.5, tmp.6 = i != 2, Copy tmp.7 = tmp.6, JumpIfZero(tmp.6, tmp.8), Return 1, Label(tmp.8), tmp.9 = tmp.5 != 3, Copy tmp.10 = tmp.9, JumpIfZero(tmp.9, tmp.11), Return 2, Label(tmp.11), tmp.12 = -1, Copy tmp.13 = tmp.12, tmp.14 = target([tmp.12]), Copy result2.2 = tmp.14, tmp.15 = -1, tmp.16 = i != tmp.15, Copy tmp.17 = tmp.16, JumpIfZero(tmp.16, tmp.18), Return 3, Label(tmp.18), tmp.19 = tmp.14 != 0, Copy tmp.20 = tmp.19, JumpIfZero(tmp.19, tmp.21), Return 4, Label(tmp.21), Return 0]
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_FunCallInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_JumpIfZeroInst'>
+<class 'tacGenerator.TAC_returnInstruction'>
+<class 'tacGenerator.TAC_LabelInst'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_JumpIfZeroInst'>
+<class 'tacGenerator.TAC_returnInstruction'>
+<class 'tacGenerator.TAC_LabelInst'>
+<class 'tacGenerator.TAC_UnaryInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_FunCallInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_UnaryInstruction'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_JumpIfZeroInst'>
+<class 'tacGenerator.TAC_returnInstruction'>
+<class 'tacGenerator.TAC_LabelInst'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_JumpIfZeroInst'>
+<class 'tacGenerator.TAC_returnInstruction'>
+<class 'tacGenerator.TAC_LabelInst'>
+<class 'tacGenerator.TAC_returnInstruction'>
+Copy tmp.4 = 2
+Return 1
+Label(tmp.8)
+Return 2
+Label(tmp.11)
+Return 3
+Label(tmp.18)
+Return 4
+Label(tmp.21)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ENTRY Entry: ENTRY {0}
+0 0: [Copy tmp.4 = 2, tmp.5 = target([2]), Copy result1.1 = tmp.5, tmp.6 = i != 2, Copy tmp.7 = tmp.6, JumpIfZero(tmp.6, tmp.8)] Pred: {ENTRY} Suc: {1, 2} iMap: {Copy tmp.4 = 2: set(), tmp.5 = target([2]): set(), Copy result1.1 = tmp.5: set(), tmp.6 = i != 2: set(), Copy tmp.7 = tmp.6: set(), JumpIfZero(tmp.6, tmp.8): set()} ReachingCopies: set()
+1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
+2 2: [Label(tmp.8), tmp.9 = tmp.5 != 3, Copy tmp.10 = tmp.9, JumpIfZero(tmp.9, tmp.11)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.8): set(), tmp.9 = tmp.5 != 3: set(), Copy tmp.10 = tmp.9: set(), JumpIfZero(tmp.9, tmp.11): set()} ReachingCopies: set()
+3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
+4 4: [Label(tmp.11), tmp.12 = -1, Copy tmp.13 = tmp.12, tmp.14 = target([tmp.12]), Copy result2.2 = tmp.14, tmp.15 = -1, tmp.16 = i != tmp.15, Copy tmp.17 = tmp.16, JumpIfZero(tmp.16, tmp.18)] Pred: {2} Suc: {5, 6} iMap: {Label(tmp.11): set(), tmp.12 = -1: set(), Copy tmp.13 = tmp.12: set(), tmp.14 = target([tmp.12]): set(), Copy result2.2 = tmp.14: set(), tmp.15 = -1: set(), tmp.16 = i != tmp.15: set(), Copy tmp.17 = tmp.16: set(), JumpIfZero(tmp.16, tmp.18): set()} ReachingCopies: set()
+5 5: [Return 3] Pred: {4} Suc: {EXIT} iMap: {Return 3: set()} ReachingCopies: set()
+6 6: [Label(tmp.18), tmp.19 = tmp.14 != 0, Copy tmp.20 = tmp.19, JumpIfZero(tmp.19, tmp.21)] Pred: {4} Suc: {8, 7} iMap: {Label(tmp.18): set(), tmp.19 = tmp.14 != 0: set(), Copy tmp.20 = tmp.19: set(), JumpIfZero(tmp.19, tmp.21): set()} ReachingCopies: set()
+7 7: [Return 4] Pred: {6} Suc: {EXIT} iMap: {Return 4: set()} ReachingCopies: set()
+8 8: [Label(tmp.21), Return 0] Pred: {6} Suc: {EXIT} iMap: {Label(tmp.21): set(), Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {1, 3, 5, 7, 8}
+ENTRY Entry: ENTRY {0}
+0 0: [Copy tmp.4 = 2, tmp.5 = target([2]), Copy result1.1 = tmp.5, tmp.6 = i != 2, Copy tmp.7 = tmp.6, JumpIfZero(tmp.6, tmp.8)] Pred: {ENTRY} Suc: {1, 2} iMap: {Copy tmp.4 = 2: set(), tmp.5 = target([2]): set(), Copy result1.1 = tmp.5: set(), tmp.6 = i != 2: set(), Copy tmp.7 = tmp.6: set(), JumpIfZero(tmp.6, tmp.8): set()} ReachingCopies: set()
+1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
+2 2: [Label(tmp.8), tmp.9 = tmp.5 != 3, Copy tmp.10 = tmp.9, JumpIfZero(tmp.9, tmp.11)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.8): set(), tmp.9 = tmp.5 != 3: set(), Copy tmp.10 = tmp.9: set(), JumpIfZero(tmp.9, tmp.11): set()} ReachingCopies: set()
+3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
+4 4: [Label(tmp.11), tmp.12 = -1, Copy tmp.13 = tmp.12, tmp.14 = target([tmp.12]), Copy result2.2 = tmp.14, tmp.15 = -1, tmp.16 = i != tmp.15, Copy tmp.17 = tmp.16, JumpIfZero(tmp.16, tmp.18)] Pred: {2} Suc: {5, 6} iMap: {Label(tmp.11): set(), tmp.12 = -1: set(), Copy tmp.13 = tmp.12: set(), tmp.14 = target([tmp.12]): set(), Copy result2.2 = tmp.14: set(), tmp.15 = -1: set(), tmp.16 = i != tmp.15: set(), Copy tmp.17 = tmp.16: set(), JumpIfZero(tmp.16, tmp.18): set()} ReachingCopies: set()
+5 5: [Return 3] Pred: {4} Suc: {EXIT} iMap: {Return 3: set()} ReachingCopies: set()
+6 6: [Label(tmp.18), tmp.19 = tmp.14 != 0, Copy tmp.20 = tmp.19, JumpIfZero(tmp.19, tmp.21)] Pred: {4} Suc: {8, 7} iMap: {Label(tmp.18): set(), tmp.19 = tmp.14 != 0: set(), Copy tmp.20 = tmp.19: set(), JumpIfZero(tmp.19, tmp.21): set()} ReachingCopies: set()
+7 7: [Return 4] Pred: {6} Suc: {EXIT} iMap: {Return 4: set()} ReachingCopies: set()
+8 8: [Label(tmp.21), Return 0] Pred: {6} Suc: {EXIT} iMap: {Label(tmp.21): set(), Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {1, 3, 5, 7, 8}
+ENTRY Entry: ENTRY {0}
+0 0: [Copy tmp.4 = 2, tmp.5 = target([2]), Copy result1.1 = tmp.5, tmp.6 = i != 2, Copy tmp.7 = tmp.6, JumpIfZero(tmp.6, tmp.8)] Pred: {ENTRY} Suc: {1, 2} iMap: {Copy tmp.4 = 2: set(), tmp.5 = target([2]): set(), Copy result1.1 = tmp.5: set(), tmp.6 = i != 2: set(), Copy tmp.7 = tmp.6: set(), JumpIfZero(tmp.6, tmp.8): set()} ReachingCopies: set()
+1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
+2 2: [Label(tmp.8), tmp.9 = tmp.5 != 3, Copy tmp.10 = tmp.9, JumpIfZero(tmp.9, tmp.11)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.8): set(), tmp.9 = tmp.5 != 3: set(), Copy tmp.10 = tmp.9: set(), JumpIfZero(tmp.9, tmp.11): set()} ReachingCopies: set()
+3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
+4 4: [Label(tmp.11), tmp.12 = -1, Copy tmp.13 = tmp.12, tmp.14 = target([tmp.12]), Copy result2.2 = tmp.14, tmp.15 = -1, tmp.16 = i != tmp.15, Copy tmp.17 = tmp.16, JumpIfZero(tmp.16, tmp.18)] Pred: {2} Suc: {5, 6} iMap: {Label(tmp.11): set(), tmp.12 = -1: set(), Copy tmp.13 = tmp.12: set(), tmp.14 = target([tmp.12]): set(), Copy result2.2 = tmp.14: set(), tmp.15 = -1: set(), tmp.16 = i != tmp.15: set(), Copy tmp.17 = tmp.16: set(), JumpIfZero(tmp.16, tmp.18): set()} ReachingCopies: set()
+5 5: [Return 3] Pred: {4} Suc: {EXIT} iMap: {Return 3: set()} ReachingCopies: set()
+6 6: [Label(tmp.18), tmp.19 = tmp.14 != 0, Copy tmp.20 = tmp.19, JumpIfZero(tmp.19, tmp.21)] Pred: {4} Suc: {8, 7} iMap: {Label(tmp.18): set(), tmp.19 = tmp.14 != 0: set(), Copy tmp.20 = tmp.19: set(), JumpIfZero(tmp.19, tmp.21): set()} ReachingCopies: set()
+7 7: [Return 4] Pred: {6} Suc: {EXIT} iMap: {Return 4: set()} ReachingCopies: set()
+8 8: [Label(tmp.21), Return 0] Pred: {6} Suc: {EXIT} iMap: {Label(tmp.21): set(), Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {1, 3, 5, 7, 8}
+ENTRY Entry: ENTRY {0}
+0 0: [Copy tmp.4 = 2, tmp.5 = target([2]), Copy result1.1 = tmp.5, tmp.6 = i != 2, Copy tmp.7 = tmp.6, JumpIfZero(tmp.6, tmp.8)] Pred: {ENTRY} Suc: {1, 2} iMap: {Copy tmp.4 = 2: set(), tmp.5 = target([2]): set(), Copy result1.1 = tmp.5: set(), tmp.6 = i != 2: set(), Copy tmp.7 = tmp.6: set(), JumpIfZero(tmp.6, tmp.8): set()} ReachingCopies: set()
+1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
+2 2: [Label(tmp.8), tmp.9 = tmp.5 != 3, Copy tmp.10 = tmp.9, JumpIfZero(tmp.9, tmp.11)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.8): set(), tmp.9 = tmp.5 != 3: set(), Copy tmp.10 = tmp.9: set(), JumpIfZero(tmp.9, tmp.11): set()} ReachingCopies: set()
+3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
+4 4: [Label(tmp.11), tmp.12 = -1, Copy tmp.13 = tmp.12, tmp.14 = target([tmp.12]), Copy result2.2 = tmp.14, tmp.15 = -1, tmp.16 = i != tmp.15, Copy tmp.17 = tmp.16, JumpIfZero(tmp.16, tmp.18)] Pred: {2} Suc: {5, 6} iMap: {Label(tmp.11): set(), tmp.12 = -1: set(), Copy tmp.13 = tmp.12: set(), tmp.14 = target([tmp.12]): set(), Copy result2.2 = tmp.14: set(), tmp.15 = -1: set(), tmp.16 = i != tmp.15: set(), Copy tmp.17 = tmp.16: set(), JumpIfZero(tmp.16, tmp.18): set()} ReachingCopies: set()
+5 5: [Return 3] Pred: {4} Suc: {EXIT} iMap: {Return 3: set()} ReachingCopies: set()
+6 6: [Label(tmp.18), tmp.19 = tmp.14 != 0, Copy tmp.20 = tmp.19, JumpIfZero(tmp.19, tmp.21)] Pred: {4} Suc: {8, 7} iMap: {Label(tmp.18): set(), tmp.19 = tmp.14 != 0: set(), Copy tmp.20 = tmp.19: set(), JumpIfZero(tmp.19, tmp.21): set()} ReachingCopies: set()
+7 7: [Return 4] Pred: {6} Suc: {EXIT} iMap: {Return 4: set()} ReachingCopies: set()
+8 8: [Label(tmp.21), Return 0] Pred: {6} Suc: {EXIT} iMap: {Label(tmp.21): set(), Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {1, 3, 5, 7, 8}
+--------------IMAP for block 0-------------------
+Copy tmp.4 = 2 set()
+<class 'parser.ConstInt'>
+tmp.5 = target([2]) {Copy tmp.4 = 2}
+Copy result1.1 = tmp.5 {Copy tmp.4 = 2}
+tmp.6 = i != 2 {Copy tmp.4 = 2, Copy result1.1 = tmp.5}
+Copy tmp.7 = tmp.6 {Copy tmp.4 = 2, Copy result1.1 = tmp.5}
+JumpIfZero(tmp.6, tmp.8) {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}
+OLD ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+NEW ANNOT: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}
+ADD SUCCESSORS.
+--------------IMAP for block 1-------------------
+Return 1 {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}
+OLD ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+NEW ANNOT: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}
+ADD SUCCESSORS.
+--------------IMAP for block 2-------------------
+Label(tmp.8) {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}
+tmp.9 = tmp.5 != 3 {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}
+Copy tmp.10 = tmp.9 {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}
+JumpIfZero(tmp.9, tmp.11) {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}
+OLD ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+NEW ANNOT: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}
+ADD SUCCESSORS.
+--------------IMAP for block 3-------------------
+Return 2 {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}
+OLD ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+NEW ANNOT: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}
+ADD SUCCESSORS.
+--------------IMAP for block 4-------------------
+Label(tmp.11) {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}
+tmp.12 = -1 {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}
+Copy tmp.13 = tmp.12 {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}
+tmp.14 = target([tmp.12]) {Copy tmp.10 = tmp.9, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}
+Copy result2.2 = tmp.14 {Copy tmp.10 = tmp.9, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}
+tmp.15 = -1 {Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}
+tmp.16 = i != tmp.15 {Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}
+Copy tmp.17 = tmp.16 {Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}
+JumpIfZero(tmp.16, tmp.18) {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}
+OLD ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+NEW ANNOT: {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}
+ADD SUCCESSORS.
+--------------IMAP for block 5-------------------
+Return 3 {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}
+OLD ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+NEW ANNOT: {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}
+ADD SUCCESSORS.
+--------------IMAP for block 6-------------------
+Label(tmp.18) {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}
+tmp.19 = tmp.14 != 0 {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}
+Copy tmp.20 = tmp.19 {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}
+JumpIfZero(tmp.19, tmp.21) {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+OLD ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+NEW ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+--------------IMAP for block 7-------------------
+Return 4 {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+OLD ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+NEW ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+--------------IMAP for block 8-------------------
+Label(tmp.21) {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+Return 0 {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+OLD ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+NEW ANNOT: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+------------REPLACE INSTRUCTIONS WITH REACHING COPIES.-------------
+ENTRY Entry: ENTRY {0}
+0 0: [Copy tmp.4 = 2, tmp.5 = target([2]), Copy result1.1 = tmp.5, tmp.6 = i != 2, Copy tmp.7 = tmp.6, JumpIfZero(tmp.6, tmp.8)] Pred: {ENTRY} Suc: {1, 2} iMap: {Copy tmp.4 = 2: set(), tmp.5 = target([2]): {Copy tmp.4 = 2}, Copy result1.1 = tmp.5: {Copy tmp.4 = 2}, tmp.6 = i != 2: {Copy tmp.4 = 2, Copy result1.1 = tmp.5}, Copy tmp.7 = tmp.6: {Copy tmp.4 = 2, Copy result1.1 = tmp.5}, JumpIfZero(tmp.6, tmp.8): {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}} ReachingCopies: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}
+1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}} ReachingCopies: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}
+2 2: [Label(tmp.8), tmp.9 = tmp.5 != 3, Copy tmp.10 = tmp.9, JumpIfZero(tmp.9, tmp.11)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.8): {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}, tmp.9 = tmp.5 != 3: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}, Copy tmp.10 = tmp.9: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6}, JumpIfZero(tmp.9, tmp.11): {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}} ReachingCopies: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}
+3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}} ReachingCopies: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}
+4 4: [Label(tmp.11), tmp.12 = -1, Copy tmp.13 = tmp.12, tmp.14 = target([tmp.12]), Copy result2.2 = tmp.14, tmp.15 = -1, tmp.16 = i != tmp.15, Copy tmp.17 = tmp.16, JumpIfZero(tmp.16, tmp.18)] Pred: {2} Suc: {5, 6} iMap: {Label(tmp.11): {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}, tmp.12 = -1: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}, Copy tmp.13 = tmp.12: {Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.10 = tmp.9}, tmp.14 = target([tmp.12]): {Copy tmp.10 = tmp.9, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}, Copy result2.2 = tmp.14: {Copy tmp.10 = tmp.9, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}, tmp.15 = -1: {Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}, tmp.16 = i != tmp.15: {Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}, Copy tmp.17 = tmp.16: {Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.13 = tmp.12}, JumpIfZero(tmp.16, tmp.18): {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}} ReachingCopies: {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}
+5 5: [Return 3] Pred: {4} Suc: {EXIT} iMap: {Return 3: {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}} ReachingCopies: {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}
+6 6: [Label(tmp.18), tmp.19 = tmp.14 != 0, Copy tmp.20 = tmp.19, JumpIfZero(tmp.19, tmp.21)] Pred: {4} Suc: {8, 7} iMap: {Label(tmp.18): {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}, tmp.19 = tmp.14 != 0: {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}, Copy tmp.20 = tmp.19: {Copy tmp.13 = tmp.12, Copy tmp.10 = tmp.9, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16}, JumpIfZero(tmp.19, tmp.21): {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}} ReachingCopies: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+7 7: [Return 4] Pred: {6} Suc: {EXIT} iMap: {Return 4: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}} ReachingCopies: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+8 8: [Label(tmp.21), Return 0] Pred: {6} Suc: {EXIT} iMap: {Label(tmp.21): {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}, Return 0: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}} ReachingCopies: {Copy tmp.10 = tmp.9, Copy tmp.7 = tmp.6, Copy tmp.17 = tmp.16, Copy tmp.13 = tmp.12, Copy result2.2 = tmp.14, Copy tmp.4 = 2, Copy result1.1 = tmp.5, Copy tmp.20 = tmp.19}
+EXIT Exit: EXIT {1, 3, 5, 7, 8}
+--------------LIVE for block 0-------------------
+JumpIfZero(tmp.6, tmp.8) set()
+Copy tmp.7 = tmp.6 {tmp.6}
+tmp.6 = i != 2 {tmp.6}
+Copy result1.1 = tmp.5 {i}
+tmp.5 = target([2]) {i, tmp.5}
+<class 'tacGenerator.TAC_ConstantValue'>
+Copy tmp.4 = 2 {i}
+--------------LIVE for block 1-------------------
+Return 1 set()
+--------------LIVE for block 2-------------------
+JumpIfZero(tmp.9, tmp.11) set()
+Copy tmp.10 = tmp.9 {tmp.9}
+tmp.9 = tmp.5 != 3 {tmp.9}
+Label(tmp.8) {tmp.5}
+--------------LIVE for block 3-------------------
+Return 2 set()
+--------------LIVE for block 4-------------------
+JumpIfZero(tmp.16, tmp.18) set()
+Copy tmp.17 = tmp.16 {tmp.16}
+tmp.16 = i != tmp.15 {tmp.16}
+tmp.15 = -1 {i, tmp.15}
+Copy result2.2 = tmp.14 {i}
+tmp.14 = target([tmp.12]) {tmp.14, i}
+<class 'tacGenerator.TAC_VariableValue'>
+Copy tmp.13 = tmp.12 {i, tmp.12}
+tmp.12 = -1 {i, tmp.12}
+Label(tmp.11) {i}
+--------------LIVE for block 5-------------------
+Return 3 set()
+--------------LIVE for block 6-------------------
+JumpIfZero(tmp.19, tmp.21) set()
+Copy tmp.20 = tmp.19 {tmp.19}
+tmp.19 = tmp.14 != 0 {tmp.19}
+Label(tmp.18) {tmp.14}
+--------------LIVE for block 7-------------------
+Return 4 set()
+--------------LIVE for block 8-------------------
+Return 0 set()
+Label(tmp.21) set()

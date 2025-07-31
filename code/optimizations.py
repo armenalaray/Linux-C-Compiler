@@ -104,18 +104,6 @@ class BasicBlock(Node, DebugNode):
         self.successors = set()
         self.updateInstructions(instructions)
 
-        #self.instructions = instructions
-        #self.regenerateIMAP(instructions)
-
-        """
-        newDic = {}
-        for i in instructions:
-            newDic[i] = set()
-
-        self.iMap = newDic
-        self.reachingCopies = set()
-        """
-
     def __str__(self):
         return "{self.id}: {self.instructions} Pred: {self.predecessors} Suc: {self.successors} iMap: {self.iMap} ReachingCopies: {self.reachingCopies}".format(self=self)
     
@@ -982,6 +970,76 @@ def findAllCopyInstructions(cfg):
 
     return allCopies
 
+def transferLive(block, endLiveVariables, allStaticVariables):
+    currentLiveVariables = endLiveVariables
+
+    print("--------------LIVE for block {0}-------------------".format(block.id))
+
+    a = list(block.iMap.items())
+    a.reverse()
+
+    #print(a)
+
+    for i, set0 in a:
+
+        set0.update(currentLiveVariables)
+
+        print(i, set0)
+
+        match i:
+            case tacGenerator.TAC_BinaryInstruction(operator = operator, src1 = src1, src2 = src2, dst = dst):
+                currentLiveVariables.discard(dst)
+
+                if type(src1) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(src1)
+                
+                if type(src2) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(src2)
+            
+            case tacGenerator.TAC_returnInstruction(Value = Value):
+                if type(Value) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(Value)
+
+            case tacGenerator.TAC_UnaryInstruction(operator = operator, src = src, dst = dst):
+                currentLiveVariables.discard(dst)
+
+                if type(src) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(src)
+
+            case tacGenerator.TAC_CopyInstruction(src = src, dst = dst):
+                currentLiveVariables.discard(dst)
+
+                if type(src) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(src)
+
+            case tacGenerator.TAC_JumpIfZeroInst(condition = condition, label = label):
+                if type(condition) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(condition)
+
+            case tacGenerator.TAC_JumpIfNotZeroInst(condition = condition, label = label):
+                if type(condition) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(condition)
+    
+            case tacGenerator.TAC_FunCallInstruction(funName = funName, arguments = arguments, dst = dst):
+                currentLiveVariables.discard(dst)
+
+                for arg in arguments:
+                    print(type(arg))
+
+                    if type(arg) == tacGenerator.TAC_VariableValue:
+                        currentLiveVariables.add(arg)
+
+                
+                currentLiveVariables.update(allStaticVariables)
+                
+            case _:
+                continue
+
+    block.reachingCopies.clear()
+    block.reachingCopies.update(currentLiveVariables)
+    
+
+#iterative algorithm
 def findReachingCopies(cfg, symbolTable, aliasedVars):
     allCopies = findAllCopyInstructions(cfg)
 
@@ -1165,13 +1223,32 @@ def copyPropagation(cfg, symbolTable, aliasedVars):
         n.instructions = newList
 
     for k, n in cfg.blocks.items():
-        print(k, n)
+        print(k,n)
+
+    for k, n in cfg.blocks.items():
+        if k == ENTRY() or k == EXIT():
+            continue
+
+        n.regenerateIMAP(n.instructions)
+
+    
 
     return cfg
 
 def deadStoreElimination(cfg):
-	return cfg
-	pass
+
+
+
+    for k, n in cfg.blocks.items():
+        
+        if k == ENTRY() or k == EXIT():
+            continue
+
+        endLiveVariables = set()
+        allStaticVariables = set()
+        transferLive(n, endLiveVariables, allStaticVariables)
+
+    return cfg
 
 def cfgToInstructions(cfg):
 
