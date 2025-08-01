@@ -11,55 +11,64 @@ NotAssembly: False
 --eliminate-dead-stores True
 --optimize True
 Libary: math.h
-[('int', <TokenType.INT_KW: 4>, 1), ('*', <TokenType.ASTERISK: 17>, 1), ('glob', <TokenType.IDENTIFIER: 2>, 1), (';', <TokenType.SEMICOLON: 11>, 1), ('int', <TokenType.INT_KW: 4>, 2), ('i', <TokenType.IDENTIFIER: 2>, 2), ('=', <TokenType.EQUAL: 28>, 2), ('10', <TokenType.INT_CONSTANT: 3>, 2), (';', <TokenType.SEMICOLON: 11>, 2), ('int', <TokenType.INT_KW: 4>, 3), ('target', <TokenType.IDENTIFIER: 2>, 3), ('(', <TokenType.OPEN_PAREN: 7>, 3), ('void', <TokenType.VOID_KW: 5>, 3), (')', <TokenType.CLOSE_PAREN: 8>, 3), ('{', <TokenType.OPEN_BRACE: 9>, 3), ('int', <TokenType.INT_KW: 4>, 4), ('*', <TokenType.ASTERISK: 17>, 4), ('loc', <TokenType.IDENTIFIER: 2>, 4), ('=', <TokenType.EQUAL: 28>, 4), ('&', <TokenType.AMPERSAND: 49>, 4), ('i', <TokenType.IDENTIFIER: 2>, 4), (';', <TokenType.SEMICOLON: 11>, 4), ('glob', <TokenType.IDENTIFIER: 2>, 5), ('=', <TokenType.EQUAL: 28>, 5), ('loc', <TokenType.IDENTIFIER: 2>, 5), (';', <TokenType.SEMICOLON: 11>, 5), ('return', <TokenType.RETURN_KW: 6>, 6), ('*', <TokenType.ASTERISK: 17>, 6), ('glob', <TokenType.IDENTIFIER: 2>, 6), (';', <TokenType.SEMICOLON: 11>, 6), ('}', <TokenType.CLOSE_BRACE: 10>, 7), ('int', <TokenType.INT_KW: 4>, 8), ('main', <TokenType.IDENTIFIER: 2>, 8), ('(', <TokenType.OPEN_PAREN: 7>, 8), ('void', <TokenType.VOID_KW: 5>, 8), (')', <TokenType.CLOSE_PAREN: 8>, 8), ('{', <TokenType.OPEN_BRACE: 9>, 8), ('if', <TokenType.IF_KW: 31>, 9), ('(', <TokenType.OPEN_PAREN: 7>, 9), ('target', <TokenType.IDENTIFIER: 2>, 9), ('(', <TokenType.OPEN_PAREN: 7>, 9), (')', <TokenType.CLOSE_PAREN: 8>, 9), ('!=', <TokenType.EXCLAMATIONEQUAL: 25>, 9), ('10', <TokenType.INT_CONSTANT: 3>, 9), (')', <TokenType.CLOSE_PAREN: 8>, 9), ('{', <TokenType.OPEN_BRACE: 9>, 9), ('return', <TokenType.RETURN_KW: 6>, 10), ('1', <TokenType.INT_CONSTANT: 3>, 10), (';', <TokenType.SEMICOLON: 11>, 10), ('}', <TokenType.CLOSE_BRACE: 10>, 11), ('if', <TokenType.IF_KW: 31>, 12), ('(', <TokenType.OPEN_PAREN: 7>, 12), ('*', <TokenType.ASTERISK: 17>, 12), ('glob', <TokenType.IDENTIFIER: 2>, 12), ('!=', <TokenType.EXCLAMATIONEQUAL: 25>, 12), ('10', <TokenType.INT_CONSTANT: 3>, 12), (')', <TokenType.CLOSE_PAREN: 8>, 12), ('{', <TokenType.OPEN_BRACE: 9>, 12), ('return', <TokenType.RETURN_KW: 6>, 13), ('2', <TokenType.INT_CONSTANT: 3>, 13), (';', <TokenType.SEMICOLON: 11>, 13), ('}', <TokenType.CLOSE_BRACE: 10>, 14), ('return', <TokenType.RETURN_KW: 6>, 15), ('0', <TokenType.INT_CONSTANT: 3>, 15), (';', <TokenType.SEMICOLON: 11>, 15), ('}', <TokenType.CLOSE_BRACE: 10>, 16)]
-<parser.Int object at 0x7fbf01983bf0>
-[<parser.TypeS object at 0x7fbf019cf650>]
+[('int', <TokenType.INT_KW: 4>, 1), ('putchar', <TokenType.IDENTIFIER: 2>, 1), ('(', <TokenType.OPEN_PAREN: 7>, 1), ('int', <TokenType.INT_KW: 4>, 1), ('c', <TokenType.IDENTIFIER: 2>, 1), (')', <TokenType.CLOSE_PAREN: 8>, 1), (';', <TokenType.SEMICOLON: 11>, 1), ('int', <TokenType.INT_KW: 4>, 2), ('target', <TokenType.IDENTIFIER: 2>, 2), ('(', <TokenType.OPEN_PAREN: 7>, 2), ('void', <TokenType.VOID_KW: 5>, 2), (')', <TokenType.CLOSE_PAREN: 8>, 2), ('{', <TokenType.OPEN_BRACE: 9>, 2), ('int', <TokenType.INT_KW: 4>, 3), ('x', <TokenType.IDENTIFIER: 2>, 3), ('=', <TokenType.EQUAL: 28>, 3), ('5', <TokenType.INT_CONSTANT: 3>, 3), (';', <TokenType.SEMICOLON: 11>, 3), ('int', <TokenType.INT_KW: 4>, 4), ('y', <TokenType.IDENTIFIER: 2>, 4), ('=', <TokenType.EQUAL: 28>, 4), ('65', <TokenType.INT_CONSTANT: 3>, 4), (';', <TokenType.SEMICOLON: 11>, 4), ('do', <TokenType.DO_KW: 33>, 5), ('{', <TokenType.OPEN_BRACE: 9>, 5), ('x', <TokenType.IDENTIFIER: 2>, 6), ('=', <TokenType.EQUAL: 28>, 6), ('y', <TokenType.IDENTIFIER: 2>, 6), ('+', <TokenType.PLUS: 18>, 6), ('2', <TokenType.INT_CONSTANT: 3>, 6), (';', <TokenType.SEMICOLON: 11>, 6), ('if', <TokenType.IF_KW: 31>, 7), ('(', <TokenType.OPEN_PAREN: 7>, 7), ('y', <TokenType.IDENTIFIER: 2>, 7), ('>', <TokenType.GREATERT: 20>, 7), ('70', <TokenType.INT_CONSTANT: 3>, 7), (')', <TokenType.CLOSE_PAREN: 8>, 7), ('{', <TokenType.OPEN_BRACE: 9>, 7), ('x', <TokenType.IDENTIFIER: 2>, 8), ('=', <TokenType.EQUAL: 28>, 8), ('y', <TokenType.IDENTIFIER: 2>, 8), ('+', <TokenType.PLUS: 18>, 8), ('3', <TokenType.INT_CONSTANT: 3>, 8), (';', <TokenType.SEMICOLON: 11>, 8), ('}', <TokenType.CLOSE_BRACE: 10>, 9), ('y', <TokenType.IDENTIFIER: 2>, 10), ('=', <TokenType.EQUAL: 28>, 10), ('putchar', <TokenType.IDENTIFIER: 2>, 10), ('(', <TokenType.OPEN_PAREN: 7>, 10), ('x', <TokenType.IDENTIFIER: 2>, 10), (')', <TokenType.CLOSE_PAREN: 8>, 10), ('+', <TokenType.PLUS: 18>, 10), ('3', <TokenType.INT_CONSTANT: 3>, 10), (';', <TokenType.SEMICOLON: 11>, 10), ('}', <TokenType.CLOSE_BRACE: 10>, 11), ('while', <TokenType.WHILE_KW: 34>, 11), ('(', <TokenType.OPEN_PAREN: 7>, 11), ('y', <TokenType.IDENTIFIER: 2>, 11), ('<', <TokenType.LESST: 21>, 11), ('90', <TokenType.INT_CONSTANT: 3>, 11), (')', <TokenType.CLOSE_PAREN: 8>, 11), (';', <TokenType.SEMICOLON: 11>, 11), ('if', <TokenType.IF_KW: 31>, 12), ('(', <TokenType.OPEN_PAREN: 7>, 12), ('x', <TokenType.IDENTIFIER: 2>, 12), ('!=', <TokenType.EXCLAMATIONEQUAL: 25>, 12), ('90', <TokenType.INT_CONSTANT: 3>, 12), (')', <TokenType.CLOSE_PAREN: 8>, 12), ('{', <TokenType.OPEN_BRACE: 9>, 12), ('return', <TokenType.RETURN_KW: 6>, 13), ('1', <TokenType.INT_CONSTANT: 3>, 13), (';', <TokenType.SEMICOLON: 11>, 13), ('}', <TokenType.CLOSE_BRACE: 10>, 14), ('if', <TokenType.IF_KW: 31>, 15), ('(', <TokenType.OPEN_PAREN: 7>, 15), ('y', <TokenType.IDENTIFIER: 2>, 15), ('!=', <TokenType.EXCLAMATIONEQUAL: 25>, 15), ('93', <TokenType.INT_CONSTANT: 3>, 15), (')', <TokenType.CLOSE_PAREN: 8>, 15), ('{', <TokenType.OPEN_BRACE: 9>, 15), ('return', <TokenType.RETURN_KW: 6>, 16), ('2', <TokenType.INT_CONSTANT: 3>, 16), (';', <TokenType.SEMICOLON: 11>, 16), ('}', <TokenType.CLOSE_BRACE: 10>, 17), ('return', <TokenType.RETURN_KW: 6>, 18), ('0', <TokenType.INT_CONSTANT: 3>, 18), (';', <TokenType.SEMICOLON: 11>, 18), ('}', <TokenType.CLOSE_BRACE: 10>, 19), ('int', <TokenType.INT_KW: 4>, 20), ('main', <TokenType.IDENTIFIER: 2>, 20), ('(', <TokenType.OPEN_PAREN: 7>, 20), ('void', <TokenType.VOID_KW: 5>, 20), (')', <TokenType.CLOSE_PAREN: 8>, 20), ('{', <TokenType.OPEN_BRACE: 9>, 20), ('return', <TokenType.RETURN_KW: 6>, 21), ('target', <TokenType.IDENTIFIER: 2>, 21), ('(', <TokenType.OPEN_PAREN: 7>, 21), (')', <TokenType.CLOSE_PAREN: 8>, 21), (';', <TokenType.SEMICOLON: 11>, 21), ('}', <TokenType.CLOSE_BRACE: 10>, 22)]
+<parser.Int object at 0x7fdbf9c7b410>
+[<parser.TypeS object at 0x7fdbf9c7bad0>]
 [<class 'parser.Int'>]
 int
-int (PointerDeclarator: (IdenDeclarator: glob))
-Pint
-<parser.Int object at 0x7fbf01983bf0>
-[<parser.TypeS object at 0x7fbf019cf7a0>]
 [<class 'parser.Int'>]
-int
-int (IdenDeclarator: i)
-int
-<parser.Int object at 0x7fbf01983bf0>
-[<parser.TypeS object at 0x7fbf019cf800>]
+int (FunDeclarator: (IdenDeclarator: putchar) [int (IdenDeclarator: c)])
+FunType: ParamTypes: [int] Return Type: int
+<parser.Int object at 0x7fdbf9c7b470>
+[<parser.TypeS object at 0x7fdbf9c7b4a0>]
 [<class 'parser.Int'>]
 int
 int (FunDeclarator: (IdenDeclarator: target) [])
 FunType: ParamTypes: [] Return Type: int
-<parser.Int object at 0x7fbf019cfa70>
-[<parser.TypeS object at 0x7fbf019cfb00>]
+<parser.Int object at 0x7fdbf9c7b800>
+[<parser.TypeS object at 0x7fdbf9c7b7d0>]
 [<class 'parser.Int'>]
 int
-int (PointerDeclarator: (IdenDeclarator: loc))
-Pint
-<parser.Int object at 0x7fbf01983bf0>
-[<parser.TypeS object at 0x7fbf019cfa40>]
+int (IdenDeclarator: x)
+int
+<parser.Int object at 0x7fdbf9c7b7d0>
+[<parser.TypeS object at 0x7fdbf9c7b800>]
+[<class 'parser.Int'>]
+int
+int (IdenDeclarator: y)
+int
+<parser.Int object at 0x7fdbf9c7b410>
+[<parser.TypeS object at 0x7fdbf9c7bad0>]
 [<class 'parser.Int'>]
 int
 int (FunDeclarator: (IdenDeclarator: main) [])
 FunType: ParamTypes: [] Return Type: int
 0
+1
+2
+1
+1
 0
-1
-1
 AST Program:
-VarDecl: NULL Pint glob
-VarDecl: NULL int i = SI: (10)
+FunDecl: NULL putchar (c, ) ParamTypes: (int, ) ReturnType: int
+
 FunDecl: NULL target () ParamTypes: () ReturnType: int
 Declaration:
-VarDecl: NULL Pint loc = SI: (&(i))
-Statement: Expression: ((glob) = (loc))
-Statement: return (*(glob))
-FunDecl: NULL main () ParamTypes: () ReturnType: int
-Statement: if (((target()) NOTEQUAL (10)))
+VarDecl: NULL int x = SI: (5)
+Declaration:
+VarDecl: NULL int y = SI: (65)
+Statement: do while  (((y) LESSTHAN (90)))
+	Statement: Expression: ((x) = ((y) ADD (2)))
+	Statement: if (((y) GREATERTHAN (70)))
+		Statement: Expression: ((x) = ((y) ADD (3)))
+	Statement: Expression: ((y) = ((putchar((x), )) ADD (3)))
+Statement: if (((x) NOTEQUAL (90)))
 	Statement: return (1)
-Statement: if (((*(glob)) NOTEQUAL (10)))
+Statement: if (((y) NOTEQUAL (93)))
 	Statement: return (2)
 Statement: return (0)
+FunDecl: NULL main () ParamTypes: () ReturnType: int
+Statement: return (target())
 
 OLD {}
 NEW {}
@@ -69,231 +78,153 @@ OLD {}
 NEW {}
 OLD {}
 NEW {}
-0
+OLD {}
+NEW {}
+OLD {}
+NEW {}
+OLD {}
+NEW {}
 0
 1
+2
 1
+1
+0
 AST Program:
-VarDecl: NULL Pint glob
-VarDecl: NULL int i = SI: (10)
+FunDecl: NULL putchar (c.0, ) ParamTypes: (int, ) ReturnType: int
+
 FunDecl: NULL target () ParamTypes: () ReturnType: int
 Declaration:
-VarDecl: NULL Pint loc.0 = SI: (&(i))
-Statement: Expression: ((glob) = (loc.0))
-Statement: return (*(glob))
-FunDecl: NULL main () ParamTypes: () ReturnType: int
-Statement: if (((target()) NOTEQUAL (10)))
+VarDecl: NULL int x.1 = SI: (5)
+Declaration:
+VarDecl: NULL int y.2 = SI: (65)
+Statement: do while  (((y.2) LESSTHAN (90)))
+	Statement: Expression: ((x.1) = ((y.2) ADD (2)))
+	Statement: if (((y.2) GREATERTHAN (70)))
+		Statement: Expression: ((x.1) = ((y.2) ADD (3)))
+	Statement: Expression: ((y.2) = ((putchar((x.1), )) ADD (3)))
+Statement: if (((x.1) NOTEQUAL (90)))
 	Statement: return (1)
-Statement: if (((*(glob)) NOTEQUAL (10)))
+Statement: if (((y.2) NOTEQUAL (93)))
 	Statement: return (2)
 Statement: return (0)
+FunDecl: NULL main () ParamTypes: () ReturnType: int
+Statement: return (target())
 
-0
+[(x.1 RetType: int)]
 0
 1
+2
 1
+1
+0
 AST Program:
-VarDecl: NULL Pint glob
-VarDecl: NULL int i = SI: (10 : int) : int
+FunDecl: NULL putchar (c.0, ) ParamTypes: (int, ) ReturnType: int
+
 FunDecl: NULL target () ParamTypes: () ReturnType: int
 Declaration:
-VarDecl: NULL Pint loc.0 = SI: (&(i : int) : Pint) : Pint
-Statement: Expression: ((glob : Pint) = (loc.0 : Pint) : Pint)
-Statement: return (*(glob : Pint) : int)
-FunDecl: NULL main () ParamTypes: () ReturnType: int
-Statement: if (((target() : int) NOTEQUAL (10 : int) : int))
+VarDecl: NULL int x.1 = SI: (5 : int) : int
+Declaration:
+VarDecl: NULL int y.2 = SI: (65 : int) : int
+Statement: do while  (((y.2 : int) LESSTHAN (90 : int) : int))
+	Statement: Expression: ((x.1 : int) = ((y.2 : int) ADD (2 : int) : int) : int)
+	Statement: if (((y.2 : int) GREATERTHAN (70 : int) : int))
+		Statement: Expression: ((x.1 : int) = ((y.2 : int) ADD (3 : int) : int) : int)
+	Statement: Expression: ((y.2 : int) = ((putchar((x.1 : int), ) : int) ADD (3 : int) : int) : int)
+Statement: if (((x.1 : int) NOTEQUAL (90 : int) : int))
 	Statement: return (1 : int)
-Statement: if (((*(glob : Pint) : int) NOTEQUAL (10 : int) : int))
+Statement: if (((y.2 : int) NOTEQUAL (93 : int) : int))
 	Statement: return (2 : int)
 Statement: return (0 : int)
+FunDecl: NULL main () ParamTypes: () ReturnType: int
+Statement: return (target() : int)
 
 Type Table:
  {}
 Symbol Table:
- {'glob': glob Pint InitialVal: <typeChecker.Tentative object at 0x7fbf01a091f0> Global: True, 'i': i int InitialVal: InitialList: [c_int(10)] Global: True, 'target': target FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'loc.0': loc.0 Pint <typeChecker.LocalAttributes object at 0x7fbf01a09580>, 'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True}
-0
+ {'putchar': putchar FunType: ParamTypes: [int] Return Type: int Defined: False Global: True, 'target': target FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'x.1': x.1 int <typeChecker.LocalAttributes object at 0x7fdbf9cb2030>, 'y.2': y.2 int <typeChecker.LocalAttributes object at 0x7fdbf9cb21e0>, 'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True}
 0
 1
+2
 1
+1
+0
 AST Program:
-VarDecl: NULL Pint glob
-VarDecl: NULL int i = SI: (10 : int) : int
+FunDecl: NULL putchar (c.0, ) ParamTypes: (int, ) ReturnType: int
+
 FunDecl: NULL target () ParamTypes: () ReturnType: int
 Declaration:
-VarDecl: NULL Pint loc.0 = SI: (&(i : int) : Pint) : Pint
-Statement: Expression: ((glob : Pint) = (loc.0 : Pint) : Pint)
-Statement: return (*(glob : Pint) : int)
-FunDecl: NULL main () ParamTypes: () ReturnType: int
-Statement: if (((target() : int) NOTEQUAL (10 : int) : int))
+VarDecl: NULL int x.1 = SI: (5 : int) : int
+Declaration:
+VarDecl: NULL int y.2 = SI: (65 : int) : int
+Statement: do while tmp.3 (((y.2 : int) LESSTHAN (90 : int) : int))
+	Statement: Expression: ((x.1 : int) = ((y.2 : int) ADD (2 : int) : int) : int)
+	Statement: if (((y.2 : int) GREATERTHAN (70 : int) : int))
+		Statement: Expression: ((x.1 : int) = ((y.2 : int) ADD (3 : int) : int) : int)
+	Statement: Expression: ((y.2 : int) = ((putchar((x.1 : int), ) : int) ADD (3 : int) : int) : int)
+Statement: if (((x.1 : int) NOTEQUAL (90 : int) : int))
 	Statement: return (1 : int)
-Statement: if (((*(glob : Pint) : int) NOTEQUAL (10 : int) : int))
+Statement: if (((y.2 : int) NOTEQUAL (93 : int) : int))
 	Statement: return (2 : int)
 Statement: return (0 : int)
+FunDecl: NULL main () ParamTypes: () ReturnType: int
+Statement: return (target() : int)
 
-glob Pint InitialVal: <typeChecker.Tentative object at 0x7fbf01a091f0> Global: True
-i int InitialVal: InitialList: [c_int(10)] Global: True
+putchar FunType: ParamTypes: [int] Return Type: int Defined: False Global: True
 target FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-loc.0 Pint <typeChecker.LocalAttributes object at 0x7fbf01a09580>
+x.1 int <typeChecker.LocalAttributes object at 0x7fdbf9cb2030>
+y.2 int <typeChecker.LocalAttributes object at 0x7fdbf9cb21e0>
 main FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-tmp.1 Pint <typeChecker.LocalAttributes object at 0x7fbf01af5160>
-tmp.2 int <typeChecker.LocalAttributes object at 0x7fbf01a0ac00>
-tmp.3 int <typeChecker.LocalAttributes object at 0x7fbf01a0b1d0>
-tmp.4 int <typeChecker.LocalAttributes object at 0x7fbf01a0b080>
-tmp.5 int <typeChecker.LocalAttributes object at 0x7fbf01a0b020>
-tmp.7 int <typeChecker.LocalAttributes object at 0x7fbf01a0b560>
-tmp.8 int <typeChecker.LocalAttributes object at 0x7fbf01a0b650>
-tmp.9 int <typeChecker.LocalAttributes object at 0x7fbf01a0b290>
-TAC Program:[Function: target ([]) instructions:[tmp.1 = Get Address i , CopyToOffset(loc.0 + 0) = tmp.1 , Copy glob = loc.0, tmp.2 = Load glob , Return tmp.2, Return 0], Function: main ([]) instructions:[tmp.3 = target([]), tmp.4 = tmp.3 != 10, Copy tmp.5 = tmp.4, JumpIfZero(tmp.5, tmp.6), Return 1, Label(tmp.6), tmp.7 = Load glob , tmp.8 = tmp.7 != 10, Copy tmp.9 = tmp.8, JumpIfZero(tmp.9, tmp.10), Return 2, Label(tmp.10), Return 0, Return 0], Global: True glob = [c_ulong(0)], Global: True i = [c_int(10)]]
+tmp.5 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8110>
+tmp.6 int <typeChecker.LocalAttributes object at 0x7fdbf9cb3fe0>
+tmp.7 int <typeChecker.LocalAttributes object at 0x7fdbf9cb3d10>
+tmp.9 int <typeChecker.LocalAttributes object at 0x7fdbf9cc85f0>
+tmp.10 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8a40>
+tmp.11 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8980>
+tmp.12 int <typeChecker.LocalAttributes object at 0x7fdbf9cc87d0>
+tmp.13 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8260>
+tmp.14 int <typeChecker.LocalAttributes object at 0x7fdbf9cc83e0>
+tmp.15 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8cb0>
+tmp.16 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8c50>
+tmp.18 int <typeChecker.LocalAttributes object at 0x7fdbf9cc9040>
+tmp.19 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8e60>
+tmp.21 int <typeChecker.LocalAttributes object at 0x7fdbf9cc9490>
+TAC Program:[Function: target ([]) instructions:[CopyToOffset(x.1 + 0) = 5 , CopyToOffset(y.2 + 0) = 65 , Label(tmp.4), tmp.5 = y.2 + 2, Copy x.1 = tmp.5, tmp.6 = y.2 > 70, Copy tmp.7 = tmp.6, JumpIfZero(tmp.7, tmp.8), tmp.9 = y.2 + 3, Copy x.1 = tmp.9, Label(tmp.8), Copy tmp.10 = x.1, tmp.11 = putchar([tmp.10]), tmp.12 = tmp.11 + 3, Copy y.2 = tmp.12, Label(continue_tmp.3), tmp.13 = y.2 < 90, Copy tmp.14 = tmp.13, JumpIfNotZero(tmp.14, tmp.4), Label(break_tmp.3), tmp.15 = x.1 != 90, Copy tmp.16 = tmp.15, JumpIfZero(tmp.16, tmp.17), Return 1, Label(tmp.17), tmp.18 = y.2 != 93, Copy tmp.19 = tmp.18, JumpIfZero(tmp.19, tmp.20), Return 2, Label(tmp.20), Return 0, Return 0], Function: main ([]) instructions:[tmp.21 = target([]), Return tmp.21, Return 0]]
 Type Table:
  {}
 Symbol Table:
- {'glob': glob Pint InitialVal: <typeChecker.Tentative object at 0x7fbf01a091f0> Global: True, 'i': i int InitialVal: InitialList: [c_int(10)] Global: True, 'target': target FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'loc.0': loc.0 Pint <typeChecker.LocalAttributes object at 0x7fbf01a09580>, 'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'tmp.1': tmp.1 Pint <typeChecker.LocalAttributes object at 0x7fbf01af5160>, 'tmp.2': tmp.2 int <typeChecker.LocalAttributes object at 0x7fbf01a0ac00>, 'tmp.3': tmp.3 int <typeChecker.LocalAttributes object at 0x7fbf01a0b1d0>, 'tmp.4': tmp.4 int <typeChecker.LocalAttributes object at 0x7fbf01a0b080>, 'tmp.5': tmp.5 int <typeChecker.LocalAttributes object at 0x7fbf01a0b020>, 'tmp.7': tmp.7 int <typeChecker.LocalAttributes object at 0x7fbf01a0b560>, 'tmp.8': tmp.8 int <typeChecker.LocalAttributes object at 0x7fbf01a0b650>, 'tmp.9': tmp.9 int <typeChecker.LocalAttributes object at 0x7fbf01a0b290>}
-OPTIMIZING FUNCTION Function: target ([]) instructions:[tmp.1 = Get Address i , CopyToOffset(loc.0 + 0) = tmp.1 , Copy glob = loc.0, tmp.2 = Load glob , Return tmp.2, Return 0]
---------------ADDRESS TAKEN ANALYSIS.------------------
-{i}
--------------CONSTANT FOLDING PASS.--------------------
-OLD LIST [tmp.1 = Get Address i , CopyToOffset(loc.0 + 0) = tmp.1 , Copy glob = loc.0, tmp.2 = Load glob , Return tmp.2, Return 0]
-NEW LIST [tmp.1 = Get Address i , CopyToOffset(loc.0 + 0) = tmp.1 , Copy glob = loc.0, tmp.2 = Load glob , Return tmp.2, Return 0]
-<class 'tacGenerator.TAC_GetAddress'>
-<class 'tacGenerator.TAC_copyToOffset'>
-<class 'tacGenerator.TAC_CopyInstruction'>
-<class 'tacGenerator.TAC_Load'>
-<class 'tacGenerator.TAC_returnInstruction'>
-<class 'tacGenerator.TAC_returnInstruction'>
-tmp.1 = Get Address i 
-Return 0
-
-
-
-ENTRY Entry: ENTRY {0}
-0 0: [tmp.1 = Get Address i , CopyToOffset(loc.0 + 0) = tmp.1 , Copy glob = loc.0, tmp.2 = Load glob , Return tmp.2] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.1 = Get Address i : set(), CopyToOffset(loc.0 + 0) = tmp.1 : set(), Copy glob = loc.0: set(), tmp.2 = Load glob : set(), Return tmp.2: set()} ReachingCopies: set()
-1 1: [Return 0] Pred: set() Suc: {EXIT} iMap: {Return 0: set()} ReachingCopies: set()
-EXIT Exit: EXIT {0, 1}
-ENTRY Entry: ENTRY {0}
-0 0: [tmp.1 = Get Address i , CopyToOffset(loc.0 + 0) = tmp.1 , Copy glob = loc.0, tmp.2 = Load glob , Return tmp.2] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.1 = Get Address i : set(), CopyToOffset(loc.0 + 0) = tmp.1 : set(), Copy glob = loc.0: set(), tmp.2 = Load glob : set(), Return tmp.2: set()} ReachingCopies: set()
-EXIT Exit: EXIT {0}
-ENTRY Entry: ENTRY {0}
-0 0: [tmp.1 = Get Address i , CopyToOffset(loc.0 + 0) = tmp.1 , Copy glob = loc.0, tmp.2 = Load glob , Return tmp.2] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.1 = Get Address i : set(), CopyToOffset(loc.0 + 0) = tmp.1 : set(), Copy glob = loc.0: set(), tmp.2 = Load glob : set(), Return tmp.2: set()} ReachingCopies: set()
-EXIT Exit: EXIT {0}
-ENTRY Entry: ENTRY {0}
-0 0: [tmp.1 = Get Address i , CopyToOffset(loc.0 + 0) = tmp.1 , Copy glob = loc.0, tmp.2 = Load glob , Return tmp.2] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.1 = Get Address i : set(), CopyToOffset(loc.0 + 0) = tmp.1 : set(), Copy glob = loc.0: set(), tmp.2 = Load glob : set(), Return tmp.2: set()} ReachingCopies: set()
-EXIT Exit: EXIT {0}
---------------IMAP for block 0-------------------
-tmp.1 = Get Address i  set()
-CopyToOffset(loc.0 + 0) = tmp.1  set()
-Copy glob = loc.0 set()
-tmp.2 = Load glob  {Copy glob = loc.0}
-Return tmp.2 {Copy glob = loc.0}
-OLD ANNOT: {Copy glob = loc.0}
-NEW ANNOT: {Copy glob = loc.0}
-------------REPLACE INSTRUCTIONS WITH REACHING COPIES.-------------
-ENTRY Entry: ENTRY {0}
-0 0: [tmp.1 = Get Address i , CopyToOffset(loc.0 + 0) = tmp.1 , Copy glob = loc.0, tmp.2 = Load loc.0 , Return tmp.2] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.1 = Get Address i : set(), CopyToOffset(loc.0 + 0) = tmp.1 : set(), Copy glob = loc.0: set(), tmp.2 = Load glob : {Copy glob = loc.0}, Return tmp.2: {Copy glob = loc.0}} ReachingCopies: {Copy glob = loc.0}
-EXIT Exit: EXIT {0}
---------------ADDING ALL STATIC VARIABLES.------------------
-glob glob Pint InitialVal: <typeChecker.Tentative object at 0x7fbf01a091f0> Global: True
-i i int InitialVal: InitialList: [c_int(10)] Global: True
-target target FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-loc.0 loc.0 Pint <typeChecker.LocalAttributes object at 0x7fbf01a09580>
-main main FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-tmp.1 tmp.1 Pint <typeChecker.LocalAttributes object at 0x7fbf01af5160>
-tmp.2 tmp.2 int <typeChecker.LocalAttributes object at 0x7fbf01a0ac00>
-tmp.3 tmp.3 int <typeChecker.LocalAttributes object at 0x7fbf01a0b1d0>
-tmp.4 tmp.4 int <typeChecker.LocalAttributes object at 0x7fbf01a0b080>
-tmp.5 tmp.5 int <typeChecker.LocalAttributes object at 0x7fbf01a0b020>
-tmp.7 tmp.7 int <typeChecker.LocalAttributes object at 0x7fbf01a0b560>
-tmp.8 tmp.8 int <typeChecker.LocalAttributes object at 0x7fbf01a0b650>
-tmp.9 tmp.9 int <typeChecker.LocalAttributes object at 0x7fbf01a0b290>
---------------LIVE for block 0-------------------
-Return tmp.2 {glob, i}
-tmp.2 = Load loc.0  {glob, i, tmp.2}
-Copy glob = loc.0 {glob, loc.0, i}
-CopyToOffset(loc.0 + 0) = tmp.1  {loc.0, i}
-tmp.1 = Get Address i  {i, tmp.1, loc.0}
-OLD ANNOT: set()
-NEW ANNOT: {loc.0, i}
-------------REMOVE DEAD STORE INSTRUCTIONS.-------------
-------------AFTER DEAD STORE REMOVAL.-------------
-ENTRY Entry: ENTRY {0}
-0 0: [tmp.1 = Get Address i , CopyToOffset(loc.0 + 0) = tmp.1 , Copy glob = loc.0, tmp.2 = Load loc.0 , Return tmp.2] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.1 = Get Address i : {i, tmp.1, loc.0}, CopyToOffset(loc.0 + 0) = tmp.1 : {loc.0, i}, Copy glob = loc.0: {glob, loc.0, i}, tmp.2 = Load loc.0 : {glob, i, tmp.2}, Return tmp.2: {glob, i}} ReachingCopies: {loc.0, i}
-EXIT Exit: EXIT {0}
---------------ADDRESS TAKEN ANALYSIS.------------------
-{i}
--------------CONSTANT FOLDING PASS.--------------------
-OLD LIST [tmp.1 = Get Address i , CopyToOffset(loc.0 + 0) = tmp.1 , Copy glob = loc.0, tmp.2 = Load loc.0 , Return tmp.2]
-NEW LIST [tmp.1 = Get Address i , CopyToOffset(loc.0 + 0) = tmp.1 , Copy glob = loc.0, tmp.2 = Load loc.0 , Return tmp.2]
-<class 'tacGenerator.TAC_GetAddress'>
-<class 'tacGenerator.TAC_copyToOffset'>
-<class 'tacGenerator.TAC_CopyInstruction'>
-<class 'tacGenerator.TAC_Load'>
-<class 'tacGenerator.TAC_returnInstruction'>
-tmp.1 = Get Address i 
-
-
-ENTRY Entry: ENTRY {0}
-0 0: [tmp.1 = Get Address i , CopyToOffset(loc.0 + 0) = tmp.1 , Copy glob = loc.0, tmp.2 = Load loc.0 , Return tmp.2] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.1 = Get Address i : set(), CopyToOffset(loc.0 + 0) = tmp.1 : set(), Copy glob = loc.0: set(), tmp.2 = Load loc.0 : set(), Return tmp.2: set()} ReachingCopies: set()
-EXIT Exit: EXIT {0}
-ENTRY Entry: ENTRY {0}
-0 0: [tmp.1 = Get Address i , CopyToOffset(loc.0 + 0) = tmp.1 , Copy glob = loc.0, tmp.2 = Load loc.0 , Return tmp.2] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.1 = Get Address i : set(), CopyToOffset(loc.0 + 0) = tmp.1 : set(), Copy glob = loc.0: set(), tmp.2 = Load loc.0 : set(), Return tmp.2: set()} ReachingCopies: set()
-EXIT Exit: EXIT {0}
-ENTRY Entry: ENTRY {0}
-0 0: [tmp.1 = Get Address i , CopyToOffset(loc.0 + 0) = tmp.1 , Copy glob = loc.0, tmp.2 = Load loc.0 , Return tmp.2] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.1 = Get Address i : set(), CopyToOffset(loc.0 + 0) = tmp.1 : set(), Copy glob = loc.0: set(), tmp.2 = Load loc.0 : set(), Return tmp.2: set()} ReachingCopies: set()
-EXIT Exit: EXIT {0}
-ENTRY Entry: ENTRY {0}
-0 0: [tmp.1 = Get Address i , CopyToOffset(loc.0 + 0) = tmp.1 , Copy glob = loc.0, tmp.2 = Load loc.0 , Return tmp.2] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.1 = Get Address i : set(), CopyToOffset(loc.0 + 0) = tmp.1 : set(), Copy glob = loc.0: set(), tmp.2 = Load loc.0 : set(), Return tmp.2: set()} ReachingCopies: set()
-EXIT Exit: EXIT {0}
---------------IMAP for block 0-------------------
-tmp.1 = Get Address i  set()
-CopyToOffset(loc.0 + 0) = tmp.1  set()
-Copy glob = loc.0 set()
-tmp.2 = Load loc.0  {Copy glob = loc.0}
-Return tmp.2 {Copy glob = loc.0}
-OLD ANNOT: {Copy glob = loc.0}
-NEW ANNOT: {Copy glob = loc.0}
-------------REPLACE INSTRUCTIONS WITH REACHING COPIES.-------------
-ENTRY Entry: ENTRY {0}
-0 0: [tmp.1 = Get Address i , CopyToOffset(loc.0 + 0) = tmp.1 , Copy glob = loc.0, tmp.2 = Load loc.0 , Return tmp.2] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.1 = Get Address i : set(), CopyToOffset(loc.0 + 0) = tmp.1 : set(), Copy glob = loc.0: set(), tmp.2 = Load loc.0 : {Copy glob = loc.0}, Return tmp.2: {Copy glob = loc.0}} ReachingCopies: {Copy glob = loc.0}
-EXIT Exit: EXIT {0}
---------------ADDING ALL STATIC VARIABLES.------------------
-glob glob Pint InitialVal: <typeChecker.Tentative object at 0x7fbf01a091f0> Global: True
-i i int InitialVal: InitialList: [c_int(10)] Global: True
-target target FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-loc.0 loc.0 Pint <typeChecker.LocalAttributes object at 0x7fbf01a09580>
-main main FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-tmp.1 tmp.1 Pint <typeChecker.LocalAttributes object at 0x7fbf01af5160>
-tmp.2 tmp.2 int <typeChecker.LocalAttributes object at 0x7fbf01a0ac00>
-tmp.3 tmp.3 int <typeChecker.LocalAttributes object at 0x7fbf01a0b1d0>
-tmp.4 tmp.4 int <typeChecker.LocalAttributes object at 0x7fbf01a0b080>
-tmp.5 tmp.5 int <typeChecker.LocalAttributes object at 0x7fbf01a0b020>
-tmp.7 tmp.7 int <typeChecker.LocalAttributes object at 0x7fbf01a0b560>
-tmp.8 tmp.8 int <typeChecker.LocalAttributes object at 0x7fbf01a0b650>
-tmp.9 tmp.9 int <typeChecker.LocalAttributes object at 0x7fbf01a0b290>
---------------LIVE for block 0-------------------
-Return tmp.2 {glob, i}
-tmp.2 = Load loc.0  {glob, i, tmp.2}
-Copy glob = loc.0 {glob, loc.0, i}
-CopyToOffset(loc.0 + 0) = tmp.1  {loc.0, i}
-tmp.1 = Get Address i  {i, tmp.1, loc.0}
-OLD ANNOT: set()
-NEW ANNOT: {loc.0, i}
-------------REMOVE DEAD STORE INSTRUCTIONS.-------------
-------------AFTER DEAD STORE REMOVAL.-------------
-ENTRY Entry: ENTRY {0}
-0 0: [tmp.1 = Get Address i , CopyToOffset(loc.0 + 0) = tmp.1 , Copy glob = loc.0, tmp.2 = Load loc.0 , Return tmp.2] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.1 = Get Address i : {i, tmp.1, loc.0}, CopyToOffset(loc.0 + 0) = tmp.1 : {loc.0, i}, Copy glob = loc.0: {glob, loc.0, i}, tmp.2 = Load loc.0 : {glob, i, tmp.2}, Return tmp.2: {glob, i}} ReachingCopies: {loc.0, i}
-EXIT Exit: EXIT {0}
-OPTIMIZING FUNCTION Function: main ([]) instructions:[tmp.3 = target([]), tmp.4 = tmp.3 != 10, Copy tmp.5 = tmp.4, JumpIfZero(tmp.5, tmp.6), Return 1, Label(tmp.6), tmp.7 = Load glob , tmp.8 = tmp.7 != 10, Copy tmp.9 = tmp.8, JumpIfZero(tmp.9, tmp.10), Return 2, Label(tmp.10), Return 0, Return 0]
+ {'putchar': putchar FunType: ParamTypes: [int] Return Type: int Defined: False Global: True, 'target': target FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'x.1': x.1 int <typeChecker.LocalAttributes object at 0x7fdbf9cb2030>, 'y.2': y.2 int <typeChecker.LocalAttributes object at 0x7fdbf9cb21e0>, 'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'tmp.5': tmp.5 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8110>, 'tmp.6': tmp.6 int <typeChecker.LocalAttributes object at 0x7fdbf9cb3fe0>, 'tmp.7': tmp.7 int <typeChecker.LocalAttributes object at 0x7fdbf9cb3d10>, 'tmp.9': tmp.9 int <typeChecker.LocalAttributes object at 0x7fdbf9cc85f0>, 'tmp.10': tmp.10 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8a40>, 'tmp.11': tmp.11 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8980>, 'tmp.12': tmp.12 int <typeChecker.LocalAttributes object at 0x7fdbf9cc87d0>, 'tmp.13': tmp.13 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8260>, 'tmp.14': tmp.14 int <typeChecker.LocalAttributes object at 0x7fdbf9cc83e0>, 'tmp.15': tmp.15 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8cb0>, 'tmp.16': tmp.16 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8c50>, 'tmp.18': tmp.18 int <typeChecker.LocalAttributes object at 0x7fdbf9cc9040>, 'tmp.19': tmp.19 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8e60>, 'tmp.21': tmp.21 int <typeChecker.LocalAttributes object at 0x7fdbf9cc9490>}
+OPTIMIZING FUNCTION Function: target ([]) instructions:[CopyToOffset(x.1 + 0) = 5 , CopyToOffset(y.2 + 0) = 65 , Label(tmp.4), tmp.5 = y.2 + 2, Copy x.1 = tmp.5, tmp.6 = y.2 > 70, Copy tmp.7 = tmp.6, JumpIfZero(tmp.7, tmp.8), tmp.9 = y.2 + 3, Copy x.1 = tmp.9, Label(tmp.8), Copy tmp.10 = x.1, tmp.11 = putchar([tmp.10]), tmp.12 = tmp.11 + 3, Copy y.2 = tmp.12, Label(continue_tmp.3), tmp.13 = y.2 < 90, Copy tmp.14 = tmp.13, JumpIfNotZero(tmp.14, tmp.4), Label(break_tmp.3), tmp.15 = x.1 != 90, Copy tmp.16 = tmp.15, JumpIfZero(tmp.16, tmp.17), Return 1, Label(tmp.17), tmp.18 = y.2 != 93, Copy tmp.19 = tmp.18, JumpIfZero(tmp.19, tmp.20), Return 2, Label(tmp.20), Return 0, Return 0]
 --------------ADDRESS TAKEN ANALYSIS.------------------
 set()
 -------------CONSTANT FOLDING PASS.--------------------
-OLD LIST [tmp.3 = target([]), tmp.4 = tmp.3 != 10, Copy tmp.5 = tmp.4, JumpIfZero(tmp.5, tmp.6), Return 1, Label(tmp.6), tmp.7 = Load glob , tmp.8 = tmp.7 != 10, Copy tmp.9 = tmp.8, JumpIfZero(tmp.9, tmp.10), Return 2, Label(tmp.10), Return 0, Return 0]
-NEW LIST [tmp.3 = target([]), tmp.4 = tmp.3 != 10, Copy tmp.5 = tmp.4, JumpIfZero(tmp.5, tmp.6), Return 1, Label(tmp.6), tmp.7 = Load glob , tmp.8 = tmp.7 != 10, Copy tmp.9 = tmp.8, JumpIfZero(tmp.9, tmp.10), Return 2, Label(tmp.10), Return 0, Return 0]
+OLD LIST [CopyToOffset(x.1 + 0) = 5 , CopyToOffset(y.2 + 0) = 65 , Label(tmp.4), tmp.5 = y.2 + 2, Copy x.1 = tmp.5, tmp.6 = y.2 > 70, Copy tmp.7 = tmp.6, JumpIfZero(tmp.7, tmp.8), tmp.9 = y.2 + 3, Copy x.1 = tmp.9, Label(tmp.8), Copy tmp.10 = x.1, tmp.11 = putchar([tmp.10]), tmp.12 = tmp.11 + 3, Copy y.2 = tmp.12, Label(continue_tmp.3), tmp.13 = y.2 < 90, Copy tmp.14 = tmp.13, JumpIfNotZero(tmp.14, tmp.4), Label(break_tmp.3), tmp.15 = x.1 != 90, Copy tmp.16 = tmp.15, JumpIfZero(tmp.16, tmp.17), Return 1, Label(tmp.17), tmp.18 = y.2 != 93, Copy tmp.19 = tmp.18, JumpIfZero(tmp.19, tmp.20), Return 2, Label(tmp.20), Return 0, Return 0]
+NEW LIST [Copy x.1 = 5, Copy y.2 = 65, Label(tmp.4), tmp.5 = y.2 + 2, Copy x.1 = tmp.5, tmp.6 = y.2 > 70, Copy tmp.7 = tmp.6, JumpIfZero(tmp.7, tmp.8), tmp.9 = y.2 + 3, Copy x.1 = tmp.9, Label(tmp.8), Copy tmp.10 = x.1, tmp.11 = putchar([tmp.10]), tmp.12 = tmp.11 + 3, Copy y.2 = tmp.12, Label(continue_tmp.3), tmp.13 = y.2 < 90, Copy tmp.14 = tmp.13, JumpIfNotZero(tmp.14, tmp.4), Label(break_tmp.3), tmp.15 = x.1 != 90, Copy tmp.16 = tmp.15, JumpIfZero(tmp.16, tmp.17), Return 1, Label(tmp.17), tmp.18 = y.2 != 93, Copy tmp.19 = tmp.18, JumpIfZero(tmp.19, tmp.20), Return 2, Label(tmp.20), Return 0, Return 0]
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_LabelInst'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_JumpIfZeroInst'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_LabelInst'>
+<class 'tacGenerator.TAC_CopyInstruction'>
 <class 'tacGenerator.TAC_FunCallInstruction'>
 <class 'tacGenerator.TAC_BinaryInstruction'>
 <class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_LabelInst'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_JumpIfNotZeroInst'>
+<class 'tacGenerator.TAC_LabelInst'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
 <class 'tacGenerator.TAC_JumpIfZeroInst'>
 <class 'tacGenerator.TAC_returnInstruction'>
 <class 'tacGenerator.TAC_LabelInst'>
-<class 'tacGenerator.TAC_Load'>
 <class 'tacGenerator.TAC_BinaryInstruction'>
 <class 'tacGenerator.TAC_CopyInstruction'>
 <class 'tacGenerator.TAC_JumpIfZeroInst'>
@@ -301,11 +232,16 @@ NEW LIST [tmp.3 = target([]), tmp.4 = tmp.3 != 10, Copy tmp.5 = tmp.4, JumpIfZer
 <class 'tacGenerator.TAC_LabelInst'>
 <class 'tacGenerator.TAC_returnInstruction'>
 <class 'tacGenerator.TAC_returnInstruction'>
-tmp.3 = target([])
+Copy x.1 = 5
+Label(tmp.4)
+tmp.9 = y.2 + 3
+Label(tmp.8)
+Label(continue_tmp.3)
+Label(break_tmp.3)
 Return 1
-Label(tmp.6)
+Label(tmp.17)
 Return 2
-Label(tmp.10)
+Label(tmp.20)
 Return 0
 
 
@@ -316,317 +252,810 @@ Return 0
 
 
 
+
+
+
+
+
+
+
 ENTRY Entry: ENTRY {0}
-0 0: [tmp.3 = target([]), tmp.4 = tmp.3 != 10, Copy tmp.5 = tmp.4, JumpIfZero(tmp.5, tmp.6)] Pred: {ENTRY} Suc: {1, 2} iMap: {tmp.3 = target([]): set(), tmp.4 = tmp.3 != 10: set(), Copy tmp.5 = tmp.4: set(), JumpIfZero(tmp.5, tmp.6): set()} ReachingCopies: set()
-1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
-2 2: [Label(tmp.6), tmp.7 = Load glob , tmp.8 = tmp.7 != 10, Copy tmp.9 = tmp.8, JumpIfZero(tmp.9, tmp.10)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.6): set(), tmp.7 = Load glob : set(), tmp.8 = tmp.7 != 10: set(), Copy tmp.9 = tmp.8: set(), JumpIfZero(tmp.9, tmp.10): set()} ReachingCopies: set()
-3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
-4 4: [Label(tmp.10), Return 0] Pred: {2} Suc: {EXIT} iMap: {Label(tmp.10): set(), Return 0: set()} ReachingCopies: set()
-5 5: [Return 0] Pred: set() Suc: {EXIT} iMap: {Return 0: set()} ReachingCopies: set()
-EXIT Exit: EXIT {1, 3, 4, 5}
+0 0: [Copy x.1 = 5, Copy y.2 = 65] Pred: {ENTRY} Suc: {1} iMap: {Copy x.1 = 5: set(), Copy y.2 = 65: set()} ReachingCopies: set()
+1 1: [Label(tmp.4), tmp.5 = y.2 + 2, Copy x.1 = tmp.5, tmp.6 = y.2 > 70, Copy tmp.7 = tmp.6, JumpIfZero(tmp.7, tmp.8)] Pred: {0, 4} Suc: {2, 3} iMap: {Label(tmp.4): set(), tmp.5 = y.2 + 2: set(), Copy x.1 = tmp.5: set(), tmp.6 = y.2 > 70: set(), Copy tmp.7 = tmp.6: set(), JumpIfZero(tmp.7, tmp.8): set()} ReachingCopies: set()
+2 2: [tmp.9 = y.2 + 3, Copy x.1 = tmp.9] Pred: {1} Suc: {3} iMap: {tmp.9 = y.2 + 3: set(), Copy x.1 = tmp.9: set()} ReachingCopies: set()
+3 3: [Label(tmp.8), Copy tmp.10 = x.1, tmp.11 = putchar([tmp.10]), tmp.12 = tmp.11 + 3, Copy y.2 = tmp.12] Pred: {1, 2} Suc: {4} iMap: {Label(tmp.8): set(), Copy tmp.10 = x.1: set(), tmp.11 = putchar([tmp.10]): set(), tmp.12 = tmp.11 + 3: set(), Copy y.2 = tmp.12: set()} ReachingCopies: set()
+4 4: [Label(continue_tmp.3), tmp.13 = y.2 < 90, Copy tmp.14 = tmp.13, JumpIfNotZero(tmp.14, tmp.4)] Pred: {3} Suc: {1, 5} iMap: {Label(continue_tmp.3): set(), tmp.13 = y.2 < 90: set(), Copy tmp.14 = tmp.13: set(), JumpIfNotZero(tmp.14, tmp.4): set()} ReachingCopies: set()
+5 5: [Label(break_tmp.3), tmp.15 = x.1 != 90, Copy tmp.16 = tmp.15, JumpIfZero(tmp.16, tmp.17)] Pred: {4} Suc: {6, 7} iMap: {Label(break_tmp.3): set(), tmp.15 = x.1 != 90: set(), Copy tmp.16 = tmp.15: set(), JumpIfZero(tmp.16, tmp.17): set()} ReachingCopies: set()
+6 6: [Return 1] Pred: {5} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
+7 7: [Label(tmp.17), tmp.18 = y.2 != 93, Copy tmp.19 = tmp.18, JumpIfZero(tmp.19, tmp.20)] Pred: {5} Suc: {8, 9} iMap: {Label(tmp.17): set(), tmp.18 = y.2 != 93: set(), Copy tmp.19 = tmp.18: set(), JumpIfZero(tmp.19, tmp.20): set()} ReachingCopies: set()
+8 8: [Return 2] Pred: {7} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
+9 9: [Label(tmp.20), Return 0] Pred: {7} Suc: {EXIT} iMap: {Label(tmp.20): set(), Return 0: set()} ReachingCopies: set()
+10 10: [Return 0] Pred: set() Suc: {EXIT} iMap: {Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {8, 9, 10, 6}
 ENTRY Entry: ENTRY {0}
-0 0: [tmp.3 = target([]), tmp.4 = tmp.3 != 10, Copy tmp.5 = tmp.4, JumpIfZero(tmp.5, tmp.6)] Pred: {ENTRY} Suc: {1, 2} iMap: {tmp.3 = target([]): set(), tmp.4 = tmp.3 != 10: set(), Copy tmp.5 = tmp.4: set(), JumpIfZero(tmp.5, tmp.6): set()} ReachingCopies: set()
-1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
-2 2: [Label(tmp.6), tmp.7 = Load glob , tmp.8 = tmp.7 != 10, Copy tmp.9 = tmp.8, JumpIfZero(tmp.9, tmp.10)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.6): set(), tmp.7 = Load glob : set(), tmp.8 = tmp.7 != 10: set(), Copy tmp.9 = tmp.8: set(), JumpIfZero(tmp.9, tmp.10): set()} ReachingCopies: set()
-3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
-4 4: [Label(tmp.10), Return 0] Pred: {2} Suc: {EXIT} iMap: {Label(tmp.10): set(), Return 0: set()} ReachingCopies: set()
-EXIT Exit: EXIT {1, 3, 4}
+0 0: [Copy x.1 = 5, Copy y.2 = 65] Pred: {ENTRY} Suc: {1} iMap: {Copy x.1 = 5: set(), Copy y.2 = 65: set()} ReachingCopies: set()
+1 1: [Label(tmp.4), tmp.5 = y.2 + 2, Copy x.1 = tmp.5, tmp.6 = y.2 > 70, Copy tmp.7 = tmp.6, JumpIfZero(tmp.7, tmp.8)] Pred: {0, 4} Suc: {2, 3} iMap: {Label(tmp.4): set(), tmp.5 = y.2 + 2: set(), Copy x.1 = tmp.5: set(), tmp.6 = y.2 > 70: set(), Copy tmp.7 = tmp.6: set(), JumpIfZero(tmp.7, tmp.8): set()} ReachingCopies: set()
+2 2: [tmp.9 = y.2 + 3, Copy x.1 = tmp.9] Pred: {1} Suc: {3} iMap: {tmp.9 = y.2 + 3: set(), Copy x.1 = tmp.9: set()} ReachingCopies: set()
+3 3: [Label(tmp.8), Copy tmp.10 = x.1, tmp.11 = putchar([tmp.10]), tmp.12 = tmp.11 + 3, Copy y.2 = tmp.12] Pred: {1, 2} Suc: {4} iMap: {Label(tmp.8): set(), Copy tmp.10 = x.1: set(), tmp.11 = putchar([tmp.10]): set(), tmp.12 = tmp.11 + 3: set(), Copy y.2 = tmp.12: set()} ReachingCopies: set()
+4 4: [Label(continue_tmp.3), tmp.13 = y.2 < 90, Copy tmp.14 = tmp.13, JumpIfNotZero(tmp.14, tmp.4)] Pred: {3} Suc: {1, 5} iMap: {Label(continue_tmp.3): set(), tmp.13 = y.2 < 90: set(), Copy tmp.14 = tmp.13: set(), JumpIfNotZero(tmp.14, tmp.4): set()} ReachingCopies: set()
+5 5: [Label(break_tmp.3), tmp.15 = x.1 != 90, Copy tmp.16 = tmp.15, JumpIfZero(tmp.16, tmp.17)] Pred: {4} Suc: {6, 7} iMap: {Label(break_tmp.3): set(), tmp.15 = x.1 != 90: set(), Copy tmp.16 = tmp.15: set(), JumpIfZero(tmp.16, tmp.17): set()} ReachingCopies: set()
+6 6: [Return 1] Pred: {5} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
+7 7: [Label(tmp.17), tmp.18 = y.2 != 93, Copy tmp.19 = tmp.18, JumpIfZero(tmp.19, tmp.20)] Pred: {5} Suc: {8, 9} iMap: {Label(tmp.17): set(), tmp.18 = y.2 != 93: set(), Copy tmp.19 = tmp.18: set(), JumpIfZero(tmp.19, tmp.20): set()} ReachingCopies: set()
+8 8: [Return 2] Pred: {7} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
+9 9: [Label(tmp.20), Return 0] Pred: {7} Suc: {EXIT} iMap: {Label(tmp.20): set(), Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {8, 9, 6}
 ENTRY Entry: ENTRY {0}
-0 0: [tmp.3 = target([]), tmp.4 = tmp.3 != 10, Copy tmp.5 = tmp.4, JumpIfZero(tmp.5, tmp.6)] Pred: {ENTRY} Suc: {1, 2} iMap: {tmp.3 = target([]): set(), tmp.4 = tmp.3 != 10: set(), Copy tmp.5 = tmp.4: set(), JumpIfZero(tmp.5, tmp.6): set()} ReachingCopies: set()
-1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
-2 2: [Label(tmp.6), tmp.7 = Load glob , tmp.8 = tmp.7 != 10, Copy tmp.9 = tmp.8, JumpIfZero(tmp.9, tmp.10)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.6): set(), tmp.7 = Load glob : set(), tmp.8 = tmp.7 != 10: set(), Copy tmp.9 = tmp.8: set(), JumpIfZero(tmp.9, tmp.10): set()} ReachingCopies: set()
-3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
-4 4: [Label(tmp.10), Return 0] Pred: {2} Suc: {EXIT} iMap: {Label(tmp.10): set(), Return 0: set()} ReachingCopies: set()
-EXIT Exit: EXIT {1, 3, 4}
+0 0: [Copy x.1 = 5, Copy y.2 = 65] Pred: {ENTRY} Suc: {1} iMap: {Copy x.1 = 5: set(), Copy y.2 = 65: set()} ReachingCopies: set()
+1 1: [Label(tmp.4), tmp.5 = y.2 + 2, Copy x.1 = tmp.5, tmp.6 = y.2 > 70, Copy tmp.7 = tmp.6, JumpIfZero(tmp.7, tmp.8)] Pred: {0, 4} Suc: {2, 3} iMap: {Label(tmp.4): set(), tmp.5 = y.2 + 2: set(), Copy x.1 = tmp.5: set(), tmp.6 = y.2 > 70: set(), Copy tmp.7 = tmp.6: set(), JumpIfZero(tmp.7, tmp.8): set()} ReachingCopies: set()
+2 2: [tmp.9 = y.2 + 3, Copy x.1 = tmp.9] Pred: {1} Suc: {3} iMap: {tmp.9 = y.2 + 3: set(), Copy x.1 = tmp.9: set()} ReachingCopies: set()
+3 3: [Label(tmp.8), Copy tmp.10 = x.1, tmp.11 = putchar([tmp.10]), tmp.12 = tmp.11 + 3, Copy y.2 = tmp.12] Pred: {1, 2} Suc: {4} iMap: {Label(tmp.8): set(), Copy tmp.10 = x.1: set(), tmp.11 = putchar([tmp.10]): set(), tmp.12 = tmp.11 + 3: set(), Copy y.2 = tmp.12: set()} ReachingCopies: set()
+4 4: [Label(continue_tmp.3), tmp.13 = y.2 < 90, Copy tmp.14 = tmp.13, JumpIfNotZero(tmp.14, tmp.4)] Pred: {3} Suc: {1, 5} iMap: {Label(continue_tmp.3): set(), tmp.13 = y.2 < 90: set(), Copy tmp.14 = tmp.13: set(), JumpIfNotZero(tmp.14, tmp.4): set()} ReachingCopies: set()
+5 5: [Label(break_tmp.3), tmp.15 = x.1 != 90, Copy tmp.16 = tmp.15, JumpIfZero(tmp.16, tmp.17)] Pred: {4} Suc: {6, 7} iMap: {Label(break_tmp.3): set(), tmp.15 = x.1 != 90: set(), Copy tmp.16 = tmp.15: set(), JumpIfZero(tmp.16, tmp.17): set()} ReachingCopies: set()
+6 6: [Return 1] Pred: {5} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
+7 7: [Label(tmp.17), tmp.18 = y.2 != 93, Copy tmp.19 = tmp.18, JumpIfZero(tmp.19, tmp.20)] Pred: {5} Suc: {8, 9} iMap: {Label(tmp.17): set(), tmp.18 = y.2 != 93: set(), Copy tmp.19 = tmp.18: set(), JumpIfZero(tmp.19, tmp.20): set()} ReachingCopies: set()
+8 8: [Return 2] Pred: {7} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
+9 9: [Label(tmp.20), Return 0] Pred: {7} Suc: {EXIT} iMap: {Label(tmp.20): set(), Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {8, 9, 6}
+POP REDUNDANT LABEL
+POP REDUNDANT LABEL
 ENTRY Entry: ENTRY {0}
-0 0: [tmp.3 = target([]), tmp.4 = tmp.3 != 10, Copy tmp.5 = tmp.4, JumpIfZero(tmp.5, tmp.6)] Pred: {ENTRY} Suc: {1, 2} iMap: {tmp.3 = target([]): set(), tmp.4 = tmp.3 != 10: set(), Copy tmp.5 = tmp.4: set(), JumpIfZero(tmp.5, tmp.6): set()} ReachingCopies: set()
-1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
-2 2: [Label(tmp.6), tmp.7 = Load glob , tmp.8 = tmp.7 != 10, Copy tmp.9 = tmp.8, JumpIfZero(tmp.9, tmp.10)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.6): set(), tmp.7 = Load glob : set(), tmp.8 = tmp.7 != 10: set(), Copy tmp.9 = tmp.8: set(), JumpIfZero(tmp.9, tmp.10): set()} ReachingCopies: set()
-3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
-4 4: [Label(tmp.10), Return 0] Pred: {2} Suc: {EXIT} iMap: {Label(tmp.10): set(), Return 0: set()} ReachingCopies: set()
-EXIT Exit: EXIT {1, 3, 4}
+0 0: [Copy x.1 = 5, Copy y.2 = 65] Pred: {ENTRY} Suc: {1} iMap: {Copy x.1 = 5: set(), Copy y.2 = 65: set()} ReachingCopies: set()
+1 1: [Label(tmp.4), tmp.5 = y.2 + 2, Copy x.1 = tmp.5, tmp.6 = y.2 > 70, Copy tmp.7 = tmp.6, JumpIfZero(tmp.7, tmp.8)] Pred: {0, 4} Suc: {2, 3} iMap: {Label(tmp.4): set(), tmp.5 = y.2 + 2: set(), Copy x.1 = tmp.5: set(), tmp.6 = y.2 > 70: set(), Copy tmp.7 = tmp.6: set(), JumpIfZero(tmp.7, tmp.8): set()} ReachingCopies: set()
+2 2: [tmp.9 = y.2 + 3, Copy x.1 = tmp.9] Pred: {1} Suc: {3} iMap: {tmp.9 = y.2 + 3: set(), Copy x.1 = tmp.9: set()} ReachingCopies: set()
+3 3: [Label(tmp.8), Copy tmp.10 = x.1, tmp.11 = putchar([tmp.10]), tmp.12 = tmp.11 + 3, Copy y.2 = tmp.12] Pred: {1, 2} Suc: {4} iMap: {Label(tmp.8): set(), Copy tmp.10 = x.1: set(), tmp.11 = putchar([tmp.10]): set(), tmp.12 = tmp.11 + 3: set(), Copy y.2 = tmp.12: set()} ReachingCopies: set()
+4 4: [tmp.13 = y.2 < 90, Copy tmp.14 = tmp.13, JumpIfNotZero(tmp.14, tmp.4)] Pred: {3} Suc: {1, 5} iMap: {tmp.13 = y.2 < 90: set(), Copy tmp.14 = tmp.13: set(), JumpIfNotZero(tmp.14, tmp.4): set()} ReachingCopies: set()
+5 5: [tmp.15 = x.1 != 90, Copy tmp.16 = tmp.15, JumpIfZero(tmp.16, tmp.17)] Pred: {4} Suc: {6, 7} iMap: {tmp.15 = x.1 != 90: set(), Copy tmp.16 = tmp.15: set(), JumpIfZero(tmp.16, tmp.17): set()} ReachingCopies: set()
+6 6: [Return 1] Pred: {5} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
+7 7: [Label(tmp.17), tmp.18 = y.2 != 93, Copy tmp.19 = tmp.18, JumpIfZero(tmp.19, tmp.20)] Pred: {5} Suc: {8, 9} iMap: {Label(tmp.17): set(), tmp.18 = y.2 != 93: set(), Copy tmp.19 = tmp.18: set(), JumpIfZero(tmp.19, tmp.20): set()} ReachingCopies: set()
+8 8: [Return 2] Pred: {7} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
+9 9: [Label(tmp.20), Return 0] Pred: {7} Suc: {EXIT} iMap: {Label(tmp.20): set(), Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {8, 9, 6}
 --------------IMAP for block 0-------------------
-tmp.3 = target([]) set()
-tmp.4 = tmp.3 != 10 set()
-Copy tmp.5 = tmp.4 set()
-JumpIfZero(tmp.5, tmp.6) {Copy tmp.5 = tmp.4}
-OLD ANNOT: {Copy tmp.9 = tmp.8, Copy tmp.5 = tmp.4}
-NEW ANNOT: {Copy tmp.5 = tmp.4}
+Copy x.1 = 5 set()
+<class 'parser.ConstInt'>
+Copy y.2 = 65 {Copy x.1 = 5}
+<class 'parser.ConstInt'>
+OLD ANNOT: {Copy tmp.19 = tmp.18, Copy x.1 = tmp.9, Copy y.2 = tmp.12, Copy tmp.7 = tmp.6, Copy x.1 = tmp.5, Copy tmp.10 = x.1, Copy tmp.14 = tmp.13, Copy y.2 = 65, Copy x.1 = 5, Copy tmp.16 = tmp.15}
+NEW ANNOT: {Copy y.2 = 65, Copy x.1 = 5}
 ADD SUCCESSORS.
 --------------IMAP for block 1-------------------
-Return 1 {Copy tmp.5 = tmp.4}
-OLD ANNOT: {Copy tmp.9 = tmp.8, Copy tmp.5 = tmp.4}
-NEW ANNOT: {Copy tmp.5 = tmp.4}
+Label(tmp.4) {Copy y.2 = 65, Copy x.1 = 5}
+tmp.5 = y.2 + 2 {Copy y.2 = 65, Copy x.1 = 5}
+Copy x.1 = tmp.5 {Copy y.2 = 65, Copy x.1 = 5}
+tmp.6 = y.2 > 70 {Copy x.1 = tmp.5, Copy y.2 = 65}
+Copy tmp.7 = tmp.6 {Copy x.1 = tmp.5, Copy y.2 = 65}
+JumpIfZero(tmp.7, tmp.8) {Copy x.1 = tmp.5, Copy y.2 = 65, Copy tmp.7 = tmp.6}
+OLD ANNOT: {Copy tmp.19 = tmp.18, Copy x.1 = tmp.9, Copy y.2 = tmp.12, Copy tmp.7 = tmp.6, Copy x.1 = tmp.5, Copy tmp.10 = x.1, Copy tmp.14 = tmp.13, Copy y.2 = 65, Copy x.1 = 5, Copy tmp.16 = tmp.15}
+NEW ANNOT: {Copy x.1 = tmp.5, Copy y.2 = 65, Copy tmp.7 = tmp.6}
 ADD SUCCESSORS.
 --------------IMAP for block 2-------------------
-Label(tmp.6) {Copy tmp.5 = tmp.4}
-tmp.7 = Load glob  {Copy tmp.5 = tmp.4}
-tmp.8 = tmp.7 != 10 {Copy tmp.5 = tmp.4}
-Copy tmp.9 = tmp.8 {Copy tmp.5 = tmp.4}
-JumpIfZero(tmp.9, tmp.10) {Copy tmp.9 = tmp.8, Copy tmp.5 = tmp.4}
-OLD ANNOT: {Copy tmp.9 = tmp.8, Copy tmp.5 = tmp.4}
-NEW ANNOT: {Copy tmp.9 = tmp.8, Copy tmp.5 = tmp.4}
+tmp.9 = y.2 + 3 {Copy x.1 = tmp.5, Copy y.2 = 65, Copy tmp.7 = tmp.6}
+Copy x.1 = tmp.9 {Copy x.1 = tmp.5, Copy y.2 = 65, Copy tmp.7 = tmp.6}
+OLD ANNOT: {Copy tmp.19 = tmp.18, Copy x.1 = tmp.9, Copy y.2 = tmp.12, Copy tmp.7 = tmp.6, Copy x.1 = tmp.5, Copy tmp.10 = x.1, Copy tmp.14 = tmp.13, Copy y.2 = 65, Copy x.1 = 5, Copy tmp.16 = tmp.15}
+NEW ANNOT: {Copy x.1 = tmp.9, Copy y.2 = 65, Copy tmp.7 = tmp.6}
+ADD SUCCESSORS.
 --------------IMAP for block 3-------------------
-Return 2 {Copy tmp.9 = tmp.8, Copy tmp.5 = tmp.4}
-OLD ANNOT: {Copy tmp.9 = tmp.8, Copy tmp.5 = tmp.4}
-NEW ANNOT: {Copy tmp.9 = tmp.8, Copy tmp.5 = tmp.4}
+Label(tmp.8) {Copy y.2 = 65, Copy tmp.7 = tmp.6}
+Copy tmp.10 = x.1 {Copy y.2 = 65, Copy tmp.7 = tmp.6}
+tmp.11 = putchar([tmp.10]) {Copy y.2 = 65, Copy tmp.10 = x.1, Copy tmp.7 = tmp.6}
+tmp.12 = tmp.11 + 3 {Copy y.2 = 65, Copy tmp.10 = x.1, Copy tmp.7 = tmp.6}
+Copy y.2 = tmp.12 {Copy y.2 = 65, Copy tmp.10 = x.1, Copy tmp.7 = tmp.6}
+OLD ANNOT: {Copy tmp.19 = tmp.18, Copy x.1 = tmp.9, Copy y.2 = tmp.12, Copy tmp.7 = tmp.6, Copy x.1 = tmp.5, Copy tmp.10 = x.1, Copy tmp.14 = tmp.13, Copy y.2 = 65, Copy x.1 = 5, Copy tmp.16 = tmp.15}
+NEW ANNOT: {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.7 = tmp.6}
+ADD SUCCESSORS.
 --------------IMAP for block 4-------------------
-Label(tmp.10) {Copy tmp.9 = tmp.8, Copy tmp.5 = tmp.4}
-Return 0 {Copy tmp.9 = tmp.8, Copy tmp.5 = tmp.4}
-OLD ANNOT: {Copy tmp.9 = tmp.8, Copy tmp.5 = tmp.4}
-NEW ANNOT: {Copy tmp.9 = tmp.8, Copy tmp.5 = tmp.4}
+tmp.13 = y.2 < 90 {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.7 = tmp.6}
+Copy tmp.14 = tmp.13 {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.7 = tmp.6}
+JumpIfNotZero(tmp.14, tmp.4) {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.7 = tmp.6}
+OLD ANNOT: {Copy tmp.19 = tmp.18, Copy x.1 = tmp.9, Copy y.2 = tmp.12, Copy tmp.7 = tmp.6, Copy x.1 = tmp.5, Copy tmp.10 = x.1, Copy tmp.14 = tmp.13, Copy y.2 = 65, Copy x.1 = 5, Copy tmp.16 = tmp.15}
+NEW ANNOT: {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.7 = tmp.6}
+ADD SUCCESSORS.
+--------------IMAP for block 5-------------------
+tmp.15 = x.1 != 90 {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.7 = tmp.6}
+Copy tmp.16 = tmp.15 {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.7 = tmp.6}
+JumpIfZero(tmp.16, tmp.17) {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}
+OLD ANNOT: {Copy tmp.19 = tmp.18, Copy x.1 = tmp.9, Copy y.2 = tmp.12, Copy tmp.7 = tmp.6, Copy x.1 = tmp.5, Copy tmp.10 = x.1, Copy tmp.14 = tmp.13, Copy y.2 = 65, Copy x.1 = 5, Copy tmp.16 = tmp.15}
+NEW ANNOT: {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}
+ADD SUCCESSORS.
+--------------IMAP for block 6-------------------
+Return 1 {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}
+OLD ANNOT: {Copy tmp.19 = tmp.18, Copy x.1 = tmp.9, Copy y.2 = tmp.12, Copy tmp.7 = tmp.6, Copy x.1 = tmp.5, Copy tmp.10 = x.1, Copy tmp.14 = tmp.13, Copy y.2 = 65, Copy x.1 = 5, Copy tmp.16 = tmp.15}
+NEW ANNOT: {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}
+ADD SUCCESSORS.
+--------------IMAP for block 7-------------------
+Label(tmp.17) {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}
+tmp.18 = y.2 != 93 {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}
+Copy tmp.19 = tmp.18 {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}
+JumpIfZero(tmp.19, tmp.20) {Copy tmp.19 = tmp.18, Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}
+OLD ANNOT: {Copy tmp.19 = tmp.18, Copy x.1 = tmp.9, Copy y.2 = tmp.12, Copy tmp.7 = tmp.6, Copy x.1 = tmp.5, Copy tmp.10 = x.1, Copy tmp.14 = tmp.13, Copy y.2 = 65, Copy x.1 = 5, Copy tmp.16 = tmp.15}
+NEW ANNOT: {Copy tmp.19 = tmp.18, Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}
+ADD SUCCESSORS.
+--------------IMAP for block 8-------------------
+Return 2 {Copy tmp.19 = tmp.18, Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}
+OLD ANNOT: {Copy tmp.19 = tmp.18, Copy x.1 = tmp.9, Copy y.2 = tmp.12, Copy tmp.7 = tmp.6, Copy x.1 = tmp.5, Copy tmp.10 = x.1, Copy tmp.14 = tmp.13, Copy y.2 = 65, Copy x.1 = 5, Copy tmp.16 = tmp.15}
+NEW ANNOT: {Copy tmp.19 = tmp.18, Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}
+ADD SUCCESSORS.
+--------------IMAP for block 9-------------------
+Label(tmp.20) {Copy tmp.19 = tmp.18, Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}
+Return 0 {Copy tmp.19 = tmp.18, Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}
+OLD ANNOT: {Copy tmp.19 = tmp.18, Copy x.1 = tmp.9, Copy y.2 = tmp.12, Copy tmp.7 = tmp.6, Copy x.1 = tmp.5, Copy tmp.10 = x.1, Copy tmp.14 = tmp.13, Copy y.2 = 65, Copy x.1 = 5, Copy tmp.16 = tmp.15}
+NEW ANNOT: {Copy tmp.19 = tmp.18, Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}
+ADD SUCCESSORS.
+--------------IMAP for block 1-------------------
+Label(tmp.4) set()
+tmp.5 = y.2 + 2 set()
+Copy x.1 = tmp.5 set()
+tmp.6 = y.2 > 70 {Copy x.1 = tmp.5}
+Copy tmp.7 = tmp.6 {Copy x.1 = tmp.5}
+JumpIfZero(tmp.7, tmp.8) {Copy x.1 = tmp.5, Copy tmp.7 = tmp.6}
+OLD ANNOT: {Copy x.1 = tmp.5, Copy y.2 = 65, Copy tmp.7 = tmp.6}
+NEW ANNOT: {Copy x.1 = tmp.5, Copy tmp.7 = tmp.6}
+ADD SUCCESSORS.
+--------------IMAP for block 2-------------------
+tmp.9 = y.2 + 3 {Copy x.1 = tmp.5, Copy tmp.7 = tmp.6}
+Copy x.1 = tmp.9 {Copy x.1 = tmp.5, Copy tmp.7 = tmp.6}
+OLD ANNOT: {Copy x.1 = tmp.9, Copy y.2 = 65, Copy tmp.7 = tmp.6}
+NEW ANNOT: {Copy x.1 = tmp.9, Copy tmp.7 = tmp.6}
+ADD SUCCESSORS.
+--------------IMAP for block 3-------------------
+Label(tmp.8) {Copy tmp.7 = tmp.6}
+Copy tmp.10 = x.1 {Copy tmp.7 = tmp.6}
+tmp.11 = putchar([tmp.10]) {Copy tmp.10 = x.1, Copy tmp.7 = tmp.6}
+tmp.12 = tmp.11 + 3 {Copy tmp.10 = x.1, Copy tmp.7 = tmp.6}
+Copy y.2 = tmp.12 {Copy tmp.10 = x.1, Copy tmp.7 = tmp.6}
+OLD ANNOT: {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.7 = tmp.6}
+NEW ANNOT: {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.7 = tmp.6}
 ------------REPLACE INSTRUCTIONS WITH REACHING COPIES.-------------
 ENTRY Entry: ENTRY {0}
-0 0: [tmp.3 = target([]), tmp.4 = tmp.3 != 10, Copy tmp.5 = tmp.4, JumpIfZero(tmp.4, tmp.6)] Pred: {ENTRY} Suc: {1, 2} iMap: {tmp.3 = target([]): set(), tmp.4 = tmp.3 != 10: set(), Copy tmp.5 = tmp.4: set(), JumpIfZero(tmp.5, tmp.6): {Copy tmp.5 = tmp.4}} ReachingCopies: {Copy tmp.5 = tmp.4}
-1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: {Copy tmp.5 = tmp.4}} ReachingCopies: {Copy tmp.5 = tmp.4}
-2 2: [Label(tmp.6), tmp.7 = Load glob , tmp.8 = tmp.7 != 10, Copy tmp.9 = tmp.8, JumpIfZero(tmp.8, tmp.10)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.6): {Copy tmp.5 = tmp.4}, tmp.7 = Load glob : {Copy tmp.5 = tmp.4}, tmp.8 = tmp.7 != 10: {Copy tmp.5 = tmp.4}, Copy tmp.9 = tmp.8: {Copy tmp.5 = tmp.4}, JumpIfZero(tmp.9, tmp.10): {Copy tmp.9 = tmp.8, Copy tmp.5 = tmp.4}} ReachingCopies: {Copy tmp.9 = tmp.8, Copy tmp.5 = tmp.4}
-3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: {Copy tmp.9 = tmp.8, Copy tmp.5 = tmp.4}} ReachingCopies: {Copy tmp.9 = tmp.8, Copy tmp.5 = tmp.4}
-4 4: [Label(tmp.10), Return 0] Pred: {2} Suc: {EXIT} iMap: {Label(tmp.10): {Copy tmp.9 = tmp.8, Copy tmp.5 = tmp.4}, Return 0: {Copy tmp.9 = tmp.8, Copy tmp.5 = tmp.4}} ReachingCopies: {Copy tmp.9 = tmp.8, Copy tmp.5 = tmp.4}
-EXIT Exit: EXIT {1, 3, 4}
+0 0: [Copy x.1 = 5, Copy y.2 = 65] Pred: {ENTRY} Suc: {1} iMap: {Copy x.1 = 5: set(), Copy y.2 = 65: {Copy x.1 = 5}} ReachingCopies: {Copy y.2 = 65, Copy x.1 = 5}
+1 1: [Label(tmp.4), tmp.5 = y.2 + 2, Copy x.1 = tmp.5, tmp.6 = y.2 > 70, Copy tmp.7 = tmp.6, JumpIfZero(tmp.6, tmp.8)] Pred: {0, 4} Suc: {2, 3} iMap: {Label(tmp.4): set(), tmp.5 = y.2 + 2: set(), Copy x.1 = tmp.5: set(), tmp.6 = y.2 > 70: {Copy x.1 = tmp.5}, Copy tmp.7 = tmp.6: {Copy x.1 = tmp.5}, JumpIfZero(tmp.7, tmp.8): {Copy x.1 = tmp.5, Copy tmp.7 = tmp.6}} ReachingCopies: {Copy x.1 = tmp.5, Copy tmp.7 = tmp.6}
+2 2: [tmp.9 = y.2 + 3, Copy x.1 = tmp.9] Pred: {1} Suc: {3} iMap: {tmp.9 = y.2 + 3: {Copy x.1 = tmp.5, Copy tmp.7 = tmp.6}, Copy x.1 = tmp.9: {Copy x.1 = tmp.5, Copy tmp.7 = tmp.6}} ReachingCopies: {Copy x.1 = tmp.9, Copy tmp.7 = tmp.6}
+3 3: [Label(tmp.8), Copy tmp.10 = x.1, tmp.11 = putchar([x.1]), tmp.12 = tmp.11 + 3, Copy y.2 = tmp.12] Pred: {1, 2} Suc: {4} iMap: {Label(tmp.8): {Copy tmp.7 = tmp.6}, Copy tmp.10 = x.1: {Copy tmp.7 = tmp.6}, tmp.11 = putchar([tmp.10]): {Copy tmp.10 = x.1, Copy tmp.7 = tmp.6}, tmp.12 = tmp.11 + 3: {Copy tmp.10 = x.1, Copy tmp.7 = tmp.6}, Copy y.2 = tmp.12: {Copy tmp.10 = x.1, Copy tmp.7 = tmp.6}} ReachingCopies: {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.7 = tmp.6}
+4 4: [tmp.13 = tmp.12 < 90, Copy tmp.14 = tmp.13, JumpIfNotZero(tmp.13, tmp.4)] Pred: {3} Suc: {1, 5} iMap: {tmp.13 = y.2 < 90: {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.7 = tmp.6}, Copy tmp.14 = tmp.13: {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.7 = tmp.6}, JumpIfNotZero(tmp.14, tmp.4): {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.7 = tmp.6}} ReachingCopies: {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.7 = tmp.6}
+5 5: [tmp.15 = x.1 != 90, Copy tmp.16 = tmp.15, JumpIfZero(tmp.15, tmp.17)] Pred: {4} Suc: {6, 7} iMap: {tmp.15 = x.1 != 90: {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.7 = tmp.6}, Copy tmp.16 = tmp.15: {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.7 = tmp.6}, JumpIfZero(tmp.16, tmp.17): {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}} ReachingCopies: {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}
+6 6: [Return 1] Pred: {5} Suc: {EXIT} iMap: {Return 1: {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}} ReachingCopies: {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}
+7 7: [Label(tmp.17), tmp.18 = tmp.12 != 93, Copy tmp.19 = tmp.18, JumpIfZero(tmp.18, tmp.20)] Pred: {5} Suc: {8, 9} iMap: {Label(tmp.17): {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}, tmp.18 = y.2 != 93: {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}, Copy tmp.19 = tmp.18: {Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}, JumpIfZero(tmp.19, tmp.20): {Copy tmp.19 = tmp.18, Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}} ReachingCopies: {Copy tmp.19 = tmp.18, Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}
+8 8: [Return 2] Pred: {7} Suc: {EXIT} iMap: {Return 2: {Copy tmp.19 = tmp.18, Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}} ReachingCopies: {Copy tmp.19 = tmp.18, Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}
+9 9: [Label(tmp.20), Return 0] Pred: {7} Suc: {EXIT} iMap: {Label(tmp.20): {Copy tmp.19 = tmp.18, Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}, Return 0: {Copy tmp.19 = tmp.18, Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}} ReachingCopies: {Copy tmp.19 = tmp.18, Copy tmp.10 = x.1, Copy y.2 = tmp.12, Copy tmp.14 = tmp.13, Copy tmp.16 = tmp.15, Copy tmp.7 = tmp.6}
+EXIT Exit: EXIT {8, 9, 6}
 --------------ADDING ALL STATIC VARIABLES.------------------
-glob glob Pint InitialVal: <typeChecker.Tentative object at 0x7fbf01a091f0> Global: True
-i i int InitialVal: InitialList: [c_int(10)] Global: True
+putchar putchar FunType: ParamTypes: [int] Return Type: int Defined: False Global: True
 target target FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-loc.0 loc.0 Pint <typeChecker.LocalAttributes object at 0x7fbf01a09580>
+x.1 x.1 int <typeChecker.LocalAttributes object at 0x7fdbf9cb2030>
+y.2 y.2 int <typeChecker.LocalAttributes object at 0x7fdbf9cb21e0>
 main main FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-tmp.1 tmp.1 Pint <typeChecker.LocalAttributes object at 0x7fbf01af5160>
-tmp.2 tmp.2 int <typeChecker.LocalAttributes object at 0x7fbf01a0ac00>
-tmp.3 tmp.3 int <typeChecker.LocalAttributes object at 0x7fbf01a0b1d0>
-tmp.4 tmp.4 int <typeChecker.LocalAttributes object at 0x7fbf01a0b080>
-tmp.5 tmp.5 int <typeChecker.LocalAttributes object at 0x7fbf01a0b020>
-tmp.7 tmp.7 int <typeChecker.LocalAttributes object at 0x7fbf01a0b560>
-tmp.8 tmp.8 int <typeChecker.LocalAttributes object at 0x7fbf01a0b650>
-tmp.9 tmp.9 int <typeChecker.LocalAttributes object at 0x7fbf01a0b290>
---------------LIVE for block 4-------------------
-Return 0 {glob, i}
-Label(tmp.10) {glob, i}
-OLD ANNOT: set()
-NEW ANNOT: {glob, i}
---------------LIVE for block 3-------------------
-Return 2 {glob, i}
-OLD ANNOT: set()
-NEW ANNOT: {glob, i}
---------------LIVE for block 2-------------------
-JumpIfZero(tmp.8, tmp.10) {glob, i}
-Copy tmp.9 = tmp.8 {glob, i, tmp.8}
-tmp.8 = tmp.7 != 10 {glob, i, tmp.8}
-tmp.7 = Load glob  {tmp.7, glob, i}
-Label(tmp.6) {glob, i}
-OLD ANNOT: set()
-NEW ANNOT: {glob, i}
---------------LIVE for block 1-------------------
-Return 1 {glob, i}
-OLD ANNOT: set()
-NEW ANNOT: {glob, i}
---------------LIVE for block 0-------------------
-JumpIfZero(tmp.4, tmp.6) {glob, i}
-Copy tmp.5 = tmp.4 {glob, tmp.4, i}
-tmp.4 = tmp.3 != 10 {glob, tmp.4, i}
-tmp.3 = target([]) {glob, tmp.3, i}
-OLD ANNOT: set()
-NEW ANNOT: {glob, i}
-------------REMOVE DEAD STORE INSTRUCTIONS.-------------
-Copy tmp.5 = tmp.4 {glob, tmp.4, i} for node 0
-Copy tmp.9 = tmp.8 {glob, i, tmp.8} for node 2
-------------AFTER DEAD STORE REMOVAL.-------------
-ENTRY Entry: ENTRY {0}
-0 0: [tmp.3 = target([]), tmp.4 = tmp.3 != 10, JumpIfZero(tmp.4, tmp.6)] Pred: {ENTRY} Suc: {1, 2} iMap: {tmp.3 = target([]): {glob, tmp.3, i}, tmp.4 = tmp.3 != 10: {glob, tmp.4, i}, Copy tmp.5 = tmp.4: {glob, tmp.4, i}, JumpIfZero(tmp.4, tmp.6): {glob, i}} ReachingCopies: {glob, i}
-1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: {glob, i}} ReachingCopies: {glob, i}
-2 2: [Label(tmp.6), tmp.7 = Load glob , tmp.8 = tmp.7 != 10, JumpIfZero(tmp.8, tmp.10)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.6): {glob, i}, tmp.7 = Load glob : {tmp.7, glob, i}, tmp.8 = tmp.7 != 10: {glob, i, tmp.8}, Copy tmp.9 = tmp.8: {glob, i, tmp.8}, JumpIfZero(tmp.8, tmp.10): {glob, i}} ReachingCopies: {glob, i}
-3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: {glob, i}} ReachingCopies: {glob, i}
-4 4: [Label(tmp.10), Return 0] Pred: {2} Suc: {EXIT} iMap: {Label(tmp.10): {glob, i}, Return 0: {glob, i}} ReachingCopies: {glob, i}
-EXIT Exit: EXIT {1, 3, 4}
---------------ADDRESS TAKEN ANALYSIS.------------------
-set()
--------------CONSTANT FOLDING PASS.--------------------
-OLD LIST [tmp.3 = target([]), tmp.4 = tmp.3 != 10, JumpIfZero(tmp.4, tmp.6), Return 1, Label(tmp.6), tmp.7 = Load glob , tmp.8 = tmp.7 != 10, JumpIfZero(tmp.8, tmp.10), Return 2, Label(tmp.10), Return 0]
-NEW LIST [tmp.3 = target([]), tmp.4 = tmp.3 != 10, JumpIfZero(tmp.4, tmp.6), Return 1, Label(tmp.6), tmp.7 = Load glob , tmp.8 = tmp.7 != 10, JumpIfZero(tmp.8, tmp.10), Return 2, Label(tmp.10), Return 0]
-<class 'tacGenerator.TAC_FunCallInstruction'>
-<class 'tacGenerator.TAC_BinaryInstruction'>
-<class 'tacGenerator.TAC_JumpIfZeroInst'>
-<class 'tacGenerator.TAC_returnInstruction'>
-<class 'tacGenerator.TAC_LabelInst'>
-<class 'tacGenerator.TAC_Load'>
-<class 'tacGenerator.TAC_BinaryInstruction'>
-<class 'tacGenerator.TAC_JumpIfZeroInst'>
-<class 'tacGenerator.TAC_returnInstruction'>
-<class 'tacGenerator.TAC_LabelInst'>
-<class 'tacGenerator.TAC_returnInstruction'>
-tmp.3 = target([])
-Return 1
-Label(tmp.6)
-Return 2
-Label(tmp.10)
-
-
-
-
-
-
-
-
-ENTRY Entry: ENTRY {0}
-0 0: [tmp.3 = target([]), tmp.4 = tmp.3 != 10, JumpIfZero(tmp.4, tmp.6)] Pred: {ENTRY} Suc: {1, 2} iMap: {tmp.3 = target([]): set(), tmp.4 = tmp.3 != 10: set(), JumpIfZero(tmp.4, tmp.6): set()} ReachingCopies: set()
-1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
-2 2: [Label(tmp.6), tmp.7 = Load glob , tmp.8 = tmp.7 != 10, JumpIfZero(tmp.8, tmp.10)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.6): set(), tmp.7 = Load glob : set(), tmp.8 = tmp.7 != 10: set(), JumpIfZero(tmp.8, tmp.10): set()} ReachingCopies: set()
-3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
-4 4: [Label(tmp.10), Return 0] Pred: {2} Suc: {EXIT} iMap: {Label(tmp.10): set(), Return 0: set()} ReachingCopies: set()
-EXIT Exit: EXIT {1, 3, 4}
-ENTRY Entry: ENTRY {0}
-0 0: [tmp.3 = target([]), tmp.4 = tmp.3 != 10, JumpIfZero(tmp.4, tmp.6)] Pred: {ENTRY} Suc: {1, 2} iMap: {tmp.3 = target([]): set(), tmp.4 = tmp.3 != 10: set(), JumpIfZero(tmp.4, tmp.6): set()} ReachingCopies: set()
-1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
-2 2: [Label(tmp.6), tmp.7 = Load glob , tmp.8 = tmp.7 != 10, JumpIfZero(tmp.8, tmp.10)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.6): set(), tmp.7 = Load glob : set(), tmp.8 = tmp.7 != 10: set(), JumpIfZero(tmp.8, tmp.10): set()} ReachingCopies: set()
-3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
-4 4: [Label(tmp.10), Return 0] Pred: {2} Suc: {EXIT} iMap: {Label(tmp.10): set(), Return 0: set()} ReachingCopies: set()
-EXIT Exit: EXIT {1, 3, 4}
-ENTRY Entry: ENTRY {0}
-0 0: [tmp.3 = target([]), tmp.4 = tmp.3 != 10, JumpIfZero(tmp.4, tmp.6)] Pred: {ENTRY} Suc: {1, 2} iMap: {tmp.3 = target([]): set(), tmp.4 = tmp.3 != 10: set(), JumpIfZero(tmp.4, tmp.6): set()} ReachingCopies: set()
-1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
-2 2: [Label(tmp.6), tmp.7 = Load glob , tmp.8 = tmp.7 != 10, JumpIfZero(tmp.8, tmp.10)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.6): set(), tmp.7 = Load glob : set(), tmp.8 = tmp.7 != 10: set(), JumpIfZero(tmp.8, tmp.10): set()} ReachingCopies: set()
-3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
-4 4: [Label(tmp.10), Return 0] Pred: {2} Suc: {EXIT} iMap: {Label(tmp.10): set(), Return 0: set()} ReachingCopies: set()
-EXIT Exit: EXIT {1, 3, 4}
-ENTRY Entry: ENTRY {0}
-0 0: [tmp.3 = target([]), tmp.4 = tmp.3 != 10, JumpIfZero(tmp.4, tmp.6)] Pred: {ENTRY} Suc: {1, 2} iMap: {tmp.3 = target([]): set(), tmp.4 = tmp.3 != 10: set(), JumpIfZero(tmp.4, tmp.6): set()} ReachingCopies: set()
-1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
-2 2: [Label(tmp.6), tmp.7 = Load glob , tmp.8 = tmp.7 != 10, JumpIfZero(tmp.8, tmp.10)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.6): set(), tmp.7 = Load glob : set(), tmp.8 = tmp.7 != 10: set(), JumpIfZero(tmp.8, tmp.10): set()} ReachingCopies: set()
-3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
-4 4: [Label(tmp.10), Return 0] Pred: {2} Suc: {EXIT} iMap: {Label(tmp.10): set(), Return 0: set()} ReachingCopies: set()
-EXIT Exit: EXIT {1, 3, 4}
---------------IMAP for block 0-------------------
-tmp.3 = target([]) set()
-tmp.4 = tmp.3 != 10 set()
-JumpIfZero(tmp.4, tmp.6) set()
+tmp.5 tmp.5 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8110>
+tmp.6 tmp.6 int <typeChecker.LocalAttributes object at 0x7fdbf9cb3fe0>
+tmp.7 tmp.7 int <typeChecker.LocalAttributes object at 0x7fdbf9cb3d10>
+tmp.9 tmp.9 int <typeChecker.LocalAttributes object at 0x7fdbf9cc85f0>
+tmp.10 tmp.10 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8a40>
+tmp.11 tmp.11 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8980>
+tmp.12 tmp.12 int <typeChecker.LocalAttributes object at 0x7fdbf9cc87d0>
+tmp.13 tmp.13 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8260>
+tmp.14 tmp.14 int <typeChecker.LocalAttributes object at 0x7fdbf9cc83e0>
+tmp.15 tmp.15 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8cb0>
+tmp.16 tmp.16 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8c50>
+tmp.18 tmp.18 int <typeChecker.LocalAttributes object at 0x7fdbf9cc9040>
+tmp.19 tmp.19 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8e60>
+tmp.21 tmp.21 int <typeChecker.LocalAttributes object at 0x7fdbf9cc9490>
+--------------LIVE for block 9-------------------
+Return 0 set()
+Label(tmp.20) set()
 OLD ANNOT: set()
 NEW ANNOT: set()
---------------IMAP for block 1-------------------
-Return 1 set()
-OLD ANNOT: set()
-NEW ANNOT: set()
---------------IMAP for block 2-------------------
-Label(tmp.6) set()
-tmp.7 = Load glob  set()
-tmp.8 = tmp.7 != 10 set()
-JumpIfZero(tmp.8, tmp.10) set()
-OLD ANNOT: set()
-NEW ANNOT: set()
---------------IMAP for block 3-------------------
+--------------LIVE for block 8-------------------
 Return 2 set()
 OLD ANNOT: set()
 NEW ANNOT: set()
+--------------LIVE for block 7-------------------
+JumpIfZero(tmp.18, tmp.20) set()
+Copy tmp.19 = tmp.18 {tmp.18}
+tmp.18 = tmp.12 != 93 {tmp.18}
+Label(tmp.17) {tmp.12}
+OLD ANNOT: set()
+NEW ANNOT: {tmp.12}
+--------------LIVE for block 6-------------------
+Return 1 set()
+OLD ANNOT: set()
+NEW ANNOT: set()
+--------------LIVE for block 5-------------------
+JumpIfZero(tmp.15, tmp.17) {tmp.12}
+Copy tmp.16 = tmp.15 {tmp.12, tmp.15}
+tmp.15 = x.1 != 90 {tmp.12, tmp.15}
+OLD ANNOT: set()
+NEW ANNOT: {tmp.12, x.1}
+--------------LIVE for block 4-------------------
+JumpIfNotZero(tmp.13, tmp.4) {tmp.12, x.1}
+Copy tmp.14 = tmp.13 {tmp.12, tmp.13, x.1}
+tmp.13 = tmp.12 < 90 {tmp.12, tmp.13, x.1}
+OLD ANNOT: set()
+NEW ANNOT: {tmp.12, x.1}
+--------------LIVE for block 3-------------------
+Copy y.2 = tmp.12 {tmp.12, x.1}
+tmp.12 = tmp.11 + 3 {tmp.12, x.1}
+tmp.11 = putchar([x.1]) {tmp.11, x.1}
+<class 'tacGenerator.TAC_VariableValue'>
+Copy tmp.10 = x.1 {x.1}
+Label(tmp.8) {x.1}
+OLD ANNOT: set()
+NEW ANNOT: {x.1}
+--------------LIVE for block 2-------------------
+Copy x.1 = tmp.9 {x.1}
+tmp.9 = y.2 + 3 {tmp.9}
+OLD ANNOT: set()
+NEW ANNOT: {y.2}
+--------------LIVE for block 1-------------------
+JumpIfZero(tmp.6, tmp.8) {y.2, x.1}
+Copy tmp.7 = tmp.6 {tmp.6, y.2, x.1}
+tmp.6 = y.2 > 70 {tmp.6, y.2, x.1}
+Copy x.1 = tmp.5 {y.2, x.1}
+tmp.5 = y.2 + 2 {tmp.5, y.2}
+Label(tmp.4) {y.2}
+OLD ANNOT: set()
+NEW ANNOT: {y.2}
+ADD PREDECESSORS.
+--------------LIVE for block 0-------------------
+Copy y.2 = 65 {y.2}
+Copy x.1 = 5 set()
+OLD ANNOT: set()
+NEW ANNOT: set()
+--------------LIVE for block 4-------------------
+JumpIfNotZero(tmp.13, tmp.4) {tmp.12, y.2, x.1}
+Copy tmp.14 = tmp.13 {tmp.12, tmp.13, y.2, x.1}
+tmp.13 = tmp.12 < 90 {tmp.12, tmp.13, y.2, x.1}
+OLD ANNOT: {tmp.12, x.1}
+NEW ANNOT: {tmp.12, y.2, x.1}
+ADD PREDECESSORS.
+--------------LIVE for block 3-------------------
+Copy y.2 = tmp.12 {tmp.12, y.2, x.1}
+tmp.12 = tmp.11 + 3 {tmp.12, x.1}
+tmp.11 = putchar([x.1]) {tmp.11, x.1}
+<class 'tacGenerator.TAC_VariableValue'>
+Copy tmp.10 = x.1 {x.1}
+Label(tmp.8) {x.1}
+OLD ANNOT: {x.1}
+NEW ANNOT: {x.1}
+------------REMOVE DEAD STORE INSTRUCTIONS.-------------
+Copy x.1 = 5 set() for node 0
+Copy tmp.7 = tmp.6 {tmp.6, y.2, x.1} for node 1
+Copy tmp.10 = x.1 {x.1} for node 3
+Copy tmp.14 = tmp.13 {tmp.12, tmp.13, y.2, x.1} for node 4
+Copy tmp.16 = tmp.15 {tmp.12, tmp.15} for node 5
+Copy tmp.19 = tmp.18 {tmp.18} for node 7
+------------AFTER DEAD STORE REMOVAL.-------------
+ENTRY Entry: ENTRY {0}
+0 0: [Copy y.2 = 65] Pred: {ENTRY} Suc: {1} iMap: {Copy x.1 = 5: set(), Copy y.2 = 65: {y.2}} ReachingCopies: set()
+1 1: [Label(tmp.4), tmp.5 = y.2 + 2, Copy x.1 = tmp.5, tmp.6 = y.2 > 70, JumpIfZero(tmp.6, tmp.8)] Pred: {0, 4} Suc: {2, 3} iMap: {Label(tmp.4): {y.2}, tmp.5 = y.2 + 2: {tmp.5, y.2}, Copy x.1 = tmp.5: {y.2, x.1}, tmp.6 = y.2 > 70: {tmp.6, y.2, x.1}, Copy tmp.7 = tmp.6: {tmp.6, y.2, x.1}, JumpIfZero(tmp.6, tmp.8): {y.2, x.1}} ReachingCopies: {y.2}
+2 2: [tmp.9 = y.2 + 3, Copy x.1 = tmp.9] Pred: {1} Suc: {3} iMap: {tmp.9 = y.2 + 3: {tmp.9}, Copy x.1 = tmp.9: {x.1}} ReachingCopies: {y.2}
+3 3: [Label(tmp.8), tmp.11 = putchar([x.1]), tmp.12 = tmp.11 + 3, Copy y.2 = tmp.12] Pred: {1, 2} Suc: {4} iMap: {Label(tmp.8): {x.1}, Copy tmp.10 = x.1: {x.1}, tmp.11 = putchar([x.1]): {tmp.11, x.1}, tmp.12 = tmp.11 + 3: {tmp.12, x.1}, Copy y.2 = tmp.12: {tmp.12, y.2, x.1}} ReachingCopies: {x.1}
+4 4: [tmp.13 = tmp.12 < 90, JumpIfNotZero(tmp.13, tmp.4)] Pred: {3} Suc: {1, 5} iMap: {tmp.13 = tmp.12 < 90: {tmp.12, tmp.13, y.2, x.1}, Copy tmp.14 = tmp.13: {tmp.12, tmp.13, y.2, x.1}, JumpIfNotZero(tmp.13, tmp.4): {tmp.12, y.2, x.1}} ReachingCopies: {tmp.12, y.2, x.1}
+5 5: [tmp.15 = x.1 != 90, JumpIfZero(tmp.15, tmp.17)] Pred: {4} Suc: {6, 7} iMap: {tmp.15 = x.1 != 90: {tmp.12, tmp.15}, Copy tmp.16 = tmp.15: {tmp.12, tmp.15}, JumpIfZero(tmp.15, tmp.17): {tmp.12}} ReachingCopies: {tmp.12, x.1}
+6 6: [Return 1] Pred: {5} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
+7 7: [Label(tmp.17), tmp.18 = tmp.12 != 93, JumpIfZero(tmp.18, tmp.20)] Pred: {5} Suc: {8, 9} iMap: {Label(tmp.17): {tmp.12}, tmp.18 = tmp.12 != 93: {tmp.18}, Copy tmp.19 = tmp.18: {tmp.18}, JumpIfZero(tmp.18, tmp.20): set()} ReachingCopies: {tmp.12}
+8 8: [Return 2] Pred: {7} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
+9 9: [Label(tmp.20), Return 0] Pred: {7} Suc: {EXIT} iMap: {Label(tmp.20): set(), Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {8, 9, 6}
+--------------ADDRESS TAKEN ANALYSIS.------------------
+set()
+-------------CONSTANT FOLDING PASS.--------------------
+OLD LIST [Copy y.2 = 65, Label(tmp.4), tmp.5 = y.2 + 2, Copy x.1 = tmp.5, tmp.6 = y.2 > 70, JumpIfZero(tmp.6, tmp.8), tmp.9 = y.2 + 3, Copy x.1 = tmp.9, Label(tmp.8), tmp.11 = putchar([x.1]), tmp.12 = tmp.11 + 3, Copy y.2 = tmp.12, tmp.13 = tmp.12 < 90, JumpIfNotZero(tmp.13, tmp.4), tmp.15 = x.1 != 90, JumpIfZero(tmp.15, tmp.17), Return 1, Label(tmp.17), tmp.18 = tmp.12 != 93, JumpIfZero(tmp.18, tmp.20), Return 2, Label(tmp.20), Return 0]
+NEW LIST [Copy y.2 = 65, Label(tmp.4), tmp.5 = y.2 + 2, Copy x.1 = tmp.5, tmp.6 = y.2 > 70, JumpIfZero(tmp.6, tmp.8), tmp.9 = y.2 + 3, Copy x.1 = tmp.9, Label(tmp.8), tmp.11 = putchar([x.1]), tmp.12 = tmp.11 + 3, Copy y.2 = tmp.12, tmp.13 = tmp.12 < 90, JumpIfNotZero(tmp.13, tmp.4), tmp.15 = x.1 != 90, JumpIfZero(tmp.15, tmp.17), Return 1, Label(tmp.17), tmp.18 = tmp.12 != 93, JumpIfZero(tmp.18, tmp.20), Return 2, Label(tmp.20), Return 0]
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_LabelInst'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_JumpIfZeroInst'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_LabelInst'>
+<class 'tacGenerator.TAC_FunCallInstruction'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_CopyInstruction'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_JumpIfNotZeroInst'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_JumpIfZeroInst'>
+<class 'tacGenerator.TAC_returnInstruction'>
+<class 'tacGenerator.TAC_LabelInst'>
+<class 'tacGenerator.TAC_BinaryInstruction'>
+<class 'tacGenerator.TAC_JumpIfZeroInst'>
+<class 'tacGenerator.TAC_returnInstruction'>
+<class 'tacGenerator.TAC_LabelInst'>
+<class 'tacGenerator.TAC_returnInstruction'>
+Copy y.2 = 65
+Label(tmp.4)
+tmp.9 = y.2 + 3
+Label(tmp.8)
+tmp.15 = x.1 != 90
+Return 1
+Label(tmp.17)
+Return 2
+Label(tmp.20)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ENTRY Entry: ENTRY {0}
+0 0: [Copy y.2 = 65] Pred: {ENTRY} Suc: {1} iMap: {Copy y.2 = 65: set()} ReachingCopies: set()
+1 1: [Label(tmp.4), tmp.5 = y.2 + 2, Copy x.1 = tmp.5, tmp.6 = y.2 > 70, JumpIfZero(tmp.6, tmp.8)] Pred: {0, 3} Suc: {2, 3} iMap: {Label(tmp.4): set(), tmp.5 = y.2 + 2: set(), Copy x.1 = tmp.5: set(), tmp.6 = y.2 > 70: set(), JumpIfZero(tmp.6, tmp.8): set()} ReachingCopies: set()
+2 2: [tmp.9 = y.2 + 3, Copy x.1 = tmp.9] Pred: {1} Suc: {3} iMap: {tmp.9 = y.2 + 3: set(), Copy x.1 = tmp.9: set()} ReachingCopies: set()
+3 3: [Label(tmp.8), tmp.11 = putchar([x.1]), tmp.12 = tmp.11 + 3, Copy y.2 = tmp.12, tmp.13 = tmp.12 < 90, JumpIfNotZero(tmp.13, tmp.4)] Pred: {1, 2} Suc: {1, 4} iMap: {Label(tmp.8): set(), tmp.11 = putchar([x.1]): set(), tmp.12 = tmp.11 + 3: set(), Copy y.2 = tmp.12: set(), tmp.13 = tmp.12 < 90: set(), JumpIfNotZero(tmp.13, tmp.4): set()} ReachingCopies: set()
+4 4: [tmp.15 = x.1 != 90, JumpIfZero(tmp.15, tmp.17)] Pred: {3} Suc: {5, 6} iMap: {tmp.15 = x.1 != 90: set(), JumpIfZero(tmp.15, tmp.17): set()} ReachingCopies: set()
+5 5: [Return 1] Pred: {4} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
+6 6: [Label(tmp.17), tmp.18 = tmp.12 != 93, JumpIfZero(tmp.18, tmp.20)] Pred: {4} Suc: {8, 7} iMap: {Label(tmp.17): set(), tmp.18 = tmp.12 != 93: set(), JumpIfZero(tmp.18, tmp.20): set()} ReachingCopies: set()
+7 7: [Return 2] Pred: {6} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
+8 8: [Label(tmp.20), Return 0] Pred: {6} Suc: {EXIT} iMap: {Label(tmp.20): set(), Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {8, 5, 7}
+ENTRY Entry: ENTRY {0}
+0 0: [Copy y.2 = 65] Pred: {ENTRY} Suc: {1} iMap: {Copy y.2 = 65: set()} ReachingCopies: set()
+1 1: [Label(tmp.4), tmp.5 = y.2 + 2, Copy x.1 = tmp.5, tmp.6 = y.2 > 70, JumpIfZero(tmp.6, tmp.8)] Pred: {0, 3} Suc: {2, 3} iMap: {Label(tmp.4): set(), tmp.5 = y.2 + 2: set(), Copy x.1 = tmp.5: set(), tmp.6 = y.2 > 70: set(), JumpIfZero(tmp.6, tmp.8): set()} ReachingCopies: set()
+2 2: [tmp.9 = y.2 + 3, Copy x.1 = tmp.9] Pred: {1} Suc: {3} iMap: {tmp.9 = y.2 + 3: set(), Copy x.1 = tmp.9: set()} ReachingCopies: set()
+3 3: [Label(tmp.8), tmp.11 = putchar([x.1]), tmp.12 = tmp.11 + 3, Copy y.2 = tmp.12, tmp.13 = tmp.12 < 90, JumpIfNotZero(tmp.13, tmp.4)] Pred: {1, 2} Suc: {1, 4} iMap: {Label(tmp.8): set(), tmp.11 = putchar([x.1]): set(), tmp.12 = tmp.11 + 3: set(), Copy y.2 = tmp.12: set(), tmp.13 = tmp.12 < 90: set(), JumpIfNotZero(tmp.13, tmp.4): set()} ReachingCopies: set()
+4 4: [tmp.15 = x.1 != 90, JumpIfZero(tmp.15, tmp.17)] Pred: {3} Suc: {5, 6} iMap: {tmp.15 = x.1 != 90: set(), JumpIfZero(tmp.15, tmp.17): set()} ReachingCopies: set()
+5 5: [Return 1] Pred: {4} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
+6 6: [Label(tmp.17), tmp.18 = tmp.12 != 93, JumpIfZero(tmp.18, tmp.20)] Pred: {4} Suc: {8, 7} iMap: {Label(tmp.17): set(), tmp.18 = tmp.12 != 93: set(), JumpIfZero(tmp.18, tmp.20): set()} ReachingCopies: set()
+7 7: [Return 2] Pred: {6} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
+8 8: [Label(tmp.20), Return 0] Pred: {6} Suc: {EXIT} iMap: {Label(tmp.20): set(), Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {8, 5, 7}
+ENTRY Entry: ENTRY {0}
+0 0: [Copy y.2 = 65] Pred: {ENTRY} Suc: {1} iMap: {Copy y.2 = 65: set()} ReachingCopies: set()
+1 1: [Label(tmp.4), tmp.5 = y.2 + 2, Copy x.1 = tmp.5, tmp.6 = y.2 > 70, JumpIfZero(tmp.6, tmp.8)] Pred: {0, 3} Suc: {2, 3} iMap: {Label(tmp.4): set(), tmp.5 = y.2 + 2: set(), Copy x.1 = tmp.5: set(), tmp.6 = y.2 > 70: set(), JumpIfZero(tmp.6, tmp.8): set()} ReachingCopies: set()
+2 2: [tmp.9 = y.2 + 3, Copy x.1 = tmp.9] Pred: {1} Suc: {3} iMap: {tmp.9 = y.2 + 3: set(), Copy x.1 = tmp.9: set()} ReachingCopies: set()
+3 3: [Label(tmp.8), tmp.11 = putchar([x.1]), tmp.12 = tmp.11 + 3, Copy y.2 = tmp.12, tmp.13 = tmp.12 < 90, JumpIfNotZero(tmp.13, tmp.4)] Pred: {1, 2} Suc: {1, 4} iMap: {Label(tmp.8): set(), tmp.11 = putchar([x.1]): set(), tmp.12 = tmp.11 + 3: set(), Copy y.2 = tmp.12: set(), tmp.13 = tmp.12 < 90: set(), JumpIfNotZero(tmp.13, tmp.4): set()} ReachingCopies: set()
+4 4: [tmp.15 = x.1 != 90, JumpIfZero(tmp.15, tmp.17)] Pred: {3} Suc: {5, 6} iMap: {tmp.15 = x.1 != 90: set(), JumpIfZero(tmp.15, tmp.17): set()} ReachingCopies: set()
+5 5: [Return 1] Pred: {4} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
+6 6: [Label(tmp.17), tmp.18 = tmp.12 != 93, JumpIfZero(tmp.18, tmp.20)] Pred: {4} Suc: {8, 7} iMap: {Label(tmp.17): set(), tmp.18 = tmp.12 != 93: set(), JumpIfZero(tmp.18, tmp.20): set()} ReachingCopies: set()
+7 7: [Return 2] Pred: {6} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
+8 8: [Label(tmp.20), Return 0] Pred: {6} Suc: {EXIT} iMap: {Label(tmp.20): set(), Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {8, 5, 7}
+ENTRY Entry: ENTRY {0}
+0 0: [Copy y.2 = 65] Pred: {ENTRY} Suc: {1} iMap: {Copy y.2 = 65: set()} ReachingCopies: set()
+1 1: [Label(tmp.4), tmp.5 = y.2 + 2, Copy x.1 = tmp.5, tmp.6 = y.2 > 70, JumpIfZero(tmp.6, tmp.8)] Pred: {0, 3} Suc: {2, 3} iMap: {Label(tmp.4): set(), tmp.5 = y.2 + 2: set(), Copy x.1 = tmp.5: set(), tmp.6 = y.2 > 70: set(), JumpIfZero(tmp.6, tmp.8): set()} ReachingCopies: set()
+2 2: [tmp.9 = y.2 + 3, Copy x.1 = tmp.9] Pred: {1} Suc: {3} iMap: {tmp.9 = y.2 + 3: set(), Copy x.1 = tmp.9: set()} ReachingCopies: set()
+3 3: [Label(tmp.8), tmp.11 = putchar([x.1]), tmp.12 = tmp.11 + 3, Copy y.2 = tmp.12, tmp.13 = tmp.12 < 90, JumpIfNotZero(tmp.13, tmp.4)] Pred: {1, 2} Suc: {1, 4} iMap: {Label(tmp.8): set(), tmp.11 = putchar([x.1]): set(), tmp.12 = tmp.11 + 3: set(), Copy y.2 = tmp.12: set(), tmp.13 = tmp.12 < 90: set(), JumpIfNotZero(tmp.13, tmp.4): set()} ReachingCopies: set()
+4 4: [tmp.15 = x.1 != 90, JumpIfZero(tmp.15, tmp.17)] Pred: {3} Suc: {5, 6} iMap: {tmp.15 = x.1 != 90: set(), JumpIfZero(tmp.15, tmp.17): set()} ReachingCopies: set()
+5 5: [Return 1] Pred: {4} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
+6 6: [Label(tmp.17), tmp.18 = tmp.12 != 93, JumpIfZero(tmp.18, tmp.20)] Pred: {4} Suc: {8, 7} iMap: {Label(tmp.17): set(), tmp.18 = tmp.12 != 93: set(), JumpIfZero(tmp.18, tmp.20): set()} ReachingCopies: set()
+7 7: [Return 2] Pred: {6} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
+8 8: [Label(tmp.20), Return 0] Pred: {6} Suc: {EXIT} iMap: {Label(tmp.20): set(), Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {8, 5, 7}
+--------------IMAP for block 0-------------------
+Copy y.2 = 65 set()
+<class 'parser.ConstInt'>
+OLD ANNOT: {Copy x.1 = tmp.5, Copy x.1 = tmp.9, Copy y.2 = 65, Copy y.2 = tmp.12}
+NEW ANNOT: {Copy y.2 = 65}
+ADD SUCCESSORS.
+--------------IMAP for block 1-------------------
+Label(tmp.4) {Copy y.2 = 65}
+tmp.5 = y.2 + 2 {Copy y.2 = 65}
+Copy x.1 = tmp.5 {Copy y.2 = 65}
+tmp.6 = y.2 > 70 {Copy x.1 = tmp.5, Copy y.2 = 65}
+JumpIfZero(tmp.6, tmp.8) {Copy x.1 = tmp.5, Copy y.2 = 65}
+OLD ANNOT: {Copy x.1 = tmp.5, Copy x.1 = tmp.9, Copy y.2 = 65, Copy y.2 = tmp.12}
+NEW ANNOT: {Copy x.1 = tmp.5, Copy y.2 = 65}
+ADD SUCCESSORS.
+--------------IMAP for block 2-------------------
+tmp.9 = y.2 + 3 {Copy x.1 = tmp.5, Copy y.2 = 65}
+Copy x.1 = tmp.9 {Copy x.1 = tmp.5, Copy y.2 = 65}
+OLD ANNOT: {Copy x.1 = tmp.5, Copy x.1 = tmp.9, Copy y.2 = 65, Copy y.2 = tmp.12}
+NEW ANNOT: {Copy x.1 = tmp.9, Copy y.2 = 65}
+ADD SUCCESSORS.
+--------------IMAP for block 3-------------------
+Label(tmp.8) {Copy y.2 = 65}
+tmp.11 = putchar([x.1]) {Copy y.2 = 65}
+tmp.12 = tmp.11 + 3 {Copy y.2 = 65}
+Copy y.2 = tmp.12 {Copy y.2 = 65}
+tmp.13 = tmp.12 < 90 {Copy y.2 = tmp.12}
+JumpIfNotZero(tmp.13, tmp.4) {Copy y.2 = tmp.12}
+OLD ANNOT: {Copy x.1 = tmp.5, Copy x.1 = tmp.9, Copy y.2 = 65, Copy y.2 = tmp.12}
+NEW ANNOT: {Copy y.2 = tmp.12}
+ADD SUCCESSORS.
 --------------IMAP for block 4-------------------
-Label(tmp.10) set()
+tmp.15 = x.1 != 90 {Copy y.2 = tmp.12}
+JumpIfZero(tmp.15, tmp.17) {Copy y.2 = tmp.12}
+OLD ANNOT: {Copy x.1 = tmp.5, Copy x.1 = tmp.9, Copy y.2 = 65, Copy y.2 = tmp.12}
+NEW ANNOT: {Copy y.2 = tmp.12}
+ADD SUCCESSORS.
+--------------IMAP for block 5-------------------
+Return 1 {Copy y.2 = tmp.12}
+OLD ANNOT: {Copy x.1 = tmp.5, Copy x.1 = tmp.9, Copy y.2 = 65, Copy y.2 = tmp.12}
+NEW ANNOT: {Copy y.2 = tmp.12}
+ADD SUCCESSORS.
+--------------IMAP for block 6-------------------
+Label(tmp.17) {Copy y.2 = tmp.12}
+tmp.18 = tmp.12 != 93 {Copy y.2 = tmp.12}
+JumpIfZero(tmp.18, tmp.20) {Copy y.2 = tmp.12}
+OLD ANNOT: {Copy x.1 = tmp.5, Copy x.1 = tmp.9, Copy y.2 = 65, Copy y.2 = tmp.12}
+NEW ANNOT: {Copy y.2 = tmp.12}
+ADD SUCCESSORS.
+--------------IMAP for block 7-------------------
+Return 2 {Copy y.2 = tmp.12}
+OLD ANNOT: {Copy x.1 = tmp.5, Copy x.1 = tmp.9, Copy y.2 = 65, Copy y.2 = tmp.12}
+NEW ANNOT: {Copy y.2 = tmp.12}
+ADD SUCCESSORS.
+--------------IMAP for block 8-------------------
+Label(tmp.20) {Copy y.2 = tmp.12}
+Return 0 {Copy y.2 = tmp.12}
+OLD ANNOT: {Copy x.1 = tmp.5, Copy x.1 = tmp.9, Copy y.2 = 65, Copy y.2 = tmp.12}
+NEW ANNOT: {Copy y.2 = tmp.12}
+ADD SUCCESSORS.
+--------------IMAP for block 1-------------------
+Label(tmp.4) set()
+tmp.5 = y.2 + 2 set()
+Copy x.1 = tmp.5 set()
+tmp.6 = y.2 > 70 {Copy x.1 = tmp.5}
+JumpIfZero(tmp.6, tmp.8) {Copy x.1 = tmp.5}
+OLD ANNOT: {Copy x.1 = tmp.5, Copy y.2 = 65}
+NEW ANNOT: {Copy x.1 = tmp.5}
+ADD SUCCESSORS.
+--------------IMAP for block 2-------------------
+tmp.9 = y.2 + 3 {Copy x.1 = tmp.5}
+Copy x.1 = tmp.9 {Copy x.1 = tmp.5}
+OLD ANNOT: {Copy x.1 = tmp.9, Copy y.2 = 65}
+NEW ANNOT: {Copy x.1 = tmp.9}
+ADD SUCCESSORS.
+--------------IMAP for block 3-------------------
+Label(tmp.8) set()
+tmp.11 = putchar([x.1]) set()
+tmp.12 = tmp.11 + 3 set()
+Copy y.2 = tmp.12 set()
+tmp.13 = tmp.12 < 90 {Copy y.2 = tmp.12}
+JumpIfNotZero(tmp.13, tmp.4) {Copy y.2 = tmp.12}
+OLD ANNOT: {Copy y.2 = tmp.12}
+NEW ANNOT: {Copy y.2 = tmp.12}
+------------REPLACE INSTRUCTIONS WITH REACHING COPIES.-------------
+ENTRY Entry: ENTRY {0}
+0 0: [Copy y.2 = 65] Pred: {ENTRY} Suc: {1} iMap: {Copy y.2 = 65: set()} ReachingCopies: {Copy y.2 = 65}
+1 1: [Label(tmp.4), tmp.5 = y.2 + 2, Copy x.1 = tmp.5, tmp.6 = y.2 > 70, JumpIfZero(tmp.6, tmp.8)] Pred: {0, 3} Suc: {2, 3} iMap: {Label(tmp.4): set(), tmp.5 = y.2 + 2: set(), Copy x.1 = tmp.5: set(), tmp.6 = y.2 > 70: {Copy x.1 = tmp.5}, JumpIfZero(tmp.6, tmp.8): {Copy x.1 = tmp.5}} ReachingCopies: {Copy x.1 = tmp.5}
+2 2: [tmp.9 = y.2 + 3, Copy x.1 = tmp.9] Pred: {1} Suc: {3} iMap: {tmp.9 = y.2 + 3: {Copy x.1 = tmp.5}, Copy x.1 = tmp.9: {Copy x.1 = tmp.5}} ReachingCopies: {Copy x.1 = tmp.9}
+3 3: [Label(tmp.8), tmp.11 = putchar([x.1]), tmp.12 = tmp.11 + 3, Copy y.2 = tmp.12, tmp.13 = tmp.12 < 90, JumpIfNotZero(tmp.13, tmp.4)] Pred: {1, 2} Suc: {1, 4} iMap: {Label(tmp.8): set(), tmp.11 = putchar([x.1]): set(), tmp.12 = tmp.11 + 3: set(), Copy y.2 = tmp.12: set(), tmp.13 = tmp.12 < 90: {Copy y.2 = tmp.12}, JumpIfNotZero(tmp.13, tmp.4): {Copy y.2 = tmp.12}} ReachingCopies: {Copy y.2 = tmp.12}
+4 4: [tmp.15 = x.1 != 90, JumpIfZero(tmp.15, tmp.17)] Pred: {3} Suc: {5, 6} iMap: {tmp.15 = x.1 != 90: {Copy y.2 = tmp.12}, JumpIfZero(tmp.15, tmp.17): {Copy y.2 = tmp.12}} ReachingCopies: {Copy y.2 = tmp.12}
+5 5: [Return 1] Pred: {4} Suc: {EXIT} iMap: {Return 1: {Copy y.2 = tmp.12}} ReachingCopies: {Copy y.2 = tmp.12}
+6 6: [Label(tmp.17), tmp.18 = tmp.12 != 93, JumpIfZero(tmp.18, tmp.20)] Pred: {4} Suc: {8, 7} iMap: {Label(tmp.17): {Copy y.2 = tmp.12}, tmp.18 = tmp.12 != 93: {Copy y.2 = tmp.12}, JumpIfZero(tmp.18, tmp.20): {Copy y.2 = tmp.12}} ReachingCopies: {Copy y.2 = tmp.12}
+7 7: [Return 2] Pred: {6} Suc: {EXIT} iMap: {Return 2: {Copy y.2 = tmp.12}} ReachingCopies: {Copy y.2 = tmp.12}
+8 8: [Label(tmp.20), Return 0] Pred: {6} Suc: {EXIT} iMap: {Label(tmp.20): {Copy y.2 = tmp.12}, Return 0: {Copy y.2 = tmp.12}} ReachingCopies: {Copy y.2 = tmp.12}
+EXIT Exit: EXIT {8, 5, 7}
+--------------ADDING ALL STATIC VARIABLES.------------------
+putchar putchar FunType: ParamTypes: [int] Return Type: int Defined: False Global: True
+target target FunType: ParamTypes: [] Return Type: int Defined: True Global: True
+x.1 x.1 int <typeChecker.LocalAttributes object at 0x7fdbf9cb2030>
+y.2 y.2 int <typeChecker.LocalAttributes object at 0x7fdbf9cb21e0>
+main main FunType: ParamTypes: [] Return Type: int Defined: True Global: True
+tmp.5 tmp.5 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8110>
+tmp.6 tmp.6 int <typeChecker.LocalAttributes object at 0x7fdbf9cb3fe0>
+tmp.7 tmp.7 int <typeChecker.LocalAttributes object at 0x7fdbf9cb3d10>
+tmp.9 tmp.9 int <typeChecker.LocalAttributes object at 0x7fdbf9cc85f0>
+tmp.10 tmp.10 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8a40>
+tmp.11 tmp.11 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8980>
+tmp.12 tmp.12 int <typeChecker.LocalAttributes object at 0x7fdbf9cc87d0>
+tmp.13 tmp.13 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8260>
+tmp.14 tmp.14 int <typeChecker.LocalAttributes object at 0x7fdbf9cc83e0>
+tmp.15 tmp.15 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8cb0>
+tmp.16 tmp.16 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8c50>
+tmp.18 tmp.18 int <typeChecker.LocalAttributes object at 0x7fdbf9cc9040>
+tmp.19 tmp.19 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8e60>
+tmp.21 tmp.21 int <typeChecker.LocalAttributes object at 0x7fdbf9cc9490>
+--------------LIVE for block 8-------------------
 Return 0 set()
+Label(tmp.20) set()
+OLD ANNOT: set()
+NEW ANNOT: set()
+--------------LIVE for block 7-------------------
+Return 2 set()
+OLD ANNOT: set()
+NEW ANNOT: set()
+--------------LIVE for block 6-------------------
+JumpIfZero(tmp.18, tmp.20) set()
+tmp.18 = tmp.12 != 93 {tmp.18}
+Label(tmp.17) {tmp.12}
+OLD ANNOT: set()
+NEW ANNOT: {tmp.12}
+--------------LIVE for block 5-------------------
+Return 1 set()
+OLD ANNOT: set()
+NEW ANNOT: set()
+--------------LIVE for block 4-------------------
+JumpIfZero(tmp.15, tmp.17) {tmp.12}
+tmp.15 = x.1 != 90 {tmp.12, tmp.15}
+OLD ANNOT: set()
+NEW ANNOT: {tmp.12, x.1}
+--------------LIVE for block 3-------------------
+JumpIfNotZero(tmp.13, tmp.4) {tmp.12, x.1}
+tmp.13 = tmp.12 < 90 {tmp.12, tmp.13, x.1}
+Copy y.2 = tmp.12 {tmp.12, x.1}
+tmp.12 = tmp.11 + 3 {tmp.12, x.1}
+tmp.11 = putchar([x.1]) {tmp.11, x.1}
+<class 'tacGenerator.TAC_VariableValue'>
+Label(tmp.8) {x.1}
+OLD ANNOT: set()
+NEW ANNOT: {x.1}
+--------------LIVE for block 2-------------------
+Copy x.1 = tmp.9 {x.1}
+tmp.9 = y.2 + 3 {tmp.9}
+OLD ANNOT: set()
+NEW ANNOT: {y.2}
+--------------LIVE for block 1-------------------
+JumpIfZero(tmp.6, tmp.8) {y.2, x.1}
+tmp.6 = y.2 > 70 {tmp.6, y.2, x.1}
+Copy x.1 = tmp.5 {y.2, x.1}
+tmp.5 = y.2 + 2 {tmp.5, y.2}
+Label(tmp.4) {y.2}
+OLD ANNOT: set()
+NEW ANNOT: {y.2}
+ADD PREDECESSORS.
+--------------LIVE for block 0-------------------
+Copy y.2 = 65 {y.2}
+OLD ANNOT: set()
+NEW ANNOT: set()
+--------------LIVE for block 3-------------------
+JumpIfNotZero(tmp.13, tmp.4) {tmp.12, y.2, x.1}
+tmp.13 = tmp.12 < 90 {tmp.12, tmp.13, y.2, x.1}
+Copy y.2 = tmp.12 {tmp.12, y.2, x.1}
+tmp.12 = tmp.11 + 3 {tmp.12, x.1}
+tmp.11 = putchar([x.1]) {tmp.11, x.1}
+<class 'tacGenerator.TAC_VariableValue'>
+Label(tmp.8) {x.1}
+OLD ANNOT: {x.1}
+NEW ANNOT: {x.1}
+------------REMOVE DEAD STORE INSTRUCTIONS.-------------
+------------AFTER DEAD STORE REMOVAL.-------------
+ENTRY Entry: ENTRY {0}
+0 0: [Copy y.2 = 65] Pred: {ENTRY} Suc: {1} iMap: {Copy y.2 = 65: {y.2}} ReachingCopies: set()
+1 1: [Label(tmp.4), tmp.5 = y.2 + 2, Copy x.1 = tmp.5, tmp.6 = y.2 > 70, JumpIfZero(tmp.6, tmp.8)] Pred: {0, 3} Suc: {2, 3} iMap: {Label(tmp.4): {y.2}, tmp.5 = y.2 + 2: {tmp.5, y.2}, Copy x.1 = tmp.5: {y.2, x.1}, tmp.6 = y.2 > 70: {tmp.6, y.2, x.1}, JumpIfZero(tmp.6, tmp.8): {y.2, x.1}} ReachingCopies: {y.2}
+2 2: [tmp.9 = y.2 + 3, Copy x.1 = tmp.9] Pred: {1} Suc: {3} iMap: {tmp.9 = y.2 + 3: {tmp.9}, Copy x.1 = tmp.9: {x.1}} ReachingCopies: {y.2}
+3 3: [Label(tmp.8), tmp.11 = putchar([x.1]), tmp.12 = tmp.11 + 3, Copy y.2 = tmp.12, tmp.13 = tmp.12 < 90, JumpIfNotZero(tmp.13, tmp.4)] Pred: {1, 2} Suc: {1, 4} iMap: {Label(tmp.8): {x.1}, tmp.11 = putchar([x.1]): {tmp.11, x.1}, tmp.12 = tmp.11 + 3: {tmp.12, x.1}, Copy y.2 = tmp.12: {tmp.12, y.2, x.1}, tmp.13 = tmp.12 < 90: {tmp.12, tmp.13, y.2, x.1}, JumpIfNotZero(tmp.13, tmp.4): {tmp.12, y.2, x.1}} ReachingCopies: {x.1}
+4 4: [tmp.15 = x.1 != 90, JumpIfZero(tmp.15, tmp.17)] Pred: {3} Suc: {5, 6} iMap: {tmp.15 = x.1 != 90: {tmp.12, tmp.15}, JumpIfZero(tmp.15, tmp.17): {tmp.12}} ReachingCopies: {tmp.12, x.1}
+5 5: [Return 1] Pred: {4} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
+6 6: [Label(tmp.17), tmp.18 = tmp.12 != 93, JumpIfZero(tmp.18, tmp.20)] Pred: {4} Suc: {8, 7} iMap: {Label(tmp.17): {tmp.12}, tmp.18 = tmp.12 != 93: {tmp.18}, JumpIfZero(tmp.18, tmp.20): set()} ReachingCopies: {tmp.12}
+7 7: [Return 2] Pred: {6} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
+8 8: [Label(tmp.20), Return 0] Pred: {6} Suc: {EXIT} iMap: {Label(tmp.20): set(), Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {8, 5, 7}
+OPTIMIZING FUNCTION Function: main ([]) instructions:[tmp.21 = target([]), Return tmp.21, Return 0]
+--------------ADDRESS TAKEN ANALYSIS.------------------
+set()
+-------------CONSTANT FOLDING PASS.--------------------
+OLD LIST [tmp.21 = target([]), Return tmp.21, Return 0]
+NEW LIST [tmp.21 = target([]), Return tmp.21, Return 0]
+<class 'tacGenerator.TAC_FunCallInstruction'>
+<class 'tacGenerator.TAC_returnInstruction'>
+<class 'tacGenerator.TAC_returnInstruction'>
+tmp.21 = target([])
+Return 0
+
+
+
+ENTRY Entry: ENTRY {0}
+0 0: [tmp.21 = target([]), Return tmp.21] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.21 = target([]): set(), Return tmp.21: set()} ReachingCopies: set()
+1 1: [Return 0] Pred: set() Suc: {EXIT} iMap: {Return 0: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0, 1}
+ENTRY Entry: ENTRY {0}
+0 0: [tmp.21 = target([]), Return tmp.21] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.21 = target([]): set(), Return tmp.21: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0}
+ENTRY Entry: ENTRY {0}
+0 0: [tmp.21 = target([]), Return tmp.21] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.21 = target([]): set(), Return tmp.21: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0}
+ENTRY Entry: ENTRY {0}
+0 0: [tmp.21 = target([]), Return tmp.21] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.21 = target([]): set(), Return tmp.21: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0}
+--------------IMAP for block 0-------------------
+tmp.21 = target([]) set()
+Return tmp.21 set()
 OLD ANNOT: set()
 NEW ANNOT: set()
 ------------REPLACE INSTRUCTIONS WITH REACHING COPIES.-------------
 ENTRY Entry: ENTRY {0}
-0 0: [tmp.3 = target([]), tmp.4 = tmp.3 != 10, JumpIfZero(tmp.4, tmp.6)] Pred: {ENTRY} Suc: {1, 2} iMap: {tmp.3 = target([]): set(), tmp.4 = tmp.3 != 10: set(), JumpIfZero(tmp.4, tmp.6): set()} ReachingCopies: set()
-1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: set()} ReachingCopies: set()
-2 2: [Label(tmp.6), tmp.7 = Load glob , tmp.8 = tmp.7 != 10, JumpIfZero(tmp.8, tmp.10)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.6): set(), tmp.7 = Load glob : set(), tmp.8 = tmp.7 != 10: set(), JumpIfZero(tmp.8, tmp.10): set()} ReachingCopies: set()
-3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: set()} ReachingCopies: set()
-4 4: [Label(tmp.10), Return 0] Pred: {2} Suc: {EXIT} iMap: {Label(tmp.10): set(), Return 0: set()} ReachingCopies: set()
-EXIT Exit: EXIT {1, 3, 4}
+0 0: [tmp.21 = target([]), Return tmp.21] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.21 = target([]): set(), Return tmp.21: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0}
 --------------ADDING ALL STATIC VARIABLES.------------------
-glob glob Pint InitialVal: <typeChecker.Tentative object at 0x7fbf01a091f0> Global: True
-i i int InitialVal: InitialList: [c_int(10)] Global: True
+putchar putchar FunType: ParamTypes: [int] Return Type: int Defined: False Global: True
 target target FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-loc.0 loc.0 Pint <typeChecker.LocalAttributes object at 0x7fbf01a09580>
+x.1 x.1 int <typeChecker.LocalAttributes object at 0x7fdbf9cb2030>
+y.2 y.2 int <typeChecker.LocalAttributes object at 0x7fdbf9cb21e0>
 main main FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-tmp.1 tmp.1 Pint <typeChecker.LocalAttributes object at 0x7fbf01af5160>
-tmp.2 tmp.2 int <typeChecker.LocalAttributes object at 0x7fbf01a0ac00>
-tmp.3 tmp.3 int <typeChecker.LocalAttributes object at 0x7fbf01a0b1d0>
-tmp.4 tmp.4 int <typeChecker.LocalAttributes object at 0x7fbf01a0b080>
-tmp.5 tmp.5 int <typeChecker.LocalAttributes object at 0x7fbf01a0b020>
-tmp.7 tmp.7 int <typeChecker.LocalAttributes object at 0x7fbf01a0b560>
-tmp.8 tmp.8 int <typeChecker.LocalAttributes object at 0x7fbf01a0b650>
-tmp.9 tmp.9 int <typeChecker.LocalAttributes object at 0x7fbf01a0b290>
---------------LIVE for block 4-------------------
-Return 0 {glob, i}
-Label(tmp.10) {glob, i}
-OLD ANNOT: set()
-NEW ANNOT: {glob, i}
---------------LIVE for block 3-------------------
-Return 2 {glob, i}
-OLD ANNOT: set()
-NEW ANNOT: {glob, i}
---------------LIVE for block 2-------------------
-JumpIfZero(tmp.8, tmp.10) {glob, i}
-tmp.8 = tmp.7 != 10 {glob, i, tmp.8}
-tmp.7 = Load glob  {tmp.7, glob, i}
-Label(tmp.6) {glob, i}
-OLD ANNOT: set()
-NEW ANNOT: {glob, i}
---------------LIVE for block 1-------------------
-Return 1 {glob, i}
-OLD ANNOT: set()
-NEW ANNOT: {glob, i}
+tmp.5 tmp.5 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8110>
+tmp.6 tmp.6 int <typeChecker.LocalAttributes object at 0x7fdbf9cb3fe0>
+tmp.7 tmp.7 int <typeChecker.LocalAttributes object at 0x7fdbf9cb3d10>
+tmp.9 tmp.9 int <typeChecker.LocalAttributes object at 0x7fdbf9cc85f0>
+tmp.10 tmp.10 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8a40>
+tmp.11 tmp.11 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8980>
+tmp.12 tmp.12 int <typeChecker.LocalAttributes object at 0x7fdbf9cc87d0>
+tmp.13 tmp.13 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8260>
+tmp.14 tmp.14 int <typeChecker.LocalAttributes object at 0x7fdbf9cc83e0>
+tmp.15 tmp.15 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8cb0>
+tmp.16 tmp.16 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8c50>
+tmp.18 tmp.18 int <typeChecker.LocalAttributes object at 0x7fdbf9cc9040>
+tmp.19 tmp.19 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8e60>
+tmp.21 tmp.21 int <typeChecker.LocalAttributes object at 0x7fdbf9cc9490>
 --------------LIVE for block 0-------------------
-JumpIfZero(tmp.4, tmp.6) {glob, i}
-tmp.4 = tmp.3 != 10 {glob, tmp.4, i}
-tmp.3 = target([]) {glob, tmp.3, i}
+Return tmp.21 set()
+tmp.21 = target([]) {tmp.21}
 OLD ANNOT: set()
-NEW ANNOT: {glob, i}
+NEW ANNOT: set()
 ------------REMOVE DEAD STORE INSTRUCTIONS.-------------
 ------------AFTER DEAD STORE REMOVAL.-------------
 ENTRY Entry: ENTRY {0}
-0 0: [tmp.3 = target([]), tmp.4 = tmp.3 != 10, JumpIfZero(tmp.4, tmp.6)] Pred: {ENTRY} Suc: {1, 2} iMap: {tmp.3 = target([]): {glob, tmp.3, i}, tmp.4 = tmp.3 != 10: {glob, tmp.4, i}, JumpIfZero(tmp.4, tmp.6): {glob, i}} ReachingCopies: {glob, i}
-1 1: [Return 1] Pred: {0} Suc: {EXIT} iMap: {Return 1: {glob, i}} ReachingCopies: {glob, i}
-2 2: [Label(tmp.6), tmp.7 = Load glob , tmp.8 = tmp.7 != 10, JumpIfZero(tmp.8, tmp.10)] Pred: {0} Suc: {3, 4} iMap: {Label(tmp.6): {glob, i}, tmp.7 = Load glob : {tmp.7, glob, i}, tmp.8 = tmp.7 != 10: {glob, i, tmp.8}, JumpIfZero(tmp.8, tmp.10): {glob, i}} ReachingCopies: {glob, i}
-3 3: [Return 2] Pred: {2} Suc: {EXIT} iMap: {Return 2: {glob, i}} ReachingCopies: {glob, i}
-4 4: [Label(tmp.10), Return 0] Pred: {2} Suc: {EXIT} iMap: {Label(tmp.10): {glob, i}, Return 0: {glob, i}} ReachingCopies: {glob, i}
-EXIT Exit: EXIT {1, 3, 4}
+0 0: [tmp.21 = target([]), Return tmp.21] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.21 = target([]): {tmp.21}, Return tmp.21: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0}
+--------------ADDRESS TAKEN ANALYSIS.------------------
+set()
+-------------CONSTANT FOLDING PASS.--------------------
+OLD LIST [tmp.21 = target([]), Return tmp.21]
+NEW LIST [tmp.21 = target([]), Return tmp.21]
+<class 'tacGenerator.TAC_FunCallInstruction'>
+<class 'tacGenerator.TAC_returnInstruction'>
+tmp.21 = target([])
+
+
+ENTRY Entry: ENTRY {0}
+0 0: [tmp.21 = target([]), Return tmp.21] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.21 = target([]): set(), Return tmp.21: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0}
+ENTRY Entry: ENTRY {0}
+0 0: [tmp.21 = target([]), Return tmp.21] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.21 = target([]): set(), Return tmp.21: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0}
+ENTRY Entry: ENTRY {0}
+0 0: [tmp.21 = target([]), Return tmp.21] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.21 = target([]): set(), Return tmp.21: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0}
+ENTRY Entry: ENTRY {0}
+0 0: [tmp.21 = target([]), Return tmp.21] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.21 = target([]): set(), Return tmp.21: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0}
+--------------IMAP for block 0-------------------
+tmp.21 = target([]) set()
+Return tmp.21 set()
+OLD ANNOT: set()
+NEW ANNOT: set()
+------------REPLACE INSTRUCTIONS WITH REACHING COPIES.-------------
+ENTRY Entry: ENTRY {0}
+0 0: [tmp.21 = target([]), Return tmp.21] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.21 = target([]): set(), Return tmp.21: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0}
+--------------ADDING ALL STATIC VARIABLES.------------------
+putchar putchar FunType: ParamTypes: [int] Return Type: int Defined: False Global: True
+target target FunType: ParamTypes: [] Return Type: int Defined: True Global: True
+x.1 x.1 int <typeChecker.LocalAttributes object at 0x7fdbf9cb2030>
+y.2 y.2 int <typeChecker.LocalAttributes object at 0x7fdbf9cb21e0>
+main main FunType: ParamTypes: [] Return Type: int Defined: True Global: True
+tmp.5 tmp.5 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8110>
+tmp.6 tmp.6 int <typeChecker.LocalAttributes object at 0x7fdbf9cb3fe0>
+tmp.7 tmp.7 int <typeChecker.LocalAttributes object at 0x7fdbf9cb3d10>
+tmp.9 tmp.9 int <typeChecker.LocalAttributes object at 0x7fdbf9cc85f0>
+tmp.10 tmp.10 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8a40>
+tmp.11 tmp.11 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8980>
+tmp.12 tmp.12 int <typeChecker.LocalAttributes object at 0x7fdbf9cc87d0>
+tmp.13 tmp.13 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8260>
+tmp.14 tmp.14 int <typeChecker.LocalAttributes object at 0x7fdbf9cc83e0>
+tmp.15 tmp.15 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8cb0>
+tmp.16 tmp.16 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8c50>
+tmp.18 tmp.18 int <typeChecker.LocalAttributes object at 0x7fdbf9cc9040>
+tmp.19 tmp.19 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8e60>
+tmp.21 tmp.21 int <typeChecker.LocalAttributes object at 0x7fdbf9cc9490>
+--------------LIVE for block 0-------------------
+Return tmp.21 set()
+tmp.21 = target([]) {tmp.21}
+OLD ANNOT: set()
+NEW ANNOT: set()
+------------REMOVE DEAD STORE INSTRUCTIONS.-------------
+------------AFTER DEAD STORE REMOVAL.-------------
+ENTRY Entry: ENTRY {0}
+0 0: [tmp.21 = target([]), Return tmp.21] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.21 = target([]): {tmp.21}, Return tmp.21: set()} ReachingCopies: set()
+EXIT Exit: EXIT {0}
 
 TAC Program:[Function: target ([]) instructions:[
-	tmp.1 = Get Address i , CopyToOffset(loc.0 + 0) = tmp.1 , 
-	Copy glob = loc.0, 
+	Copy y.2 = 65, 
+	Label(tmp.4), 
+	tmp.5 = y.2 + 2, 
+	Copy x.1 = tmp.5, 
+	tmp.6 = y.2 > 70, 
+	JumpIfZero(tmp.6, tmp.8), 
+	tmp.9 = y.2 + 3, 
+	Copy x.1 = tmp.9, 
+	Label(tmp.8), 
+	tmp.11 = putchar([x.1]), 
+	tmp.12 = tmp.11 + 3, 
+	Copy y.2 = tmp.12, 
+	tmp.13 = tmp.12 < 90, 
+	JumpIfNotZero(tmp.13, tmp.4), 
 	
-	tmp.2 = Load loc.0 , 
-	Return tmp.2], Function: main ([]) instructions:[tmp.3 = target([]), tmp.4 = tmp.3 != 10, JumpIfZero(tmp.4, tmp.6), Return 1, Label(tmp.6), tmp.7 = Load glob , tmp.8 = tmp.7 != 10, JumpIfZero(tmp.8, tmp.10), Return 2, Label(tmp.10), Return 0], Global: True glob = [c_ulong(0)], Global: True i = [c_int(10)]]
-
+	tmp.15 = x.1 != 90, JumpIfZero(tmp.15, tmp.17), Return 1, Label(tmp.17), tmp.18 = tmp.12 != 93, JumpIfZero(tmp.18, tmp.20), Return 2, Label(tmp.20), Return 0], Function: main ([]) instructions:[tmp.21 = target([]), Return tmp.21]]
 Type Table:
  {}
 Symbol Table:
- {'glob': glob Pint InitialVal: <typeChecker.Tentative object at 0x7fbf01a091f0> Global: True, 'i': i int InitialVal: InitialList: [c_int(10)] Global: True, 'target': target FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'loc.0': loc.0 Pint <typeChecker.LocalAttributes object at 0x7fbf01a09580>, 'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'tmp.1': tmp.1 Pint <typeChecker.LocalAttributes object at 0x7fbf01af5160>, 'tmp.2': tmp.2 int <typeChecker.LocalAttributes object at 0x7fbf01a0ac00>, 'tmp.3': tmp.3 int <typeChecker.LocalAttributes object at 0x7fbf01a0b1d0>, 'tmp.4': tmp.4 int <typeChecker.LocalAttributes object at 0x7fbf01a0b080>, 'tmp.5': tmp.5 int <typeChecker.LocalAttributes object at 0x7fbf01a0b020>, 'tmp.7': tmp.7 int <typeChecker.LocalAttributes object at 0x7fbf01a0b560>, 'tmp.8': tmp.8 int <typeChecker.LocalAttributes object at 0x7fbf01a0b650>, 'tmp.9': tmp.9 int <typeChecker.LocalAttributes object at 0x7fbf01a0b290>}
+ {'putchar': putchar FunType: ParamTypes: [int] Return Type: int Defined: False Global: True, 'target': target FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'x.1': x.1 int <typeChecker.LocalAttributes object at 0x7fdbf9cb2030>, 'y.2': y.2 int <typeChecker.LocalAttributes object at 0x7fdbf9cb21e0>, 'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'tmp.5': tmp.5 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8110>, 'tmp.6': tmp.6 int <typeChecker.LocalAttributes object at 0x7fdbf9cb3fe0>, 'tmp.7': tmp.7 int <typeChecker.LocalAttributes object at 0x7fdbf9cb3d10>, 'tmp.9': tmp.9 int <typeChecker.LocalAttributes object at 0x7fdbf9cc85f0>, 'tmp.10': tmp.10 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8a40>, 'tmp.11': tmp.11 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8980>, 'tmp.12': tmp.12 int <typeChecker.LocalAttributes object at 0x7fdbf9cc87d0>, 'tmp.13': tmp.13 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8260>, 'tmp.14': tmp.14 int <typeChecker.LocalAttributes object at 0x7fdbf9cc83e0>, 'tmp.15': tmp.15 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8cb0>, 'tmp.16': tmp.16 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8c50>, 'tmp.18': tmp.18 int <typeChecker.LocalAttributes object at 0x7fdbf9cc9040>, 'tmp.19': tmp.19 int <typeChecker.LocalAttributes object at 0x7fdbf9cc8e60>, 'tmp.21': tmp.21 int <typeChecker.LocalAttributes object at 0x7fdbf9cc9490>}
 IntParams: []
+<class 'parser.IntType'>
+IntDests: [(<assemblyGenerator.Longword object at 0x7fdbf9ce6600>, Pseudo(tmp.11))]
+DoubleDests: []
+ReturnInMemory: False
+Operand: Pseudo(x.1)
+IntArgs: [(<assemblyGenerator.Longword object at 0x7fdbf9b041d0>, Pseudo(x.1))]
+DoubleArgs: []
+StackArgs: []
+<class 'parser.IntType'>
+<class 'parser.IntType'>
+<class 'parser.IntType'>
 IntParams: []
-IntDests: [(<assemblyGenerator.Longword object at 0x7fbf01a27140>, Pseudo(tmp.3))]
+IntDests: [(<assemblyGenerator.Longword object at 0x7fdbf9cd6a80>, Pseudo(tmp.21))]
 DoubleDests: []
 ReturnInMemory: False
 IntArgs: []
 DoubleArgs: []
 StackArgs: []
-<class 'parser.IntType'>
-<class 'parser.IntType'>
-ASM Program: [Function target stackOffset: None global: True instructions:[Lea(Pseudo(i), Pseudo(tmp.1)), AssType: <assemblyGenerator.Quadword object at 0x7fbf01a25130> Mov(Pseudo(tmp.1), PseudoMem(loc.0, 0)), AssType: <assemblyGenerator.Quadword object at 0x7fbf01a21dc0> Mov(Pseudo(loc.0), Pseudo(glob)), AssType: <assemblyGenerator.Quadword object at 0x7fbf01a32fc0> Mov(Pseudo(loc.0), Reg(AX)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a31e50> Mov(Memory(AX, 0), Pseudo(tmp.2)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a25490> Mov(Pseudo(tmp.2), Reg(AX)), ret], Function main stackOffset: None global: True instructions:[Call(target), AssType: <assemblyGenerator.Longword object at 0x7fbf01a27140> Mov(Reg(AX), Pseudo(tmp.3)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a33050> Cmp(Imm(10), Pseudo(tmp.3)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a39070> Mov(Imm(0), Pseudo(tmp.4)), SetCC(ConcCodeType.NE, Pseudo(tmp.4)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a20f80> Cmp(Imm(0), Pseudo(tmp.4)), JmpCC(ConcCodeType.E, tmp.6), AssType: <assemblyGenerator.Longword object at 0x7fbf01a38080> Mov(Imm(1), Reg(AX)), ret, Label(tmp.6), AssType: <assemblyGenerator.Quadword object at 0x7fbf01a305f0> Mov(Pseudo(glob), Reg(AX)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a32c00> Mov(Memory(AX, 0), Pseudo(tmp.7)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a381d0> Cmp(Imm(10), Pseudo(tmp.7)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a38380> Mov(Imm(0), Pseudo(tmp.8)), SetCC(ConcCodeType.NE, Pseudo(tmp.8)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a3a900> Cmp(Imm(0), Pseudo(tmp.8)), JmpCC(ConcCodeType.E, tmp.10), AssType: <assemblyGenerator.Longword object at 0x7fbf01a3aa20> Mov(Imm(2), Reg(AX)), ret, Label(tmp.10), AssType: <assemblyGenerator.Longword object at 0x7fbf01a3ab70> Mov(Imm(0), Reg(AX)), ret], Static Variable: Global = True Alignment = 8 : glob = [c_ulong(0)], Static Variable: Global = True Alignment = 4 : i = [c_int(10)]]
+ASM Program: [Function target stackOffset: None global: True instructions:[AssType: <assemblyGenerator.Longword object at 0x7fdbf9cffdd0> Mov(Imm(65), Pseudo(y.2)), Label(tmp.4), AssType: <assemblyGenerator.Longword object at 0x7fdbf9e8d6a0> Mov(Pseudo(y.2), Pseudo(tmp.5)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9e8d6a0> Binary(Add, Imm(2), Pseudo(tmp.5)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cca1e0> Mov(Pseudo(tmp.5), Pseudo(x.1)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cd4680> Cmp(Imm(70), Pseudo(y.2)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cfd0d0> Mov(Imm(0), Pseudo(tmp.6)), SetCC(ConcCodeType.G, Pseudo(tmp.6)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cd5c10> Cmp(Imm(0), Pseudo(tmp.6)), JmpCC(ConcCodeType.E, tmp.8), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cfe8d0> Mov(Pseudo(y.2), Pseudo(tmp.9)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cfe8d0> Binary(Add, Imm(3), Pseudo(tmp.9)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce7a40> Mov(Pseudo(tmp.9), Pseudo(x.1)), Label(tmp.8), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b041d0> Mov(Pseudo(x.1), Reg(DI)), Call(putchar), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce6600> Mov(Reg(AX), Pseudo(tmp.11)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce6cf0> Mov(Pseudo(tmp.11), Pseudo(tmp.12)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce6cf0> Binary(Add, Imm(3), Pseudo(tmp.12)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b044a0> Mov(Pseudo(tmp.12), Pseudo(y.2)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cd4470> Cmp(Imm(90), Pseudo(tmp.12)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce54c0> Mov(Imm(0), Pseudo(tmp.13)), SetCC(ConcCodeType.L, Pseudo(tmp.13)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cd7d40> Cmp(Imm(0), Pseudo(tmp.13)), JmpCC(ConcCodeType.NE, tmp.4), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b047d0> Cmp(Imm(90), Pseudo(x.1)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b04620> Mov(Imm(0), Pseudo(tmp.15)), SetCC(ConcCodeType.NE, Pseudo(tmp.15)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b04920> Cmp(Imm(0), Pseudo(tmp.15)), JmpCC(ConcCodeType.E, tmp.17), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cffb90> Mov(Imm(1), Reg(AX)), ret, Label(tmp.17), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b04b30> Cmp(Imm(93), Pseudo(tmp.12)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce7da0> Mov(Imm(0), Pseudo(tmp.18)), SetCC(ConcCodeType.NE, Pseudo(tmp.18)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b04d10> Cmp(Imm(0), Pseudo(tmp.18)), JmpCC(ConcCodeType.E, tmp.20), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b04e30> Mov(Imm(2), Reg(AX)), ret, Label(tmp.20), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b04f80> Mov(Imm(0), Reg(AX)), ret], Function main stackOffset: None global: True instructions:[Call(target), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cd6a80> Mov(Reg(AX), Pseudo(tmp.21)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b050a0> Mov(Pseudo(tmp.21), Reg(AX)), ret]]
 Type Table:
  {}
 Backend Symbol Table:
- {'glob': AssType: <assemblyGenerator.Quadword object at 0x7fbf01a30c80> IsStatic: True IsConstant: False, 'i': AssType: <assemblyGenerator.Longword object at 0x7fbf019ad0a0> IsStatic: True IsConstant: False, 'target': Defined: True ReturnOnStack: False, 'loc.0': AssType: <assemblyGenerator.Quadword object at 0x7fbf01a300e0> IsStatic: False IsConstant: False, 'main': Defined: True ReturnOnStack: False, 'tmp.1': AssType: <assemblyGenerator.Quadword object at 0x7fbf01a233b0> IsStatic: False IsConstant: False, 'tmp.2': AssType: <assemblyGenerator.Longword object at 0x7fbf01a24dd0> IsStatic: False IsConstant: False, 'tmp.3': AssType: <assemblyGenerator.Longword object at 0x7fbf01a39eb0> IsStatic: False IsConstant: False, 'tmp.4': AssType: <assemblyGenerator.Longword object at 0x7fbf01a384a0> IsStatic: False IsConstant: False, 'tmp.5': AssType: <assemblyGenerator.Longword object at 0x7fbf01a38110> IsStatic: False IsConstant: False, 'tmp.7': AssType: <assemblyGenerator.Longword object at 0x7fbf01a3a930> IsStatic: False IsConstant: False, 'tmp.8': AssType: <assemblyGenerator.Longword object at 0x7fbf01a3acc0> IsStatic: False IsConstant: False, 'tmp.9': AssType: <assemblyGenerator.Longword object at 0x7fbf01a3ad20> IsStatic: False IsConstant: False}
-ASM Program: [Function target stackOffset: -20 global: True instructions:[Lea(Data(i, 0), Memory(BP, -8)), AssType: <assemblyGenerator.Quadword object at 0x7fbf01a25130> Mov(Memory(BP, -8), Memory(BP, -16)), AssType: <assemblyGenerator.Quadword object at 0x7fbf01a21dc0> Mov(Memory(BP, -16), Data(glob, 0)), AssType: <assemblyGenerator.Quadword object at 0x7fbf01a32fc0> Mov(Memory(BP, -16), Reg(AX)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a31e50> Mov(Memory(AX, 0), Memory(BP, -20)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a25490> Mov(Memory(BP, -20), Reg(AX)), ret], Function main stackOffset: -16 global: True instructions:[Call(target), AssType: <assemblyGenerator.Longword object at 0x7fbf01a27140> Mov(Reg(AX), Memory(BP, -4)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a33050> Cmp(Imm(10), Memory(BP, -4)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a39070> Mov(Imm(0), Memory(BP, -8)), SetCC(ConcCodeType.NE, Memory(BP, -8)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a20f80> Cmp(Imm(0), Memory(BP, -8)), JmpCC(ConcCodeType.E, tmp.6), AssType: <assemblyGenerator.Longword object at 0x7fbf01a38080> Mov(Imm(1), Reg(AX)), ret, Label(tmp.6), AssType: <assemblyGenerator.Quadword object at 0x7fbf01a305f0> Mov(Data(glob, 0), Reg(AX)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a32c00> Mov(Memory(AX, 0), Memory(BP, -12)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a381d0> Cmp(Imm(10), Memory(BP, -12)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a38380> Mov(Imm(0), Memory(BP, -16)), SetCC(ConcCodeType.NE, Memory(BP, -16)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a3a900> Cmp(Imm(0), Memory(BP, -16)), JmpCC(ConcCodeType.E, tmp.10), AssType: <assemblyGenerator.Longword object at 0x7fbf01a3aa20> Mov(Imm(2), Reg(AX)), ret, Label(tmp.10), AssType: <assemblyGenerator.Longword object at 0x7fbf01a3ab70> Mov(Imm(0), Reg(AX)), ret], Static Variable: Global = True Alignment = 8 : glob = [c_ulong(0)], Static Variable: Global = True Alignment = 4 : i = [c_int(10)]]
--32
+ {'putchar': Defined: False ReturnOnStack: False, 'target': Defined: True ReturnOnStack: False, 'x.1': AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce4050> IsStatic: False IsConstant: False, 'y.2': AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce7e00> IsStatic: False IsConstant: False, 'main': Defined: True ReturnOnStack: False, 'tmp.5': AssType: <assemblyGenerator.Longword object at 0x7fdbf9ceebd0> IsStatic: False IsConstant: False, 'tmp.6': AssType: <assemblyGenerator.Longword object at 0x7fdbf9cd7230> IsStatic: False IsConstant: False, 'tmp.7': AssType: <assemblyGenerator.Longword object at 0x7fdbf9cd75c0> IsStatic: False IsConstant: False, 'tmp.9': AssType: <assemblyGenerator.Longword object at 0x7fdbf9b04950> IsStatic: False IsConstant: False, 'tmp.10': AssType: <assemblyGenerator.Longword object at 0x7fdbf9b05280> IsStatic: False IsConstant: False, 'tmp.11': AssType: <assemblyGenerator.Longword object at 0x7fdbf9b052e0> IsStatic: False IsConstant: False, 'tmp.12': AssType: <assemblyGenerator.Longword object at 0x7fdbf9b05340> IsStatic: False IsConstant: False, 'tmp.13': AssType: <assemblyGenerator.Longword object at 0x7fdbf9b053a0> IsStatic: False IsConstant: False, 'tmp.14': AssType: <assemblyGenerator.Longword object at 0x7fdbf9b05400> IsStatic: False IsConstant: False, 'tmp.15': AssType: <assemblyGenerator.Longword object at 0x7fdbf9b05460> IsStatic: False IsConstant: False, 'tmp.16': AssType: <assemblyGenerator.Longword object at 0x7fdbf9b054c0> IsStatic: False IsConstant: False, 'tmp.18': AssType: <assemblyGenerator.Longword object at 0x7fdbf9b05520> IsStatic: False IsConstant: False, 'tmp.19': AssType: <assemblyGenerator.Longword object at 0x7fdbf9b05580> IsStatic: False IsConstant: False, 'tmp.21': AssType: <assemblyGenerator.Longword object at 0x7fdbf9b055e0> IsStatic: False IsConstant: False}
+ASM Program: [Function target stackOffset: -40 global: True instructions:[AssType: <assemblyGenerator.Longword object at 0x7fdbf9cffdd0> Mov(Imm(65), Memory(BP, -4)), Label(tmp.4), AssType: <assemblyGenerator.Longword object at 0x7fdbf9e8d6a0> Mov(Memory(BP, -4), Memory(BP, -8)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9e8d6a0> Binary(Add, Imm(2), Memory(BP, -8)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cca1e0> Mov(Memory(BP, -8), Memory(BP, -12)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cd4680> Cmp(Imm(70), Memory(BP, -4)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cfd0d0> Mov(Imm(0), Memory(BP, -16)), SetCC(ConcCodeType.G, Memory(BP, -16)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cd5c10> Cmp(Imm(0), Memory(BP, -16)), JmpCC(ConcCodeType.E, tmp.8), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cfe8d0> Mov(Memory(BP, -4), Memory(BP, -20)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cfe8d0> Binary(Add, Imm(3), Memory(BP, -20)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce7a40> Mov(Memory(BP, -20), Memory(BP, -12)), Label(tmp.8), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b041d0> Mov(Memory(BP, -12), Reg(DI)), Call(putchar), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce6600> Mov(Reg(AX), Memory(BP, -24)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce6cf0> Mov(Memory(BP, -24), Memory(BP, -28)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce6cf0> Binary(Add, Imm(3), Memory(BP, -28)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b044a0> Mov(Memory(BP, -28), Memory(BP, -4)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cd4470> Cmp(Imm(90), Memory(BP, -28)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce54c0> Mov(Imm(0), Memory(BP, -32)), SetCC(ConcCodeType.L, Memory(BP, -32)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cd7d40> Cmp(Imm(0), Memory(BP, -32)), JmpCC(ConcCodeType.NE, tmp.4), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b047d0> Cmp(Imm(90), Memory(BP, -12)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b04620> Mov(Imm(0), Memory(BP, -36)), SetCC(ConcCodeType.NE, Memory(BP, -36)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b04920> Cmp(Imm(0), Memory(BP, -36)), JmpCC(ConcCodeType.E, tmp.17), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cffb90> Mov(Imm(1), Reg(AX)), ret, Label(tmp.17), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b04b30> Cmp(Imm(93), Memory(BP, -28)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce7da0> Mov(Imm(0), Memory(BP, -40)), SetCC(ConcCodeType.NE, Memory(BP, -40)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b04d10> Cmp(Imm(0), Memory(BP, -40)), JmpCC(ConcCodeType.E, tmp.20), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b04e30> Mov(Imm(2), Reg(AX)), ret, Label(tmp.20), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b04f80> Mov(Imm(0), Reg(AX)), ret], Function main stackOffset: -4 global: True instructions:[Call(target), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cd6a80> Mov(Reg(AX), Memory(BP, -4)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b050a0> Mov(Memory(BP, -4), Reg(AX)), ret]]
+-48
 -16
-ASM Program: [Function target stackOffset: -20 global: True instructions:[AssType: <assemblyGenerator.Quadword object at 0x7fbf01a39370> Binary(Sub, Imm(32), Reg(SP)), Lea(Data(i, 0), Reg(R11d)), AssType: <assemblyGenerator.Quadword object at 0x7fbf01a25970> Mov(Reg(R11d), Memory(BP, -8)), AssType: <assemblyGenerator.Quadword object at 0x7fbf01a25130> Mov(Memory(BP, -8), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7fbf01a25130> Mov(Reg(R10d), Memory(BP, -16)), AssType: <assemblyGenerator.Quadword object at 0x7fbf01a21dc0> Mov(Memory(BP, -16), Reg(R10d)), AssType: <assemblyGenerator.Quadword object at 0x7fbf01a21dc0> Mov(Reg(R10d), Data(glob, 0)), AssType: <assemblyGenerator.Quadword object at 0x7fbf01a32fc0> Mov(Memory(BP, -16), Reg(AX)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a31e50> Mov(Memory(AX, 0), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a31e50> Mov(Reg(R10d), Memory(BP, -20)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a25490> Mov(Memory(BP, -20), Reg(AX)), ret], Function main stackOffset: -16 global: True instructions:[AssType: <assemblyGenerator.Quadword object at 0x7fbf01a3b560> Binary(Sub, Imm(16), Reg(SP)), Call(target), AssType: <assemblyGenerator.Longword object at 0x7fbf01a27140> Mov(Reg(AX), Memory(BP, -4)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a33050> Cmp(Imm(10), Memory(BP, -4)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a39070> Mov(Imm(0), Memory(BP, -8)), SetCC(ConcCodeType.NE, Memory(BP, -8)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a20f80> Cmp(Imm(0), Memory(BP, -8)), JmpCC(ConcCodeType.E, tmp.6), AssType: <assemblyGenerator.Longword object at 0x7fbf01a38080> Mov(Imm(1), Reg(AX)), ret, Label(tmp.6), AssType: <assemblyGenerator.Quadword object at 0x7fbf01a305f0> Mov(Data(glob, 0), Reg(AX)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a32c00> Mov(Memory(AX, 0), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a32c00> Mov(Reg(R10d), Memory(BP, -12)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a381d0> Cmp(Imm(10), Memory(BP, -12)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a38380> Mov(Imm(0), Memory(BP, -16)), SetCC(ConcCodeType.NE, Memory(BP, -16)), AssType: <assemblyGenerator.Longword object at 0x7fbf01a3a900> Cmp(Imm(0), Memory(BP, -16)), JmpCC(ConcCodeType.E, tmp.10), AssType: <assemblyGenerator.Longword object at 0x7fbf01a3aa20> Mov(Imm(2), Reg(AX)), ret, Label(tmp.10), AssType: <assemblyGenerator.Longword object at 0x7fbf01a3ab70> Mov(Imm(0), Reg(AX)), ret], Static Variable: Global = True Alignment = 8 : glob = [c_ulong(0)], Static Variable: Global = True Alignment = 4 : i = [c_int(10)]]
-<class 'assemblyGenerator.Quadword'>
-0
-<class 'assemblyGenerator.Longword'>
-10
+ASM Program: [Function target stackOffset: -40 global: True instructions:[AssType: <assemblyGenerator.Quadword object at 0x7fdbf9cd58b0> Binary(Sub, Imm(48), Reg(SP)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cffdd0> Mov(Imm(65), Memory(BP, -4)), Label(tmp.4), AssType: <assemblyGenerator.Longword object at 0x7fdbf9e8d6a0> Mov(Memory(BP, -4), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9e8d6a0> Mov(Reg(R10d), Memory(BP, -8)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9e8d6a0> Binary(Add, Imm(2), Memory(BP, -8)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cca1e0> Mov(Memory(BP, -8), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cca1e0> Mov(Reg(R10d), Memory(BP, -12)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cd4680> Cmp(Imm(70), Memory(BP, -4)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cfd0d0> Mov(Imm(0), Memory(BP, -16)), SetCC(ConcCodeType.G, Memory(BP, -16)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cd5c10> Cmp(Imm(0), Memory(BP, -16)), JmpCC(ConcCodeType.E, tmp.8), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cfe8d0> Mov(Memory(BP, -4), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cfe8d0> Mov(Reg(R10d), Memory(BP, -20)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cfe8d0> Binary(Add, Imm(3), Memory(BP, -20)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce7a40> Mov(Memory(BP, -20), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce7a40> Mov(Reg(R10d), Memory(BP, -12)), Label(tmp.8), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b041d0> Mov(Memory(BP, -12), Reg(DI)), Call(putchar), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce6600> Mov(Reg(AX), Memory(BP, -24)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce6cf0> Mov(Memory(BP, -24), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce6cf0> Mov(Reg(R10d), Memory(BP, -28)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce6cf0> Binary(Add, Imm(3), Memory(BP, -28)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b044a0> Mov(Memory(BP, -28), Reg(R10d)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b044a0> Mov(Reg(R10d), Memory(BP, -4)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cd4470> Cmp(Imm(90), Memory(BP, -28)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce54c0> Mov(Imm(0), Memory(BP, -32)), SetCC(ConcCodeType.L, Memory(BP, -32)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cd7d40> Cmp(Imm(0), Memory(BP, -32)), JmpCC(ConcCodeType.NE, tmp.4), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b047d0> Cmp(Imm(90), Memory(BP, -12)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b04620> Mov(Imm(0), Memory(BP, -36)), SetCC(ConcCodeType.NE, Memory(BP, -36)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b04920> Cmp(Imm(0), Memory(BP, -36)), JmpCC(ConcCodeType.E, tmp.17), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cffb90> Mov(Imm(1), Reg(AX)), ret, Label(tmp.17), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b04b30> Cmp(Imm(93), Memory(BP, -28)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9ce7da0> Mov(Imm(0), Memory(BP, -40)), SetCC(ConcCodeType.NE, Memory(BP, -40)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b04d10> Cmp(Imm(0), Memory(BP, -40)), JmpCC(ConcCodeType.E, tmp.20), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b04e30> Mov(Imm(2), Reg(AX)), ret, Label(tmp.20), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b04f80> Mov(Imm(0), Reg(AX)), ret], Function main stackOffset: -4 global: True instructions:[AssType: <assemblyGenerator.Quadword object at 0x7fdbf9b06750> Binary(Sub, Imm(16), Reg(SP)), Call(target), AssType: <assemblyGenerator.Longword object at 0x7fdbf9cd6a80> Mov(Reg(AX), Memory(BP, -4)), AssType: <assemblyGenerator.Longword object at 0x7fdbf9b050a0> Mov(Memory(BP, -4), Reg(AX)), ret]]
 	.globl target
 	.text
 target:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $32, %rsp
-	leaq i+0(%rip), %r11
-	movq %r11, -8(%rbp)
-	movq -8(%rbp), %r10
-	movq %r10, -16(%rbp)
-	movq -16(%rbp), %r10
-	movq %r10, glob+0(%rip)
-	movq -16(%rbp), %rax
-	movl 0(%rax), %r10d
+	subq $48, %rsp
+	movl $65, -4(%rbp)
+.Ltmp.4:
+	movl -4(%rbp), %r10d
+	movl %r10d, -8(%rbp)
+	addl $2, -8(%rbp)
+	movl -8(%rbp), %r10d
+	movl %r10d, -12(%rbp)
+	cmpl $70, -4(%rbp)
+	movl $0, -16(%rbp)
+	setG -16(%rbp)
+	cmpl $0, -16(%rbp)
+	jE .Ltmp.8
+	movl -4(%rbp), %r10d
 	movl %r10d, -20(%rbp)
-	movl -20(%rbp), %eax
+	addl $3, -20(%rbp)
+	movl -20(%rbp), %r10d
+	movl %r10d, -12(%rbp)
+.Ltmp.8:
+	movl -12(%rbp), %edi
+	call putchar
+	movl %eax, -24(%rbp)
+	movl -24(%rbp), %r10d
+	movl %r10d, -28(%rbp)
+	addl $3, -28(%rbp)
+	movl -28(%rbp), %r10d
+	movl %r10d, -4(%rbp)
+	cmpl $90, -28(%rbp)
+	movl $0, -32(%rbp)
+	setL -32(%rbp)
+	cmpl $0, -32(%rbp)
+	jNE .Ltmp.4
+	cmpl $90, -12(%rbp)
+	movl $0, -36(%rbp)
+	setNE -36(%rbp)
+	cmpl $0, -36(%rbp)
+	jE .Ltmp.17
+	movl $1, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.17:
+	cmpl $93, -28(%rbp)
+	movl $0, -40(%rbp)
+	setNE -40(%rbp)
+	cmpl $0, -40(%rbp)
+	jE .Ltmp.20
+	movl $2, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.20:
+	movl $0, %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
@@ -638,43 +1067,10 @@ main:
 	subq $16, %rsp
 	call target
 	movl %eax, -4(%rbp)
-	cmpl $10, -4(%rbp)
-	movl $0, -8(%rbp)
-	setNE -8(%rbp)
-	cmpl $0, -8(%rbp)
-	jE .Ltmp.6
-	movl $1, %eax
+	movl -4(%rbp), %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-.Ltmp.6:
-	movq glob+0(%rip), %rax
-	movl 0(%rax), %r10d
-	movl %r10d, -12(%rbp)
-	cmpl $10, -12(%rbp)
-	movl $0, -16(%rbp)
-	setNE -16(%rbp)
-	cmpl $0, -16(%rbp)
-	jE .Ltmp.10
-	movl $2, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.10:
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl glob
-	.bss
-	.align 8
-glob:
-	.zero 8
-	.globl i
-	.data
-	.align 4
-i:
-	.long 10
 	.section	.note.GNU-stack,"",@progbits
 
 gcc -ggdb /home/alejandro/CComp/test_/test.s -o /home/alejandro/CComp/test_/test -lm

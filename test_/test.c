@@ -1,23 +1,27 @@
-/* Make sure we can propagate copies into Load instruction.
- * in assembly for target, we'll see a copy to glob but no reads from it
- */
+/* Test that we can detect dead stores in a function with a loop */
+int putchar(int c);  // from standard library
 
-int *glob;
-int i = 10;
 int target(void) {
-    int *loc = &i;
-    glob = loc;
-    return *glob;  // rewrite as *loc; don't need to read glob here
+    int x = 5;   // dead store
+    int y = 65;  // not a dead store
+    do {
+        x = y + 2;  // kill x, gen y
+        if (y > 70) {
+            // make sure we assign to x on multiple paths
+            // so copy prop doesn't replace it entirely
+            x = y + 3;
+        }
+        y = putchar(x) + 3;  // gen x and y
+    } while (y < 90);
+    if (x != 90) {
+        return 1;  // fail
+    }
+    if (y != 93) {
+        return 2;  // fail
+    }
+    return 0;  // success
 }
 
 int main(void) {
-    if (target() != 10) {
-        return 1;  // failure
-    }
-    
-    if (*glob != 10) {
-        return 2;  // failure
-    }
-
-    return 0;  // success
+    return target();
 }

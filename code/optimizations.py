@@ -1651,9 +1651,18 @@ def constantFolding(tac, symbolTable):
 
             case tacGenerator.TAC_copyToOffset(src = src, dst = dst, offset = offset):
                 
-                newList.append(i)
+
+                entry = symbolTable[dst]
+
+                if typeChecker.isScalar(entry.type):
+                    
+                    newList.append(tacGenerator.TAC_CopyInstruction(src, tacGenerator.TAC_VariableValue(dst)))
+                    
+                else:
+                    newList.append(i)
 
                 """
+                newList.append(i)
                 if offset == 0:
                     newList.append(tacGenerator.TAC_CopyInstruction(src, tacGenerator.TAC_VariableValue(dst)))
                     

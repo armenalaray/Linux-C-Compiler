@@ -3,17 +3,59 @@
 target:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $32, %rsp
-	leaq i+0(%rip), %r11
-	movq %r11, -8(%rbp)
-	movq -8(%rbp), %r10
-	movq %r10, -16(%rbp)
-	movq -16(%rbp), %r10
-	movq %r10, glob+0(%rip)
-	movq -16(%rbp), %rax
-	movl 0(%rax), %r10d
+	subq $48, %rsp
+	movl $65, -4(%rbp)
+.Ltmp.4:
+	movl -4(%rbp), %r10d
+	movl %r10d, -8(%rbp)
+	addl $2, -8(%rbp)
+	movl -8(%rbp), %r10d
+	movl %r10d, -12(%rbp)
+	cmpl $70, -4(%rbp)
+	movl $0, -16(%rbp)
+	setG -16(%rbp)
+	cmpl $0, -16(%rbp)
+	jE .Ltmp.8
+	movl -4(%rbp), %r10d
 	movl %r10d, -20(%rbp)
-	movl -20(%rbp), %eax
+	addl $3, -20(%rbp)
+	movl -20(%rbp), %r10d
+	movl %r10d, -12(%rbp)
+.Ltmp.8:
+	movl -12(%rbp), %edi
+	call putchar
+	movl %eax, -24(%rbp)
+	movl -24(%rbp), %r10d
+	movl %r10d, -28(%rbp)
+	addl $3, -28(%rbp)
+	movl -28(%rbp), %r10d
+	movl %r10d, -4(%rbp)
+	cmpl $90, -28(%rbp)
+	movl $0, -32(%rbp)
+	setL -32(%rbp)
+	cmpl $0, -32(%rbp)
+	jNE .Ltmp.4
+	cmpl $90, -12(%rbp)
+	movl $0, -36(%rbp)
+	setNE -36(%rbp)
+	cmpl $0, -36(%rbp)
+	jE .Ltmp.17
+	movl $1, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.17:
+	cmpl $93, -28(%rbp)
+	movl $0, -40(%rbp)
+	setNE -40(%rbp)
+	cmpl $0, -40(%rbp)
+	jE .Ltmp.20
+	movl $2, %eax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+.Ltmp.20:
+	movl $0, %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
@@ -25,41 +67,8 @@ main:
 	subq $16, %rsp
 	call target
 	movl %eax, -4(%rbp)
-	cmpl $10, -4(%rbp)
-	movl $0, -8(%rbp)
-	setNE -8(%rbp)
-	cmpl $0, -8(%rbp)
-	jE .Ltmp.6
-	movl $1, %eax
+	movl -4(%rbp), %eax
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-.Ltmp.6:
-	movq glob+0(%rip), %rax
-	movl 0(%rax), %r10d
-	movl %r10d, -12(%rbp)
-	cmpl $10, -12(%rbp)
-	movl $0, -16(%rbp)
-	setNE -16(%rbp)
-	cmpl $0, -16(%rbp)
-	jE .Ltmp.10
-	movl $2, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-.Ltmp.10:
-	movl $0, %eax
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.globl glob
-	.bss
-	.align 8
-glob:
-	.zero 8
-	.globl i
-	.data
-	.align 4
-i:
-	.long 10
 	.section	.note.GNU-stack,"",@progbits
