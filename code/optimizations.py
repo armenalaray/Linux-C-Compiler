@@ -1086,6 +1086,9 @@ def transferLive(block, endLiveVariables, allStaticVariables, aliasedVars):
 
             case tacGenerator.TAC_GetAddress(src = src, dst = dst):
                 currentLiveVariables.discard(dst)
+
+                if type(src) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(src)
             
             case tacGenerator.TAC_Load(src = src, dst = dst):
                 currentLiveVariables.discard(dst)

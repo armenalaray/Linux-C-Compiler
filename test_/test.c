@@ -1,27 +1,30 @@
-/* Test that we eliminate dead stores to static and global variables */
+/* Test that we rerun alias analysis with each pipeline iteration */
 
-int i = 0;
+int putchar(int c);
 
-int target(int arg) {
-    i = 5;  // dead store
-    i = arg;
-    return i + 1;
+int foo(int *ptr) {
+    putchar(*ptr);
+    return 0;
+}
+
+int target(void) {
+    int x = 10;  // this is a dead store
+    int y = 65;
+    int *ptr = &y;
+    if (0) {
+        // on our first pass through the pipeline it will look like x is
+        // aliased; on later passes, after unreachable code elimination removes
+        // this branch, we'll recognize that x is not aliased
+        ptr = &x;
+    }
+    x = 5;     // this is a dead store, but we'll only recognize this after
+               // rerunning alias analysis
+    foo(ptr);  // we'll think this makes x live until we recognize that x is not
+               // aliased
+
+    return 0;
 }
 
 int main(void) {
-    int result1 = target(2);
-    if (i != 2) {
-        return 1;  // fail
-    }
-    if (result1 != 3) {
-        return 2;  // fail
-    }
-    int result2 = target(-1);
-    if (i != -1) {
-        return 3;  // fail
-    }
-    if (result2 != 0) {
-        return 4;  // fail
-    }
-    return 0;  // success
+    return target();
 }
