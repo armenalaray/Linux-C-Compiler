@@ -59,6 +59,7 @@ class TAC_FunctionDef(TopLevel):
 class instruction:
     pass
 
+#C
 class TAC_addPtr(instruction, DebugNode):
     def __init__(self, ptr, index, scale, dst):
         self.ptr = ptr
@@ -85,6 +86,7 @@ class TAC_addPtr(instruction, DebugNode):
         
         return self.ptr == value.ptr and self.index == value.index and self.scale == value.scale and self.dst == value.dst
 
+#C
 class TAC_copyFromOffset(instruction, DebugNode):
     def __init__(self, src, offset, dst):
         self.src = src
@@ -110,6 +112,7 @@ class TAC_copyFromOffset(instruction, DebugNode):
         
         return self.src == value.src and self.offset == value.offset and self.dst == value.dst
 
+#C
 class TAC_copyToOffset(instruction, DebugNode):
     def __init__(self, src, dst, offset):
         self.src = src
@@ -159,6 +162,7 @@ class TAC_returnInstruction(instruction, DebugNode):
         
         return self.Value == value.Value
 
+#C
 class TAC_signExtendInstruction(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src
@@ -182,7 +186,8 @@ class TAC_signExtendInstruction(instruction, DebugNode):
             return NotImplemented
         
         return self.src == value.src and self.dst == value.dst
-    
+
+#C
 class TAC_zeroExtendInstruction(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src
@@ -207,6 +212,7 @@ class TAC_zeroExtendInstruction(instruction, DebugNode):
         
         return self.src == value.src and self.dst == value.dst
 
+#C
 class TAC_DoubleToInt(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src
@@ -231,6 +237,7 @@ class TAC_DoubleToInt(instruction, DebugNode):
         
         return self.src == value.src and self.dst == value.dst
 
+#C
 class TAC_DoubleToUInt(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src
@@ -255,6 +262,7 @@ class TAC_DoubleToUInt(instruction, DebugNode):
         
         return self.src == value.src and self.dst == value.dst
 
+#C
 class TAC_IntToDouble(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src
@@ -279,6 +287,7 @@ class TAC_IntToDouble(instruction, DebugNode):
         
         return self.src == value.src and self.dst == value.dst
 
+#C
 class TAC_UIntToDouble(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src
@@ -303,6 +312,7 @@ class TAC_UIntToDouble(instruction, DebugNode):
         
         return self.src == value.src and self.dst == value.dst
 
+#C
 class TAC_truncateInstruction(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src
@@ -327,6 +337,7 @@ class TAC_truncateInstruction(instruction, DebugNode):
         
         return self.src == value.src and self.dst == value.dst
 
+#C
 class TAC_UnaryInstruction(instruction, DebugNode):
     def __init__(self, operator, src, dst):
         self.operator = operator
@@ -361,6 +372,7 @@ class TAC_UnaryInstruction(instruction, DebugNode):
         return False
     """
 
+#C
 class TAC_CopyInstruction(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src 
@@ -385,6 +397,7 @@ class TAC_CopyInstruction(instruction, DebugNode):
         return self.src == value.src and self.dst == value.dst
     
 
+#C
 class TAC_GetAddress(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src 
@@ -417,7 +430,8 @@ class TAC_GetAddress(instruction, DebugNode):
         
         return False
     """
-    
+
+#C
 class TAC_Load(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src 
@@ -451,6 +465,7 @@ class TAC_Load(instruction, DebugNode):
         return False
     """
 
+#C
 class TAC_Store(instruction, DebugNode):
     def __init__(self, src, dst):
         self.src = src 
@@ -613,6 +628,7 @@ class TAC_LabelInst(instruction, DebugNode):
         return False
     """
 
+#C
 class TAC_BinaryInstruction(DebugNode):
     def __init__(self, operator, src1, src2, dst):
         self.operator = operator
@@ -639,6 +655,7 @@ class TAC_BinaryInstruction(DebugNode):
         
         return self.operator == value.operator and self.src1 == value.src1 and self.src2 == value.src2 and self.dst == value.dst
 
+#C
 class TAC_FunCallInstruction(DebugNode):
     def __init__(self, funName, arguments, dst = None):
         self.funName = funName

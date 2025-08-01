@@ -660,6 +660,7 @@ def transfer(block, reachingCopies, symbolTable, aliasedVars):
 
     for i, set0 in block.iMap.items():
 
+        set0.clear()
         set0.update(currentReachingCopies)
         
         print(i, set0)
@@ -945,9 +946,6 @@ def meet(block, allCopies, cfg):
                 other = cfg.blocks[predID]
                 predOutCopies = other.reachingCopies
 
-                #print("PRED:", predOutCopies)
-                #print("INCOMING:", incomingCopies)
-
                 incomingCopies = incomingCopies & predOutCopies
 
             case EXIT():
@@ -970,7 +968,7 @@ def findAllCopyInstructions(cfg):
 
     return allCopies
 
-def transferLive(block, endLiveVariables, allStaticVariables):
+def transferLive(block, endLiveVariables, allStaticVariables, aliasedVars):
     currentLiveVariables = endLiveVariables
 
     print("--------------LIVE for block {0}-------------------".format(block.id))
@@ -982,6 +980,7 @@ def transferLive(block, endLiveVariables, allStaticVariables):
 
     for i, set0 in a:
 
+        set0.clear()
         set0.update(currentLiveVariables)
 
         print(i, set0)
@@ -1006,11 +1005,7 @@ def transferLive(block, endLiveVariables, allStaticVariables):
                 if type(src) == tacGenerator.TAC_VariableValue:
                     currentLiveVariables.add(src)
 
-            case tacGenerator.TAC_CopyInstruction(src = src, dst = dst):
-                currentLiveVariables.discard(dst)
-
-                if type(src) == tacGenerator.TAC_VariableValue:
-                    currentLiveVariables.add(src)
+            
 
             case tacGenerator.TAC_JumpIfZeroInst(condition = condition, label = label):
                 if type(condition) == tacGenerator.TAC_VariableValue:
@@ -1031,7 +1026,93 @@ def transferLive(block, endLiveVariables, allStaticVariables):
 
                 
                 currentLiveVariables.update(allStaticVariables)
+            
+            case tacGenerator.TAC_CopyInstruction(src = src, dst = dst):
+                currentLiveVariables.discard(dst)
+
+                if type(src) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(src)
+
+            case tacGenerator.TAC_truncateInstruction(src = src, dst = dst):
+                currentLiveVariables.discard(dst)
+
+                if type(src) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(src)
+
+            case tacGenerator.TAC_signExtendInstruction(src = src, dst = dst):
+                currentLiveVariables.discard(dst)
+
+                if type(src) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(src)
+            
+            case tacGenerator.TAC_zeroExtendInstruction(src = src, dst = dst):
+                currentLiveVariables.discard(dst)
+
+                if type(src) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(src)
+
+            case tacGenerator.TAC_DoubleToInt(src = src, dst = dst):
+                currentLiveVariables.discard(dst)
+
+                if type(src) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(src)
+
+            case tacGenerator.TAC_DoubleToUInt(src = src, dst = dst):
+                currentLiveVariables.discard(dst)
+
+                if type(src) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(src)
+
+            case tacGenerator.TAC_IntToDouble(src = src, dst = dst):
+                currentLiveVariables.discard(dst)
+
+                if type(src) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(src)
+
+            case tacGenerator.TAC_UIntToDouble(src = src, dst = dst):
+                currentLiveVariables.discard(dst)
+
+                if type(src) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(src)
+
+            case tacGenerator.TAC_addPtr(ptr = ptr, index = index, scale = scale, dst = dst):
+                currentLiveVariables.discard(dst)
+
+                if type(ptr) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(ptr)
                 
+                if type(index) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(index)
+
+            case tacGenerator.TAC_GetAddress(src = src, dst = dst):
+                currentLiveVariables.discard(dst)
+            
+            case tacGenerator.TAC_Load(src = src, dst = dst):
+                currentLiveVariables.discard(dst)
+
+                currentLiveVariables.update(aliasedVars)
+                
+                if type(src) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(src)
+
+            case tacGenerator.TAC_Store(src = src, dst = dst):
+                
+                if type(src) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(src)
+
+                if type(dst) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(dst)
+
+            case tacGenerator.TAC_copyFromOffset(src = src, dst = dst, offset = offset):
+                currentLiveVariables.discard(dst)
+
+                currentLiveVariables.add(tacGenerator.TAC_VariableValue(src))
+
+            case tacGenerator.TAC_copyToOffset(src = src, dst = dst, offset = offset):
+
+                if type(src) == tacGenerator.TAC_VariableValue:
+                    currentLiveVariables.add(src)
+
             case _:
                 continue
 
@@ -1250,17 +1331,127 @@ def addAllStaticVariables(cfg, symbolTable):
 
     return allStaticVariables
 
-def deadStoreElimination(cfg, symbolTable):
+def meetLive(block, allStaticVariables, cfg):
+    liveVars = set()
+
+    for sID in block.successors:
+        match sID:
+            case ENTRY():
+                print("Error: Malformed control graph.")
+                sys.exit(1)
+
+            case EXIT():
+                liveVars.update(allStaticVariables)
+
+            case BlockID(num = num):
+                node = cfg.blocks[sID]
+                liveVars.update(node.reachingCopies)
+
+    return liveVars
+        
+def livenessAnalysis(cfg, symbolTable, aliasedVars):
 
     allStaticVariables = addAllStaticVariables(cfg, symbolTable)
 
-    for k, n in cfg.blocks.items():
-        
+    workList = []
+
+    a = list(cfg.blocks.items())
+    a.reverse()
+
+    for k, n in a:
         if k == ENTRY() or k == EXIT():
             continue
+        
+        workList.append(n)
+        n.reachingCopies.clear()
 
-        endLiveVariables = set()
-        transferLive(n, endLiveVariables, allStaticVariables)
+    while workList != []:
+        n = workList.pop(0)
+        
+        oldAnnot = copy.deepcopy(n.reachingCopies)
+
+        liveVars = meetLive(n, allStaticVariables, cfg)
+        transferLive(n, liveVars, allStaticVariables, aliasedVars)
+
+        print("OLD ANNOT:", oldAnnot)
+        print("NEW ANNOT:", n.reachingCopies)
+
+        if oldAnnot != n.reachingCopies:
+
+
+            for pID in n.predecessors:
+
+                match pID:
+
+                    case EXIT():
+                        print("Error: Malformed control flow graph.")
+                        sys.exit(1)
+
+                    case ENTRY():
+                        continue
+
+                    case BlockID(num = num):
+
+                        
+                        block = cfg.blocks[pID]
+
+                        if block in workList:
+                            pass
+                        else:
+                            print("ADD PREDECESSORS.")
+                            workList.append(block)
+
+
+def isDeadStore(i, node):
+
+    if type(i) == tacGenerator.TAC_FunCallInstruction:
+        return False
+
+    if type(i) == tacGenerator.TAC_Store:
+        return False
+
+    if hasattr(i, "dst"):
+        set0 = node.iMap[i]
+
+        dst = None
+        if type(i) == tacGenerator.TAC_copyToOffset:
+            dst = tacGenerator.TAC_VariableValue(i.dst)
+            
+        else:
+            dst = i.dst
+            
+        if dst in set0:
+            pass
+        else:
+            print(i, set0, "for node", node.id)
+            return True
+    
+    return False
+
+def deadStoreElimination(cfg, symbolTable, aliasedVars):
+
+    livenessAnalysis(cfg, symbolTable, aliasedVars)    
+
+    print("------------REMOVE DEAD STORE INSTRUCTIONS.-------------")
+
+    for k, n in cfg.blocks.items():
+        if k == ENTRY() or k == EXIT():
+            continue
+        
+        newList = []
+        for i in n.instructions: 
+            if isDeadStore(i, n):
+                pass
+            else:
+                newList.append(i)
+                pass
+        
+        n.instructions = newList
+    
+    print("------------AFTER DEAD STORE REMOVAL.-------------")
+
+    for k, n in cfg.blocks.items():
+        print(k,n)
 
     return cfg
 
@@ -1455,11 +1646,16 @@ def constantFolding(tac, symbolTable):
                         newList.append(i)
 
             case tacGenerator.TAC_copyToOffset(src = src, dst = dst, offset = offset):
+                
+                newList.append(i)
+
+                """
                 if offset == 0:
                     newList.append(tacGenerator.TAC_CopyInstruction(src, tacGenerator.TAC_VariableValue(dst)))
                     
                 else:
                     newList.append(i)
+                """
 
             case tacGenerator.TAC_copyFromOffset(src = src, offset = offset,dst = dst):
 

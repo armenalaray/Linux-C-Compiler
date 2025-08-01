@@ -126,9 +126,8 @@ def optimizeFunction(functionBody, symbolTable):
 			cfg = optimizations.copyPropagation(cfg, symbolTable, aliasedVars)
 
 		if eliminateDeadStores:
-			cfg = optimizations.deadStoreElimination(cfg, symbolTable)
+			cfg = optimizations.deadStoreElimination(cfg, symbolTable, aliasedVars)
 
-		
 		optimizedFunctionBody = optimizations.cfgToInstructions(cfg)
 
 		if optimizedFunctionBody == functionBody or optimizedFunctionBody == []:
@@ -312,12 +311,12 @@ if __name__ == "__main__":
 			#aFile.write(output)
 			#aFile.close()
 			
-			"""
+			
 			if printDebugInfo:
 				print(tac)
 				print("Type Table:\n", typeTable)
 				print("Symbol Table:\n", symbolTable)
-			"""
+			
 			
 			if LastStage == 'tac':
 				sys.exit(0)
