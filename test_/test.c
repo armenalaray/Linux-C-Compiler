@@ -1,29 +1,27 @@
-/* Test that we recognize aliased non-static variables are live
- * just after function calls but dead at function exit
- * */
+/* Test that we eliminate dead stores to static and global variables */
 
-int b = 0;
+int i = 0;
 
-void callee(int *ptr) {
-    b = *ptr;
-    *ptr = 100;
-}
-
-int target(void) {
-    int x = 10;
-    callee(&x);  // generates all aliased variables (i.e. x)
-    int y = x;
-    x = 50;  // this is dead
-    return y;
+int target(int arg) {
+    i = 5;  // dead store
+    i = arg;
+    return i + 1;
 }
 
 int main(void) {
-    int a = target();
-    if (a != 100) {
-        return 1; // fail
+    int result1 = target(2);
+    if (i != 2) {
+        return 1;  // fail
     }
-    if (b != 10) {
-        return 2; // fail
+    if (result1 != 3) {
+        return 2;  // fail
     }
-    return 0; // success
+    int result2 = target(-1);
+    if (i != -1) {
+        return 3;  // fail
+    }
+    if (result2 != 0) {
+        return 4;  // fail
+    }
+    return 0;  // success
 }
