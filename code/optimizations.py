@@ -1179,7 +1179,7 @@ def replaceOperand(op, reachingCopies):
         return op
 
     for copy in reachingCopies:
-        #breakpoint()
+        #print(copy.src, type(copy.src))
         if copy.dst == op:
             return copy.src
 
@@ -1235,9 +1235,10 @@ def rewriteInstruction(node, ins):
             newSrc = replaceOperand(src, reachingCopies)
             return tacGenerator.TAC_copyToOffset(newSrc, dst, offset)
         
-        #case tacGenerator.TAC_copyFromOffset(src = src, dst = dst, offset = offset):
-            #newSrc = replaceOperand(src, reachingCopies)
-            #return tacGenerator.TAC_copyToOffset(newSrc, dst, offset)
+        case tacGenerator.TAC_copyFromOffset(src = src, dst = dst, offset = offset):
+            newSrc = replaceOperand(tacGenerator.TAC_VariableValue(src), reachingCopies)
+
+            return tacGenerator.TAC_copyFromOffset(newSrc.identifier, offset, dst)
 
         case tacGenerator.TAC_addPtr(ptr = ptr, index = index, scale = scale,dst = dst):
             newPtr = replaceOperand(ptr, reachingCopies)
