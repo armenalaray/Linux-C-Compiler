@@ -112,20 +112,20 @@ def optimizeFunction(functionBody, symbolTable):
 	while True:
 		aliasedVars = optimizations.addressTakenAnalysis(functionBody, symbolTable)
 
-		if foldConstants:
+		if foldConstants or optimize:
 			postConstantFolding = optimizations.constantFolding(functionBody, symbolTable)
 		else:
 			postConstantFolding = functionBody
 
 		cfg = optimizations.makeControlFlowGraph(postConstantFolding)
 
-		if eliminateUnreachableCode:
+		if eliminateUnreachableCode or optimize:
 			cfg = optimizations.unreachableCodeElimination(cfg)
 		
-		if propagateCopies:
+		if propagateCopies or optimize:
 			cfg = optimizations.copyPropagation(cfg, symbolTable, aliasedVars)
 
-		if eliminateDeadStores:
+		if eliminateDeadStores or optimize:
 			cfg = optimizations.deadStoreElimination(cfg, symbolTable, aliasedVars)
 
 		optimizedFunctionBody = optimizations.cfgToInstructions(cfg)

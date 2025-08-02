@@ -27,8 +27,19 @@ class IdentifierAttributes:
 
 class FunAttributes(IdentifierAttributes):
     def __init__(self, defined, global_):
+
         self.defined = defined
         self.global_ = global_
+
+        self.paramInt = set()
+        self.paramDouble = set()
+        
+        #self.paramStack = []
+
+        self.returnInt = set()
+        self.returnDouble = set()
+
+        #self.returnStack = []
     
     def __str__(self):
         return "Defined: {self.defined} Global: {self.global_}".format(self=self)

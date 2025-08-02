@@ -588,6 +588,8 @@ class FunType(Type, Node):
     def __init__(self, paramTypes, retType):
         self.paramTypes = paramTypes
         self.retType = retType
+
+        #self.paramNames = paramNames
     
     def __str__(self):
         return "FunType: ParamTypes: {self.paramTypes} Return Type: {self.retType}".format(self=self)

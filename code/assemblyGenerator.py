@@ -578,6 +578,85 @@ class Register:
             case _:
                 return "_"
 
+
+def parseValueFromType(type, symbolTable, typeTable):
+    
+    match type:
+
+        case parser.CharType():
+            asmType = Byte()
+            cType = parser.CharType()
+
+        case parser.SCharType():
+            asmType = Byte()
+            cType = parser.SCharType()
+
+        case parser.UCharType():
+            asmType = Byte()
+            cType = parser.UCharType()
+
+        case parser.IntType():
+            asmType = Longword()
+            cType = parser.IntType()
+
+        case parser.LongType():
+            asmType = Quadword()
+            cType = parser.LongType()
+        
+        case parser.UIntType():
+            asmType = Longword()
+            cType = parser.UIntType()
+        
+        case parser.ULongType():
+            asmType = Quadword()
+            cType = parser.ULongType()
+
+        case parser.DoubleType():
+            asmType = Double()
+            cType = parser.DoubleType()
+        
+        case parser.PointerType(referenceType = referenceType):
+            asmType = Quadword()
+            cType = parser.ULongType()
+
+        case parser.ArrayType(elementType = elementType, size = size):
+            
+            asmType = None
+            cType = symbolTable[i].type
+            
+            sizeArray = cType.getBaseTypeSize(0, typeTable)
+            print(sizeArray)
+
+            while type(cType) == parser.ArrayType:
+                cType = cType.elementType
+
+            alignment, other = matchCType(cType, typeTable)
+                
+            if sizeArray < 16:
+                asmType = ByteArray(sizeArray, alignment)                
+            else:
+                asmType = ByteArray(sizeArray, 16)                
+
+            return asmType, cType, PseudoMem(i, 0)
+        
+        case parser.StuctureType(tag = tag):
+            cType = parser.StuctureType(tag)
+            
+            if tag in typeTable:
+                structDef = typeTable[tag]
+                asmType = ByteArray(structDef.size, structDef.alignment)
+
+                return asmType, cType, PseudoMem(i, 0)
+            
+            return None, cType, PseudoMem(i, 0)
+        
+        case _:
+            traceback.print_stack()
+            print("Error: Invalid Assembly Type.")
+            sys.exit(1)
+
+    return asmType, cType, PseudoRegisterOperand(i)
+
 def parseValue(v, symbolTable, typeTable, topLevelList):
     asmType = None
     cType = None
@@ -959,6 +1038,93 @@ def getEightByteType(offset, structSize):
     
     return ByteArray(bytesFromEnd, 8)    
 
+def classifyParametersFromTypes(paramTypes, symbolTable, typeTable, returnInMemory):
+
+    intRegArgs = []
+    doubleRegArgs = []
+    stackArgs = []
+
+    intRegsAvailable = 6
+
+    if returnInMemory:
+        intRegsAvailable = 5
+
+    else:
+        intRegsAvailable = 6
+
+
+    for paramType in paramTypes:
+        t, cType1, operand = parseValueFromType(paramType, symbolTable, typeTable)
+
+        print("Operand:", operand)
+
+        typedOperand = (t, operand)
+
+        if type(cType1) == parser.DoubleType:
+
+            if len(doubleRegArgs) < 8:
+                doubleRegArgs.append(operand)
+            else:
+                stackArgs.append(typedOperand)
+
+        elif typeChecker.isScalar(cType1):
+
+            if len(intRegArgs) < intRegsAvailable:
+                intRegArgs.append(typedOperand)
+            else:
+                stackArgs.append(typedOperand)
+            
+        else:
+            
+            match cType1:
+                case parser.StuctureType(tag = tag):
+
+                    structDef = typeTable[tag]
+                    classes = classifyStructure(structDef, typeTable)
+
+                    useStack = True
+                    structSize = structDef.size
+
+                    if classes[0] != ABI_StructType.MEMORY:
+                        
+                        #breakpoint()
+
+                        tentativeInts = []
+                        tentativeDoubles = []
+                        offset = 0
+
+                        for class_ in classes:
+                            operand_ = addOffset(operand, offset)
+
+                            if class_ == ABI_StructType.SSE:
+                                tentativeDoubles.append(operand_)
+                            else:
+                                eightByteType = getEightByteType(offset, structSize)
+                                tentativeInts.append((eightByteType, operand_))
+                                
+                            offset += 8
+
+                        
+                        if len(tentativeDoubles) + len(doubleRegArgs) <= 8 and len(tentativeInts) + len(intRegArgs) <= intRegsAvailable:
+                            doubleRegArgs.extend(tentativeDoubles)
+                            intRegArgs.extend(tentativeInts)
+                            useStack = False
+
+                    if useStack:
+                        offset = 0
+                        for class_ in classes:
+                            operand_ = addOffset(operand, offset)
+
+                            eightByteType = getEightByteType(offset, structSize)
+                            stackArgs.append((eightByteType, operand_))
+                            offset += 8
+
+                case _:
+                    print("Error:")
+                    sys.exit(1)
+                
+    return intRegArgs, doubleRegArgs, stackArgs  
+
 def classifyParameters(values, symbolTable, typeTable, topLevelList, returnInMemory):
     
     intRegArgs = []
@@ -975,6 +1141,7 @@ def classifyParameters(values, symbolTable, typeTable, topLevelList, returnInMem
 
 
     for arg in values:
+        #t, cType1, operand = parseValueFromType(type, symbolTable, typeTable)
         t, cType1, operand = parseValue(arg, symbolTable, typeTable, topLevelList)
 
         print("Operand:", operand)
@@ -1216,7 +1383,7 @@ def copyBytesToReg(srcOp, dstReg, byteCount, ASM_Instructions):
 
         offset -= 1
 
-def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeTable, topLevelList):
+def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeTable, topLevelList, parentFunName):
 
     for i in TAC_Instructions:
         match i:
@@ -1407,12 +1574,17 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                     copyBytes(src, dst, assType.size, ASM_Instructions)
 
                 else:
+
+                    funAttrs = symbolTable[parentFunName].attrs
+
                     intReturnRegisters = [RegisterType.AX, RegisterType.DX]
                     doubleReturnRegisters = [SSERegisterType.XMM0, SSERegisterType.XMM1]
 
                     for i, (t, op) in enumerate(intRetVals):
                         
                         r = intReturnRegisters[i]
+
+                        funAttrs.returnInt.add(r)
 
                         match t:
                             case ByteArray(size = size, alignment = alignment):
@@ -1425,6 +1597,9 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                     
                     for i, op in enumerate(doubleRetVals):
                         r = doubleReturnRegisters[i]
+
+                        funAttrs.returnDouble.add(r)
+
                         ASM_Instructions.append(MovInstruction(Double(), op, RegisterOperand(Register(r))))
 
                 
@@ -1539,6 +1714,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                 print("DoubleArgs:", doubleArgs)
                 print("StackArgs:", stackArgs)
 
+
                 stackPadding = 0
                 if len(stackArgs) % 2:
                     stackPadding = 8
@@ -1549,6 +1725,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                     
                     ASM_Instructions.append(instruction0)
 
+                funAttrs = symbolTable[funName].attrs
 
                 intRegisters = [RegisterType.DI, RegisterType.SI, RegisterType.DX, RegisterType.CX, RegisterType.R8, RegisterType.R9]
 
@@ -1557,6 +1734,8 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                 for i, (assType, assArg) in enumerate(intArgs):
                     
                     r = intRegisters[i]
+
+                    funAttrs.paramInt.add(r)
 
                     match assType:
                         case ByteArray(size = size, alignment = alignment):
@@ -1568,6 +1747,8 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                 
                 for i, assArg in enumerate(doubleArgs):
                     r = doubleRegisters[i]
+
+                    funAttrs.paramDouble.add(r)
 
                     ASM_Instructions.append(MovInstruction(Double(), assArg, RegisterOperand(Register(r))))
 
@@ -1615,6 +1796,8 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
                         r = intReturnRegisters[i]
 
+                        funAttrs.returnInt.add(r)
+
                         match t:
                             case ByteArray(size = size, alignment = alignment):
                                 copyBytesFromReg(r, op, size, ASM_Instructions)
@@ -1627,6 +1810,9 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                         #print("T:", i, op)
 
                         r = doubleReturnRegisters[i]
+
+                        funAttrs.returnDouble.add(r)
+
                         ASM_Instructions.append(MovInstruction(Double(), RegisterOperand(Register(r)), op))
 
 
@@ -2125,19 +2311,6 @@ def ASM_parseTopLevel(topLevel, symbolTable, typeTable, topLevelList):
                                         
                         case _:
                             returnInMemory = False
-
-                    """
-                    match retType:
-                        case parser.StuctureType(tag = tag):
-                            structDef = typeTable[tag]
-                            if structDef.size > 16:
-                                returnInMemory = True
-                            else:
-                                returnInMemory = False
-                                        
-                        case _:
-                            returnInMemory = False
-                    """
                     
                 case _:
                     print("Error: Not fun type.")
@@ -2148,6 +2321,8 @@ def ASM_parseTopLevel(topLevel, symbolTable, typeTable, topLevelList):
             print("IntParams:",intParams)
 
             ASM_Instructions = []
+
+            funAttrs = funcDef.attrs
 
             intRegisters = [RegisterType.DI, RegisterType.SI, RegisterType.DX, RegisterType.CX, RegisterType.R8, RegisterType.R9]
 
@@ -2164,6 +2339,8 @@ def ASM_parseTopLevel(topLevel, symbolTable, typeTable, topLevelList):
                 
                 r = intRegisters[i]
 
+                funAttrs.paramInt.add(r)
+
                 match paramType:
                     case ByteArray(size = size, alignment = alignment):
                         copyBytesFromReg(r, param, size, ASM_Instructions)
@@ -2173,6 +2350,9 @@ def ASM_parseTopLevel(topLevel, symbolTable, typeTable, topLevelList):
             
             for i, param in enumerate(doubleParams):
                 r = doubleRegisters[i]
+
+                funAttrs.paramDouble.add(r)
+
                 ASM_Instructions.append(MovInstruction(Double(), RegisterOperand(Register(r)), param))
                 
             offset = 16 
@@ -2188,8 +2368,8 @@ def ASM_parseTopLevel(topLevel, symbolTable, typeTable, topLevelList):
                         ASM_Instructions.append(MovInstruction(paramType, MemoryOperand(Register(RegisterType.BP), offset), param))
                 
                 offset += 8
-                
-            ASM_parseInstructions(instructions, ASM_Instructions, symbolTable, typeTable, topLevelList)
+
+            ASM_parseInstructions(instructions, ASM_Instructions, symbolTable, typeTable, topLevelList, identifier)
 
             return Function(identifier, global_, ASM_Instructions)
 
@@ -2211,11 +2391,22 @@ class ObjEntry(asm_symtab_entry):
     
     def __repr__(self):
         return self.__str__()
+    
 class FunEntry(asm_symtab_entry):
-    def __init__(self, defined, returnOnStack):
+    def __init__(self, defined, returnOnStack, paramInt, paramDouble, returnInt, returnDouble):
 
         self.defined = defined
         self.returnOnStack = returnOnStack
+
+        self.paramInt = paramInt 
+        self.paramDouble = paramDouble
+        
+        #self.paramStack = []
+
+        self.returnInt = returnInt
+        self.returnDouble = returnDouble
+
+        #self.returnStack = []
 
     def __str__(self):
         return "Defined: {self.defined} ReturnOnStack: {self.returnOnStack}".format(self=self)
@@ -2336,12 +2527,14 @@ def ASM_parseAST(ast, symbolTable, typeTable):
                                             
                             case _:
                                 returnOnStack = False
+
+                        #classifyParametersFromTypes(paramTypes, symbolTable, typeTable, returnOnStack)
                         
                     case _:
                         print("Error: Not fun type.")
                         sys.exit(1)
 
-                backendSymbolTable[name] = FunEntry(defined=defined, returnOnStack=returnOnStack)
+                backendSymbolTable[name] = FunEntry(defined=defined, returnOnStack=returnOnStack, )
              
             case typeChecker.LocalAttributes():
                 alignment, type_ = matchCType(entry.type, typeTable)
@@ -2358,7 +2551,8 @@ def ASM_parseAST(ast, symbolTable, typeTable):
             case _:
                 print("Error: {0}".format(type(entry.attrs)))
                 sys.exit(1)
-                
+    
+
 
     return Program(funcDefList), backendSymbolTable
 
