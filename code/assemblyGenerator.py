@@ -22,16 +22,34 @@ class AssemblyType:
     pass
 
 class Byte(AssemblyType):
-    pass
+
+    def __str__(self):
+        return "Byte"
+    
+    def __repr__(self):
+        return self.__str__()
 
 class Longword(AssemblyType):
-    pass
+    def __str__(self):
+        return "Longword"
+    
+    def __repr__(self):
+        return self.__str__()
 
 class Quadword(AssemblyType):
-    pass
+    def __str__(self):
+        return "Quadword"
+    
+    def __repr__(self):
+        return self.__str__()
 
 class Double(AssemblyType):
-    pass
+    def __str__(self):
+        return "Double"
+    
+    def __repr__(self):
+        return self.__str__()
+    
 
 class ByteArray(AssemblyType):
     def __init__(self, size, alignment):

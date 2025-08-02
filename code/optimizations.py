@@ -646,9 +646,7 @@ def isStatic(variable, symbolTable):
 
             match a.attrs:
                 case typeChecker.StaticAttributes(initialVal = initialVal, global_ = global_):
-                    if global_ == False:
-                        return True
-
+                    return True
     
     return False
 
@@ -1655,7 +1653,7 @@ def constantFolding(tac, symbolTable):
                 entry = symbolTable[dst]
 
                 if typeChecker.isScalar(entry.type):
-                    
+
                     newList.append(tacGenerator.TAC_CopyInstruction(src, tacGenerator.TAC_VariableValue(dst)))
                     
                 else:
