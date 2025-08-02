@@ -1,4 +1,5 @@
 from re import match
+from ordered_set import OrderedSet
 import sys
 import traceback
 from enum import Enum
@@ -31,13 +32,13 @@ class FunAttributes(IdentifierAttributes):
         self.defined = defined
         self.global_ = global_
 
-        self.paramInt = set()
-        self.paramDouble = set()
+        self.paramInt = OrderedSet()
+        self.paramDouble = OrderedSet()
         
         #self.paramStack = []
 
-        self.returnInt = set()
-        self.returnDouble = set()
+        self.returnInt = OrderedSet()
+        self.returnDouble = OrderedSet()
 
         #self.returnStack = []
     

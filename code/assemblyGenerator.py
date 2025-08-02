@@ -2409,8 +2409,8 @@ class FunEntry(asm_symtab_entry):
         #self.returnStack = []
 
     def __str__(self):
-        return "Defined: {self.defined} ReturnOnStack: {self.returnOnStack}".format(self=self)
-    
+        return "Defined: {self.defined} ReturnOnStack: {self.returnOnStack} IntParams: {self.paramInt} DoubleParams: {self.paramDouble} ReturnInt: {self.returnInt} ReturnDouble: {self.returnDouble}".format(self=self)
+
     def __repr__(self):
         return self.__str__()
 
@@ -2504,7 +2504,7 @@ def ASM_parseAST(ast, symbolTable, typeTable):
 
         match entry.attrs:
 
-            case typeChecker.FunAttributes(defined = defined, global_ = global_):
+            case typeChecker.FunAttributes(defined = defined, global_ = global_, paramInt = paramInt, paramDouble = paramDouble, returnInt = returnInt, returnDouble = returnDouble):
 
                 funcDef = symbolTable[name]
                 
@@ -2534,7 +2534,7 @@ def ASM_parseAST(ast, symbolTable, typeTable):
                         print("Error: Not fun type.")
                         sys.exit(1)
 
-                backendSymbolTable[name] = FunEntry(defined=defined, returnOnStack=returnOnStack, )
+                backendSymbolTable[name] = FunEntry(defined, returnOnStack, paramInt, paramDouble, returnInt, returnDouble)
              
             case typeChecker.LocalAttributes():
                 alignment, type_ = matchCType(entry.type, typeTable)
