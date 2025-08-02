@@ -1,4 +1,6 @@
 
+from assemblyGenerator import RegisterType, SSERegisterType
+
 def buildGraph(instructions):
     pass
 
@@ -15,6 +17,16 @@ def replacePseudoRegs(instructions, registerMap):
     pass
 
 def allocateRegisters(instructions):
+
+    intRegisters = list(RegisterType)
+    print(intRegisters)
+    doubleRegisters = list(SSERegisterType)
+
+    allocateRegistersForType(instructions, intRegisters)
+    allocateRegistersForType(instructions, doubleRegisters)
+
+def allocateRegistersForType(instructions, registers):
+
     interGraph = buildGraph(instructions)
 
     addSpillCosts(interGraph, instructions)
