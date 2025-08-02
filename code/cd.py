@@ -16,6 +16,7 @@ import ReplacePseudoRegisters
 import FixingUpInstructions
 import ASTDebug
 import optimizations
+import RegisterAllocation
 
 
 printDebugInfo = True
@@ -328,8 +329,16 @@ if __name__ == "__main__":
 				print("Type Table:\n", typeTable)
 				print("Backend Symbol Table:\n", backSymbolTable)
 
-			#breakpoint()
-			#a = backSymbolTable['tmp.14']
+			#Register Allocator
+			for i in ass.topLevelList:
+				match i:
+					case assemblyGenerator.Function():
+						print("REGISTER ALLOCATE FUNCTION {0}".format(i))
+						i.insList = RegisterAllocation.allocateRegisters(i.insList)
+
+			if LastStage == 'assemblyGeneration':
+				sys.exit(0)
+			
 			ReplacePseudoRegisters.ReplacePseudoRegisters(ass, backSymbolTable)
 
 			if printDebugInfo:
@@ -343,8 +352,7 @@ if __name__ == "__main__":
 						
 		
 
-			if LastStage == 'assemblyGeneration':
-				sys.exit(0)
+			
 
 
 			output = codeEmission.outputAsmFile(ass, backSymbolTable)
