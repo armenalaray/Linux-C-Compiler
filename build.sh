@@ -19,6 +19,7 @@ lastStage="--codegen"
 library="-lmath.h"
 
 python3 "$(pwd)"/code/cd.py $lastStage $noLink $notAssembly $library $fC $pC $eUC $eDS $o "$(pwd)"/test_/test.c > "$(pwd)"/test_/testOptimizations.txt
+
 echo $?
 
 if test -f test_/test; then

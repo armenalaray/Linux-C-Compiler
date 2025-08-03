@@ -2,7 +2,6 @@
 
 //#include "../util.h"
 
-
 /* Helper functions defined in tests/chapter_20/helper_libs/util.c */
 
 /* The check_* functions return 0 on success,

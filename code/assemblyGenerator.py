@@ -820,6 +820,8 @@ class Register:
         match self.register:
             case RegisterType.AX:
                 return "AX"
+            case RegisterType.BX:
+                return "BX"
             case RegisterType.CX:
                 return "CX"
             case RegisterType.DX:
@@ -836,8 +838,19 @@ class Register:
                 return "R10d"
             case RegisterType.R11:
                 return "R11d"
+            case RegisterType.R12:
+                return "R12d"
+            case RegisterType.R13:
+                return "R13d"
+            case RegisterType.R14:
+                return "R14d"
+            case RegisterType.R15:
+                return "R15d"            
             case RegisterType.SP:
                 return "SP"
+            case RegisterType.BP:
+                return "BP"
+
             
             case SSERegisterType.XMM0:
                 return "XMM0"
@@ -855,14 +868,24 @@ class Register:
                 return "XMM6"
             case SSERegisterType.XMM7:
                 return "XMM7"
+            case SSERegisterType.XMM8:
+                return "XMM8"
+            case SSERegisterType.XMM9:
+                return "XMM9"
+            case SSERegisterType.XMM10:
+                return "XMM10"
+            case SSERegisterType.XMM11:
+                return "XMM11"
+            case SSERegisterType.XMM12:
+                return "XMM12"
+            case SSERegisterType.XMM13:
+                return "XMM13"
             case SSERegisterType.XMM14:
                 return "XMM14"
             case SSERegisterType.XMM15:
                 return "XMM15"
             
-            case RegisterType.BP:
-                return "BP"
-
+            
             case _:
                 return "_"
 
