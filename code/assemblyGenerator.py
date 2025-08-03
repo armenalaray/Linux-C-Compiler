@@ -28,6 +28,15 @@ class Byte(AssemblyType):
     
     def __repr__(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash("Byte")
+    
+    def __eq__(self, other):
+        if not isinstance(other, Byte):
+            return False
+        
+        return True
 
 class Longword(AssemblyType):
     def __str__(self):
@@ -35,6 +44,15 @@ class Longword(AssemblyType):
     
     def __repr__(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash("Longword")
+
+    def __eq__(self, other):
+        if not isinstance(other, Longword):
+            return False
+
+        return True
 
 class Quadword(AssemblyType):
     def __str__(self):
@@ -43,12 +61,30 @@ class Quadword(AssemblyType):
     def __repr__(self):
         return self.__str__()
 
+    def __hash__(self):
+        return hash("Quadword")
+
+    def __eq__(self, other):
+        if not isinstance(other, Quadword):
+            return False
+
+        return True
+
 class Double(AssemblyType):
     def __str__(self):
         return "Double"
     
     def __repr__(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash("Double")
+    
+    def __eq__(self, other):
+        if not isinstance(other, Double):
+            return False
+        
+        return True
     
 
 class ByteArray(AssemblyType):
@@ -61,6 +97,17 @@ class ByteArray(AssemblyType):
     
     def __repr__(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.size, self.alignment))
+    
+    def __eq__(self, other):
+        if not isinstance(other, ByteArray):
+            return False
+        
+        return (self.size == other.size and
+                self.alignment == other.alignment)
+    
 
 class TopLevel:
     pass
@@ -106,18 +153,26 @@ class Function(TopLevel):
     def __repr__(self):
         return self.__str__()
 
+
 class ReturnInstruction:
 
     def __init__(self):
         pass
     
-    #debuggear
     def __str__(self):
         return "ret"
     
-    
     def __repr__(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash("ReturnInstruction")
+
+    def __eq__(self, other):
+        if not isinstance(other, ReturnInstruction):
+            return False
+
+        return True
 
 class Cvttsd2si:
 
@@ -162,6 +217,17 @@ class MovInstruction:
     
     def __repr__(self):
         return self.__str__()
+
+    def __hash__(self):
+        return hash((self.assType, self.sourceO, self.destO))
+    
+    def __eq__(self, other):
+        if not isinstance(other, MovInstruction):
+            return False
+        
+        return (self.assType == other.assType and
+                self.sourceO == other.sourceO and
+                self.destO == other.destO)
 
 class MovSXInstruction:
 
@@ -214,6 +280,18 @@ class UnaryInstruction:
     
     def __repr__(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.assType, self.operator, self.dest))
+
+    def __eq__(self, other):
+        if not isinstance(other, UnaryInstruction):
+            return False
+
+        return (self.assType == other.assType and
+                self.operator == other.operator and
+                self.dest == other.dest)
+
 
 class CompInst:
     def __init__(self, assType, operand0, operand1):
@@ -227,6 +305,17 @@ class CompInst:
     def __repr__(self):
         return self.__str__()
     
+    def __hash__(self):
+        return hash((self.assType, self.operand0, self.operand1))
+    
+    def __eq__(self, other):
+        if not isinstance(other, CompInst):
+            return False
+
+        return (self.assType == other.assType and
+                self.operand0 == other.operand0 and
+                self.operand1 == other.operand1)
+
 class JumpInst:
     def __init__(self, identifier):
         self.identifier = identifier
@@ -236,6 +325,16 @@ class JumpInst:
     
     def __repr__(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.identifier))
+    
+    def __eq__(self, other):
+        if not isinstance(other, JumpInst):
+            return False
+
+        return (self.identifier == other.identifier)
+    
 
 class ConcCodeType(Enum):
     E = 1
@@ -263,6 +362,17 @@ class JumpCCInst:
     
     def __repr__(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.conc_code, self.identifier))
+    
+    def __eq__(self, other):
+        if not isinstance(other, JumpCCInst):
+            return False
+
+        return (self.conc_code == other.conc_code and
+                self.identifier == other.identifier)
+    
 
 class SetCCInst:
     def __init__(self, conc_code, operand):
@@ -274,6 +384,17 @@ class SetCCInst:
     
     def __repr__(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.conc_code, self.operand))
+    
+    def __eq__(self, other):
+        if not isinstance(other, SetCCInst):
+            return False
+
+        return (self.conc_code == other.conc_code and
+                self.operand == other.operand)
+    
 
 class LabelInst:
     def __init__(self, identifier):
@@ -284,6 +405,17 @@ class LabelInst:
     
     def __repr__(self):
         return self.__str__()
+
+    def __hash__(self):
+        return hash((self.identifier))
+
+    def __eq__(self, other):
+        if not isinstance(other, LabelInst):
+            return False
+
+        return (self.identifier == other.identifier)
+    
+
 
 class BinaryInstruction:
     def __init__(self, operator, assType, src, dest):
@@ -297,8 +429,19 @@ class BinaryInstruction:
     
     def __repr__(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.operator, self.assType, self.src, self.dest))
 
-#(operator, src2, dst)
+    def __eq__(self, other):
+        if not isinstance(other, BinaryInstruction):
+            return False
+
+        return (self.assType == other.assType and
+                self.operator == other.operator and
+                self.src == other.src and
+                self.dest == other.dest)
+
 
 class IDivInstruction:
     def __init__(self, assType, divisor):
@@ -310,6 +453,17 @@ class IDivInstruction:
     
     def __repr__(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.assType, self.divisor))
+    
+    def __eq__(self, other):
+        if not isinstance(other, IDivInstruction):
+            return False
+
+        return (self.assType == other.assType and
+                self.divisor == other.divisor)
+
 
 class DivInstruction:
     def __init__(self, assType, divisor):
@@ -334,6 +488,15 @@ class CDQInstruction:
     def __repr__(self):
         return self.__str__()
 
+    def __hash__(self):
+        return hash((self.assType))
+    
+    def __eq__(self, other):
+        if not isinstance(other, CDQInstruction):
+            return False
+
+        return (self.assType == other.assType)
+
 class Pop():
     def __init__(self, reg):
         self.reg = reg
@@ -354,6 +517,15 @@ class PushInstruction():
     def __repr__(self):
         return self.__str__()
     
+    def __hash__(self):
+        return hash((self.operand))
+    
+    def __eq__(self, other):
+        if not isinstance(other, PushInstruction):
+            return False
+
+        return (self.operand == other.operand)
+
 class CallInstruction():
     def __init__(self, identifier):
         self.identifier = identifier    
@@ -363,6 +535,15 @@ class CallInstruction():
     
     def __repr__(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.identifier))
+    
+    def __eq__(self, other):
+        if not isinstance(other, CallInstruction):
+            return False
+
+        return (self.identifier == other.identifier)
 
 
 class Operand:
@@ -380,6 +561,15 @@ class PseudoMem(Operand):
     def __repr__(self):
         return self.__str__()
     
+    def __hash__(self):
+        return hash((self.identifier, self.offset))
+    
+    def __eq__(self, other):
+        if not isinstance(other, PseudoMem):
+            return False
+        
+        return (self.identifier == other.identifier and
+                self.offset == other.offset)
     
 class Indexed(Operand):
     def __init__(self, base, index, scale):
@@ -392,6 +582,17 @@ class Indexed(Operand):
 
     def __repr__(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.base, self.index, self.scale))
+    
+    def __eq__(self, other):
+        if not isinstance(other, Indexed):
+            return False
+        
+        return (self.base == other.base and
+                self.index == other.index and
+                self.scale == other.scale)
 
 class PseudoRegisterOperand:
 
@@ -403,6 +604,15 @@ class PseudoRegisterOperand:
 
     def __repr__(self):
         return self.__str__()
+    
+    def __hash__(self):
+        return hash((self.pseudo))
+    
+    def __eq__(self, other):
+        if not isinstance(other, PseudoRegisterOperand):
+            return False
+        
+        return (self.pseudo == other.pseudo)
 
 class MemoryOperand:
     def __init__(self, reg, int):
@@ -412,6 +622,16 @@ class MemoryOperand:
     def __str__(self):
         return "Memory({self.reg}, {self.int})".format(self=self)
 
+    def __hash__(self):
+        return hash((self.reg, self.int))
+    
+    def __eq__(self, other):
+        if not isinstance(other, MemoryOperand):
+            return False
+        
+        return (self.reg == other.reg and
+                self.int == other.int)
+
 class DataOperand:
     def __init__(self, identifier, offset):
         self.identifier = identifier
@@ -419,6 +639,16 @@ class DataOperand:
 
     def __str__(self):
         return "Data({self.identifier}, {self.offset})".format(self=self)
+    
+    def __hash__(self):
+        return hash((self.identifier, self.offset))
+    
+    def __eq__(self, other):
+        if not isinstance(other, DataOperand):
+            return False
+        
+        return (self.identifier == other.identifier and
+                self.offset == other.offset)
 
 class RegisterOperand:
 
@@ -427,11 +657,16 @@ class RegisterOperand:
     
     def __str__(self):
         return r"Reg({self.register})".format(self=self)
-    """
     
-    def __repr__(self):
-        return self.__str__()
-    """
+    def __hash__(self):
+        return hash((self.register))
+    
+    def __eq__(self, other):
+        if not isinstance(other, RegisterOperand):
+            return False
+        
+        return (self.register == other.register)
+    
 
 class ImmediateOperand:
     def __init__(self, intVal):
@@ -440,10 +675,15 @@ class ImmediateOperand:
     def __str__(self):
         return r"Imm({self.imm})".format(self=self)
     
-    """
-    def __repr__(self):
-        return self.__str__()
-    """
+    def __hash__(self):
+        return hash((self.imm))
+
+    def __eq__(self, other):
+        if not isinstance(other, ImmediateOperand):
+            return False
+        
+        return (self.imm == other.imm)
+
 
 class UnopType(Enum):
     Not = 1
@@ -476,6 +716,15 @@ class UnaryOperator:
                 return "Shr"
             case _:
                 return "_"
+            
+    def __hash__(self):
+        return hash((self.operator))
+    
+    def __eq__(self, other):
+        if not isinstance(other, UnaryOperator):
+            return False
+        
+        return (self.operator == other.operator)
 
 class BinaryOperator:
     def __init__(self, operator):
@@ -500,6 +749,15 @@ class BinaryOperator:
             
             case _:
                 return "_"
+            
+    def __hash__(self):
+        return hash((self.operator))
+    
+    def __eq__(self, other):
+        if not isinstance(other, BinaryOperator):
+            return False
+        
+        return (self.operator == other.operator)
 
 class RegisterType(Enum):
     #These are used for registers
@@ -545,6 +803,15 @@ class SSERegisterType(Enum):
 class Register:
     def __init__(self, register):
         self.register = register
+
+    def __hash__(self):
+        return hash((self.register))
+    
+    def __eq__(self, other):
+        if not isinstance(other, Register):
+            return False
+        
+        return (self.register == other.register)
 
     def __str__(self):
         match self.register:

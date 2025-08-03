@@ -479,8 +479,24 @@ def findUsedAndUpdated(instruction, backendSymbolTable):
     
     return used, updated
 
-def transferLive(n, liveVars, backendSymbolTable):
-    #TODO YOUAREHERE
+def transferLive(n, endLiveRegisters, backendSymbolTable):
+
+    currentLiveRegisters = endLiveRegisters
+
+    print("--------------LIVE for block {0}-------------------".format(n.id))
+
+    a = list(n.iMap.items())
+    a.reverse()
+
+    #print(a)
+
+    for i, set0 in a:
+
+        set0.clear()
+        set0.update(currentLiveRegisters)
+
+        print(i, set0)
+
     findUsedAndUpdated(n.instructions[0], backendSymbolTable)
 
 
