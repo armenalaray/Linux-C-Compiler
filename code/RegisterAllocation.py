@@ -1,4 +1,5 @@
 
+import copy
 import assemblyGenerator
 from assemblyGenerator import RegisterType, SSERegisterType
 import typeChecker
@@ -341,19 +342,20 @@ def addAllEdgesToCFG(cfg):
 
             case assemblyGenerator.ReturnInstruction():
                 op.addEdge(n.id, op.EXIT(), cfg)
-                pass
 
             case assemblyGenerator.JumpInst(identifier = identifier):
-                obj = graph.labels[identifier]
+                obj = cfg.labels[identifier]
                 op.addEdge(n.id, obj.id, cfg)
 
-            case assemblyGenerator.JumpCCInst():
-                pass
+            case assemblyGenerator.JumpCCInst(conc_code = conc_code, identifier = identifier):
+                obj = cfg.labels[identifier]
+                op.addEdge(n.id, obj.id, cfg)
+                op.addEdge(n.id, nextID, cfg)
 
             case _:
                 op.addEdge(n.id, nextID, cfg)
 
-
+    print("-------------CONNECTED BLOCKS-----------------")
     for k, n in cfg.blocks.items():
         print(k, n)    
 
@@ -402,7 +404,7 @@ def makeControlFlowGraph(functionBody):
     g.blocks[op.EXIT()] = op.Exit()
 
     print("-------------LABELS-----------------")
-    
+
     for k, w in g.labels.items():
         print(k,w)
 
@@ -410,18 +412,137 @@ def makeControlFlowGraph(functionBody):
 
     return g
     
-"""
-case tacGenerator.TAC_LabelInst(identifier = identifier):
-                g.labels[identifier] = BasicBlock(BlockID(i), instructions)
-"""
+def meetLive(n, cfg):
+    liveVars = set()
 
-def analyzeLiveness(cfg):
-    pass
+    for sID in n.successors:
+        match sID:
+            case op.ENTRY():
+                print("Error: Malformed control graph.")
+                sys.exit(1)
+
+            case op.EXIT():
+                liveVars.add(RegisterType.AX)
+
+            case op.BlockID(num = num):
+                node = cfg.blocks[sID]
+                liveVars.update(node.reachingCopies)
+
+    return liveVars
+
+def findUsedAndUpdated(instruction, backendSymbolTable):
+    used = []
+    updated = []
+
+    match instruction:
+        case assemblyGenerator.MovInstruction(sourceO = sourceO, destO = destO):
+            used = [sourceO]
+            updated = [destO]
+
+        case assemblyGenerator.BinaryInstruction(src = src, dest = dest):
+            used = [src, dest]
+            updated = [dest]
+
+        case assemblyGenerator.UnaryInstruction(dest = dest):
+            used = [dest]
+            updated = [dest]
+
+        case assemblyGenerator.CompInst(operand0 = operand0, operand1 = operand1):
+            used = [operand0, operand1]
+            updated = []
+
+        case assemblyGenerator.SetCCInst(operand = operand):
+            used = []
+            updated = [operand]
+        
+        case assemblyGenerator.PushInstruction(operand = operand):
+            used = [operand]
+            updated = []
+
+        case assemblyGenerator.IDivInstruction(divisor = divisor):
+            used = [divisor, RegisterType.AX, RegisterType.DX]
+            updated = [RegisterType.AX, RegisterType.DX]
+
+        case assemblyGenerator.CDQInstruction():
+            used = [RegisterType.AX]
+            updated = [RegisterType.DX]
+        
+        case assemblyGenerator.CallInstruction(identifier = identifier):
+            funEntry = backendSymbolTable[identifier]
+            
+            used = list(funEntry.paramInt)
+            updated = [RegisterType.DI, RegisterType.SI, RegisterType.DX, RegisterType.CX, RegisterType.R8, RegisterType.R9, RegisterType.AX]
+
+        case _:
+            used = []
+            updated = []
+    
+    return used, updated
+
+def transferLive(n, liveVars, backendSymbolTable):
+    #TODO YOUAREHERE
+    findUsedAndUpdated(n.instructions[0], backendSymbolTable)
+
+
+def analyzeLiveness(cfg, backendSymbolTable):
+    #allStaticVariables = addAllStaticVariables(cfg, symbolTable)
+
+    workList = []
+
+    a = list(cfg.blocks.items())
+    a.reverse()
+
+    for k, n in a:
+        if k == op.ENTRY() or k == op.EXIT():
+            continue
+        
+        workList.append(n)
+        n.reachingCopies.clear()
+
+    while workList != []:
+        n = workList.pop(0)
+        
+        oldAnnot = copy.deepcopy(n.reachingCopies)
+
+        liveVars = meetLive(n, cfg)
+        transferLive(n, liveVars, backendSymbolTable)
+
+        """
+
+        print("OLD ANNOT:", oldAnnot)
+        print("NEW ANNOT:", n.reachingCopies)
+
+        if oldAnnot != n.reachingCopies:
+
+
+            for pID in n.predecessors:
+
+                match pID:
+
+                    case EXIT():
+                        print("Error: Malformed control flow graph.")
+                        sys.exit(1)
+
+                    case ENTRY():
+                        continue
+
+                    case BlockID(num = num):
+
+                        
+                        block = cfg.blocks[pID]
+
+                        if block in workList:
+                            pass
+                        else:
+                            print("ADD PREDECESSORS.")
+                            workList.append(block)
+        """
+    
 
 def addEdges(cfg, interferenceGraph):
     pass
 
-def buildInterferenceGraph(instructions, symbolTable):
+def buildInterferenceGraph(instructions, symbolTable, backendSymbolTable):
 
     print("-----------Building interference graph.------------------")
 
@@ -435,9 +556,7 @@ def buildInterferenceGraph(instructions, symbolTable):
 
     cfg = makeControlFlowGraph(instructions)
 
-    
-    
-    analyzeLiveness(cfg)
+    analyzeLiveness(cfg, backendSymbolTable)
 
     addEdges(cfg, interferenceGraph)
 
@@ -455,9 +574,9 @@ def createRegisterMap(interGraph):
 def replacePseudoRegs(instructions, registerMap):
     pass
 
-def allocateRegistersForType(instructions, registers, symbolTable):
+def allocateRegistersForType(instructions, registers, symbolTable, backendSymbolTable):
 
-    interGraph = buildInterferenceGraph(instructions, symbolTable)
+    interGraph = buildInterferenceGraph(instructions, symbolTable, backendSymbolTable)
 
     addSpillCosts(interGraph, instructions)
 
@@ -469,11 +588,11 @@ def allocateRegistersForType(instructions, registers, symbolTable):
 
     return replacedIns
 
-def allocateRegisters(instructions, symbolTable):
+def allocateRegisters(instructions, symbolTable, backendSymbolTable):
 
     intRegisters = list(RegisterType)
     print(intRegisters)
     doubleRegisters = list(SSERegisterType)
 
-    allocateRegistersForType(instructions, intRegisters, symbolTable)
+    allocateRegistersForType(instructions, intRegisters, symbolTable, backendSymbolTable)
     #allocateRegistersForType(instructions, doubleRegisters, symbolTable)

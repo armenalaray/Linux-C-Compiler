@@ -334,7 +334,7 @@ if __name__ == "__main__":
 				match i:
 					case assemblyGenerator.Function():
 						print("REGISTER ALLOCATE FUNCTION {0}".format(i.identifier))
-						i.insList = RegisterAllocation.allocateRegisters(i.insList, symbolTable)
+						i.insList = RegisterAllocation.allocateRegisters(i.insList, symbolTable, backSymbolTable)
 
 			if LastStage == 'assemblyGeneration':
 				sys.exit(0)

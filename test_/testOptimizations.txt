@@ -12,16 +12,16 @@ NotAssembly: False
 --optimize True
 Libary: math.h
 [('int', <TokenType.INT_KW: 4>, 1), ('check_one_int', <TokenType.IDENTIFIER: 2>, 1), ('(', <TokenType.OPEN_PAREN: 7>, 1), ('int', <TokenType.INT_KW: 4>, 1), ('actual', <TokenType.IDENTIFIER: 2>, 1), (',', <TokenType.COMMA: 38>, 1), ('int', <TokenType.INT_KW: 4>, 1), ('expected', <TokenType.IDENTIFIER: 2>, 1), (')', <TokenType.CLOSE_PAREN: 8>, 1), (';', <TokenType.SEMICOLON: 11>, 1), ('int', <TokenType.INT_KW: 4>, 2), ('check_5_ints', <TokenType.IDENTIFIER: 2>, 2), ('(', <TokenType.OPEN_PAREN: 7>, 2), ('int', <TokenType.INT_KW: 4>, 2), ('a', <TokenType.IDENTIFIER: 2>, 2), (',', <TokenType.COMMA: 38>, 2), ('int', <TokenType.INT_KW: 4>, 2), ('b', <TokenType.IDENTIFIER: 2>, 2), (',', <TokenType.COMMA: 38>, 2), ('int', <TokenType.INT_KW: 4>, 2), ('c', <TokenType.IDENTIFIER: 2>, 2), (',', <TokenType.COMMA: 38>, 2), ('int', <TokenType.INT_KW: 4>, 2), ('d', <TokenType.IDENTIFIER: 2>, 2), (',', <TokenType.COMMA: 38>, 2), ('int', <TokenType.INT_KW: 4>, 2), ('e', <TokenType.IDENTIFIER: 2>, 2), (',', <TokenType.COMMA: 38>, 2), ('int', <TokenType.INT_KW: 4>, 2), ('start', <TokenType.IDENTIFIER: 2>, 2), (')', <TokenType.CLOSE_PAREN: 8>, 2), (';', <TokenType.SEMICOLON: 11>, 2), ('int', <TokenType.INT_KW: 4>, 3), ('check_12_ints', <TokenType.IDENTIFIER: 2>, 3), ('(', <TokenType.OPEN_PAREN: 7>, 3), ('int', <TokenType.INT_KW: 4>, 3), ('a', <TokenType.IDENTIFIER: 2>, 3), (',', <TokenType.COMMA: 38>, 3), ('int', <TokenType.INT_KW: 4>, 3), ('b', <TokenType.IDENTIFIER: 2>, 3), (',', <TokenType.COMMA: 38>, 3), ('int', <TokenType.INT_KW: 4>, 3), ('c', <TokenType.IDENTIFIER: 2>, 3), (',', <TokenType.COMMA: 38>, 3), ('int', <TokenType.INT_KW: 4>, 3), ('d', <TokenType.IDENTIFIER: 2>, 3), (',', <TokenType.COMMA: 38>, 3), ('int', <TokenType.INT_KW: 4>, 3), ('e', <TokenType.IDENTIFIER: 2>, 3), (',', <TokenType.COMMA: 38>, 3), ('int', <TokenType.INT_KW: 4>, 3), ('f', <TokenType.IDENTIFIER: 2>, 3), (',', <TokenType.COMMA: 38>, 3), ('int', <TokenType.INT_KW: 4>, 3), ('g', <TokenType.IDENTIFIER: 2>, 3), (',', <TokenType.COMMA: 38>, 3), ('int', <TokenType.INT_KW: 4>, 3), ('h', <TokenType.IDENTIFIER: 2>, 3), (',', <TokenType.COMMA: 38>, 3), ('int', <TokenType.INT_KW: 4>, 3), ('i', <TokenType.IDENTIFIER: 2>, 3), (',', <TokenType.COMMA: 38>, 3), ('int', <TokenType.INT_KW: 4>, 4), ('j', <TokenType.IDENTIFIER: 2>, 4), (',', <TokenType.COMMA: 38>, 4), ('int', <TokenType.INT_KW: 4>, 4), ('k', <TokenType.IDENTIFIER: 2>, 4), (',', <TokenType.COMMA: 38>, 4), ('int', <TokenType.INT_KW: 4>, 4), ('l', <TokenType.IDENTIFIER: 2>, 4), (',', <TokenType.COMMA: 38>, 4), ('int', <TokenType.INT_KW: 4>, 4), ('start', <TokenType.IDENTIFIER: 2>, 4), (')', <TokenType.CLOSE_PAREN: 8>, 4), (';', <TokenType.SEMICOLON: 11>, 4), ('int', <TokenType.INT_KW: 4>, 5), ('id', <TokenType.IDENTIFIER: 2>, 5), ('(', <TokenType.OPEN_PAREN: 7>, 5), ('int', <TokenType.INT_KW: 4>, 5), ('x', <TokenType.IDENTIFIER: 2>, 5), (')', <TokenType.CLOSE_PAREN: 8>, 5), (';', <TokenType.SEMICOLON: 11>, 5), ('int', <TokenType.INT_KW: 4>, 6), ('src_test', <TokenType.IDENTIFIER: 2>, 6), ('(', <TokenType.OPEN_PAREN: 7>, 6), ('int', <TokenType.INT_KW: 4>, 6), ('arg', <TokenType.IDENTIFIER: 2>, 6), (')', <TokenType.CLOSE_PAREN: 8>, 6), ('{', <TokenType.OPEN_BRACE: 9>, 6), ('int', <TokenType.INT_KW: 4>, 7), ('x', <TokenType.IDENTIFIER: 2>, 7), ('=', <TokenType.EQUAL: 28>, 7), ('5', <TokenType.INT_CONSTANT: 3>, 7), ('+', <TokenType.PLUS: 18>, 7), ('arg', <TokenType.IDENTIFIER: 2>, 7), (';', <TokenType.SEMICOLON: 11>, 7), ('check_one_int', <TokenType.IDENTIFIER: 2>, 8), ('(', <TokenType.OPEN_PAREN: 7>, 8), ('x', <TokenType.IDENTIFIER: 2>, 8), (',', <TokenType.COMMA: 38>, 8), ('6', <TokenType.INT_CONSTANT: 3>, 8), (')', <TokenType.CLOSE_PAREN: 8>, 8), (';', <TokenType.SEMICOLON: 11>, 8), ('return', <TokenType.RETURN_KW: 6>, 9), ('0', <TokenType.INT_CONSTANT: 3>, 9), (';', <TokenType.SEMICOLON: 11>, 9), ('}', <TokenType.CLOSE_BRACE: 10>, 10), ('int', <TokenType.INT_KW: 4>, 11), ('glob', <TokenType.IDENTIFIER: 2>, 11), ('=', <TokenType.EQUAL: 28>, 11), ('1', <TokenType.INT_CONSTANT: 3>, 11), (';', <TokenType.SEMICOLON: 11>, 11), ('int', <TokenType.INT_KW: 4>, 12), ('glob2', <TokenType.IDENTIFIER: 2>, 12), (';', <TokenType.SEMICOLON: 11>, 12), ('int', <TokenType.INT_KW: 4>, 13), ('flag', <TokenType.IDENTIFIER: 2>, 13), ('=', <TokenType.EQUAL: 28>, 13), ('1', <TokenType.INT_CONSTANT: 3>, 13), (';', <TokenType.SEMICOLON: 11>, 13), ('int', <TokenType.INT_KW: 4>, 14), ('dst_test', <TokenType.IDENTIFIER: 2>, 14), ('(', <TokenType.OPEN_PAREN: 7>, 14), ('void', <TokenType.VOID_KW: 5>, 14), (')', <TokenType.CLOSE_PAREN: 8>, 14), ('{', <TokenType.OPEN_BRACE: 9>, 14), ('int', <TokenType.INT_KW: 4>, 15), ('a', <TokenType.IDENTIFIER: 2>, 15), ('=', <TokenType.EQUAL: 28>, 15), ('id', <TokenType.IDENTIFIER: 2>, 15), ('(', <TokenType.OPEN_PAREN: 7>, 15), ('100', <TokenType.INT_CONSTANT: 3>, 15), (')', <TokenType.CLOSE_PAREN: 8>, 15), (';', <TokenType.SEMICOLON: 11>, 15), ('if', <TokenType.IF_KW: 31>, 16), ('(', <TokenType.OPEN_PAREN: 7>, 16), ('flag', <TokenType.IDENTIFIER: 2>, 16), (')', <TokenType.CLOSE_PAREN: 8>, 16), ('{', <TokenType.OPEN_BRACE: 9>, 16), ('glob2', <TokenType.IDENTIFIER: 2>, 17), ('=', <TokenType.EQUAL: 28>, 17), ('a', <TokenType.IDENTIFIER: 2>, 17), ('+', <TokenType.PLUS: 18>, 17), ('glob', <TokenType.IDENTIFIER: 2>, 17), (';', <TokenType.SEMICOLON: 11>, 17), ('a', <TokenType.IDENTIFIER: 2>, 18), ('=', <TokenType.EQUAL: 28>, 18), ('a', <TokenType.IDENTIFIER: 2>, 18), ('-', <TokenType.HYPHEN: 13>, 18), ('1', <TokenType.INT_CONSTANT: 3>, 18), (';', <TokenType.SEMICOLON: 11>, 18), ('}', <TokenType.CLOSE_BRACE: 10>, 19), ('check_one_int', <TokenType.IDENTIFIER: 2>, 20), ('(', <TokenType.OPEN_PAREN: 7>, 20), ('a', <TokenType.IDENTIFIER: 2>, 20), (',', <TokenType.COMMA: 38>, 20), ('99', <TokenType.INT_CONSTANT: 3>, 20), (')', <TokenType.CLOSE_PAREN: 8>, 20), (';', <TokenType.SEMICOLON: 11>, 20), ('check_one_int', <TokenType.IDENTIFIER: 2>, 21), ('(', <TokenType.OPEN_PAREN: 7>, 21), ('glob2', <TokenType.IDENTIFIER: 2>, 21), (',', <TokenType.COMMA: 38>, 21), ('101', <TokenType.INT_CONSTANT: 3>, 21), (')', <TokenType.CLOSE_PAREN: 8>, 21), (';', <TokenType.SEMICOLON: 11>, 21), ('return', <TokenType.RETURN_KW: 6>, 22), ('0', <TokenType.INT_CONSTANT: 3>, 22), (';', <TokenType.SEMICOLON: 11>, 22), ('}', <TokenType.CLOSE_BRACE: 10>, 23), ('int', <TokenType.INT_KW: 4>, 24), ('main', <TokenType.IDENTIFIER: 2>, 24), ('(', <TokenType.OPEN_PAREN: 7>, 24), ('void', <TokenType.VOID_KW: 5>, 24), (')', <TokenType.CLOSE_PAREN: 8>, 24), ('{', <TokenType.OPEN_BRACE: 9>, 24), ('src_test', <TokenType.IDENTIFIER: 2>, 25), ('(', <TokenType.OPEN_PAREN: 7>, 25), ('1', <TokenType.INT_CONSTANT: 3>, 25), (')', <TokenType.CLOSE_PAREN: 8>, 25), (';', <TokenType.SEMICOLON: 11>, 25), ('dst_test', <TokenType.IDENTIFIER: 2>, 26), ('(', <TokenType.OPEN_PAREN: 7>, 26), (')', <TokenType.CLOSE_PAREN: 8>, 26), (';', <TokenType.SEMICOLON: 11>, 26), ('}', <TokenType.CLOSE_BRACE: 10>, 27)]
-<parser.Int object at 0x7fc2273a0f50>
-[<parser.TypeS object at 0x7fc2273a0f20>]
+<parser.Int object at 0x7fede9e9d100>
+[<parser.TypeS object at 0x7fede9f30e60>]
 [<class 'parser.Int'>]
 int
 [<class 'parser.Int'>]
 [<class 'parser.Int'>]
 int (FunDeclarator: (IdenDeclarator: check_one_int) [int (IdenDeclarator: actual), int (IdenDeclarator: expected)])
 FunType: ParamTypes: [int, int] Return Type: int
-<parser.Int object at 0x7fc227490320>
-[<parser.TypeS object at 0x7fc2273a1010>]
+<parser.Int object at 0x7fede9e9d100>
+[<parser.TypeS object at 0x7fede9f30ec0>]
 [<class 'parser.Int'>]
 int
 [<class 'parser.Int'>]
@@ -32,8 +32,8 @@ int
 [<class 'parser.Int'>]
 int (FunDeclarator: (IdenDeclarator: check_5_ints) [int (IdenDeclarator: a), int (IdenDeclarator: b), int (IdenDeclarator: c), int (IdenDeclarator: d), int (IdenDeclarator: e), int (IdenDeclarator: start)])
 FunType: ParamTypes: [int, int, int, int, int, int] Return Type: int
-<parser.Int object at 0x7fc227490320>
-[<parser.TypeS object at 0x7fc2273a1190>]
+<parser.Int object at 0x7fede9e9d100>
+[<parser.TypeS object at 0x7fede9f310a0>]
 [<class 'parser.Int'>]
 int
 [<class 'parser.Int'>]
@@ -51,58 +51,58 @@ int
 [<class 'parser.Int'>]
 int (FunDeclarator: (IdenDeclarator: check_12_ints) [int (IdenDeclarator: a), int (IdenDeclarator: b), int (IdenDeclarator: c), int (IdenDeclarator: d), int (IdenDeclarator: e), int (IdenDeclarator: f), int (IdenDeclarator: g), int (IdenDeclarator: h), int (IdenDeclarator: i), int (IdenDeclarator: j), int (IdenDeclarator: k), int (IdenDeclarator: l), int (IdenDeclarator: start)])
 FunType: ParamTypes: [int, int, int, int, int, int, int, int, int, int, int, int, int] Return Type: int
-<parser.Int object at 0x7fc227490320>
-[<parser.TypeS object at 0x7fc2273a0f50>]
+<parser.Int object at 0x7fede9e9d100>
+[<parser.TypeS object at 0x7fede9f30e60>]
 [<class 'parser.Int'>]
 int
 [<class 'parser.Int'>]
 int (FunDeclarator: (IdenDeclarator: id) [int (IdenDeclarator: x)])
 FunType: ParamTypes: [int] Return Type: int
-<parser.Int object at 0x7fc227490320>
-[<parser.TypeS object at 0x7fc2273a1610>]
+<parser.Int object at 0x7fede9e9d100>
+[<parser.TypeS object at 0x7fede9f31550>]
 [<class 'parser.Int'>]
 int
 [<class 'parser.Int'>]
 int (FunDeclarator: (IdenDeclarator: src_test) [int (IdenDeclarator: arg)])
 FunType: ParamTypes: [int] Return Type: int
-<parser.Int object at 0x7fc2273a1b80>
-[<parser.TypeS object at 0x7fc2273a1c40>]
+<parser.Int object at 0x7fede9f31ac0>
+[<parser.TypeS object at 0x7fede9f31b80>]
 [<class 'parser.Int'>]
 int
 int (IdenDeclarator: x)
 int
-<parser.Int object at 0x7fc227490320>
-[<parser.TypeS object at 0x7fc2273a18b0>]
+<parser.Int object at 0x7fede9e9d100>
+[<parser.TypeS object at 0x7fede9f317f0>]
 [<class 'parser.Int'>]
 int
 int (IdenDeclarator: glob)
 int
-<parser.Int object at 0x7fc227490320>
-[<parser.TypeS object at 0x7fc2273a0f50>]
+<parser.Int object at 0x7fede9e9d100>
+[<parser.TypeS object at 0x7fede9f30e60>]
 [<class 'parser.Int'>]
 int
 int (IdenDeclarator: glob2)
 int
-<parser.Int object at 0x7fc227490320>
-[<parser.TypeS object at 0x7fc2273a22a0>]
+<parser.Int object at 0x7fede9e9d100>
+[<parser.TypeS object at 0x7fede9f32390>]
 [<class 'parser.Int'>]
 int
 int (IdenDeclarator: flag)
 int
-<parser.Int object at 0x7fc227490320>
-[<parser.TypeS object at 0x7fc2273a2360>]
+<parser.Int object at 0x7fede9e9d100>
+[<parser.TypeS object at 0x7fede9f32450>]
 [<class 'parser.Int'>]
 int
 int (FunDeclarator: (IdenDeclarator: dst_test) [])
 FunType: ParamTypes: [] Return Type: int
-<parser.Int object at 0x7fc2273a2570>
-[<parser.TypeS object at 0x7fc2273a25a0>]
+<parser.Int object at 0x7fede9f32630>
+[<parser.TypeS object at 0x7fede9f32660>]
 [<class 'parser.Int'>]
 int
 int (IdenDeclarator: a)
 int
-<parser.Int object at 0x7fc227490320>
-[<parser.TypeS object at 0x7fc2273a24e0>]
+<parser.Int object at 0x7fede9e9d100>
+[<parser.TypeS object at 0x7fede9f325d0>]
 [<class 'parser.Int'>]
 int
 int (FunDeclarator: (IdenDeclarator: main) [])
@@ -233,7 +233,7 @@ Statement: Expression: (dst_test() : int)
 Type Table:
  {}
 Symbol Table:
- {'check_one_int': check_one_int FunType: ParamTypes: [int, int] Return Type: int Defined: False Global: True, 'check_5_ints': check_5_ints FunType: ParamTypes: [int, int, int, int, int, int] Return Type: int Defined: False Global: True, 'check_12_ints': check_12_ints FunType: ParamTypes: [int, int, int, int, int, int, int, int, int, int, int, int, int] Return Type: int Defined: False Global: True, 'id': id FunType: ParamTypes: [int] Return Type: int Defined: False Global: True, 'src_test': src_test FunType: ParamTypes: [int] Return Type: int Defined: True Global: True, 'arg.22': arg.22 int <typeChecker.LocalAttributes object at 0x7fc2271fd9d0>, 'x.23': x.23 int <typeChecker.LocalAttributes object at 0x7fc2271fd9a0>, 'glob': glob int InitialVal: InitialList: [c_int(1)] Global: True, 'glob2': glob2 int InitialVal: <typeChecker.Tentative object at 0x7fc2271fe090> Global: True, 'flag': flag int InitialVal: InitialList: [c_int(1)] Global: True, 'dst_test': dst_test FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'a.24': a.24 int <typeChecker.LocalAttributes object at 0x7fc2271fe4b0>, 'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True}
+ {'check_one_int': check_one_int FunType: ParamTypes: [int, int] Return Type: int Defined: False Global: True, 'check_5_ints': check_5_ints FunType: ParamTypes: [int, int, int, int, int, int] Return Type: int Defined: False Global: True, 'check_12_ints': check_12_ints FunType: ParamTypes: [int, int, int, int, int, int, int, int, int, int, int, int, int] Return Type: int Defined: False Global: True, 'id': id FunType: ParamTypes: [int] Return Type: int Defined: False Global: True, 'src_test': src_test FunType: ParamTypes: [int] Return Type: int Defined: True Global: True, 'arg.22': arg.22 int <typeChecker.LocalAttributes object at 0x7fede9d91160>, 'x.23': x.23 int <typeChecker.LocalAttributes object at 0x7fede9d91130>, 'glob': glob int InitialVal: InitialList: [c_int(1)] Global: True, 'glob2': glob2 int InitialVal: <typeChecker.Tentative object at 0x7fede9d917f0> Global: True, 'flag': flag int InitialVal: InitialList: [c_int(1)] Global: True, 'dst_test': dst_test FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'a.24': a.24 int <typeChecker.LocalAttributes object at 0x7fede9d91c10>, 'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True}
 0
 0
 1
@@ -273,37 +273,37 @@ check_5_ints FunType: ParamTypes: [int, int, int, int, int, int] Return Type: in
 check_12_ints FunType: ParamTypes: [int, int, int, int, int, int, int, int, int, int, int, int, int] Return Type: int Defined: False Global: True
 id FunType: ParamTypes: [int] Return Type: int Defined: False Global: True
 src_test FunType: ParamTypes: [int] Return Type: int Defined: True Global: True
-arg.22 int <typeChecker.LocalAttributes object at 0x7fc2271fd9d0>
-x.23 int <typeChecker.LocalAttributes object at 0x7fc2271fd9a0>
+arg.22 int <typeChecker.LocalAttributes object at 0x7fede9d91160>
+x.23 int <typeChecker.LocalAttributes object at 0x7fede9d91130>
 glob int InitialVal: InitialList: [c_int(1)] Global: True
-glob2 int InitialVal: <typeChecker.Tentative object at 0x7fc2271fe090> Global: True
+glob2 int InitialVal: <typeChecker.Tentative object at 0x7fede9d917f0> Global: True
 flag int InitialVal: InitialList: [c_int(1)] Global: True
 dst_test FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-a.24 int <typeChecker.LocalAttributes object at 0x7fc2271fe4b0>
+a.24 int <typeChecker.LocalAttributes object at 0x7fede9d91c10>
 main FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-tmp.25 int <typeChecker.LocalAttributes object at 0x7fc2273dc8f0>
-tmp.26 int <typeChecker.LocalAttributes object at 0x7fc2273dca10>
-tmp.27 int <typeChecker.LocalAttributes object at 0x7fc2273dcb30>
-tmp.28 int <typeChecker.LocalAttributes object at 0x7fc2273dc890>
-tmp.29 int <typeChecker.LocalAttributes object at 0x7fc2273dce30>
-tmp.30 int <typeChecker.LocalAttributes object at 0x7fc2273dcd70>
-tmp.31 int <typeChecker.LocalAttributes object at 0x7fc2273dc680>
-tmp.33 int <typeChecker.LocalAttributes object at 0x7fc2273dd2b0>
-tmp.34 int <typeChecker.LocalAttributes object at 0x7fc2273dd490>
-tmp.35 int <typeChecker.LocalAttributes object at 0x7fc2273dd130>
-tmp.36 int <typeChecker.LocalAttributes object at 0x7fc2273dd700>
-tmp.37 int <typeChecker.LocalAttributes object at 0x7fc2273dcf80>
-tmp.38 int <typeChecker.LocalAttributes object at 0x7fc2273dd940>
-tmp.39 int <typeChecker.LocalAttributes object at 0x7fc2273dda90>
-tmp.40 int <typeChecker.LocalAttributes object at 0x7fc2273dd820>
-tmp.41 int <typeChecker.LocalAttributes object at 0x7fc2273ddee0>
-tmp.42 int <typeChecker.LocalAttributes object at 0x7fc2273ddd60>
-tmp.43 int <typeChecker.LocalAttributes object at 0x7fc2273ddfd0>
+tmp.25 int <typeChecker.LocalAttributes object at 0x7fede9d93cb0>
+tmp.26 int <typeChecker.LocalAttributes object at 0x7fede9f44ce0>
+tmp.27 int <typeChecker.LocalAttributes object at 0x7fede9f44e00>
+tmp.28 int <typeChecker.LocalAttributes object at 0x7fede9f44b90>
+tmp.29 int <typeChecker.LocalAttributes object at 0x7fede9f45130>
+tmp.30 int <typeChecker.LocalAttributes object at 0x7fede9f45070>
+tmp.31 int <typeChecker.LocalAttributes object at 0x7fede9f44920>
+tmp.33 int <typeChecker.LocalAttributes object at 0x7fede9f455b0>
+tmp.34 int <typeChecker.LocalAttributes object at 0x7fede9f45790>
+tmp.35 int <typeChecker.LocalAttributes object at 0x7fede9f45430>
+tmp.36 int <typeChecker.LocalAttributes object at 0x7fede9f45a00>
+tmp.37 int <typeChecker.LocalAttributes object at 0x7fede9f45280>
+tmp.38 int <typeChecker.LocalAttributes object at 0x7fede9f45c40>
+tmp.39 int <typeChecker.LocalAttributes object at 0x7fede9f45d90>
+tmp.40 int <typeChecker.LocalAttributes object at 0x7fede9f45b20>
+tmp.41 int <typeChecker.LocalAttributes object at 0x7fede9f461e0>
+tmp.42 int <typeChecker.LocalAttributes object at 0x7fede9f46060>
+tmp.43 int <typeChecker.LocalAttributes object at 0x7fede9f462d0>
 TAC Program:[Function: src_test (['arg.22']) instructions:[tmp.25 = 5 + arg.22, CopyToOffset(x.23 + 0) = tmp.25 , Copy tmp.26 = x.23, Copy tmp.27 = 6, tmp.28 = check_one_int([tmp.26, tmp.27]), Return 0, Return 0], Function: dst_test ([]) instructions:[Copy tmp.29 = 100, tmp.30 = id([tmp.29]), CopyToOffset(a.24 + 0) = tmp.30 , Copy tmp.31 = flag, JumpIfZero(tmp.31, tmp.32), tmp.33 = a.24 + glob, Copy glob2 = tmp.33, tmp.34 = a.24 - 1, Copy a.24 = tmp.34, Label(tmp.32), Copy tmp.35 = a.24, Copy tmp.36 = 99, tmp.37 = check_one_int([tmp.35, tmp.36]), Copy tmp.38 = glob2, Copy tmp.39 = 101, tmp.40 = check_one_int([tmp.38, tmp.39]), Return 0, Return 0], Function: main ([]) instructions:[Copy tmp.41 = 1, tmp.42 = src_test([tmp.41]), tmp.43 = dst_test([]), Return 0], Global: True glob = [c_int(1)], Global: True glob2 = [c_int(0)], Global: True flag = [c_int(1)]]
 Type Table:
  {}
 Symbol Table:
- {'check_one_int': check_one_int FunType: ParamTypes: [int, int] Return Type: int Defined: False Global: True, 'check_5_ints': check_5_ints FunType: ParamTypes: [int, int, int, int, int, int] Return Type: int Defined: False Global: True, 'check_12_ints': check_12_ints FunType: ParamTypes: [int, int, int, int, int, int, int, int, int, int, int, int, int] Return Type: int Defined: False Global: True, 'id': id FunType: ParamTypes: [int] Return Type: int Defined: False Global: True, 'src_test': src_test FunType: ParamTypes: [int] Return Type: int Defined: True Global: True, 'arg.22': arg.22 int <typeChecker.LocalAttributes object at 0x7fc2271fd9d0>, 'x.23': x.23 int <typeChecker.LocalAttributes object at 0x7fc2271fd9a0>, 'glob': glob int InitialVal: InitialList: [c_int(1)] Global: True, 'glob2': glob2 int InitialVal: <typeChecker.Tentative object at 0x7fc2271fe090> Global: True, 'flag': flag int InitialVal: InitialList: [c_int(1)] Global: True, 'dst_test': dst_test FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'a.24': a.24 int <typeChecker.LocalAttributes object at 0x7fc2271fe4b0>, 'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'tmp.25': tmp.25 int <typeChecker.LocalAttributes object at 0x7fc2273dc8f0>, 'tmp.26': tmp.26 int <typeChecker.LocalAttributes object at 0x7fc2273dca10>, 'tmp.27': tmp.27 int <typeChecker.LocalAttributes object at 0x7fc2273dcb30>, 'tmp.28': tmp.28 int <typeChecker.LocalAttributes object at 0x7fc2273dc890>, 'tmp.29': tmp.29 int <typeChecker.LocalAttributes object at 0x7fc2273dce30>, 'tmp.30': tmp.30 int <typeChecker.LocalAttributes object at 0x7fc2273dcd70>, 'tmp.31': tmp.31 int <typeChecker.LocalAttributes object at 0x7fc2273dc680>, 'tmp.33': tmp.33 int <typeChecker.LocalAttributes object at 0x7fc2273dd2b0>, 'tmp.34': tmp.34 int <typeChecker.LocalAttributes object at 0x7fc2273dd490>, 'tmp.35': tmp.35 int <typeChecker.LocalAttributes object at 0x7fc2273dd130>, 'tmp.36': tmp.36 int <typeChecker.LocalAttributes object at 0x7fc2273dd700>, 'tmp.37': tmp.37 int <typeChecker.LocalAttributes object at 0x7fc2273dcf80>, 'tmp.38': tmp.38 int <typeChecker.LocalAttributes object at 0x7fc2273dd940>, 'tmp.39': tmp.39 int <typeChecker.LocalAttributes object at 0x7fc2273dda90>, 'tmp.40': tmp.40 int <typeChecker.LocalAttributes object at 0x7fc2273dd820>, 'tmp.41': tmp.41 int <typeChecker.LocalAttributes object at 0x7fc2273ddee0>, 'tmp.42': tmp.42 int <typeChecker.LocalAttributes object at 0x7fc2273ddd60>, 'tmp.43': tmp.43 int <typeChecker.LocalAttributes object at 0x7fc2273ddfd0>}
+ {'check_one_int': check_one_int FunType: ParamTypes: [int, int] Return Type: int Defined: False Global: True, 'check_5_ints': check_5_ints FunType: ParamTypes: [int, int, int, int, int, int] Return Type: int Defined: False Global: True, 'check_12_ints': check_12_ints FunType: ParamTypes: [int, int, int, int, int, int, int, int, int, int, int, int, int] Return Type: int Defined: False Global: True, 'id': id FunType: ParamTypes: [int] Return Type: int Defined: False Global: True, 'src_test': src_test FunType: ParamTypes: [int] Return Type: int Defined: True Global: True, 'arg.22': arg.22 int <typeChecker.LocalAttributes object at 0x7fede9d91160>, 'x.23': x.23 int <typeChecker.LocalAttributes object at 0x7fede9d91130>, 'glob': glob int InitialVal: InitialList: [c_int(1)] Global: True, 'glob2': glob2 int InitialVal: <typeChecker.Tentative object at 0x7fede9d917f0> Global: True, 'flag': flag int InitialVal: InitialList: [c_int(1)] Global: True, 'dst_test': dst_test FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'a.24': a.24 int <typeChecker.LocalAttributes object at 0x7fede9d91c10>, 'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'tmp.25': tmp.25 int <typeChecker.LocalAttributes object at 0x7fede9d93cb0>, 'tmp.26': tmp.26 int <typeChecker.LocalAttributes object at 0x7fede9f44ce0>, 'tmp.27': tmp.27 int <typeChecker.LocalAttributes object at 0x7fede9f44e00>, 'tmp.28': tmp.28 int <typeChecker.LocalAttributes object at 0x7fede9f44b90>, 'tmp.29': tmp.29 int <typeChecker.LocalAttributes object at 0x7fede9f45130>, 'tmp.30': tmp.30 int <typeChecker.LocalAttributes object at 0x7fede9f45070>, 'tmp.31': tmp.31 int <typeChecker.LocalAttributes object at 0x7fede9f44920>, 'tmp.33': tmp.33 int <typeChecker.LocalAttributes object at 0x7fede9f455b0>, 'tmp.34': tmp.34 int <typeChecker.LocalAttributes object at 0x7fede9f45790>, 'tmp.35': tmp.35 int <typeChecker.LocalAttributes object at 0x7fede9f45430>, 'tmp.36': tmp.36 int <typeChecker.LocalAttributes object at 0x7fede9f45a00>, 'tmp.37': tmp.37 int <typeChecker.LocalAttributes object at 0x7fede9f45280>, 'tmp.38': tmp.38 int <typeChecker.LocalAttributes object at 0x7fede9f45c40>, 'tmp.39': tmp.39 int <typeChecker.LocalAttributes object at 0x7fede9f45d90>, 'tmp.40': tmp.40 int <typeChecker.LocalAttributes object at 0x7fede9f45b20>, 'tmp.41': tmp.41 int <typeChecker.LocalAttributes object at 0x7fede9f461e0>, 'tmp.42': tmp.42 int <typeChecker.LocalAttributes object at 0x7fede9f46060>, 'tmp.43': tmp.43 int <typeChecker.LocalAttributes object at 0x7fede9f462d0>}
 OPTIMIZING FUNCTION Function: src_test (['arg.22']) instructions:[tmp.25 = 5 + arg.22, CopyToOffset(x.23 + 0) = tmp.25 , Copy tmp.26 = x.23, Copy tmp.27 = 6, tmp.28 = check_one_int([tmp.26, tmp.27]), Return 0, Return 0]
 --------------ADDRESS TAKEN ANALYSIS.------------------
 set()
@@ -355,49 +355,49 @@ check_5_ints check_5_ints FunType: ParamTypes: [int, int, int, int, int, int] Re
 check_12_ints check_12_ints FunType: ParamTypes: [int, int, int, int, int, int, int, int, int, int, int, int, int] Return Type: int Defined: False Global: True
 id id FunType: ParamTypes: [int] Return Type: int Defined: False Global: True
 src_test src_test FunType: ParamTypes: [int] Return Type: int Defined: True Global: True
-arg.22 arg.22 int <typeChecker.LocalAttributes object at 0x7fc2271fd9d0>
-x.23 x.23 int <typeChecker.LocalAttributes object at 0x7fc2271fd9a0>
+arg.22 arg.22 int <typeChecker.LocalAttributes object at 0x7fede9d91160>
+x.23 x.23 int <typeChecker.LocalAttributes object at 0x7fede9d91130>
 glob glob int InitialVal: InitialList: [c_int(1)] Global: True
-glob2 glob2 int InitialVal: <typeChecker.Tentative object at 0x7fc2271fe090> Global: True
+glob2 glob2 int InitialVal: <typeChecker.Tentative object at 0x7fede9d917f0> Global: True
 flag flag int InitialVal: InitialList: [c_int(1)] Global: True
 dst_test dst_test FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-a.24 a.24 int <typeChecker.LocalAttributes object at 0x7fc2271fe4b0>
+a.24 a.24 int <typeChecker.LocalAttributes object at 0x7fede9d91c10>
 main main FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-tmp.25 tmp.25 int <typeChecker.LocalAttributes object at 0x7fc2273dc8f0>
-tmp.26 tmp.26 int <typeChecker.LocalAttributes object at 0x7fc2273dca10>
-tmp.27 tmp.27 int <typeChecker.LocalAttributes object at 0x7fc2273dcb30>
-tmp.28 tmp.28 int <typeChecker.LocalAttributes object at 0x7fc2273dc890>
-tmp.29 tmp.29 int <typeChecker.LocalAttributes object at 0x7fc2273dce30>
-tmp.30 tmp.30 int <typeChecker.LocalAttributes object at 0x7fc2273dcd70>
-tmp.31 tmp.31 int <typeChecker.LocalAttributes object at 0x7fc2273dc680>
-tmp.33 tmp.33 int <typeChecker.LocalAttributes object at 0x7fc2273dd2b0>
-tmp.34 tmp.34 int <typeChecker.LocalAttributes object at 0x7fc2273dd490>
-tmp.35 tmp.35 int <typeChecker.LocalAttributes object at 0x7fc2273dd130>
-tmp.36 tmp.36 int <typeChecker.LocalAttributes object at 0x7fc2273dd700>
-tmp.37 tmp.37 int <typeChecker.LocalAttributes object at 0x7fc2273dcf80>
-tmp.38 tmp.38 int <typeChecker.LocalAttributes object at 0x7fc2273dd940>
-tmp.39 tmp.39 int <typeChecker.LocalAttributes object at 0x7fc2273dda90>
-tmp.40 tmp.40 int <typeChecker.LocalAttributes object at 0x7fc2273dd820>
-tmp.41 tmp.41 int <typeChecker.LocalAttributes object at 0x7fc2273ddee0>
-tmp.42 tmp.42 int <typeChecker.LocalAttributes object at 0x7fc2273ddd60>
-tmp.43 tmp.43 int <typeChecker.LocalAttributes object at 0x7fc2273ddfd0>
+tmp.25 tmp.25 int <typeChecker.LocalAttributes object at 0x7fede9d93cb0>
+tmp.26 tmp.26 int <typeChecker.LocalAttributes object at 0x7fede9f44ce0>
+tmp.27 tmp.27 int <typeChecker.LocalAttributes object at 0x7fede9f44e00>
+tmp.28 tmp.28 int <typeChecker.LocalAttributes object at 0x7fede9f44b90>
+tmp.29 tmp.29 int <typeChecker.LocalAttributes object at 0x7fede9f45130>
+tmp.30 tmp.30 int <typeChecker.LocalAttributes object at 0x7fede9f45070>
+tmp.31 tmp.31 int <typeChecker.LocalAttributes object at 0x7fede9f44920>
+tmp.33 tmp.33 int <typeChecker.LocalAttributes object at 0x7fede9f455b0>
+tmp.34 tmp.34 int <typeChecker.LocalAttributes object at 0x7fede9f45790>
+tmp.35 tmp.35 int <typeChecker.LocalAttributes object at 0x7fede9f45430>
+tmp.36 tmp.36 int <typeChecker.LocalAttributes object at 0x7fede9f45a00>
+tmp.37 tmp.37 int <typeChecker.LocalAttributes object at 0x7fede9f45280>
+tmp.38 tmp.38 int <typeChecker.LocalAttributes object at 0x7fede9f45c40>
+tmp.39 tmp.39 int <typeChecker.LocalAttributes object at 0x7fede9f45d90>
+tmp.40 tmp.40 int <typeChecker.LocalAttributes object at 0x7fede9f45b20>
+tmp.41 tmp.41 int <typeChecker.LocalAttributes object at 0x7fede9f461e0>
+tmp.42 tmp.42 int <typeChecker.LocalAttributes object at 0x7fede9f46060>
+tmp.43 tmp.43 int <typeChecker.LocalAttributes object at 0x7fede9f462d0>
 --------------LIVE for block 0-------------------
-Return 0 {glob2, glob, flag}
-tmp.28 = check_one_int([x.23, 6]) {glob2, glob, flag}
+Return 0 {flag, glob, glob2}
+tmp.28 = check_one_int([x.23, 6]) {flag, glob, glob2}
 <class 'tacGenerator.TAC_VariableValue'>
 <class 'tacGenerator.TAC_ConstantValue'>
-Copy tmp.27 = 6 {glob2, flag, x.23, glob}
-Copy tmp.26 = tmp.25 {glob2, flag, x.23, glob}
-Copy x.23 = tmp.25 {glob2, flag, glob, x.23, tmp.25}
-tmp.25 = 5 + arg.22 {glob2, flag, tmp.25, glob}
+Copy tmp.27 = 6 {x.23, flag, glob, glob2}
+Copy tmp.26 = tmp.25 {x.23, flag, glob, glob2}
+Copy x.23 = tmp.25 {tmp.25, x.23, flag, glob, glob2}
+tmp.25 = 5 + arg.22 {tmp.25, flag, glob, glob2}
 OLD ANNOT: set()
-NEW ANNOT: {glob2, flag, glob, arg.22}
+NEW ANNOT: {flag, arg.22, glob, glob2}
 ------------REMOVE DEAD STORE INSTRUCTIONS.-------------
-Copy tmp.26 = tmp.25 {glob2, flag, x.23, glob} for node 0
-Copy tmp.27 = 6 {glob2, flag, x.23, glob} for node 0
+Copy tmp.26 = tmp.25 {x.23, flag, glob, glob2} for node 0
+Copy tmp.27 = 6 {x.23, flag, glob, glob2} for node 0
 ------------AFTER DEAD STORE REMOVAL.-------------
 ENTRY Entry: ENTRY {0}
-0 0: [tmp.25 = 5 + arg.22, Copy x.23 = tmp.25, tmp.28 = check_one_int([x.23, 6]), Return 0] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.25 = 5 + arg.22: {glob2, flag, tmp.25, glob}, Copy x.23 = tmp.25: {glob2, flag, glob, x.23, tmp.25}, Copy tmp.26 = tmp.25: {glob2, flag, x.23, glob}, Copy tmp.27 = 6: {glob2, flag, x.23, glob}, tmp.28 = check_one_int([x.23, 6]): {glob2, glob, flag}, Return 0: {glob2, glob, flag}} ReachingCopies: {glob2, flag, glob, arg.22}
+0 0: [tmp.25 = 5 + arg.22, Copy x.23 = tmp.25, tmp.28 = check_one_int([x.23, 6]), Return 0] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.25 = 5 + arg.22: {tmp.25, flag, glob, glob2}, Copy x.23 = tmp.25: {tmp.25, x.23, flag, glob, glob2}, Copy tmp.26 = tmp.25: {x.23, flag, glob, glob2}, Copy tmp.27 = 6: {x.23, flag, glob, glob2}, tmp.28 = check_one_int([x.23, 6]): {flag, glob, glob2}, Return 0: {flag, glob, glob2}} ReachingCopies: {flag, arg.22, glob, glob2}
 EXIT Exit: EXIT {0}
 --------------ADDRESS TAKEN ANALYSIS.------------------
 set()
@@ -440,46 +440,46 @@ check_5_ints check_5_ints FunType: ParamTypes: [int, int, int, int, int, int] Re
 check_12_ints check_12_ints FunType: ParamTypes: [int, int, int, int, int, int, int, int, int, int, int, int, int] Return Type: int Defined: False Global: True
 id id FunType: ParamTypes: [int] Return Type: int Defined: False Global: True
 src_test src_test FunType: ParamTypes: [int] Return Type: int Defined: True Global: True
-arg.22 arg.22 int <typeChecker.LocalAttributes object at 0x7fc2271fd9d0>
-x.23 x.23 int <typeChecker.LocalAttributes object at 0x7fc2271fd9a0>
+arg.22 arg.22 int <typeChecker.LocalAttributes object at 0x7fede9d91160>
+x.23 x.23 int <typeChecker.LocalAttributes object at 0x7fede9d91130>
 glob glob int InitialVal: InitialList: [c_int(1)] Global: True
-glob2 glob2 int InitialVal: <typeChecker.Tentative object at 0x7fc2271fe090> Global: True
+glob2 glob2 int InitialVal: <typeChecker.Tentative object at 0x7fede9d917f0> Global: True
 flag flag int InitialVal: InitialList: [c_int(1)] Global: True
 dst_test dst_test FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-a.24 a.24 int <typeChecker.LocalAttributes object at 0x7fc2271fe4b0>
+a.24 a.24 int <typeChecker.LocalAttributes object at 0x7fede9d91c10>
 main main FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-tmp.25 tmp.25 int <typeChecker.LocalAttributes object at 0x7fc2273dc8f0>
-tmp.26 tmp.26 int <typeChecker.LocalAttributes object at 0x7fc2273dca10>
-tmp.27 tmp.27 int <typeChecker.LocalAttributes object at 0x7fc2273dcb30>
-tmp.28 tmp.28 int <typeChecker.LocalAttributes object at 0x7fc2273dc890>
-tmp.29 tmp.29 int <typeChecker.LocalAttributes object at 0x7fc2273dce30>
-tmp.30 tmp.30 int <typeChecker.LocalAttributes object at 0x7fc2273dcd70>
-tmp.31 tmp.31 int <typeChecker.LocalAttributes object at 0x7fc2273dc680>
-tmp.33 tmp.33 int <typeChecker.LocalAttributes object at 0x7fc2273dd2b0>
-tmp.34 tmp.34 int <typeChecker.LocalAttributes object at 0x7fc2273dd490>
-tmp.35 tmp.35 int <typeChecker.LocalAttributes object at 0x7fc2273dd130>
-tmp.36 tmp.36 int <typeChecker.LocalAttributes object at 0x7fc2273dd700>
-tmp.37 tmp.37 int <typeChecker.LocalAttributes object at 0x7fc2273dcf80>
-tmp.38 tmp.38 int <typeChecker.LocalAttributes object at 0x7fc2273dd940>
-tmp.39 tmp.39 int <typeChecker.LocalAttributes object at 0x7fc2273dda90>
-tmp.40 tmp.40 int <typeChecker.LocalAttributes object at 0x7fc2273dd820>
-tmp.41 tmp.41 int <typeChecker.LocalAttributes object at 0x7fc2273ddee0>
-tmp.42 tmp.42 int <typeChecker.LocalAttributes object at 0x7fc2273ddd60>
-tmp.43 tmp.43 int <typeChecker.LocalAttributes object at 0x7fc2273ddfd0>
+tmp.25 tmp.25 int <typeChecker.LocalAttributes object at 0x7fede9d93cb0>
+tmp.26 tmp.26 int <typeChecker.LocalAttributes object at 0x7fede9f44ce0>
+tmp.27 tmp.27 int <typeChecker.LocalAttributes object at 0x7fede9f44e00>
+tmp.28 tmp.28 int <typeChecker.LocalAttributes object at 0x7fede9f44b90>
+tmp.29 tmp.29 int <typeChecker.LocalAttributes object at 0x7fede9f45130>
+tmp.30 tmp.30 int <typeChecker.LocalAttributes object at 0x7fede9f45070>
+tmp.31 tmp.31 int <typeChecker.LocalAttributes object at 0x7fede9f44920>
+tmp.33 tmp.33 int <typeChecker.LocalAttributes object at 0x7fede9f455b0>
+tmp.34 tmp.34 int <typeChecker.LocalAttributes object at 0x7fede9f45790>
+tmp.35 tmp.35 int <typeChecker.LocalAttributes object at 0x7fede9f45430>
+tmp.36 tmp.36 int <typeChecker.LocalAttributes object at 0x7fede9f45a00>
+tmp.37 tmp.37 int <typeChecker.LocalAttributes object at 0x7fede9f45280>
+tmp.38 tmp.38 int <typeChecker.LocalAttributes object at 0x7fede9f45c40>
+tmp.39 tmp.39 int <typeChecker.LocalAttributes object at 0x7fede9f45d90>
+tmp.40 tmp.40 int <typeChecker.LocalAttributes object at 0x7fede9f45b20>
+tmp.41 tmp.41 int <typeChecker.LocalAttributes object at 0x7fede9f461e0>
+tmp.42 tmp.42 int <typeChecker.LocalAttributes object at 0x7fede9f46060>
+tmp.43 tmp.43 int <typeChecker.LocalAttributes object at 0x7fede9f462d0>
 --------------LIVE for block 0-------------------
-Return 0 {glob2, glob, flag}
-tmp.28 = check_one_int([tmp.25, 6]) {glob2, glob, flag}
+Return 0 {flag, glob, glob2}
+tmp.28 = check_one_int([tmp.25, 6]) {flag, glob, glob2}
 <class 'tacGenerator.TAC_VariableValue'>
 <class 'tacGenerator.TAC_ConstantValue'>
-Copy x.23 = tmp.25 {glob2, flag, tmp.25, glob}
-tmp.25 = 5 + arg.22 {glob2, flag, tmp.25, glob}
+Copy x.23 = tmp.25 {tmp.25, flag, glob, glob2}
+tmp.25 = 5 + arg.22 {tmp.25, flag, glob, glob2}
 OLD ANNOT: set()
-NEW ANNOT: {glob2, flag, glob, arg.22}
+NEW ANNOT: {flag, arg.22, glob, glob2}
 ------------REMOVE DEAD STORE INSTRUCTIONS.-------------
-Copy x.23 = tmp.25 {glob2, flag, tmp.25, glob} for node 0
+Copy x.23 = tmp.25 {tmp.25, flag, glob, glob2} for node 0
 ------------AFTER DEAD STORE REMOVAL.-------------
 ENTRY Entry: ENTRY {0}
-0 0: [tmp.25 = 5 + arg.22, tmp.28 = check_one_int([tmp.25, 6]), Return 0] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.25 = 5 + arg.22: {glob2, flag, tmp.25, glob}, Copy x.23 = tmp.25: {glob2, flag, tmp.25, glob}, tmp.28 = check_one_int([tmp.25, 6]): {glob2, glob, flag}, Return 0: {glob2, glob, flag}} ReachingCopies: {glob2, flag, glob, arg.22}
+0 0: [tmp.25 = 5 + arg.22, tmp.28 = check_one_int([tmp.25, 6]), Return 0] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.25 = 5 + arg.22: {tmp.25, flag, glob, glob2}, Copy x.23 = tmp.25: {tmp.25, flag, glob, glob2}, tmp.28 = check_one_int([tmp.25, 6]): {flag, glob, glob2}, Return 0: {flag, glob, glob2}} ReachingCopies: {flag, arg.22, glob, glob2}
 EXIT Exit: EXIT {0}
 --------------ADDRESS TAKEN ANALYSIS.------------------
 set()
@@ -520,48 +520,48 @@ check_5_ints check_5_ints FunType: ParamTypes: [int, int, int, int, int, int] Re
 check_12_ints check_12_ints FunType: ParamTypes: [int, int, int, int, int, int, int, int, int, int, int, int, int] Return Type: int Defined: False Global: True
 id id FunType: ParamTypes: [int] Return Type: int Defined: False Global: True
 src_test src_test FunType: ParamTypes: [int] Return Type: int Defined: True Global: True
-arg.22 arg.22 int <typeChecker.LocalAttributes object at 0x7fc2271fd9d0>
-x.23 x.23 int <typeChecker.LocalAttributes object at 0x7fc2271fd9a0>
+arg.22 arg.22 int <typeChecker.LocalAttributes object at 0x7fede9d91160>
+x.23 x.23 int <typeChecker.LocalAttributes object at 0x7fede9d91130>
 glob glob int InitialVal: InitialList: [c_int(1)] Global: True
-glob2 glob2 int InitialVal: <typeChecker.Tentative object at 0x7fc2271fe090> Global: True
+glob2 glob2 int InitialVal: <typeChecker.Tentative object at 0x7fede9d917f0> Global: True
 flag flag int InitialVal: InitialList: [c_int(1)] Global: True
 dst_test dst_test FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-a.24 a.24 int <typeChecker.LocalAttributes object at 0x7fc2271fe4b0>
+a.24 a.24 int <typeChecker.LocalAttributes object at 0x7fede9d91c10>
 main main FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-tmp.25 tmp.25 int <typeChecker.LocalAttributes object at 0x7fc2273dc8f0>
-tmp.26 tmp.26 int <typeChecker.LocalAttributes object at 0x7fc2273dca10>
-tmp.27 tmp.27 int <typeChecker.LocalAttributes object at 0x7fc2273dcb30>
-tmp.28 tmp.28 int <typeChecker.LocalAttributes object at 0x7fc2273dc890>
-tmp.29 tmp.29 int <typeChecker.LocalAttributes object at 0x7fc2273dce30>
-tmp.30 tmp.30 int <typeChecker.LocalAttributes object at 0x7fc2273dcd70>
-tmp.31 tmp.31 int <typeChecker.LocalAttributes object at 0x7fc2273dc680>
-tmp.33 tmp.33 int <typeChecker.LocalAttributes object at 0x7fc2273dd2b0>
-tmp.34 tmp.34 int <typeChecker.LocalAttributes object at 0x7fc2273dd490>
-tmp.35 tmp.35 int <typeChecker.LocalAttributes object at 0x7fc2273dd130>
-tmp.36 tmp.36 int <typeChecker.LocalAttributes object at 0x7fc2273dd700>
-tmp.37 tmp.37 int <typeChecker.LocalAttributes object at 0x7fc2273dcf80>
-tmp.38 tmp.38 int <typeChecker.LocalAttributes object at 0x7fc2273dd940>
-tmp.39 tmp.39 int <typeChecker.LocalAttributes object at 0x7fc2273dda90>
-tmp.40 tmp.40 int <typeChecker.LocalAttributes object at 0x7fc2273dd820>
-tmp.41 tmp.41 int <typeChecker.LocalAttributes object at 0x7fc2273ddee0>
-tmp.42 tmp.42 int <typeChecker.LocalAttributes object at 0x7fc2273ddd60>
-tmp.43 tmp.43 int <typeChecker.LocalAttributes object at 0x7fc2273ddfd0>
+tmp.25 tmp.25 int <typeChecker.LocalAttributes object at 0x7fede9d93cb0>
+tmp.26 tmp.26 int <typeChecker.LocalAttributes object at 0x7fede9f44ce0>
+tmp.27 tmp.27 int <typeChecker.LocalAttributes object at 0x7fede9f44e00>
+tmp.28 tmp.28 int <typeChecker.LocalAttributes object at 0x7fede9f44b90>
+tmp.29 tmp.29 int <typeChecker.LocalAttributes object at 0x7fede9f45130>
+tmp.30 tmp.30 int <typeChecker.LocalAttributes object at 0x7fede9f45070>
+tmp.31 tmp.31 int <typeChecker.LocalAttributes object at 0x7fede9f44920>
+tmp.33 tmp.33 int <typeChecker.LocalAttributes object at 0x7fede9f455b0>
+tmp.34 tmp.34 int <typeChecker.LocalAttributes object at 0x7fede9f45790>
+tmp.35 tmp.35 int <typeChecker.LocalAttributes object at 0x7fede9f45430>
+tmp.36 tmp.36 int <typeChecker.LocalAttributes object at 0x7fede9f45a00>
+tmp.37 tmp.37 int <typeChecker.LocalAttributes object at 0x7fede9f45280>
+tmp.38 tmp.38 int <typeChecker.LocalAttributes object at 0x7fede9f45c40>
+tmp.39 tmp.39 int <typeChecker.LocalAttributes object at 0x7fede9f45d90>
+tmp.40 tmp.40 int <typeChecker.LocalAttributes object at 0x7fede9f45b20>
+tmp.41 tmp.41 int <typeChecker.LocalAttributes object at 0x7fede9f461e0>
+tmp.42 tmp.42 int <typeChecker.LocalAttributes object at 0x7fede9f46060>
+tmp.43 tmp.43 int <typeChecker.LocalAttributes object at 0x7fede9f462d0>
 --------------LIVE for block 0-------------------
-Return 0 {glob2, glob, flag}
-tmp.28 = check_one_int([tmp.25, 6]) {glob2, glob, flag}
+Return 0 {flag, glob, glob2}
+tmp.28 = check_one_int([tmp.25, 6]) {flag, glob, glob2}
 <class 'tacGenerator.TAC_VariableValue'>
 <class 'tacGenerator.TAC_ConstantValue'>
-tmp.25 = 5 + arg.22 {glob2, flag, tmp.25, glob}
+tmp.25 = 5 + arg.22 {tmp.25, flag, glob, glob2}
 OLD ANNOT: set()
-NEW ANNOT: {glob2, flag, glob, arg.22}
+NEW ANNOT: {flag, arg.22, glob, glob2}
 ------------REMOVE DEAD STORE INSTRUCTIONS.-------------
 ------------AFTER DEAD STORE REMOVAL.-------------
 ENTRY Entry: ENTRY {0}
-0 0: [tmp.25 = 5 + arg.22, tmp.28 = check_one_int([tmp.25, 6]), Return 0] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.25 = 5 + arg.22: {glob2, flag, tmp.25, glob}, tmp.28 = check_one_int([tmp.25, 6]): {glob2, glob, flag}, Return 0: {glob2, glob, flag}} ReachingCopies: {glob2, flag, glob, arg.22}
+0 0: [tmp.25 = 5 + arg.22, tmp.28 = check_one_int([tmp.25, 6]), Return 0] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.25 = 5 + arg.22: {tmp.25, flag, glob, glob2}, tmp.28 = check_one_int([tmp.25, 6]): {flag, glob, glob2}, Return 0: {flag, glob, glob2}} ReachingCopies: {flag, arg.22, glob, glob2}
 EXIT Exit: EXIT {0}
 OPTIMIZING FUNCTION Function: dst_test ([]) instructions:[Copy tmp.29 = 100, tmp.30 = id([tmp.29]), CopyToOffset(a.24 + 0) = tmp.30 , Copy tmp.31 = flag, JumpIfZero(tmp.31, tmp.32), tmp.33 = a.24 + glob, Copy glob2 = tmp.33, tmp.34 = a.24 - 1, Copy a.24 = tmp.34, Label(tmp.32), Copy tmp.35 = a.24, Copy tmp.36 = 99, tmp.37 = check_one_int([tmp.35, tmp.36]), Copy tmp.38 = glob2, Copy tmp.39 = 101, tmp.40 = check_one_int([tmp.38, tmp.39]), Return 0, Return 0]
 --------------ADDRESS TAKEN ANALYSIS.------------------
-{glob2, flag, glob}
+{flag, glob, glob2}
 -------------CONSTANT FOLDING PASS.--------------------
 OLD LIST [Copy tmp.29 = 100, tmp.30 = id([tmp.29]), CopyToOffset(a.24 + 0) = tmp.30 , Copy tmp.31 = flag, JumpIfZero(tmp.31, tmp.32), tmp.33 = a.24 + glob, Copy glob2 = tmp.33, tmp.34 = a.24 - 1, Copy a.24 = tmp.34, Label(tmp.32), Copy tmp.35 = a.24, Copy tmp.36 = 99, tmp.37 = check_one_int([tmp.35, tmp.36]), Copy tmp.38 = glob2, Copy tmp.39 = 101, tmp.40 = check_one_int([tmp.38, tmp.39]), Return 0, Return 0]
 NEW LIST [Copy tmp.29 = 100, tmp.30 = id([tmp.29]), Copy a.24 = tmp.30, Copy tmp.31 = flag, JumpIfZero(tmp.31, tmp.32), tmp.33 = a.24 + glob, Copy glob2 = tmp.33, tmp.34 = a.24 - 1, Copy a.24 = tmp.34, Label(tmp.32), Copy tmp.35 = a.24, Copy tmp.36 = 99, tmp.37 = check_one_int([tmp.35, tmp.36]), Copy tmp.38 = glob2, Copy tmp.39 = 101, tmp.40 = check_one_int([tmp.38, tmp.39]), Return 0, Return 0]
@@ -619,17 +619,17 @@ Copy tmp.29 = 100 set()
 <class 'parser.ConstInt'>
 tmp.30 = id([tmp.29]) {Copy tmp.29 = 100}
 Copy a.24 = tmp.30 {Copy tmp.29 = 100}
-Copy tmp.31 = flag {Copy tmp.29 = 100, Copy a.24 = tmp.30}
-JumpIfZero(tmp.31, tmp.32) {Copy tmp.31 = flag, Copy tmp.29 = 100, Copy a.24 = tmp.30}
-OLD ANNOT: {Copy tmp.31 = flag, Copy tmp.38 = glob2, Copy a.24 = tmp.30, Copy tmp.36 = 99, Copy tmp.29 = 100, Copy tmp.35 = a.24, Copy tmp.39 = 101, Copy a.24 = tmp.34, Copy glob2 = tmp.33}
-NEW ANNOT: {Copy tmp.31 = flag, Copy tmp.29 = 100, Copy a.24 = tmp.30}
+Copy tmp.31 = flag {Copy a.24 = tmp.30, Copy tmp.29 = 100}
+JumpIfZero(tmp.31, tmp.32) {Copy tmp.31 = flag, Copy a.24 = tmp.30, Copy tmp.29 = 100}
+OLD ANNOT: {Copy a.24 = tmp.30, Copy tmp.35 = a.24, Copy glob2 = tmp.33, Copy tmp.39 = 101, Copy tmp.31 = flag, Copy tmp.36 = 99, Copy tmp.38 = glob2, Copy a.24 = tmp.34, Copy tmp.29 = 100}
+NEW ANNOT: {Copy tmp.31 = flag, Copy a.24 = tmp.30, Copy tmp.29 = 100}
 ADD SUCCESSORS.
 --------------IMAP for block 1-------------------
-tmp.33 = a.24 + glob {Copy tmp.31 = flag, Copy tmp.29 = 100, Copy a.24 = tmp.30}
-Copy glob2 = tmp.33 {Copy tmp.31 = flag, Copy tmp.29 = 100, Copy a.24 = tmp.30}
-tmp.34 = a.24 - 1 {Copy tmp.31 = flag, Copy glob2 = tmp.33, Copy tmp.29 = 100, Copy a.24 = tmp.30}
-Copy a.24 = tmp.34 {Copy tmp.31 = flag, Copy tmp.29 = 100, Copy glob2 = tmp.33, Copy a.24 = tmp.30}
-OLD ANNOT: {Copy tmp.31 = flag, Copy tmp.38 = glob2, Copy a.24 = tmp.30, Copy tmp.36 = 99, Copy tmp.29 = 100, Copy tmp.35 = a.24, Copy tmp.39 = 101, Copy a.24 = tmp.34, Copy glob2 = tmp.33}
+tmp.33 = a.24 + glob {Copy tmp.31 = flag, Copy a.24 = tmp.30, Copy tmp.29 = 100}
+Copy glob2 = tmp.33 {Copy tmp.31 = flag, Copy a.24 = tmp.30, Copy tmp.29 = 100}
+tmp.34 = a.24 - 1 {Copy tmp.31 = flag, Copy a.24 = tmp.30, Copy glob2 = tmp.33, Copy tmp.29 = 100}
+Copy a.24 = tmp.34 {Copy tmp.31 = flag, Copy a.24 = tmp.30, Copy glob2 = tmp.33, Copy tmp.29 = 100}
+OLD ANNOT: {Copy a.24 = tmp.30, Copy tmp.35 = a.24, Copy glob2 = tmp.33, Copy tmp.39 = 101, Copy tmp.31 = flag, Copy tmp.36 = 99, Copy tmp.38 = glob2, Copy a.24 = tmp.34, Copy tmp.29 = 100}
 NEW ANNOT: {Copy tmp.31 = flag, Copy glob2 = tmp.33, Copy a.24 = tmp.34, Copy tmp.29 = 100}
 ADD SUCCESSORS.
 --------------IMAP for block 2-------------------
@@ -637,20 +637,20 @@ Label(tmp.32) {Copy tmp.31 = flag, Copy tmp.29 = 100}
 Copy tmp.35 = a.24 {Copy tmp.31 = flag, Copy tmp.29 = 100}
 Copy tmp.36 = 99 {Copy tmp.31 = flag, Copy tmp.35 = a.24, Copy tmp.29 = 100}
 <class 'parser.ConstInt'>
-tmp.37 = check_one_int([tmp.35, tmp.36]) {Copy tmp.31 = flag, Copy tmp.36 = 99, Copy tmp.29 = 100, Copy tmp.35 = a.24}
-Copy tmp.38 = glob2 {Copy tmp.35 = a.24, Copy tmp.36 = 99, Copy tmp.29 = 100}
-Copy tmp.39 = 101 {Copy tmp.38 = glob2, Copy tmp.29 = 100, Copy tmp.36 = 99, Copy tmp.35 = a.24}
+tmp.37 = check_one_int([tmp.35, tmp.36]) {Copy tmp.31 = flag, Copy tmp.36 = 99, Copy tmp.35 = a.24, Copy tmp.29 = 100}
+Copy tmp.38 = glob2 {Copy tmp.36 = 99, Copy tmp.35 = a.24, Copy tmp.29 = 100}
+Copy tmp.39 = 101 {Copy tmp.38 = glob2, Copy tmp.36 = 99, Copy tmp.35 = a.24, Copy tmp.29 = 100}
 <class 'parser.ConstInt'>
-tmp.40 = check_one_int([tmp.38, tmp.39]) {Copy tmp.38 = glob2, Copy tmp.29 = 100, Copy tmp.39 = 101, Copy tmp.36 = 99, Copy tmp.35 = a.24}
-Return 0 {Copy tmp.29 = 100, Copy tmp.39 = 101, Copy tmp.36 = 99, Copy tmp.35 = a.24}
-OLD ANNOT: {Copy tmp.31 = flag, Copy tmp.38 = glob2, Copy a.24 = tmp.30, Copy tmp.36 = 99, Copy tmp.29 = 100, Copy tmp.35 = a.24, Copy tmp.39 = 101, Copy a.24 = tmp.34, Copy glob2 = tmp.33}
-NEW ANNOT: {Copy tmp.29 = 100, Copy tmp.39 = 101, Copy tmp.36 = 99, Copy tmp.35 = a.24}
+tmp.40 = check_one_int([tmp.38, tmp.39]) {Copy tmp.38 = glob2, Copy tmp.29 = 100, Copy tmp.36 = 99, Copy tmp.35 = a.24, Copy tmp.39 = 101}
+Return 0 {Copy tmp.29 = 100, Copy tmp.36 = 99, Copy tmp.35 = a.24, Copy tmp.39 = 101}
+OLD ANNOT: {Copy a.24 = tmp.30, Copy tmp.35 = a.24, Copy glob2 = tmp.33, Copy tmp.39 = 101, Copy tmp.31 = flag, Copy tmp.36 = 99, Copy tmp.38 = glob2, Copy a.24 = tmp.34, Copy tmp.29 = 100}
+NEW ANNOT: {Copy tmp.29 = 100, Copy tmp.36 = 99, Copy tmp.35 = a.24, Copy tmp.39 = 101}
 ADD SUCCESSORS.
 ------------REPLACE INSTRUCTIONS WITH REACHING COPIES.-------------
 ENTRY Entry: ENTRY {0}
-0 0: [Copy tmp.29 = 100, tmp.30 = id([100]), Copy a.24 = tmp.30, Copy tmp.31 = flag, JumpIfZero(flag, tmp.32)] Pred: {ENTRY} Suc: {1, 2} iMap: {Copy tmp.29 = 100: set(), tmp.30 = id([tmp.29]): {Copy tmp.29 = 100}, Copy a.24 = tmp.30: {Copy tmp.29 = 100}, Copy tmp.31 = flag: {Copy tmp.29 = 100, Copy a.24 = tmp.30}, JumpIfZero(tmp.31, tmp.32): {Copy tmp.31 = flag, Copy tmp.29 = 100, Copy a.24 = tmp.30}} ReachingCopies: {Copy tmp.31 = flag, Copy tmp.29 = 100, Copy a.24 = tmp.30}
-1 1: [tmp.33 = tmp.30 + glob, Copy glob2 = tmp.33, tmp.34 = tmp.30 - 1, Copy a.24 = tmp.34] Pred: {0} Suc: {2} iMap: {tmp.33 = a.24 + glob: {Copy tmp.31 = flag, Copy tmp.29 = 100, Copy a.24 = tmp.30}, Copy glob2 = tmp.33: {Copy tmp.31 = flag, Copy tmp.29 = 100, Copy a.24 = tmp.30}, tmp.34 = a.24 - 1: {Copy tmp.31 = flag, Copy glob2 = tmp.33, Copy tmp.29 = 100, Copy a.24 = tmp.30}, Copy a.24 = tmp.34: {Copy tmp.31 = flag, Copy tmp.29 = 100, Copy glob2 = tmp.33, Copy a.24 = tmp.30}} ReachingCopies: {Copy tmp.31 = flag, Copy glob2 = tmp.33, Copy a.24 = tmp.34, Copy tmp.29 = 100}
-2 2: [Label(tmp.32), Copy tmp.35 = a.24, Copy tmp.36 = 99, tmp.37 = check_one_int([a.24, 99]), Copy tmp.38 = glob2, Copy tmp.39 = 101, tmp.40 = check_one_int([glob2, 101]), Return 0] Pred: {0, 1} Suc: {EXIT} iMap: {Label(tmp.32): {Copy tmp.31 = flag, Copy tmp.29 = 100}, Copy tmp.35 = a.24: {Copy tmp.31 = flag, Copy tmp.29 = 100}, Copy tmp.36 = 99: {Copy tmp.31 = flag, Copy tmp.35 = a.24, Copy tmp.29 = 100}, tmp.37 = check_one_int([tmp.35, tmp.36]): {Copy tmp.31 = flag, Copy tmp.36 = 99, Copy tmp.29 = 100, Copy tmp.35 = a.24}, Copy tmp.38 = glob2: {Copy tmp.35 = a.24, Copy tmp.36 = 99, Copy tmp.29 = 100}, Copy tmp.39 = 101: {Copy tmp.38 = glob2, Copy tmp.29 = 100, Copy tmp.36 = 99, Copy tmp.35 = a.24}, tmp.40 = check_one_int([tmp.38, tmp.39]): {Copy tmp.38 = glob2, Copy tmp.29 = 100, Copy tmp.39 = 101, Copy tmp.36 = 99, Copy tmp.35 = a.24}, Return 0: {Copy tmp.29 = 100, Copy tmp.39 = 101, Copy tmp.36 = 99, Copy tmp.35 = a.24}} ReachingCopies: {Copy tmp.29 = 100, Copy tmp.39 = 101, Copy tmp.36 = 99, Copy tmp.35 = a.24}
+0 0: [Copy tmp.29 = 100, tmp.30 = id([100]), Copy a.24 = tmp.30, Copy tmp.31 = flag, JumpIfZero(flag, tmp.32)] Pred: {ENTRY} Suc: {1, 2} iMap: {Copy tmp.29 = 100: set(), tmp.30 = id([tmp.29]): {Copy tmp.29 = 100}, Copy a.24 = tmp.30: {Copy tmp.29 = 100}, Copy tmp.31 = flag: {Copy a.24 = tmp.30, Copy tmp.29 = 100}, JumpIfZero(tmp.31, tmp.32): {Copy tmp.31 = flag, Copy a.24 = tmp.30, Copy tmp.29 = 100}} ReachingCopies: {Copy tmp.31 = flag, Copy a.24 = tmp.30, Copy tmp.29 = 100}
+1 1: [tmp.33 = tmp.30 + glob, Copy glob2 = tmp.33, tmp.34 = tmp.30 - 1, Copy a.24 = tmp.34] Pred: {0} Suc: {2} iMap: {tmp.33 = a.24 + glob: {Copy tmp.31 = flag, Copy a.24 = tmp.30, Copy tmp.29 = 100}, Copy glob2 = tmp.33: {Copy tmp.31 = flag, Copy a.24 = tmp.30, Copy tmp.29 = 100}, tmp.34 = a.24 - 1: {Copy tmp.31 = flag, Copy a.24 = tmp.30, Copy glob2 = tmp.33, Copy tmp.29 = 100}, Copy a.24 = tmp.34: {Copy tmp.31 = flag, Copy a.24 = tmp.30, Copy glob2 = tmp.33, Copy tmp.29 = 100}} ReachingCopies: {Copy tmp.31 = flag, Copy glob2 = tmp.33, Copy a.24 = tmp.34, Copy tmp.29 = 100}
+2 2: [Label(tmp.32), Copy tmp.35 = a.24, Copy tmp.36 = 99, tmp.37 = check_one_int([a.24, 99]), Copy tmp.38 = glob2, Copy tmp.39 = 101, tmp.40 = check_one_int([glob2, 101]), Return 0] Pred: {0, 1} Suc: {EXIT} iMap: {Label(tmp.32): {Copy tmp.31 = flag, Copy tmp.29 = 100}, Copy tmp.35 = a.24: {Copy tmp.31 = flag, Copy tmp.29 = 100}, Copy tmp.36 = 99: {Copy tmp.31 = flag, Copy tmp.35 = a.24, Copy tmp.29 = 100}, tmp.37 = check_one_int([tmp.35, tmp.36]): {Copy tmp.31 = flag, Copy tmp.36 = 99, Copy tmp.35 = a.24, Copy tmp.29 = 100}, Copy tmp.38 = glob2: {Copy tmp.36 = 99, Copy tmp.35 = a.24, Copy tmp.29 = 100}, Copy tmp.39 = 101: {Copy tmp.38 = glob2, Copy tmp.36 = 99, Copy tmp.35 = a.24, Copy tmp.29 = 100}, tmp.40 = check_one_int([tmp.38, tmp.39]): {Copy tmp.38 = glob2, Copy tmp.29 = 100, Copy tmp.36 = 99, Copy tmp.35 = a.24, Copy tmp.39 = 101}, Return 0: {Copy tmp.29 = 100, Copy tmp.36 = 99, Copy tmp.35 = a.24, Copy tmp.39 = 101}} ReachingCopies: {Copy tmp.29 = 100, Copy tmp.36 = 99, Copy tmp.35 = a.24, Copy tmp.39 = 101}
 EXIT Exit: EXIT {2}
 --------------ADDING ALL STATIC VARIABLES.------------------
 check_one_int check_one_int FunType: ParamTypes: [int, int] Return Type: int Defined: False Global: True
@@ -658,78 +658,78 @@ check_5_ints check_5_ints FunType: ParamTypes: [int, int, int, int, int, int] Re
 check_12_ints check_12_ints FunType: ParamTypes: [int, int, int, int, int, int, int, int, int, int, int, int, int] Return Type: int Defined: False Global: True
 id id FunType: ParamTypes: [int] Return Type: int Defined: False Global: True
 src_test src_test FunType: ParamTypes: [int] Return Type: int Defined: True Global: True
-arg.22 arg.22 int <typeChecker.LocalAttributes object at 0x7fc2271fd9d0>
-x.23 x.23 int <typeChecker.LocalAttributes object at 0x7fc2271fd9a0>
+arg.22 arg.22 int <typeChecker.LocalAttributes object at 0x7fede9d91160>
+x.23 x.23 int <typeChecker.LocalAttributes object at 0x7fede9d91130>
 glob glob int InitialVal: InitialList: [c_int(1)] Global: True
-glob2 glob2 int InitialVal: <typeChecker.Tentative object at 0x7fc2271fe090> Global: True
+glob2 glob2 int InitialVal: <typeChecker.Tentative object at 0x7fede9d917f0> Global: True
 flag flag int InitialVal: InitialList: [c_int(1)] Global: True
 dst_test dst_test FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-a.24 a.24 int <typeChecker.LocalAttributes object at 0x7fc2271fe4b0>
+a.24 a.24 int <typeChecker.LocalAttributes object at 0x7fede9d91c10>
 main main FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-tmp.25 tmp.25 int <typeChecker.LocalAttributes object at 0x7fc2273dc8f0>
-tmp.26 tmp.26 int <typeChecker.LocalAttributes object at 0x7fc2273dca10>
-tmp.27 tmp.27 int <typeChecker.LocalAttributes object at 0x7fc2273dcb30>
-tmp.28 tmp.28 int <typeChecker.LocalAttributes object at 0x7fc2273dc890>
-tmp.29 tmp.29 int <typeChecker.LocalAttributes object at 0x7fc2273dce30>
-tmp.30 tmp.30 int <typeChecker.LocalAttributes object at 0x7fc2273dcd70>
-tmp.31 tmp.31 int <typeChecker.LocalAttributes object at 0x7fc2273dc680>
-tmp.33 tmp.33 int <typeChecker.LocalAttributes object at 0x7fc2273dd2b0>
-tmp.34 tmp.34 int <typeChecker.LocalAttributes object at 0x7fc2273dd490>
-tmp.35 tmp.35 int <typeChecker.LocalAttributes object at 0x7fc2273dd130>
-tmp.36 tmp.36 int <typeChecker.LocalAttributes object at 0x7fc2273dd700>
-tmp.37 tmp.37 int <typeChecker.LocalAttributes object at 0x7fc2273dcf80>
-tmp.38 tmp.38 int <typeChecker.LocalAttributes object at 0x7fc2273dd940>
-tmp.39 tmp.39 int <typeChecker.LocalAttributes object at 0x7fc2273dda90>
-tmp.40 tmp.40 int <typeChecker.LocalAttributes object at 0x7fc2273dd820>
-tmp.41 tmp.41 int <typeChecker.LocalAttributes object at 0x7fc2273ddee0>
-tmp.42 tmp.42 int <typeChecker.LocalAttributes object at 0x7fc2273ddd60>
-tmp.43 tmp.43 int <typeChecker.LocalAttributes object at 0x7fc2273ddfd0>
+tmp.25 tmp.25 int <typeChecker.LocalAttributes object at 0x7fede9d93cb0>
+tmp.26 tmp.26 int <typeChecker.LocalAttributes object at 0x7fede9f44ce0>
+tmp.27 tmp.27 int <typeChecker.LocalAttributes object at 0x7fede9f44e00>
+tmp.28 tmp.28 int <typeChecker.LocalAttributes object at 0x7fede9f44b90>
+tmp.29 tmp.29 int <typeChecker.LocalAttributes object at 0x7fede9f45130>
+tmp.30 tmp.30 int <typeChecker.LocalAttributes object at 0x7fede9f45070>
+tmp.31 tmp.31 int <typeChecker.LocalAttributes object at 0x7fede9f44920>
+tmp.33 tmp.33 int <typeChecker.LocalAttributes object at 0x7fede9f455b0>
+tmp.34 tmp.34 int <typeChecker.LocalAttributes object at 0x7fede9f45790>
+tmp.35 tmp.35 int <typeChecker.LocalAttributes object at 0x7fede9f45430>
+tmp.36 tmp.36 int <typeChecker.LocalAttributes object at 0x7fede9f45a00>
+tmp.37 tmp.37 int <typeChecker.LocalAttributes object at 0x7fede9f45280>
+tmp.38 tmp.38 int <typeChecker.LocalAttributes object at 0x7fede9f45c40>
+tmp.39 tmp.39 int <typeChecker.LocalAttributes object at 0x7fede9f45d90>
+tmp.40 tmp.40 int <typeChecker.LocalAttributes object at 0x7fede9f45b20>
+tmp.41 tmp.41 int <typeChecker.LocalAttributes object at 0x7fede9f461e0>
+tmp.42 tmp.42 int <typeChecker.LocalAttributes object at 0x7fede9f46060>
+tmp.43 tmp.43 int <typeChecker.LocalAttributes object at 0x7fede9f462d0>
 --------------LIVE for block 2-------------------
-Return 0 {glob2, glob, flag}
-tmp.40 = check_one_int([glob2, 101]) {glob2, glob, flag}
+Return 0 {flag, glob, glob2}
+tmp.40 = check_one_int([glob2, 101]) {flag, glob, glob2}
 <class 'tacGenerator.TAC_VariableValue'>
 <class 'tacGenerator.TAC_ConstantValue'>
-Copy tmp.39 = 101 {glob2, flag, glob}
-Copy tmp.38 = glob2 {glob2, flag, glob}
-tmp.37 = check_one_int([a.24, 99]) {glob2, flag, glob}
+Copy tmp.39 = 101 {flag, glob, glob2}
+Copy tmp.38 = glob2 {flag, glob, glob2}
+tmp.37 = check_one_int([a.24, 99]) {flag, glob, glob2}
 <class 'tacGenerator.TAC_VariableValue'>
 <class 'tacGenerator.TAC_ConstantValue'>
-Copy tmp.36 = 99 {glob2, a.24, flag, glob}
-Copy tmp.35 = a.24 {glob2, a.24, flag, glob}
-Label(tmp.32) {glob2, a.24, flag, glob}
+Copy tmp.36 = 99 {flag, glob, glob2, a.24}
+Copy tmp.35 = a.24 {flag, glob, glob2, a.24}
+Label(tmp.32) {flag, glob, glob2, a.24}
 OLD ANNOT: set()
-NEW ANNOT: {glob2, a.24, flag, glob}
+NEW ANNOT: {flag, glob, glob2, a.24}
 --------------LIVE for block 1-------------------
-Copy a.24 = tmp.34 {glob2, a.24, flag, glob}
-tmp.34 = tmp.30 - 1 {glob2, tmp.34, flag, glob}
-Copy glob2 = tmp.33 {glob2, flag, tmp.30, glob}
-tmp.33 = tmp.30 + glob {flag, tmp.30, glob, tmp.33}
+Copy a.24 = tmp.34 {flag, glob, glob2, a.24}
+tmp.34 = tmp.30 - 1 {flag, tmp.34, glob, glob2}
+Copy glob2 = tmp.33 {flag, tmp.30, glob2, glob}
+tmp.33 = tmp.30 + glob {flag, tmp.30, tmp.33, glob}
 OLD ANNOT: set()
 NEW ANNOT: {flag, tmp.30, glob}
 --------------LIVE for block 0-------------------
-JumpIfZero(flag, tmp.32) {glob2, a.24, tmp.30, glob, flag}
-Copy tmp.31 = flag {glob2, a.24, tmp.30, glob, flag}
-Copy a.24 = tmp.30 {glob2, a.24, tmp.30, glob, flag}
-tmp.30 = id([100]) {glob2, glob, tmp.30, flag}
+JumpIfZero(flag, tmp.32) {tmp.30, flag, glob, glob2, a.24}
+Copy tmp.31 = flag {tmp.30, flag, glob, glob2, a.24}
+Copy a.24 = tmp.30 {tmp.30, flag, glob, glob2, a.24}
+tmp.30 = id([100]) {flag, tmp.30, glob2, glob}
 <class 'tacGenerator.TAC_ConstantValue'>
-Copy tmp.29 = 100 {glob2, glob, flag}
+Copy tmp.29 = 100 {flag, glob, glob2}
 OLD ANNOT: set()
-NEW ANNOT: {glob2, glob, flag}
+NEW ANNOT: {flag, glob, glob2}
 ------------REMOVE DEAD STORE INSTRUCTIONS.-------------
-Copy tmp.29 = 100 {glob2, glob, flag} for node 0
-Copy tmp.31 = flag {glob2, a.24, tmp.30, glob, flag} for node 0
-Copy tmp.35 = a.24 {glob2, a.24, flag, glob} for node 2
-Copy tmp.36 = 99 {glob2, a.24, flag, glob} for node 2
-Copy tmp.38 = glob2 {glob2, flag, glob} for node 2
-Copy tmp.39 = 101 {glob2, flag, glob} for node 2
+Copy tmp.29 = 100 {flag, glob, glob2} for node 0
+Copy tmp.31 = flag {tmp.30, flag, glob, glob2, a.24} for node 0
+Copy tmp.35 = a.24 {flag, glob, glob2, a.24} for node 2
+Copy tmp.36 = 99 {flag, glob, glob2, a.24} for node 2
+Copy tmp.38 = glob2 {flag, glob, glob2} for node 2
+Copy tmp.39 = 101 {flag, glob, glob2} for node 2
 ------------AFTER DEAD STORE REMOVAL.-------------
 ENTRY Entry: ENTRY {0}
-0 0: [tmp.30 = id([100]), Copy a.24 = tmp.30, JumpIfZero(flag, tmp.32)] Pred: {ENTRY} Suc: {1, 2} iMap: {Copy tmp.29 = 100: {glob2, glob, flag}, tmp.30 = id([100]): {glob2, glob, tmp.30, flag}, Copy a.24 = tmp.30: {glob2, a.24, tmp.30, glob, flag}, Copy tmp.31 = flag: {glob2, a.24, tmp.30, glob, flag}, JumpIfZero(flag, tmp.32): {glob2, a.24, tmp.30, glob, flag}} ReachingCopies: {glob2, glob, flag}
-1 1: [tmp.33 = tmp.30 + glob, Copy glob2 = tmp.33, tmp.34 = tmp.30 - 1, Copy a.24 = tmp.34] Pred: {0} Suc: {2} iMap: {tmp.33 = tmp.30 + glob: {flag, tmp.30, glob, tmp.33}, Copy glob2 = tmp.33: {glob2, flag, tmp.30, glob}, tmp.34 = tmp.30 - 1: {glob2, tmp.34, flag, glob}, Copy a.24 = tmp.34: {glob2, a.24, flag, glob}} ReachingCopies: {flag, tmp.30, glob}
-2 2: [Label(tmp.32), tmp.37 = check_one_int([a.24, 99]), tmp.40 = check_one_int([glob2, 101]), Return 0] Pred: {0, 1} Suc: {EXIT} iMap: {Label(tmp.32): {glob2, a.24, flag, glob}, Copy tmp.35 = a.24: {glob2, a.24, flag, glob}, Copy tmp.36 = 99: {glob2, a.24, flag, glob}, tmp.37 = check_one_int([a.24, 99]): {glob2, flag, glob}, Copy tmp.38 = glob2: {glob2, flag, glob}, Copy tmp.39 = 101: {glob2, flag, glob}, tmp.40 = check_one_int([glob2, 101]): {glob2, glob, flag}, Return 0: {glob2, glob, flag}} ReachingCopies: {glob2, a.24, flag, glob}
+0 0: [tmp.30 = id([100]), Copy a.24 = tmp.30, JumpIfZero(flag, tmp.32)] Pred: {ENTRY} Suc: {1, 2} iMap: {Copy tmp.29 = 100: {flag, glob, glob2}, tmp.30 = id([100]): {flag, tmp.30, glob2, glob}, Copy a.24 = tmp.30: {tmp.30, flag, glob, glob2, a.24}, Copy tmp.31 = flag: {tmp.30, flag, glob, glob2, a.24}, JumpIfZero(flag, tmp.32): {tmp.30, flag, glob, glob2, a.24}} ReachingCopies: {flag, glob, glob2}
+1 1: [tmp.33 = tmp.30 + glob, Copy glob2 = tmp.33, tmp.34 = tmp.30 - 1, Copy a.24 = tmp.34] Pred: {0} Suc: {2} iMap: {tmp.33 = tmp.30 + glob: {flag, tmp.30, tmp.33, glob}, Copy glob2 = tmp.33: {flag, tmp.30, glob2, glob}, tmp.34 = tmp.30 - 1: {flag, tmp.34, glob, glob2}, Copy a.24 = tmp.34: {flag, glob, glob2, a.24}} ReachingCopies: {flag, tmp.30, glob}
+2 2: [Label(tmp.32), tmp.37 = check_one_int([a.24, 99]), tmp.40 = check_one_int([glob2, 101]), Return 0] Pred: {0, 1} Suc: {EXIT} iMap: {Label(tmp.32): {flag, glob, glob2, a.24}, Copy tmp.35 = a.24: {flag, glob, glob2, a.24}, Copy tmp.36 = 99: {flag, glob, glob2, a.24}, tmp.37 = check_one_int([a.24, 99]): {flag, glob, glob2}, Copy tmp.38 = glob2: {flag, glob, glob2}, Copy tmp.39 = 101: {flag, glob, glob2}, tmp.40 = check_one_int([glob2, 101]): {flag, glob, glob2}, Return 0: {flag, glob, glob2}} ReachingCopies: {flag, glob, glob2, a.24}
 EXIT Exit: EXIT {2}
 --------------ADDRESS TAKEN ANALYSIS.------------------
-{glob2, flag, glob}
+{flag, glob, glob2}
 -------------CONSTANT FOLDING PASS.--------------------
 OLD LIST [tmp.30 = id([100]), Copy a.24 = tmp.30, JumpIfZero(flag, tmp.32), tmp.33 = tmp.30 + glob, Copy glob2 = tmp.33, tmp.34 = tmp.30 - 1, Copy a.24 = tmp.34, Label(tmp.32), tmp.37 = check_one_int([a.24, 99]), tmp.40 = check_one_int([glob2, 101]), Return 0]
 NEW LIST [tmp.30 = id([100]), Copy a.24 = tmp.30, JumpIfZero(flag, tmp.32), tmp.33 = tmp.30 + glob, Copy glob2 = tmp.33, tmp.34 = tmp.30 - 1, Copy a.24 = tmp.34, Label(tmp.32), tmp.37 = check_one_int([a.24, 99]), tmp.40 = check_one_int([glob2, 101]), Return 0]
@@ -776,29 +776,29 @@ EXIT Exit: EXIT {2}
 tmp.30 = id([100]) set()
 Copy a.24 = tmp.30 set()
 JumpIfZero(flag, tmp.32) {Copy a.24 = tmp.30}
-OLD ANNOT: {Copy a.24 = tmp.34, Copy glob2 = tmp.33, Copy a.24 = tmp.30}
+OLD ANNOT: {Copy a.24 = tmp.30, Copy glob2 = tmp.33, Copy a.24 = tmp.34}
 NEW ANNOT: {Copy a.24 = tmp.30}
 ADD SUCCESSORS.
 --------------IMAP for block 1-------------------
 tmp.33 = tmp.30 + glob {Copy a.24 = tmp.30}
 Copy glob2 = tmp.33 {Copy a.24 = tmp.30}
-tmp.34 = tmp.30 - 1 {Copy glob2 = tmp.33, Copy a.24 = tmp.30}
-Copy a.24 = tmp.34 {Copy glob2 = tmp.33, Copy a.24 = tmp.30}
-OLD ANNOT: {Copy a.24 = tmp.34, Copy glob2 = tmp.33, Copy a.24 = tmp.30}
-NEW ANNOT: {Copy a.24 = tmp.34, Copy glob2 = tmp.33}
+tmp.34 = tmp.30 - 1 {Copy a.24 = tmp.30, Copy glob2 = tmp.33}
+Copy a.24 = tmp.34 {Copy a.24 = tmp.30, Copy glob2 = tmp.33}
+OLD ANNOT: {Copy a.24 = tmp.30, Copy glob2 = tmp.33, Copy a.24 = tmp.34}
+NEW ANNOT: {Copy glob2 = tmp.33, Copy a.24 = tmp.34}
 ADD SUCCESSORS.
 --------------IMAP for block 2-------------------
 Label(tmp.32) set()
 tmp.37 = check_one_int([a.24, 99]) set()
 tmp.40 = check_one_int([glob2, 101]) set()
 Return 0 set()
-OLD ANNOT: {Copy a.24 = tmp.34, Copy glob2 = tmp.33, Copy a.24 = tmp.30}
+OLD ANNOT: {Copy a.24 = tmp.30, Copy glob2 = tmp.33, Copy a.24 = tmp.34}
 NEW ANNOT: set()
 ADD SUCCESSORS.
 ------------REPLACE INSTRUCTIONS WITH REACHING COPIES.-------------
 ENTRY Entry: ENTRY {0}
 0 0: [tmp.30 = id([100]), Copy a.24 = tmp.30, JumpIfZero(flag, tmp.32)] Pred: {ENTRY} Suc: {1, 2} iMap: {tmp.30 = id([100]): set(), Copy a.24 = tmp.30: set(), JumpIfZero(flag, tmp.32): {Copy a.24 = tmp.30}} ReachingCopies: {Copy a.24 = tmp.30}
-1 1: [tmp.33 = tmp.30 + glob, Copy glob2 = tmp.33, tmp.34 = tmp.30 - 1, Copy a.24 = tmp.34] Pred: {0} Suc: {2} iMap: {tmp.33 = tmp.30 + glob: {Copy a.24 = tmp.30}, Copy glob2 = tmp.33: {Copy a.24 = tmp.30}, tmp.34 = tmp.30 - 1: {Copy glob2 = tmp.33, Copy a.24 = tmp.30}, Copy a.24 = tmp.34: {Copy glob2 = tmp.33, Copy a.24 = tmp.30}} ReachingCopies: {Copy a.24 = tmp.34, Copy glob2 = tmp.33}
+1 1: [tmp.33 = tmp.30 + glob, Copy glob2 = tmp.33, tmp.34 = tmp.30 - 1, Copy a.24 = tmp.34] Pred: {0} Suc: {2} iMap: {tmp.33 = tmp.30 + glob: {Copy a.24 = tmp.30}, Copy glob2 = tmp.33: {Copy a.24 = tmp.30}, tmp.34 = tmp.30 - 1: {Copy a.24 = tmp.30, Copy glob2 = tmp.33}, Copy a.24 = tmp.34: {Copy a.24 = tmp.30, Copy glob2 = tmp.33}} ReachingCopies: {Copy glob2 = tmp.33, Copy a.24 = tmp.34}
 2 2: [Label(tmp.32), tmp.37 = check_one_int([a.24, 99]), tmp.40 = check_one_int([glob2, 101]), Return 0] Pred: {0, 1} Suc: {EXIT} iMap: {Label(tmp.32): set(), tmp.37 = check_one_int([a.24, 99]): set(), tmp.40 = check_one_int([glob2, 101]): set(), Return 0: set()} ReachingCopies: set()
 EXIT Exit: EXIT {2}
 --------------ADDING ALL STATIC VARIABLES.------------------
@@ -807,63 +807,63 @@ check_5_ints check_5_ints FunType: ParamTypes: [int, int, int, int, int, int] Re
 check_12_ints check_12_ints FunType: ParamTypes: [int, int, int, int, int, int, int, int, int, int, int, int, int] Return Type: int Defined: False Global: True
 id id FunType: ParamTypes: [int] Return Type: int Defined: False Global: True
 src_test src_test FunType: ParamTypes: [int] Return Type: int Defined: True Global: True
-arg.22 arg.22 int <typeChecker.LocalAttributes object at 0x7fc2271fd9d0>
-x.23 x.23 int <typeChecker.LocalAttributes object at 0x7fc2271fd9a0>
+arg.22 arg.22 int <typeChecker.LocalAttributes object at 0x7fede9d91160>
+x.23 x.23 int <typeChecker.LocalAttributes object at 0x7fede9d91130>
 glob glob int InitialVal: InitialList: [c_int(1)] Global: True
-glob2 glob2 int InitialVal: <typeChecker.Tentative object at 0x7fc2271fe090> Global: True
+glob2 glob2 int InitialVal: <typeChecker.Tentative object at 0x7fede9d917f0> Global: True
 flag flag int InitialVal: InitialList: [c_int(1)] Global: True
 dst_test dst_test FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-a.24 a.24 int <typeChecker.LocalAttributes object at 0x7fc2271fe4b0>
+a.24 a.24 int <typeChecker.LocalAttributes object at 0x7fede9d91c10>
 main main FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-tmp.25 tmp.25 int <typeChecker.LocalAttributes object at 0x7fc2273dc8f0>
-tmp.26 tmp.26 int <typeChecker.LocalAttributes object at 0x7fc2273dca10>
-tmp.27 tmp.27 int <typeChecker.LocalAttributes object at 0x7fc2273dcb30>
-tmp.28 tmp.28 int <typeChecker.LocalAttributes object at 0x7fc2273dc890>
-tmp.29 tmp.29 int <typeChecker.LocalAttributes object at 0x7fc2273dce30>
-tmp.30 tmp.30 int <typeChecker.LocalAttributes object at 0x7fc2273dcd70>
-tmp.31 tmp.31 int <typeChecker.LocalAttributes object at 0x7fc2273dc680>
-tmp.33 tmp.33 int <typeChecker.LocalAttributes object at 0x7fc2273dd2b0>
-tmp.34 tmp.34 int <typeChecker.LocalAttributes object at 0x7fc2273dd490>
-tmp.35 tmp.35 int <typeChecker.LocalAttributes object at 0x7fc2273dd130>
-tmp.36 tmp.36 int <typeChecker.LocalAttributes object at 0x7fc2273dd700>
-tmp.37 tmp.37 int <typeChecker.LocalAttributes object at 0x7fc2273dcf80>
-tmp.38 tmp.38 int <typeChecker.LocalAttributes object at 0x7fc2273dd940>
-tmp.39 tmp.39 int <typeChecker.LocalAttributes object at 0x7fc2273dda90>
-tmp.40 tmp.40 int <typeChecker.LocalAttributes object at 0x7fc2273dd820>
-tmp.41 tmp.41 int <typeChecker.LocalAttributes object at 0x7fc2273ddee0>
-tmp.42 tmp.42 int <typeChecker.LocalAttributes object at 0x7fc2273ddd60>
-tmp.43 tmp.43 int <typeChecker.LocalAttributes object at 0x7fc2273ddfd0>
+tmp.25 tmp.25 int <typeChecker.LocalAttributes object at 0x7fede9d93cb0>
+tmp.26 tmp.26 int <typeChecker.LocalAttributes object at 0x7fede9f44ce0>
+tmp.27 tmp.27 int <typeChecker.LocalAttributes object at 0x7fede9f44e00>
+tmp.28 tmp.28 int <typeChecker.LocalAttributes object at 0x7fede9f44b90>
+tmp.29 tmp.29 int <typeChecker.LocalAttributes object at 0x7fede9f45130>
+tmp.30 tmp.30 int <typeChecker.LocalAttributes object at 0x7fede9f45070>
+tmp.31 tmp.31 int <typeChecker.LocalAttributes object at 0x7fede9f44920>
+tmp.33 tmp.33 int <typeChecker.LocalAttributes object at 0x7fede9f455b0>
+tmp.34 tmp.34 int <typeChecker.LocalAttributes object at 0x7fede9f45790>
+tmp.35 tmp.35 int <typeChecker.LocalAttributes object at 0x7fede9f45430>
+tmp.36 tmp.36 int <typeChecker.LocalAttributes object at 0x7fede9f45a00>
+tmp.37 tmp.37 int <typeChecker.LocalAttributes object at 0x7fede9f45280>
+tmp.38 tmp.38 int <typeChecker.LocalAttributes object at 0x7fede9f45c40>
+tmp.39 tmp.39 int <typeChecker.LocalAttributes object at 0x7fede9f45d90>
+tmp.40 tmp.40 int <typeChecker.LocalAttributes object at 0x7fede9f45b20>
+tmp.41 tmp.41 int <typeChecker.LocalAttributes object at 0x7fede9f461e0>
+tmp.42 tmp.42 int <typeChecker.LocalAttributes object at 0x7fede9f46060>
+tmp.43 tmp.43 int <typeChecker.LocalAttributes object at 0x7fede9f462d0>
 --------------LIVE for block 2-------------------
-Return 0 {glob2, glob, flag}
-tmp.40 = check_one_int([glob2, 101]) {glob2, glob, flag}
+Return 0 {flag, glob, glob2}
+tmp.40 = check_one_int([glob2, 101]) {flag, glob, glob2}
 <class 'tacGenerator.TAC_VariableValue'>
 <class 'tacGenerator.TAC_ConstantValue'>
-tmp.37 = check_one_int([a.24, 99]) {glob2, flag, glob}
+tmp.37 = check_one_int([a.24, 99]) {flag, glob, glob2}
 <class 'tacGenerator.TAC_VariableValue'>
 <class 'tacGenerator.TAC_ConstantValue'>
-Label(tmp.32) {glob2, a.24, flag, glob}
+Label(tmp.32) {flag, glob, glob2, a.24}
 OLD ANNOT: set()
-NEW ANNOT: {glob2, a.24, flag, glob}
+NEW ANNOT: {flag, glob, glob2, a.24}
 --------------LIVE for block 1-------------------
-Copy a.24 = tmp.34 {glob2, a.24, flag, glob}
-tmp.34 = tmp.30 - 1 {glob2, tmp.34, flag, glob}
-Copy glob2 = tmp.33 {glob2, flag, tmp.30, glob}
-tmp.33 = tmp.30 + glob {flag, tmp.30, glob, tmp.33}
+Copy a.24 = tmp.34 {flag, glob, glob2, a.24}
+tmp.34 = tmp.30 - 1 {flag, tmp.34, glob, glob2}
+Copy glob2 = tmp.33 {flag, tmp.30, glob2, glob}
+tmp.33 = tmp.30 + glob {flag, tmp.30, tmp.33, glob}
 OLD ANNOT: set()
 NEW ANNOT: {flag, tmp.30, glob}
 --------------LIVE for block 0-------------------
-JumpIfZero(flag, tmp.32) {glob2, a.24, tmp.30, glob, flag}
-Copy a.24 = tmp.30 {glob2, a.24, tmp.30, glob, flag}
-tmp.30 = id([100]) {glob2, glob, tmp.30, flag}
+JumpIfZero(flag, tmp.32) {tmp.30, flag, glob, glob2, a.24}
+Copy a.24 = tmp.30 {tmp.30, flag, glob, glob2, a.24}
+tmp.30 = id([100]) {flag, tmp.30, glob2, glob}
 <class 'tacGenerator.TAC_ConstantValue'>
 OLD ANNOT: set()
-NEW ANNOT: {glob2, glob, flag}
+NEW ANNOT: {flag, glob, glob2}
 ------------REMOVE DEAD STORE INSTRUCTIONS.-------------
 ------------AFTER DEAD STORE REMOVAL.-------------
 ENTRY Entry: ENTRY {0}
-0 0: [tmp.30 = id([100]), Copy a.24 = tmp.30, JumpIfZero(flag, tmp.32)] Pred: {ENTRY} Suc: {1, 2} iMap: {tmp.30 = id([100]): {glob2, glob, tmp.30, flag}, Copy a.24 = tmp.30: {glob2, a.24, tmp.30, glob, flag}, JumpIfZero(flag, tmp.32): {glob2, a.24, tmp.30, glob, flag}} ReachingCopies: {glob2, glob, flag}
-1 1: [tmp.33 = tmp.30 + glob, Copy glob2 = tmp.33, tmp.34 = tmp.30 - 1, Copy a.24 = tmp.34] Pred: {0} Suc: {2} iMap: {tmp.33 = tmp.30 + glob: {flag, tmp.30, glob, tmp.33}, Copy glob2 = tmp.33: {glob2, flag, tmp.30, glob}, tmp.34 = tmp.30 - 1: {glob2, tmp.34, flag, glob}, Copy a.24 = tmp.34: {glob2, a.24, flag, glob}} ReachingCopies: {flag, tmp.30, glob}
-2 2: [Label(tmp.32), tmp.37 = check_one_int([a.24, 99]), tmp.40 = check_one_int([glob2, 101]), Return 0] Pred: {0, 1} Suc: {EXIT} iMap: {Label(tmp.32): {glob2, a.24, flag, glob}, tmp.37 = check_one_int([a.24, 99]): {glob2, flag, glob}, tmp.40 = check_one_int([glob2, 101]): {glob2, glob, flag}, Return 0: {glob2, glob, flag}} ReachingCopies: {glob2, a.24, flag, glob}
+0 0: [tmp.30 = id([100]), Copy a.24 = tmp.30, JumpIfZero(flag, tmp.32)] Pred: {ENTRY} Suc: {1, 2} iMap: {tmp.30 = id([100]): {flag, tmp.30, glob2, glob}, Copy a.24 = tmp.30: {tmp.30, flag, glob, glob2, a.24}, JumpIfZero(flag, tmp.32): {tmp.30, flag, glob, glob2, a.24}} ReachingCopies: {flag, glob, glob2}
+1 1: [tmp.33 = tmp.30 + glob, Copy glob2 = tmp.33, tmp.34 = tmp.30 - 1, Copy a.24 = tmp.34] Pred: {0} Suc: {2} iMap: {tmp.33 = tmp.30 + glob: {flag, tmp.30, tmp.33, glob}, Copy glob2 = tmp.33: {flag, tmp.30, glob2, glob}, tmp.34 = tmp.30 - 1: {flag, tmp.34, glob, glob2}, Copy a.24 = tmp.34: {flag, glob, glob2, a.24}} ReachingCopies: {flag, tmp.30, glob}
+2 2: [Label(tmp.32), tmp.37 = check_one_int([a.24, 99]), tmp.40 = check_one_int([glob2, 101]), Return 0] Pred: {0, 1} Suc: {EXIT} iMap: {Label(tmp.32): {flag, glob, glob2, a.24}, tmp.37 = check_one_int([a.24, 99]): {flag, glob, glob2}, tmp.40 = check_one_int([glob2, 101]): {flag, glob, glob2}, Return 0: {flag, glob, glob2}} ReachingCopies: {flag, glob, glob2, a.24}
 EXIT Exit: EXIT {2}
 OPTIMIZING FUNCTION Function: main ([]) instructions:[Copy tmp.41 = 1, tmp.42 = src_test([tmp.41]), tmp.43 = dst_test([]), Return 0]
 --------------ADDRESS TAKEN ANALYSIS.------------------
@@ -908,45 +908,45 @@ check_5_ints check_5_ints FunType: ParamTypes: [int, int, int, int, int, int] Re
 check_12_ints check_12_ints FunType: ParamTypes: [int, int, int, int, int, int, int, int, int, int, int, int, int] Return Type: int Defined: False Global: True
 id id FunType: ParamTypes: [int] Return Type: int Defined: False Global: True
 src_test src_test FunType: ParamTypes: [int] Return Type: int Defined: True Global: True
-arg.22 arg.22 int <typeChecker.LocalAttributes object at 0x7fc2271fd9d0>
-x.23 x.23 int <typeChecker.LocalAttributes object at 0x7fc2271fd9a0>
+arg.22 arg.22 int <typeChecker.LocalAttributes object at 0x7fede9d91160>
+x.23 x.23 int <typeChecker.LocalAttributes object at 0x7fede9d91130>
 glob glob int InitialVal: InitialList: [c_int(1)] Global: True
-glob2 glob2 int InitialVal: <typeChecker.Tentative object at 0x7fc2271fe090> Global: True
+glob2 glob2 int InitialVal: <typeChecker.Tentative object at 0x7fede9d917f0> Global: True
 flag flag int InitialVal: InitialList: [c_int(1)] Global: True
 dst_test dst_test FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-a.24 a.24 int <typeChecker.LocalAttributes object at 0x7fc2271fe4b0>
+a.24 a.24 int <typeChecker.LocalAttributes object at 0x7fede9d91c10>
 main main FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-tmp.25 tmp.25 int <typeChecker.LocalAttributes object at 0x7fc2273dc8f0>
-tmp.26 tmp.26 int <typeChecker.LocalAttributes object at 0x7fc2273dca10>
-tmp.27 tmp.27 int <typeChecker.LocalAttributes object at 0x7fc2273dcb30>
-tmp.28 tmp.28 int <typeChecker.LocalAttributes object at 0x7fc2273dc890>
-tmp.29 tmp.29 int <typeChecker.LocalAttributes object at 0x7fc2273dce30>
-tmp.30 tmp.30 int <typeChecker.LocalAttributes object at 0x7fc2273dcd70>
-tmp.31 tmp.31 int <typeChecker.LocalAttributes object at 0x7fc2273dc680>
-tmp.33 tmp.33 int <typeChecker.LocalAttributes object at 0x7fc2273dd2b0>
-tmp.34 tmp.34 int <typeChecker.LocalAttributes object at 0x7fc2273dd490>
-tmp.35 tmp.35 int <typeChecker.LocalAttributes object at 0x7fc2273dd130>
-tmp.36 tmp.36 int <typeChecker.LocalAttributes object at 0x7fc2273dd700>
-tmp.37 tmp.37 int <typeChecker.LocalAttributes object at 0x7fc2273dcf80>
-tmp.38 tmp.38 int <typeChecker.LocalAttributes object at 0x7fc2273dd940>
-tmp.39 tmp.39 int <typeChecker.LocalAttributes object at 0x7fc2273dda90>
-tmp.40 tmp.40 int <typeChecker.LocalAttributes object at 0x7fc2273dd820>
-tmp.41 tmp.41 int <typeChecker.LocalAttributes object at 0x7fc2273ddee0>
-tmp.42 tmp.42 int <typeChecker.LocalAttributes object at 0x7fc2273ddd60>
-tmp.43 tmp.43 int <typeChecker.LocalAttributes object at 0x7fc2273ddfd0>
+tmp.25 tmp.25 int <typeChecker.LocalAttributes object at 0x7fede9d93cb0>
+tmp.26 tmp.26 int <typeChecker.LocalAttributes object at 0x7fede9f44ce0>
+tmp.27 tmp.27 int <typeChecker.LocalAttributes object at 0x7fede9f44e00>
+tmp.28 tmp.28 int <typeChecker.LocalAttributes object at 0x7fede9f44b90>
+tmp.29 tmp.29 int <typeChecker.LocalAttributes object at 0x7fede9f45130>
+tmp.30 tmp.30 int <typeChecker.LocalAttributes object at 0x7fede9f45070>
+tmp.31 tmp.31 int <typeChecker.LocalAttributes object at 0x7fede9f44920>
+tmp.33 tmp.33 int <typeChecker.LocalAttributes object at 0x7fede9f455b0>
+tmp.34 tmp.34 int <typeChecker.LocalAttributes object at 0x7fede9f45790>
+tmp.35 tmp.35 int <typeChecker.LocalAttributes object at 0x7fede9f45430>
+tmp.36 tmp.36 int <typeChecker.LocalAttributes object at 0x7fede9f45a00>
+tmp.37 tmp.37 int <typeChecker.LocalAttributes object at 0x7fede9f45280>
+tmp.38 tmp.38 int <typeChecker.LocalAttributes object at 0x7fede9f45c40>
+tmp.39 tmp.39 int <typeChecker.LocalAttributes object at 0x7fede9f45d90>
+tmp.40 tmp.40 int <typeChecker.LocalAttributes object at 0x7fede9f45b20>
+tmp.41 tmp.41 int <typeChecker.LocalAttributes object at 0x7fede9f461e0>
+tmp.42 tmp.42 int <typeChecker.LocalAttributes object at 0x7fede9f46060>
+tmp.43 tmp.43 int <typeChecker.LocalAttributes object at 0x7fede9f462d0>
 --------------LIVE for block 0-------------------
-Return 0 {glob2, glob, flag}
-tmp.43 = dst_test([]) {glob2, glob, flag}
-tmp.42 = src_test([1]) {glob2, flag, glob}
+Return 0 {flag, glob, glob2}
+tmp.43 = dst_test([]) {flag, glob, glob2}
+tmp.42 = src_test([1]) {flag, glob, glob2}
 <class 'tacGenerator.TAC_ConstantValue'>
-Copy tmp.41 = 1 {glob2, flag, glob}
+Copy tmp.41 = 1 {flag, glob, glob2}
 OLD ANNOT: set()
-NEW ANNOT: {glob2, flag, glob}
+NEW ANNOT: {flag, glob, glob2}
 ------------REMOVE DEAD STORE INSTRUCTIONS.-------------
-Copy tmp.41 = 1 {glob2, flag, glob} for node 0
+Copy tmp.41 = 1 {flag, glob, glob2} for node 0
 ------------AFTER DEAD STORE REMOVAL.-------------
 ENTRY Entry: ENTRY {0}
-0 0: [tmp.42 = src_test([1]), tmp.43 = dst_test([]), Return 0] Pred: {ENTRY} Suc: {EXIT} iMap: {Copy tmp.41 = 1: {glob2, flag, glob}, tmp.42 = src_test([1]): {glob2, flag, glob}, tmp.43 = dst_test([]): {glob2, glob, flag}, Return 0: {glob2, glob, flag}} ReachingCopies: {glob2, flag, glob}
+0 0: [tmp.42 = src_test([1]), tmp.43 = dst_test([]), Return 0] Pred: {ENTRY} Suc: {EXIT} iMap: {Copy tmp.41 = 1: {flag, glob, glob2}, tmp.42 = src_test([1]): {flag, glob, glob2}, tmp.43 = dst_test([]): {flag, glob, glob2}, Return 0: {flag, glob, glob2}} ReachingCopies: {flag, glob, glob2}
 EXIT Exit: EXIT {0}
 --------------ADDRESS TAKEN ANALYSIS.------------------
 set()
@@ -987,49 +987,49 @@ check_5_ints check_5_ints FunType: ParamTypes: [int, int, int, int, int, int] Re
 check_12_ints check_12_ints FunType: ParamTypes: [int, int, int, int, int, int, int, int, int, int, int, int, int] Return Type: int Defined: False Global: True
 id id FunType: ParamTypes: [int] Return Type: int Defined: False Global: True
 src_test src_test FunType: ParamTypes: [int] Return Type: int Defined: True Global: True
-arg.22 arg.22 int <typeChecker.LocalAttributes object at 0x7fc2271fd9d0>
-x.23 x.23 int <typeChecker.LocalAttributes object at 0x7fc2271fd9a0>
+arg.22 arg.22 int <typeChecker.LocalAttributes object at 0x7fede9d91160>
+x.23 x.23 int <typeChecker.LocalAttributes object at 0x7fede9d91130>
 glob glob int InitialVal: InitialList: [c_int(1)] Global: True
-glob2 glob2 int InitialVal: <typeChecker.Tentative object at 0x7fc2271fe090> Global: True
+glob2 glob2 int InitialVal: <typeChecker.Tentative object at 0x7fede9d917f0> Global: True
 flag flag int InitialVal: InitialList: [c_int(1)] Global: True
 dst_test dst_test FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-a.24 a.24 int <typeChecker.LocalAttributes object at 0x7fc2271fe4b0>
+a.24 a.24 int <typeChecker.LocalAttributes object at 0x7fede9d91c10>
 main main FunType: ParamTypes: [] Return Type: int Defined: True Global: True
-tmp.25 tmp.25 int <typeChecker.LocalAttributes object at 0x7fc2273dc8f0>
-tmp.26 tmp.26 int <typeChecker.LocalAttributes object at 0x7fc2273dca10>
-tmp.27 tmp.27 int <typeChecker.LocalAttributes object at 0x7fc2273dcb30>
-tmp.28 tmp.28 int <typeChecker.LocalAttributes object at 0x7fc2273dc890>
-tmp.29 tmp.29 int <typeChecker.LocalAttributes object at 0x7fc2273dce30>
-tmp.30 tmp.30 int <typeChecker.LocalAttributes object at 0x7fc2273dcd70>
-tmp.31 tmp.31 int <typeChecker.LocalAttributes object at 0x7fc2273dc680>
-tmp.33 tmp.33 int <typeChecker.LocalAttributes object at 0x7fc2273dd2b0>
-tmp.34 tmp.34 int <typeChecker.LocalAttributes object at 0x7fc2273dd490>
-tmp.35 tmp.35 int <typeChecker.LocalAttributes object at 0x7fc2273dd130>
-tmp.36 tmp.36 int <typeChecker.LocalAttributes object at 0x7fc2273dd700>
-tmp.37 tmp.37 int <typeChecker.LocalAttributes object at 0x7fc2273dcf80>
-tmp.38 tmp.38 int <typeChecker.LocalAttributes object at 0x7fc2273dd940>
-tmp.39 tmp.39 int <typeChecker.LocalAttributes object at 0x7fc2273dda90>
-tmp.40 tmp.40 int <typeChecker.LocalAttributes object at 0x7fc2273dd820>
-tmp.41 tmp.41 int <typeChecker.LocalAttributes object at 0x7fc2273ddee0>
-tmp.42 tmp.42 int <typeChecker.LocalAttributes object at 0x7fc2273ddd60>
-tmp.43 tmp.43 int <typeChecker.LocalAttributes object at 0x7fc2273ddfd0>
+tmp.25 tmp.25 int <typeChecker.LocalAttributes object at 0x7fede9d93cb0>
+tmp.26 tmp.26 int <typeChecker.LocalAttributes object at 0x7fede9f44ce0>
+tmp.27 tmp.27 int <typeChecker.LocalAttributes object at 0x7fede9f44e00>
+tmp.28 tmp.28 int <typeChecker.LocalAttributes object at 0x7fede9f44b90>
+tmp.29 tmp.29 int <typeChecker.LocalAttributes object at 0x7fede9f45130>
+tmp.30 tmp.30 int <typeChecker.LocalAttributes object at 0x7fede9f45070>
+tmp.31 tmp.31 int <typeChecker.LocalAttributes object at 0x7fede9f44920>
+tmp.33 tmp.33 int <typeChecker.LocalAttributes object at 0x7fede9f455b0>
+tmp.34 tmp.34 int <typeChecker.LocalAttributes object at 0x7fede9f45790>
+tmp.35 tmp.35 int <typeChecker.LocalAttributes object at 0x7fede9f45430>
+tmp.36 tmp.36 int <typeChecker.LocalAttributes object at 0x7fede9f45a00>
+tmp.37 tmp.37 int <typeChecker.LocalAttributes object at 0x7fede9f45280>
+tmp.38 tmp.38 int <typeChecker.LocalAttributes object at 0x7fede9f45c40>
+tmp.39 tmp.39 int <typeChecker.LocalAttributes object at 0x7fede9f45d90>
+tmp.40 tmp.40 int <typeChecker.LocalAttributes object at 0x7fede9f45b20>
+tmp.41 tmp.41 int <typeChecker.LocalAttributes object at 0x7fede9f461e0>
+tmp.42 tmp.42 int <typeChecker.LocalAttributes object at 0x7fede9f46060>
+tmp.43 tmp.43 int <typeChecker.LocalAttributes object at 0x7fede9f462d0>
 --------------LIVE for block 0-------------------
-Return 0 {glob2, glob, flag}
-tmp.43 = dst_test([]) {glob2, glob, flag}
-tmp.42 = src_test([1]) {glob2, flag, glob}
+Return 0 {flag, glob, glob2}
+tmp.43 = dst_test([]) {flag, glob, glob2}
+tmp.42 = src_test([1]) {flag, glob, glob2}
 <class 'tacGenerator.TAC_ConstantValue'>
 OLD ANNOT: set()
-NEW ANNOT: {glob2, flag, glob}
+NEW ANNOT: {flag, glob, glob2}
 ------------REMOVE DEAD STORE INSTRUCTIONS.-------------
 ------------AFTER DEAD STORE REMOVAL.-------------
 ENTRY Entry: ENTRY {0}
-0 0: [tmp.42 = src_test([1]), tmp.43 = dst_test([]), Return 0] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.42 = src_test([1]): {glob2, flag, glob}, tmp.43 = dst_test([]): {glob2, glob, flag}, Return 0: {glob2, glob, flag}} ReachingCopies: {glob2, flag, glob}
+0 0: [tmp.42 = src_test([1]), tmp.43 = dst_test([]), Return 0] Pred: {ENTRY} Suc: {EXIT} iMap: {tmp.42 = src_test([1]): {flag, glob, glob2}, tmp.43 = dst_test([]): {flag, glob, glob2}, Return 0: {flag, glob, glob2}} ReachingCopies: {flag, glob, glob2}
 EXIT Exit: EXIT {0}
 TAC Program:[Function: src_test (['arg.22']) instructions:[tmp.25 = 5 + arg.22, tmp.28 = check_one_int([tmp.25, 6]), Return 0], Function: dst_test ([]) instructions:[tmp.30 = id([100]), Copy a.24 = tmp.30, JumpIfZero(flag, tmp.32), tmp.33 = tmp.30 + glob, Copy glob2 = tmp.33, tmp.34 = tmp.30 - 1, Copy a.24 = tmp.34, Label(tmp.32), tmp.37 = check_one_int([a.24, 99]), tmp.40 = check_one_int([glob2, 101]), Return 0], Function: main ([]) instructions:[tmp.42 = src_test([1]), tmp.43 = dst_test([]), Return 0], Global: True glob = [c_int(1)], Global: True glob2 = [c_int(0)], Global: True flag = [c_int(1)]]
 Type Table:
  {}
 Symbol Table:
- {'check_one_int': check_one_int FunType: ParamTypes: [int, int] Return Type: int Defined: False Global: True, 'check_5_ints': check_5_ints FunType: ParamTypes: [int, int, int, int, int, int] Return Type: int Defined: False Global: True, 'check_12_ints': check_12_ints FunType: ParamTypes: [int, int, int, int, int, int, int, int, int, int, int, int, int] Return Type: int Defined: False Global: True, 'id': id FunType: ParamTypes: [int] Return Type: int Defined: False Global: True, 'src_test': src_test FunType: ParamTypes: [int] Return Type: int Defined: True Global: True, 'arg.22': arg.22 int <typeChecker.LocalAttributes object at 0x7fc2271fd9d0>, 'x.23': x.23 int <typeChecker.LocalAttributes object at 0x7fc2271fd9a0>, 'glob': glob int InitialVal: InitialList: [c_int(1)] Global: True, 'glob2': glob2 int InitialVal: <typeChecker.Tentative object at 0x7fc2271fe090> Global: True, 'flag': flag int InitialVal: InitialList: [c_int(1)] Global: True, 'dst_test': dst_test FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'a.24': a.24 int <typeChecker.LocalAttributes object at 0x7fc2271fe4b0>, 'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'tmp.25': tmp.25 int <typeChecker.LocalAttributes object at 0x7fc2273dc8f0>, 'tmp.26': tmp.26 int <typeChecker.LocalAttributes object at 0x7fc2273dca10>, 'tmp.27': tmp.27 int <typeChecker.LocalAttributes object at 0x7fc2273dcb30>, 'tmp.28': tmp.28 int <typeChecker.LocalAttributes object at 0x7fc2273dc890>, 'tmp.29': tmp.29 int <typeChecker.LocalAttributes object at 0x7fc2273dce30>, 'tmp.30': tmp.30 int <typeChecker.LocalAttributes object at 0x7fc2273dcd70>, 'tmp.31': tmp.31 int <typeChecker.LocalAttributes object at 0x7fc2273dc680>, 'tmp.33': tmp.33 int <typeChecker.LocalAttributes object at 0x7fc2273dd2b0>, 'tmp.34': tmp.34 int <typeChecker.LocalAttributes object at 0x7fc2273dd490>, 'tmp.35': tmp.35 int <typeChecker.LocalAttributes object at 0x7fc2273dd130>, 'tmp.36': tmp.36 int <typeChecker.LocalAttributes object at 0x7fc2273dd700>, 'tmp.37': tmp.37 int <typeChecker.LocalAttributes object at 0x7fc2273dcf80>, 'tmp.38': tmp.38 int <typeChecker.LocalAttributes object at 0x7fc2273dd940>, 'tmp.39': tmp.39 int <typeChecker.LocalAttributes object at 0x7fc2273dda90>, 'tmp.40': tmp.40 int <typeChecker.LocalAttributes object at 0x7fc2273dd820>, 'tmp.41': tmp.41 int <typeChecker.LocalAttributes object at 0x7fc2273ddee0>, 'tmp.42': tmp.42 int <typeChecker.LocalAttributes object at 0x7fc2273ddd60>, 'tmp.43': tmp.43 int <typeChecker.LocalAttributes object at 0x7fc2273ddfd0>}
+ {'check_one_int': check_one_int FunType: ParamTypes: [int, int] Return Type: int Defined: False Global: True, 'check_5_ints': check_5_ints FunType: ParamTypes: [int, int, int, int, int, int] Return Type: int Defined: False Global: True, 'check_12_ints': check_12_ints FunType: ParamTypes: [int, int, int, int, int, int, int, int, int, int, int, int, int] Return Type: int Defined: False Global: True, 'id': id FunType: ParamTypes: [int] Return Type: int Defined: False Global: True, 'src_test': src_test FunType: ParamTypes: [int] Return Type: int Defined: True Global: True, 'arg.22': arg.22 int <typeChecker.LocalAttributes object at 0x7fede9d91160>, 'x.23': x.23 int <typeChecker.LocalAttributes object at 0x7fede9d91130>, 'glob': glob int InitialVal: InitialList: [c_int(1)] Global: True, 'glob2': glob2 int InitialVal: <typeChecker.Tentative object at 0x7fede9d917f0> Global: True, 'flag': flag int InitialVal: InitialList: [c_int(1)] Global: True, 'dst_test': dst_test FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'a.24': a.24 int <typeChecker.LocalAttributes object at 0x7fede9d91c10>, 'main': main FunType: ParamTypes: [] Return Type: int Defined: True Global: True, 'tmp.25': tmp.25 int <typeChecker.LocalAttributes object at 0x7fede9d93cb0>, 'tmp.26': tmp.26 int <typeChecker.LocalAttributes object at 0x7fede9f44ce0>, 'tmp.27': tmp.27 int <typeChecker.LocalAttributes object at 0x7fede9f44e00>, 'tmp.28': tmp.28 int <typeChecker.LocalAttributes object at 0x7fede9f44b90>, 'tmp.29': tmp.29 int <typeChecker.LocalAttributes object at 0x7fede9f45130>, 'tmp.30': tmp.30 int <typeChecker.LocalAttributes object at 0x7fede9f45070>, 'tmp.31': tmp.31 int <typeChecker.LocalAttributes object at 0x7fede9f44920>, 'tmp.33': tmp.33 int <typeChecker.LocalAttributes object at 0x7fede9f455b0>, 'tmp.34': tmp.34 int <typeChecker.LocalAttributes object at 0x7fede9f45790>, 'tmp.35': tmp.35 int <typeChecker.LocalAttributes object at 0x7fede9f45430>, 'tmp.36': tmp.36 int <typeChecker.LocalAttributes object at 0x7fede9f45a00>, 'tmp.37': tmp.37 int <typeChecker.LocalAttributes object at 0x7fede9f45280>, 'tmp.38': tmp.38 int <typeChecker.LocalAttributes object at 0x7fede9f45c40>, 'tmp.39': tmp.39 int <typeChecker.LocalAttributes object at 0x7fede9f45d90>, 'tmp.40': tmp.40 int <typeChecker.LocalAttributes object at 0x7fede9f45b20>, 'tmp.41': tmp.41 int <typeChecker.LocalAttributes object at 0x7fede9f461e0>, 'tmp.42': tmp.42 int <typeChecker.LocalAttributes object at 0x7fede9f46060>, 'tmp.43': tmp.43 int <typeChecker.LocalAttributes object at 0x7fede9f462d0>}
 Operand: Pseudo(arg.22)
 IntParams: [(Longword, Pseudo(arg.22))]
 IntDests: [(Longword, Pseudo(tmp.28))]
@@ -1037,7 +1037,7 @@ DoubleDests: []
 ReturnInMemory: False
 Operand: Pseudo(tmp.25)
 Operand: Imm(6)
-IntArgs: [(Longword, Pseudo(tmp.25)), (Longword, <assemblyGenerator.ImmediateOperand object at 0x7fc2273cdc10>)]
+IntArgs: [(Longword, Pseudo(tmp.25)), (Longword, <assemblyGenerator.ImmediateOperand object at 0x7fede9d65ac0>)]
 DoubleArgs: []
 StackArgs: []
 IntParams: []
@@ -1045,7 +1045,7 @@ IntDests: [(Longword, Pseudo(tmp.30))]
 DoubleDests: []
 ReturnInMemory: False
 Operand: Imm(100)
-IntArgs: [(Longword, <assemblyGenerator.ImmediateOperand object at 0x7fc2273b5040>)]
+IntArgs: [(Longword, <assemblyGenerator.ImmediateOperand object at 0x7fede9dbc1d0>)]
 DoubleArgs: []
 StackArgs: []
 IntDests: [(Longword, Pseudo(tmp.37))]
@@ -1053,7 +1053,7 @@ DoubleDests: []
 ReturnInMemory: False
 Operand: Pseudo(a.24)
 Operand: Imm(99)
-IntArgs: [(Longword, Pseudo(a.24)), (Longword, <assemblyGenerator.ImmediateOperand object at 0x7fc2273b6ae0>)]
+IntArgs: [(Longword, Pseudo(a.24)), (Longword, <assemblyGenerator.ImmediateOperand object at 0x7fede9dbea80>)]
 DoubleArgs: []
 StackArgs: []
 IntDests: [(Longword, Pseudo(tmp.40))]
@@ -1061,7 +1061,7 @@ DoubleDests: []
 ReturnInMemory: False
 Operand: Pseudo(glob2)
 Operand: Imm(101)
-IntArgs: [(Longword, Pseudo(glob2)), (Longword, <assemblyGenerator.ImmediateOperand object at 0x7fc2273c6bd0>)]
+IntArgs: [(Longword, Pseudo(glob2)), (Longword, <assemblyGenerator.ImmediateOperand object at 0x7fede9d67050>)]
 DoubleArgs: []
 StackArgs: []
 IntParams: []
@@ -1069,7 +1069,7 @@ IntDests: [(Longword, Pseudo(tmp.42))]
 DoubleDests: []
 ReturnInMemory: False
 Operand: Imm(1)
-IntArgs: [(Longword, <assemblyGenerator.ImmediateOperand object at 0x7fc2273b6e40>)]
+IntArgs: [(Longword, <assemblyGenerator.ImmediateOperand object at 0x7fede9dbee10>)]
 DoubleArgs: []
 StackArgs: []
 IntDests: [(Longword, Pseudo(tmp.43))]
@@ -1253,6 +1253,7 @@ AssType: Longword Mov(Reg(DI), Pseudo(arg.22))
 -------------LABELS-----------------
 
 
+-------------CONNECTED BLOCKS-----------------
 ENTRY Entry: ENTRY {0}
 0 0: [AssType: Longword Mov(Reg(DI), Pseudo(arg.22)), AssType: Longword Mov(Imm(5), Pseudo(tmp.25)), AssType: Longword Binary(Add, Pseudo(arg.22), Pseudo(tmp.25)), AssType: Longword Mov(Pseudo(tmp.25), Reg(DI)), AssType: Longword Mov(Imm(6), Reg(SI)), Call(check_one_int), AssType: Longword Mov(Reg(AX), Pseudo(tmp.28)), AssType: Longword Mov(Imm(0), Reg(AX)), ret] Pred: {ENTRY} Suc: {EXIT} iMap: {AssType: Longword Mov(Reg(DI), Pseudo(arg.22)): set(), AssType: Longword Mov(Imm(5), Pseudo(tmp.25)): set(), AssType: Longword Binary(Add, Pseudo(arg.22), Pseudo(tmp.25)): set(), AssType: Longword Mov(Pseudo(tmp.25), Reg(DI)): set(), AssType: Longword Mov(Imm(6), Reg(SI)): set(), Call(check_one_int): set(), AssType: Longword Mov(Reg(AX), Pseudo(tmp.28)): set(), AssType: Longword Mov(Imm(0), Reg(AX)): set(), ret: set()} ReachingCopies: set()
 EXIT Exit: EXIT {0}
@@ -1436,10 +1437,13 @@ tmp.32 2: [Label(tmp.32), AssType: Longword Mov(Pseudo(a.24), Reg(DI)), AssType:
 
 
 
+
+
+-------------CONNECTED BLOCKS-----------------
 ENTRY Entry: ENTRY {0}
-0 0: [AssType: Longword Mov(Imm(100), Reg(DI)), Call(id), AssType: Longword Mov(Reg(AX), Pseudo(tmp.30)), AssType: Longword Mov(Pseudo(tmp.30), Pseudo(a.24)), AssType: Longword Cmp(Imm(0), Pseudo(flag)), JmpCC(ConcCodeType.E, tmp.32)] Pred: {ENTRY} Suc: set() iMap: {AssType: Longword Mov(Imm(100), Reg(DI)): set(), Call(id): set(), AssType: Longword Mov(Reg(AX), Pseudo(tmp.30)): set(), AssType: Longword Mov(Pseudo(tmp.30), Pseudo(a.24)): set(), AssType: Longword Cmp(Imm(0), Pseudo(flag)): set(), JmpCC(ConcCodeType.E, tmp.32): set()} ReachingCopies: set()
-1 1: [AssType: Longword Mov(Pseudo(tmp.30), Pseudo(tmp.33)), AssType: Longword Binary(Add, Pseudo(glob), Pseudo(tmp.33)), AssType: Longword Mov(Pseudo(tmp.33), Pseudo(glob2)), AssType: Longword Mov(Pseudo(tmp.30), Pseudo(tmp.34)), AssType: Longword Binary(Sub, Imm(1), Pseudo(tmp.34)), AssType: Longword Mov(Pseudo(tmp.34), Pseudo(a.24))] Pred: set() Suc: {2} iMap: {AssType: Longword Mov(Pseudo(tmp.30), Pseudo(tmp.33)): set(), AssType: Longword Binary(Add, Pseudo(glob), Pseudo(tmp.33)): set(), AssType: Longword Mov(Pseudo(tmp.33), Pseudo(glob2)): set(), AssType: Longword Mov(Pseudo(tmp.30), Pseudo(tmp.34)): set(), AssType: Longword Binary(Sub, Imm(1), Pseudo(tmp.34)): set(), AssType: Longword Mov(Pseudo(tmp.34), Pseudo(a.24)): set()} ReachingCopies: set()
-2 2: [Label(tmp.32), AssType: Longword Mov(Pseudo(a.24), Reg(DI)), AssType: Longword Mov(Imm(99), Reg(SI)), Call(check_one_int), AssType: Longword Mov(Reg(AX), Pseudo(tmp.37)), AssType: Longword Mov(Pseudo(glob2), Reg(DI)), AssType: Longword Mov(Imm(101), Reg(SI)), Call(check_one_int), AssType: Longword Mov(Reg(AX), Pseudo(tmp.40)), AssType: Longword Mov(Imm(0), Reg(AX)), ret] Pred: {1} Suc: {EXIT} iMap: {Label(tmp.32): set(), AssType: Longword Mov(Pseudo(a.24), Reg(DI)): set(), AssType: Longword Mov(Imm(99), Reg(SI)): set(), Call(check_one_int): set(), AssType: Longword Mov(Reg(AX), Pseudo(tmp.37)): set(), AssType: Longword Mov(Pseudo(glob2), Reg(DI)): set(), AssType: Longword Mov(Imm(101), Reg(SI)): set(), Call(check_one_int): set(), AssType: Longword Mov(Reg(AX), Pseudo(tmp.40)): set(), AssType: Longword Mov(Imm(0), Reg(AX)): set(), ret: set()} ReachingCopies: set()
+0 0: [AssType: Longword Mov(Imm(100), Reg(DI)), Call(id), AssType: Longword Mov(Reg(AX), Pseudo(tmp.30)), AssType: Longword Mov(Pseudo(tmp.30), Pseudo(a.24)), AssType: Longword Cmp(Imm(0), Pseudo(flag)), JmpCC(ConcCodeType.E, tmp.32)] Pred: {ENTRY} Suc: {1, 2} iMap: {AssType: Longword Mov(Imm(100), Reg(DI)): set(), Call(id): set(), AssType: Longword Mov(Reg(AX), Pseudo(tmp.30)): set(), AssType: Longword Mov(Pseudo(tmp.30), Pseudo(a.24)): set(), AssType: Longword Cmp(Imm(0), Pseudo(flag)): set(), JmpCC(ConcCodeType.E, tmp.32): set()} ReachingCopies: set()
+1 1: [AssType: Longword Mov(Pseudo(tmp.30), Pseudo(tmp.33)), AssType: Longword Binary(Add, Pseudo(glob), Pseudo(tmp.33)), AssType: Longword Mov(Pseudo(tmp.33), Pseudo(glob2)), AssType: Longword Mov(Pseudo(tmp.30), Pseudo(tmp.34)), AssType: Longword Binary(Sub, Imm(1), Pseudo(tmp.34)), AssType: Longword Mov(Pseudo(tmp.34), Pseudo(a.24))] Pred: {0} Suc: {2} iMap: {AssType: Longword Mov(Pseudo(tmp.30), Pseudo(tmp.33)): set(), AssType: Longword Binary(Add, Pseudo(glob), Pseudo(tmp.33)): set(), AssType: Longword Mov(Pseudo(tmp.33), Pseudo(glob2)): set(), AssType: Longword Mov(Pseudo(tmp.30), Pseudo(tmp.34)): set(), AssType: Longword Binary(Sub, Imm(1), Pseudo(tmp.34)): set(), AssType: Longword Mov(Pseudo(tmp.34), Pseudo(a.24)): set()} ReachingCopies: set()
+2 2: [Label(tmp.32), AssType: Longword Mov(Pseudo(a.24), Reg(DI)), AssType: Longword Mov(Imm(99), Reg(SI)), Call(check_one_int), AssType: Longword Mov(Reg(AX), Pseudo(tmp.37)), AssType: Longword Mov(Pseudo(glob2), Reg(DI)), AssType: Longword Mov(Imm(101), Reg(SI)), Call(check_one_int), AssType: Longword Mov(Reg(AX), Pseudo(tmp.40)), AssType: Longword Mov(Imm(0), Reg(AX)), ret] Pred: {0, 1} Suc: {EXIT} iMap: {Label(tmp.32): set(), AssType: Longword Mov(Pseudo(a.24), Reg(DI)): set(), AssType: Longword Mov(Imm(99), Reg(SI)): set(), Call(check_one_int): set(), AssType: Longword Mov(Reg(AX), Pseudo(tmp.37)): set(), AssType: Longword Mov(Pseudo(glob2), Reg(DI)): set(), AssType: Longword Mov(Imm(101), Reg(SI)): set(), Call(check_one_int): set(), AssType: Longword Mov(Reg(AX), Pseudo(tmp.40)): set(), AssType: Longword Mov(Imm(0), Reg(AX)): set(), ret: set()} ReachingCopies: set()
 EXIT Exit: EXIT {2}
 REGISTER ALLOCATE FUNCTION main
 [<RegisterType.DI: 0>, <RegisterType.SI: 1>, <RegisterType.DX: 2>, <RegisterType.CX: 3>, <RegisterType.R8: 4>, <RegisterType.R9: 5>, <RegisterType.AX: 6>, <RegisterType.BX: 7>, <RegisterType.R10: 8>, <RegisterType.R11: 9>, <RegisterType.R12: 10>, <RegisterType.R13: 11>, <RegisterType.R14: 12>, <RegisterType.R15: 13>, <RegisterType.SP: 14>, <RegisterType.BP: 15>]
@@ -1609,6 +1613,7 @@ AssType: Longword Mov(Imm(1), Reg(DI))
 -------------LABELS-----------------
 
 
+-------------CONNECTED BLOCKS-----------------
 ENTRY Entry: ENTRY {0}
 0 0: [AssType: Longword Mov(Imm(1), Reg(DI)), Call(src_test), AssType: Longword Mov(Reg(AX), Pseudo(tmp.42)), Call(dst_test), AssType: Longword Mov(Reg(AX), Pseudo(tmp.43)), AssType: Longword Mov(Imm(0), Reg(AX)), ret] Pred: {ENTRY} Suc: {EXIT} iMap: {AssType: Longword Mov(Imm(1), Reg(DI)): set(), Call(src_test): set(), AssType: Longword Mov(Reg(AX), Pseudo(tmp.42)): set(), Call(dst_test): set(), AssType: Longword Mov(Reg(AX), Pseudo(tmp.43)): set(), AssType: Longword Mov(Imm(0), Reg(AX)): set(), ret: set()} ReachingCopies: set()
 EXIT Exit: EXIT {0}
