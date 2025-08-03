@@ -43,162 +43,162 @@ class BaseGraph(Graph):
     def __init__(self):
         super().__init__()
 
-        self.nodes[RegisterType.AX] = Node(RegisterType.AX)
-        self.nodes[RegisterType.BX] = Node(RegisterType.BX)
-        self.nodes[RegisterType.CX] = Node(RegisterType.CX)
-        self.nodes[RegisterType.DX] = Node(RegisterType.DX)
-        self.nodes[RegisterType.DI] = Node(RegisterType.DI)
-        self.nodes[RegisterType.SI] = Node(RegisterType.SI)
-        self.nodes[RegisterType.R8] = Node(RegisterType.R8)
-        self.nodes[RegisterType.R9] = Node(RegisterType.R9)
-        self.nodes[RegisterType.R12] = Node(RegisterType.R12)
-        self.nodes[RegisterType.R13] = Node(RegisterType.R13)
-        self.nodes[RegisterType.R14] = Node(RegisterType.R14)
-        self.nodes[RegisterType.R15] = Node(RegisterType.R15)
+        self.nodes[RegisterOperand(Register(RegisterType.AX))] = Node(RegisterOperand(Register(RegisterType.AX)))
+        self.nodes[RegisterOperand(Register(RegisterType.BX))] = Node(RegisterOperand(Register(RegisterType.BX)))
+        self.nodes[RegisterOperand(Register(RegisterType.CX))] = Node(RegisterOperand(Register(RegisterType.CX)))
+        self.nodes[RegisterOperand(Register(RegisterType.DX))] = Node(RegisterOperand(Register(RegisterType.DX)))
+        self.nodes[RegisterOperand(Register(RegisterType.DI))] = Node(RegisterOperand(Register(RegisterType.DI)))
+        self.nodes[RegisterOperand(Register(RegisterType.SI))] = Node(RegisterOperand(Register(RegisterType.SI)))
+        self.nodes[RegisterOperand(Register(RegisterType.R8))] = Node(RegisterOperand(Register(RegisterType.R8)))
+        self.nodes[RegisterOperand(Register(RegisterType.R9))] = Node(RegisterOperand(Register(RegisterType.R9)))
+        self.nodes[RegisterOperand(Register(RegisterType.R12))] = Node(RegisterOperand(Register(RegisterType.R12)))
+        self.nodes[RegisterOperand(Register(RegisterType.R13))] = Node(RegisterOperand(Register(RegisterType.R13)))
+        self.nodes[RegisterOperand(Register(RegisterType.R14))] = Node(RegisterOperand(Register(RegisterType.R14)))
+        self.nodes[RegisterOperand(Register(RegisterType.R15))] = Node(RegisterOperand(Register(RegisterType.R15)))
 
-        self.nodes[RegisterType.AX].neighbors.append(RegisterType.BX)
-        self.nodes[RegisterType.AX].neighbors.append(RegisterType.CX)
-        self.nodes[RegisterType.AX].neighbors.append(RegisterType.DX)
-        self.nodes[RegisterType.AX].neighbors.append(RegisterType.DI)
-        self.nodes[RegisterType.AX].neighbors.append(RegisterType.SI)
-        self.nodes[RegisterType.AX].neighbors.append(RegisterType.R8)
-        self.nodes[RegisterType.AX].neighbors.append(RegisterType.R9)
-        self.nodes[RegisterType.AX].neighbors.append(RegisterType.R12)
-        self.nodes[RegisterType.AX].neighbors.append(RegisterType.R13)
-        self.nodes[RegisterType.AX].neighbors.append(RegisterType.R14)
-        self.nodes[RegisterType.AX].neighbors.append(RegisterType.R15)
+        self.nodes[RegisterOperand(Register(RegisterType.AX))].neighbors.append(RegisterOperand(Register(RegisterType.BX)))
+        self.nodes[RegisterOperand(Register(RegisterType.AX))].neighbors.append(RegisterOperand(Register(RegisterType.CX)))
+        self.nodes[RegisterOperand(Register(RegisterType.AX))].neighbors.append(RegisterOperand(Register(RegisterType.DX)))
+        self.nodes[RegisterOperand(Register(RegisterType.AX))].neighbors.append(RegisterOperand(Register(RegisterType.DI)))
+        self.nodes[RegisterOperand(Register(RegisterType.AX))].neighbors.append(RegisterOperand(Register(RegisterType.SI)))
+        self.nodes[RegisterOperand(Register(RegisterType.AX))].neighbors.append(RegisterOperand(Register(RegisterType.R8)))
+        self.nodes[RegisterOperand(Register(RegisterType.AX))].neighbors.append(RegisterOperand(Register(RegisterType.R9)))
+        self.nodes[RegisterOperand(Register(RegisterType.AX))].neighbors.append(RegisterOperand(Register(RegisterType.R12)))
+        self.nodes[RegisterOperand(Register(RegisterType.AX))].neighbors.append(RegisterOperand(Register(RegisterType.R13)))
+        self.nodes[RegisterOperand(Register(RegisterType.AX))].neighbors.append(RegisterOperand(Register(RegisterType.R14)))
+        self.nodes[RegisterOperand(Register(RegisterType.AX))].neighbors.append(RegisterOperand(Register(RegisterType.R15)))
 
-        self.nodes[RegisterType.BX].neighbors.append(RegisterType.AX)
-        self.nodes[RegisterType.BX].neighbors.append(RegisterType.CX)
-        self.nodes[RegisterType.BX].neighbors.append(RegisterType.DX)
-        self.nodes[RegisterType.BX].neighbors.append(RegisterType.DI)
-        self.nodes[RegisterType.BX].neighbors.append(RegisterType.SI)
-        self.nodes[RegisterType.BX].neighbors.append(RegisterType.R8)
-        self.nodes[RegisterType.BX].neighbors.append(RegisterType.R9)
-        self.nodes[RegisterType.BX].neighbors.append(RegisterType.R12)
-        self.nodes[RegisterType.BX].neighbors.append(RegisterType.R13)
-        self.nodes[RegisterType.BX].neighbors.append(RegisterType.R14)
-        self.nodes[RegisterType.BX].neighbors.append(RegisterType.R15)
+        self.nodes[RegisterOperand(Register(RegisterType.BX))].neighbors.append(RegisterOperand(Register(RegisterType.AX)))
+        self.nodes[RegisterOperand(Register(RegisterType.BX))].neighbors.append(RegisterOperand(Register(RegisterType.CX)))
+        self.nodes[RegisterOperand(Register(RegisterType.BX))].neighbors.append(RegisterOperand(Register(RegisterType.DX)))
+        self.nodes[RegisterOperand(Register(RegisterType.BX))].neighbors.append(RegisterOperand(Register(RegisterType.DI)))
+        self.nodes[RegisterOperand(Register(RegisterType.BX))].neighbors.append(RegisterOperand(Register(RegisterType.SI)))
+        self.nodes[RegisterOperand(Register(RegisterType.BX))].neighbors.append(RegisterOperand(Register(RegisterType.R8)))
+        self.nodes[RegisterOperand(Register(RegisterType.BX))].neighbors.append(RegisterOperand(Register(RegisterType.R9)))
+        self.nodes[RegisterOperand(Register(RegisterType.BX))].neighbors.append(RegisterOperand(Register(RegisterType.R12)))
+        self.nodes[RegisterOperand(Register(RegisterType.BX))].neighbors.append(RegisterOperand(Register(RegisterType.R13)))
+        self.nodes[RegisterOperand(Register(RegisterType.BX))].neighbors.append(RegisterOperand(Register(RegisterType.R14)))
+        self.nodes[RegisterOperand(Register(RegisterType.BX))].neighbors.append(RegisterOperand(Register(RegisterType.R15)))
 
-        self.nodes[RegisterType.CX].neighbors.append(RegisterType.AX)
-        self.nodes[RegisterType.CX].neighbors.append(RegisterType.BX)
-        self.nodes[RegisterType.CX].neighbors.append(RegisterType.DX)
-        self.nodes[RegisterType.CX].neighbors.append(RegisterType.DI)
-        self.nodes[RegisterType.CX].neighbors.append(RegisterType.SI)
-        self.nodes[RegisterType.CX].neighbors.append(RegisterType.R8)
-        self.nodes[RegisterType.CX].neighbors.append(RegisterType.R9)
-        self.nodes[RegisterType.CX].neighbors.append(RegisterType.R12)
-        self.nodes[RegisterType.CX].neighbors.append(RegisterType.R13)
-        self.nodes[RegisterType.CX].neighbors.append(RegisterType.R14)
-        self.nodes[RegisterType.CX].neighbors.append(RegisterType.R15)
+        self.nodes[RegisterOperand(Register(RegisterType.CX))].neighbors.append(RegisterOperand(Register(RegisterType.AX)))
+        self.nodes[RegisterOperand(Register(RegisterType.CX))].neighbors.append(RegisterOperand(Register(RegisterType.BX)))
+        self.nodes[RegisterOperand(Register(RegisterType.CX))].neighbors.append(RegisterOperand(Register(RegisterType.DX)))
+        self.nodes[RegisterOperand(Register(RegisterType.CX))].neighbors.append(RegisterOperand(Register(RegisterType.DI)))
+        self.nodes[RegisterOperand(Register(RegisterType.CX))].neighbors.append(RegisterOperand(Register(RegisterType.SI)))
+        self.nodes[RegisterOperand(Register(RegisterType.CX))].neighbors.append(RegisterOperand(Register(RegisterType.R8)))
+        self.nodes[RegisterOperand(Register(RegisterType.CX))].neighbors.append(RegisterOperand(Register(RegisterType.R9)))
+        self.nodes[RegisterOperand(Register(RegisterType.CX))].neighbors.append(RegisterOperand(Register(RegisterType.R12)))
+        self.nodes[RegisterOperand(Register(RegisterType.CX))].neighbors.append(RegisterOperand(Register(RegisterType.R13)))
+        self.nodes[RegisterOperand(Register(RegisterType.CX))].neighbors.append(RegisterOperand(Register(RegisterType.R14)))
+        self.nodes[RegisterOperand(Register(RegisterType.CX))].neighbors.append(RegisterOperand(Register(RegisterType.R15)))
 
-        self.nodes[RegisterType.DX].neighbors.append(RegisterType.AX)
-        self.nodes[RegisterType.DX].neighbors.append(RegisterType.BX)
-        self.nodes[RegisterType.DX].neighbors.append(RegisterType.CX)
-        self.nodes[RegisterType.DX].neighbors.append(RegisterType.DI)
-        self.nodes[RegisterType.DX].neighbors.append(RegisterType.SI)
-        self.nodes[RegisterType.DX].neighbors.append(RegisterType.R8)
-        self.nodes[RegisterType.DX].neighbors.append(RegisterType.R9)
-        self.nodes[RegisterType.DX].neighbors.append(RegisterType.R12)
-        self.nodes[RegisterType.DX].neighbors.append(RegisterType.R13)
-        self.nodes[RegisterType.DX].neighbors.append(RegisterType.R14)
-        self.nodes[RegisterType.DX].neighbors.append(RegisterType.R15)
+        self.nodes[RegisterOperand(Register(RegisterType.DX))].neighbors.append(RegisterOperand(Register(RegisterType.AX)))
+        self.nodes[RegisterOperand(Register(RegisterType.DX))].neighbors.append(RegisterOperand(Register(RegisterType.BX)))
+        self.nodes[RegisterOperand(Register(RegisterType.DX))].neighbors.append(RegisterOperand(Register(RegisterType.CX)))
+        self.nodes[RegisterOperand(Register(RegisterType.DX))].neighbors.append(RegisterOperand(Register(RegisterType.DI)))
+        self.nodes[RegisterOperand(Register(RegisterType.DX))].neighbors.append(RegisterOperand(Register(RegisterType.SI)))
+        self.nodes[RegisterOperand(Register(RegisterType.DX))].neighbors.append(RegisterOperand(Register(RegisterType.R8)))
+        self.nodes[RegisterOperand(Register(RegisterType.DX))].neighbors.append(RegisterOperand(Register(RegisterType.R9)))
+        self.nodes[RegisterOperand(Register(RegisterType.DX))].neighbors.append(RegisterOperand(Register(RegisterType.R12)))
+        self.nodes[RegisterOperand(Register(RegisterType.DX))].neighbors.append(RegisterOperand(Register(RegisterType.R13)))
+        self.nodes[RegisterOperand(Register(RegisterType.DX))].neighbors.append(RegisterOperand(Register(RegisterType.R14)))
+        self.nodes[RegisterOperand(Register(RegisterType.DX))].neighbors.append(RegisterOperand(Register(RegisterType.R15)))
 
-        self.nodes[RegisterType.DI].neighbors.append(RegisterType.AX)
-        self.nodes[RegisterType.DI].neighbors.append(RegisterType.BX)
-        self.nodes[RegisterType.DI].neighbors.append(RegisterType.CX)
-        self.nodes[RegisterType.DI].neighbors.append(RegisterType.DX)
-        self.nodes[RegisterType.DI].neighbors.append(RegisterType.SI)
-        self.nodes[RegisterType.DI].neighbors.append(RegisterType.R8)
-        self.nodes[RegisterType.DI].neighbors.append(RegisterType.R9)
-        self.nodes[RegisterType.DI].neighbors.append(RegisterType.R12)
-        self.nodes[RegisterType.DI].neighbors.append(RegisterType.R13)
-        self.nodes[RegisterType.DI].neighbors.append(RegisterType.R14)
-        self.nodes[RegisterType.DI].neighbors.append(RegisterType.R15)
+        self.nodes[RegisterOperand(Register(RegisterType.DI))].neighbors.append(RegisterOperand(Register(RegisterType.AX)))
+        self.nodes[RegisterOperand(Register(RegisterType.DI))].neighbors.append(RegisterOperand(Register(RegisterType.BX)))
+        self.nodes[RegisterOperand(Register(RegisterType.DI))].neighbors.append(RegisterOperand(Register(RegisterType.CX)))
+        self.nodes[RegisterOperand(Register(RegisterType.DI))].neighbors.append(RegisterOperand(Register(RegisterType.DX)))
+        self.nodes[RegisterOperand(Register(RegisterType.DI))].neighbors.append(RegisterOperand(Register(RegisterType.SI)))
+        self.nodes[RegisterOperand(Register(RegisterType.DI))].neighbors.append(RegisterOperand(Register(RegisterType.R8)))
+        self.nodes[RegisterOperand(Register(RegisterType.DI))].neighbors.append(RegisterOperand(Register(RegisterType.R9)))
+        self.nodes[RegisterOperand(Register(RegisterType.DI))].neighbors.append(RegisterOperand(Register(RegisterType.R12)))
+        self.nodes[RegisterOperand(Register(RegisterType.DI))].neighbors.append(RegisterOperand(Register(RegisterType.R13)))
+        self.nodes[RegisterOperand(Register(RegisterType.DI))].neighbors.append(RegisterOperand(Register(RegisterType.R14)))
+        self.nodes[RegisterOperand(Register(RegisterType.DI))].neighbors.append(RegisterOperand(Register(RegisterType.R15)))
 
-        self.nodes[RegisterType.SI].neighbors.append(RegisterType.AX)
-        self.nodes[RegisterType.SI].neighbors.append(RegisterType.BX)
-        self.nodes[RegisterType.SI].neighbors.append(RegisterType.CX)
-        self.nodes[RegisterType.SI].neighbors.append(RegisterType.DX)
-        self.nodes[RegisterType.SI].neighbors.append(RegisterType.DI)
-        self.nodes[RegisterType.SI].neighbors.append(RegisterType.R8)
-        self.nodes[RegisterType.SI].neighbors.append(RegisterType.R9)
-        self.nodes[RegisterType.SI].neighbors.append(RegisterType.R12)
-        self.nodes[RegisterType.SI].neighbors.append(RegisterType.R13)
-        self.nodes[RegisterType.SI].neighbors.append(RegisterType.R14)
-        self.nodes[RegisterType.SI].neighbors.append(RegisterType.R15)
+        self.nodes[RegisterOperand(Register(RegisterType.SI))].neighbors.append(RegisterOperand(Register(RegisterType.AX)))
+        self.nodes[RegisterOperand(Register(RegisterType.SI))].neighbors.append(RegisterOperand(Register(RegisterType.BX)))
+        self.nodes[RegisterOperand(Register(RegisterType.SI))].neighbors.append(RegisterOperand(Register(RegisterType.CX)))
+        self.nodes[RegisterOperand(Register(RegisterType.SI))].neighbors.append(RegisterOperand(Register(RegisterType.DX)))
+        self.nodes[RegisterOperand(Register(RegisterType.SI))].neighbors.append(RegisterOperand(Register(RegisterType.DI)))
+        self.nodes[RegisterOperand(Register(RegisterType.SI))].neighbors.append(RegisterOperand(Register(RegisterType.R8)))
+        self.nodes[RegisterOperand(Register(RegisterType.SI))].neighbors.append(RegisterOperand(Register(RegisterType.R9)))
+        self.nodes[RegisterOperand(Register(RegisterType.SI))].neighbors.append(RegisterOperand(Register(RegisterType.R12)))
+        self.nodes[RegisterOperand(Register(RegisterType.SI))].neighbors.append(RegisterOperand(Register(RegisterType.R13)))
+        self.nodes[RegisterOperand(Register(RegisterType.SI))].neighbors.append(RegisterOperand(Register(RegisterType.R14)))
+        self.nodes[RegisterOperand(Register(RegisterType.SI))].neighbors.append(RegisterOperand(Register(RegisterType.R15)))
 
-        self.nodes[RegisterType.R8].neighbors.append(RegisterType.AX)
-        self.nodes[RegisterType.R8].neighbors.append(RegisterType.BX)
-        self.nodes[RegisterType.R8].neighbors.append(RegisterType.CX)
-        self.nodes[RegisterType.R8].neighbors.append(RegisterType.DX)
-        self.nodes[RegisterType.R8].neighbors.append(RegisterType.DI)
-        self.nodes[RegisterType.R8].neighbors.append(RegisterType.SI)
-        self.nodes[RegisterType.R8].neighbors.append(RegisterType.R9)
-        self.nodes[RegisterType.R8].neighbors.append(RegisterType.R12)
-        self.nodes[RegisterType.R8].neighbors.append(RegisterType.R13)
-        self.nodes[RegisterType.R8].neighbors.append(RegisterType.R14)
-        self.nodes[RegisterType.R8].neighbors.append(RegisterType.R15)
+        self.nodes[RegisterOperand(Register(RegisterType.R8))].neighbors.append(RegisterOperand(Register(RegisterType.AX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R8))].neighbors.append(RegisterOperand(Register(RegisterType.BX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R8))].neighbors.append(RegisterOperand(Register(RegisterType.CX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R8))].neighbors.append(RegisterOperand(Register(RegisterType.DX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R8))].neighbors.append(RegisterOperand(Register(RegisterType.DI)))
+        self.nodes[RegisterOperand(Register(RegisterType.R8))].neighbors.append(RegisterOperand(Register(RegisterType.SI)))
+        self.nodes[RegisterOperand(Register(RegisterType.R8))].neighbors.append(RegisterOperand(Register(RegisterType.R9)))
+        self.nodes[RegisterOperand(Register(RegisterType.R8))].neighbors.append(RegisterOperand(Register(RegisterType.R12)))
+        self.nodes[RegisterOperand(Register(RegisterType.R8))].neighbors.append(RegisterOperand(Register(RegisterType.R13)))
+        self.nodes[RegisterOperand(Register(RegisterType.R8))].neighbors.append(RegisterOperand(Register(RegisterType.R14)))
+        self.nodes[RegisterOperand(Register(RegisterType.R8))].neighbors.append(RegisterOperand(Register(RegisterType.R15)))
 
-        self.nodes[RegisterType.R9].neighbors.append(RegisterType.AX)
-        self.nodes[RegisterType.R9].neighbors.append(RegisterType.BX)
-        self.nodes[RegisterType.R9].neighbors.append(RegisterType.CX)
-        self.nodes[RegisterType.R9].neighbors.append(RegisterType.DX)
-        self.nodes[RegisterType.R9].neighbors.append(RegisterType.DI)
-        self.nodes[RegisterType.R9].neighbors.append(RegisterType.SI)
-        self.nodes[RegisterType.R9].neighbors.append(RegisterType.R8)
-        self.nodes[RegisterType.R9].neighbors.append(RegisterType.R12)
-        self.nodes[RegisterType.R9].neighbors.append(RegisterType.R13)
-        self.nodes[RegisterType.R9].neighbors.append(RegisterType.R14)
-        self.nodes[RegisterType.R9].neighbors.append(RegisterType.R15)
+        self.nodes[RegisterOperand(Register(RegisterType.R9))].neighbors.append(RegisterOperand(Register(RegisterType.AX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R9))].neighbors.append(RegisterOperand(Register(RegisterType.BX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R9))].neighbors.append(RegisterOperand(Register(RegisterType.CX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R9))].neighbors.append(RegisterOperand(Register(RegisterType.DX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R9))].neighbors.append(RegisterOperand(Register(RegisterType.DI)))
+        self.nodes[RegisterOperand(Register(RegisterType.R9))].neighbors.append(RegisterOperand(Register(RegisterType.SI)))
+        self.nodes[RegisterOperand(Register(RegisterType.R9))].neighbors.append(RegisterOperand(Register(RegisterType.R8)))
+        self.nodes[RegisterOperand(Register(RegisterType.R9))].neighbors.append(RegisterOperand(Register(RegisterType.R12)))
+        self.nodes[RegisterOperand(Register(RegisterType.R9))].neighbors.append(RegisterOperand(Register(RegisterType.R13)))
+        self.nodes[RegisterOperand(Register(RegisterType.R9))].neighbors.append(RegisterOperand(Register(RegisterType.R14)))
+        self.nodes[RegisterOperand(Register(RegisterType.R9))].neighbors.append(RegisterOperand(Register(RegisterType.R15)))
 
-        self.nodes[RegisterType.R12].neighbors.append(RegisterType.AX)
-        self.nodes[RegisterType.R12].neighbors.append(RegisterType.BX)
-        self.nodes[RegisterType.R12].neighbors.append(RegisterType.CX)
-        self.nodes[RegisterType.R12].neighbors.append(RegisterType.DX)
-        self.nodes[RegisterType.R12].neighbors.append(RegisterType.DI)
-        self.nodes[RegisterType.R12].neighbors.append(RegisterType.SI)
-        self.nodes[RegisterType.R12].neighbors.append(RegisterType.R8)
-        self.nodes[RegisterType.R12].neighbors.append(RegisterType.R9)
-        self.nodes[RegisterType.R12].neighbors.append(RegisterType.R13)
-        self.nodes[RegisterType.R12].neighbors.append(RegisterType.R14)
-        self.nodes[RegisterType.R12].neighbors.append(RegisterType.R15)
+        self.nodes[RegisterOperand(Register(RegisterType.R12))].neighbors.append(RegisterOperand(Register(RegisterType.AX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R12))].neighbors.append(RegisterOperand(Register(RegisterType.BX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R12))].neighbors.append(RegisterOperand(Register(RegisterType.CX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R12))].neighbors.append(RegisterOperand(Register(RegisterType.DX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R12))].neighbors.append(RegisterOperand(Register(RegisterType.DI)))
+        self.nodes[RegisterOperand(Register(RegisterType.R12))].neighbors.append(RegisterOperand(Register(RegisterType.SI)))
+        self.nodes[RegisterOperand(Register(RegisterType.R12))].neighbors.append(RegisterOperand(Register(RegisterType.R8)))
+        self.nodes[RegisterOperand(Register(RegisterType.R12))].neighbors.append(RegisterOperand(Register(RegisterType.R9)))
+        self.nodes[RegisterOperand(Register(RegisterType.R12))].neighbors.append(RegisterOperand(Register(RegisterType.R13)))
+        self.nodes[RegisterOperand(Register(RegisterType.R12))].neighbors.append(RegisterOperand(Register(RegisterType.R14)))
+        self.nodes[RegisterOperand(Register(RegisterType.R12))].neighbors.append(RegisterOperand(Register(RegisterType.R15)))
 
-        self.nodes[RegisterType.R13].neighbors.append(RegisterType.AX)
-        self.nodes[RegisterType.R13].neighbors.append(RegisterType.BX)
-        self.nodes[RegisterType.R13].neighbors.append(RegisterType.CX)
-        self.nodes[RegisterType.R13].neighbors.append(RegisterType.DX)
-        self.nodes[RegisterType.R13].neighbors.append(RegisterType.DI)
-        self.nodes[RegisterType.R13].neighbors.append(RegisterType.SI)
-        self.nodes[RegisterType.R13].neighbors.append(RegisterType.R8)
-        self.nodes[RegisterType.R13].neighbors.append(RegisterType.R9)
-        self.nodes[RegisterType.R13].neighbors.append(RegisterType.R12)
-        self.nodes[RegisterType.R13].neighbors.append(RegisterType.R14)
-        self.nodes[RegisterType.R13].neighbors.append(RegisterType.R15)
+        self.nodes[RegisterOperand(Register(RegisterType.R13))].neighbors.append(RegisterOperand(Register(RegisterType.AX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R13))].neighbors.append(RegisterOperand(Register(RegisterType.BX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R13))].neighbors.append(RegisterOperand(Register(RegisterType.CX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R13))].neighbors.append(RegisterOperand(Register(RegisterType.DX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R13))].neighbors.append(RegisterOperand(Register(RegisterType.DI)))
+        self.nodes[RegisterOperand(Register(RegisterType.R13))].neighbors.append(RegisterOperand(Register(RegisterType.SI)))
+        self.nodes[RegisterOperand(Register(RegisterType.R13))].neighbors.append(RegisterOperand(Register(RegisterType.R8)))
+        self.nodes[RegisterOperand(Register(RegisterType.R13))].neighbors.append(RegisterOperand(Register(RegisterType.R9)))
+        self.nodes[RegisterOperand(Register(RegisterType.R13))].neighbors.append(RegisterOperand(Register(RegisterType.R12)))
+        self.nodes[RegisterOperand(Register(RegisterType.R13))].neighbors.append(RegisterOperand(Register(RegisterType.R14)))
+        self.nodes[RegisterOperand(Register(RegisterType.R13))].neighbors.append(RegisterOperand(Register(RegisterType.R15)))
 
-        self.nodes[RegisterType.R14].neighbors.append(RegisterType.AX)
-        self.nodes[RegisterType.R14].neighbors.append(RegisterType.BX)
-        self.nodes[RegisterType.R14].neighbors.append(RegisterType.CX)
-        self.nodes[RegisterType.R14].neighbors.append(RegisterType.DX)
-        self.nodes[RegisterType.R14].neighbors.append(RegisterType.DI)
-        self.nodes[RegisterType.R14].neighbors.append(RegisterType.SI)
-        self.nodes[RegisterType.R14].neighbors.append(RegisterType.R8)
-        self.nodes[RegisterType.R14].neighbors.append(RegisterType.R9)
-        self.nodes[RegisterType.R14].neighbors.append(RegisterType.R12)
-        self.nodes[RegisterType.R14].neighbors.append(RegisterType.R13)
-        self.nodes[RegisterType.R14].neighbors.append(RegisterType.R15)
+        self.nodes[RegisterOperand(Register(RegisterType.R14))].neighbors.append(RegisterOperand(Register(RegisterType.AX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R14))].neighbors.append(RegisterOperand(Register(RegisterType.BX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R14))].neighbors.append(RegisterOperand(Register(RegisterType.CX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R14))].neighbors.append(RegisterOperand(Register(RegisterType.DX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R14))].neighbors.append(RegisterOperand(Register(RegisterType.DI)))
+        self.nodes[RegisterOperand(Register(RegisterType.R14))].neighbors.append(RegisterOperand(Register(RegisterType.SI)))
+        self.nodes[RegisterOperand(Register(RegisterType.R14))].neighbors.append(RegisterOperand(Register(RegisterType.R8)))
+        self.nodes[RegisterOperand(Register(RegisterType.R14))].neighbors.append(RegisterOperand(Register(RegisterType.R9)))
+        self.nodes[RegisterOperand(Register(RegisterType.R14))].neighbors.append(RegisterOperand(Register(RegisterType.R12)))
+        self.nodes[RegisterOperand(Register(RegisterType.R14))].neighbors.append(RegisterOperand(Register(RegisterType.R13)))
+        self.nodes[RegisterOperand(Register(RegisterType.R14))].neighbors.append(RegisterOperand(Register(RegisterType.R15)))
 
-        self.nodes[RegisterType.R15].neighbors.append(RegisterType.AX)
-        self.nodes[RegisterType.R15].neighbors.append(RegisterType.BX)
-        self.nodes[RegisterType.R15].neighbors.append(RegisterType.CX)
-        self.nodes[RegisterType.R15].neighbors.append(RegisterType.DX)
-        self.nodes[RegisterType.R15].neighbors.append(RegisterType.DI)
-        self.nodes[RegisterType.R15].neighbors.append(RegisterType.SI)
-        self.nodes[RegisterType.R15].neighbors.append(RegisterType.R8)
-        self.nodes[RegisterType.R15].neighbors.append(RegisterType.R9)
-        self.nodes[RegisterType.R15].neighbors.append(RegisterType.R12)
-        self.nodes[RegisterType.R15].neighbors.append(RegisterType.R13)
-        self.nodes[RegisterType.R15].neighbors.append(RegisterType.R14)
+        self.nodes[RegisterOperand(Register(RegisterType.R15))].neighbors.append(RegisterOperand(Register(RegisterType.AX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R15))].neighbors.append(RegisterOperand(Register(RegisterType.BX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R15))].neighbors.append(RegisterOperand(Register(RegisterType.CX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R15))].neighbors.append(RegisterOperand(Register(RegisterType.DX)))
+        self.nodes[RegisterOperand(Register(RegisterType.R15))].neighbors.append(RegisterOperand(Register(RegisterType.DI)))
+        self.nodes[RegisterOperand(Register(RegisterType.R15))].neighbors.append(RegisterOperand(Register(RegisterType.SI)))
+        self.nodes[RegisterOperand(Register(RegisterType.R15))].neighbors.append(RegisterOperand(Register(RegisterType.R8)))
+        self.nodes[RegisterOperand(Register(RegisterType.R15))].neighbors.append(RegisterOperand(Register(RegisterType.R9)))
+        self.nodes[RegisterOperand(Register(RegisterType.R15))].neighbors.append(RegisterOperand(Register(RegisterType.R12)))
+        self.nodes[RegisterOperand(Register(RegisterType.R15))].neighbors.append(RegisterOperand(Register(RegisterType.R13)))
+        self.nodes[RegisterOperand(Register(RegisterType.R15))].neighbors.append(RegisterOperand(Register(RegisterType.R14)))
 
 
 def isStatic(identifier, symbolTable):
@@ -422,7 +422,7 @@ def meetLive(n, cfg):
                 sys.exit(1)
 
             case op.EXIT():
-                liveVars.add(RegisterType.AX)
+                liveVars.add(RegisterOperand(Register(RegisterType.AX)))
 
             case op.BlockID(num = num):
                 node = cfg.blocks[sID]
@@ -466,7 +466,7 @@ def findUsedAndUpdated(instruction, backendSymbolTable):
 
         case assemblyGenerator.CDQInstruction():
             used = [RegisterOperand(Register(RegisterType.AX))]
-            
+
             updated = [RegisterOperand(Register(RegisterType.DX))]
 
         case assemblyGenerator.CallInstruction(identifier = identifier):
@@ -487,6 +487,19 @@ def findUsedAndUpdated(instruction, backendSymbolTable):
             updated = []
     
     return used, updated
+
+def isRegister(operand):
+
+    match operand:
+
+        case assemblyGenerator.RegisterOperand():
+            return True
+        
+        case assemblyGenerator.PseudoRegisterOperand():
+            return True
+        
+        case _:
+            return False
 
 def transferLive(n, endLiveRegisters, backendSymbolTable):
 
@@ -509,18 +522,18 @@ def transferLive(n, endLiveRegisters, backendSymbolTable):
         used, updated = findUsedAndUpdated(i, backendSymbolTable)
 
         for v in updated:
-            pass
+            if isRegister(v):
+                currentLiveRegisters.discard(v)
+                
 
         for v in used:
-            pass
-        
-        
+            if isRegister(v):
+                currentLiveRegisters.add(v)
 
-
+    n.reachingCopies.clear()
+    n.reachingCopies.update(currentLiveRegisters)
 
 def analyzeLiveness(cfg, backendSymbolTable):
-    #allStaticVariables = addAllStaticVariables(cfg, symbolTable)
-
     workList = []
 
     a = list(cfg.blocks.items())
@@ -541,28 +554,24 @@ def analyzeLiveness(cfg, backendSymbolTable):
         liveVars = meetLive(n, cfg)
         transferLive(n, liveVars, backendSymbolTable)
 
-        """
-
         print("OLD ANNOT:", oldAnnot)
         print("NEW ANNOT:", n.reachingCopies)
 
         if oldAnnot != n.reachingCopies:
 
-
             for pID in n.predecessors:
 
                 match pID:
 
-                    case EXIT():
+                    case op.EXIT():
                         print("Error: Malformed control flow graph.")
                         sys.exit(1)
 
-                    case ENTRY():
+                    case op.ENTRY():
                         continue
 
-                    case BlockID(num = num):
+                    case op.BlockID(num = num):
 
-                        
                         block = cfg.blocks[pID]
 
                         if block in workList:
@@ -570,11 +579,35 @@ def analyzeLiveness(cfg, backendSymbolTable):
                         else:
                             print("ADD PREDECESSORS.")
                             workList.append(block)
-        """
+        
     
 
-def addEdges(cfg, interferenceGraph):
-    pass
+def addEdges(cfg, interferenceGraph, backendSymbolTable):
+    print("-----------Adding edges to interference graph.------------------")
+
+    for k, n in cfg.blocks.items():
+        if k == op.ENTRY() or k == op.EXIT():
+            continue
+
+        for i, set0 in n.iMap.items():
+
+            used, updated = findUsedAndUpdated(i, backendSymbolTable)
+
+            for l in set0:
+                if isinstance(i, assemblyGenerator.MovInstruction) and l == i.sourceO:
+                    continue
+
+                for u in updated:
+                    if l in interferenceGraph.nodes and u in interferenceGraph.nodes and not (l == u):
+                        addEdge(l, u, interferenceGraph)
+
+                    
+                
+            
+
+
+        
+    
 
 def buildInterferenceGraph(instructions, symbolTable, backendSymbolTable):
 
@@ -592,7 +625,7 @@ def buildInterferenceGraph(instructions, symbolTable, backendSymbolTable):
 
     analyzeLiveness(cfg, backendSymbolTable)
 
-    addEdges(cfg, interferenceGraph)
+    addEdges(cfg, interferenceGraph, backendSymbolTable)
 
     return interferenceGraph
 
