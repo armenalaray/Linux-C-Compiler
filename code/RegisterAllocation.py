@@ -187,9 +187,78 @@ class DoubleBaseGraph(Graph):
         self.nodes[RegisterOperand(Register(SSERegisterType.XMM8))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM11)))
         self.nodes[RegisterOperand(Register(SSERegisterType.XMM8))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM12)))
         self.nodes[RegisterOperand(Register(SSERegisterType.XMM8))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM13)))
+
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM9))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM0)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM9))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM1)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM9))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM2)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM9))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM3)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM9))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM4)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM9))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM5)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM9))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM6)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM9))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM7)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM9))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM8)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM9))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM10)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM9))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM11)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM9))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM12)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM9))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM13)))
+
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM10))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM0)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM10))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM1)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM10))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM2)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM10))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM3)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM10))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM4)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM10))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM5)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM10))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM6)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM10))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM7)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM10))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM8)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM10))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM9)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM10))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM11)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM10))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM12)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM10))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM13)))
+
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM11))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM0)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM11))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM1)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM11))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM2)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM11))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM3)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM11))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM4)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM11))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM5)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM11))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM6)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM11))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM7)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM11))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM8)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM11))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM9)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM11))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM10)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM11))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM12)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM11))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM13)))
+
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM12))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM0)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM12))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM1)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM12))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM2)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM12))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM3)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM12))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM4)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM12))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM5)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM12))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM6)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM12))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM7)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM12))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM8)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM12))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM9)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM12))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM10)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM12))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM11)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM12))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM13)))
+
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM13))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM0)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM13))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM1)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM13))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM2)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM13))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM3)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM13))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM4)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM13))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM5)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM13))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM6)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM13))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM7)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM13))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM8)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM13))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM9)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM13))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM10)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM13))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM11)))
+        self.nodes[RegisterOperand(Register(SSERegisterType.XMM13))].neighbors.add(RegisterOperand(Register(SSERegisterType.XMM12)))
+
         
-
-
 class IntegerBaseGraph(Graph):
     def __init__(self):
         super().__init__()
@@ -529,45 +598,116 @@ def isStatic(identifier, symbolTable):
     
     return False
 
+def isIntegerScalar(identifier, backendSymbolTable):
+    a = backendSymbolTable[identifier]
+    match a.assType:
 
-def addPseudoRegisters(interferenceGraph, instructions, symbolTable):
+        case assemblyGenerator.Byte():
+            return True
+
+        case assemblyGenerator.Longword():
+            return True
+
+        case assemblyGenerator.Quadword():
+            return True
+
+        case _:
+            return False
+        
+def isDouble(identifier, backendSymbolTable):
+    a = backendSymbolTable[identifier]
+    match a.assType:
+
+        case assemblyGenerator.Double():
+            return True
+        
+        case _:
+            return False
+
+def addPseudoRegistersDouble(interferenceGraph, instructions, symbolTable, backendSymbolTable, aliasedVars):
 
     for i in instructions:
         match i:
             case assemblyGenerator.MovInstruction(assType = assType, sourceO = sourceO, destO = destO):
-                if isinstance(sourceO, assemblyGenerator.PseudoRegisterOperand) and not isStatic(sourceO.pseudo, symbolTable):
+                if isinstance(sourceO, assemblyGenerator.PseudoRegisterOperand) and isDouble(sourceO.pseudo, backendSymbolTable) and not isStatic(sourceO.pseudo, symbolTable):
                     interferenceGraph.nodes[sourceO] = Node(sourceO)
 
-                if isinstance(destO, assemblyGenerator.PseudoRegisterOperand) and not isStatic(destO.pseudo, symbolTable):
+                if isinstance(destO, assemblyGenerator.PseudoRegisterOperand) and isDouble(destO.pseudo, backendSymbolTable) and not isStatic(destO.pseudo, symbolTable):
                     interferenceGraph.nodes[destO] = Node(destO)
 
             case assemblyGenerator.BinaryInstruction(operator = operator, assType = assType, src = src, dest = dest):
-                if isinstance(src, assemblyGenerator.PseudoRegisterOperand) and not isStatic(src.pseudo, symbolTable):
+                if isinstance(src, assemblyGenerator.PseudoRegisterOperand) and isDouble(src.pseudo, backendSymbolTable) and not isStatic(src.pseudo, symbolTable):
                     interferenceGraph.nodes[src] = Node(src)
-                if isinstance(dest, assemblyGenerator.PseudoRegisterOperand) and not isStatic(dest.pseudo, symbolTable):
+
+                if isinstance(dest, assemblyGenerator.PseudoRegisterOperand) and isDouble(dest.pseudo, backendSymbolTable) and not isStatic(dest.pseudo, symbolTable):
                     interferenceGraph.nodes[dest] = Node(dest)
 
             case assemblyGenerator.UnaryInstruction(operator = operator, assType = assType, dest = dest):
-                if isinstance(dest, assemblyGenerator.PseudoRegisterOperand) and not isStatic(dest.pseudo, symbolTable):
+                if isinstance(dest, assemblyGenerator.PseudoRegisterOperand) and isDouble(dest.pseudo, backendSymbolTable) and not isStatic(dest.pseudo, symbolTable):
                     interferenceGraph.nodes[dest] = Node(dest)
 
             case assemblyGenerator.CompInst(assType = assType, operand0 = operand0, operand1 = operand1):
-                if isinstance(operand0, assemblyGenerator.PseudoRegisterOperand) and not isStatic(operand0.pseudo, symbolTable):
+                if isinstance(operand0, assemblyGenerator.PseudoRegisterOperand) and isDouble(operand0.pseudo, backendSymbolTable) and not isStatic(operand0.pseudo, symbolTable):
                     interferenceGraph.nodes[operand0] = Node(operand0)
-                if isinstance(operand1, assemblyGenerator.PseudoRegisterOperand) and not isStatic(operand1.pseudo, symbolTable):
+
+                if isinstance(operand1, assemblyGenerator.PseudoRegisterOperand) and isDouble(operand1.pseudo, backendSymbolTable) and not isStatic(operand1.pseudo, symbolTable):
                     interferenceGraph.nodes[operand1] = Node(operand1)
 
             case assemblyGenerator.IDivInstruction(assType = assType, divisor = divisor):
-                if isinstance(divisor, assemblyGenerator.PseudoRegisterOperand) and not isStatic(divisor.pseudo, symbolTable):
+                if isinstance(divisor, assemblyGenerator.PseudoRegisterOperand) and isDouble(divisor.pseudo, backendSymbolTable) and not isStatic(divisor.pseudo, symbolTable):
                     interferenceGraph.nodes[divisor] = Node(divisor)
 
             case assemblyGenerator.SetCCInst(conc_code = conc_code, operand = operand):
-                if isinstance(operand, assemblyGenerator.PseudoRegisterOperand) and not isStatic(operand.pseudo, symbolTable):
+                if isinstance(operand, assemblyGenerator.PseudoRegisterOperand) and isDouble(operand.pseudo, backendSymbolTable) and not isStatic(operand.pseudo, symbolTable):
                     interferenceGraph.nodes[operand] = Node(operand)
 
             case assemblyGenerator.PushInstruction(operand = operand):
-                if isinstance(operand, assemblyGenerator.PseudoRegisterOperand) and not isStatic(operand.pseudo, symbolTable):
+                if isinstance(operand, assemblyGenerator.PseudoRegisterOperand) and isDouble(operand.pseudo, backendSymbolTable) and not isStatic(operand.pseudo, symbolTable):
                     interferenceGraph.nodes[operand] = Node(operand)
+
+
+def addPseudoRegistersIntegerScalar(interferenceGraph, instructions, symbolTable, backendSymbolTable):
+
+    for i in instructions:
+        match i:
+            case assemblyGenerator.MovInstruction(assType = assType, sourceO = sourceO, destO = destO):
+                if isinstance(sourceO, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(sourceO.pseudo, backendSymbolTable) and not isStatic(sourceO.pseudo, symbolTable):
+                    interferenceGraph.nodes[sourceO] = Node(sourceO)
+
+                if isinstance(destO, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(destO.pseudo, backendSymbolTable) and not isStatic(destO.pseudo, symbolTable):
+                    interferenceGraph.nodes[destO] = Node(destO)
+
+            case assemblyGenerator.BinaryInstruction(operator = operator, assType = assType, src = src, dest = dest):
+                if isinstance(src, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(src.pseudo, backendSymbolTable) and not isStatic(src.pseudo, symbolTable):
+                    interferenceGraph.nodes[src] = Node(src)
+
+                if isinstance(dest, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(dest.pseudo, backendSymbolTable) and not isStatic(dest.pseudo, symbolTable):
+                    interferenceGraph.nodes[dest] = Node(dest)
+
+            case assemblyGenerator.UnaryInstruction(operator = operator, assType = assType, dest = dest):
+                if isinstance(dest, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(dest.pseudo, backendSymbolTable) and not isStatic(dest.pseudo, symbolTable):
+                    interferenceGraph.nodes[dest] = Node(dest)
+
+            case assemblyGenerator.CompInst(assType = assType, operand0 = operand0, operand1 = operand1):
+                if isinstance(operand0, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(operand0.pseudo, backendSymbolTable) and not isStatic(operand0.pseudo, symbolTable):
+                    interferenceGraph.nodes[operand0] = Node(operand0)
+
+                if isinstance(operand1, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(operand1.pseudo, backendSymbolTable) and not isStatic(operand1.pseudo, symbolTable):
+                    interferenceGraph.nodes[operand1] = Node(operand1)
+
+            case assemblyGenerator.IDivInstruction(assType = assType, divisor = divisor):
+                if isinstance(divisor, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(divisor.pseudo, backendSymbolTable) and not isStatic(divisor.pseudo, symbolTable):
+                    interferenceGraph.nodes[divisor] = Node(divisor)
+
+            case assemblyGenerator.SetCCInst(conc_code = conc_code, operand = operand):
+                if isinstance(operand, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(operand.pseudo, backendSymbolTable) and not isStatic(operand.pseudo, symbolTable):
+                    interferenceGraph.nodes[operand] = Node(operand)
+
+            case assemblyGenerator.PushInstruction(operand = operand):
+                if isinstance(operand, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(operand.pseudo, backendSymbolTable) and not isStatic(operand.pseudo, symbolTable):
+                    interferenceGraph.nodes[operand] = Node(operand)
+
+
 
 def partitionIntoBasicBlocks(instructions):
 
@@ -913,7 +1053,7 @@ def buildInterferenceGraphInteger(instructions, symbolTable, backendSymbolTable)
 
     interferenceGraph = IntegerBaseGraph()
 
-    addPseudoRegisters(interferenceGraph, instructions, symbolTable)
+    addPseudoRegistersIntegerScalar(interferenceGraph, instructions, symbolTable, backendSymbolTable)
 
     ########################### es diferente
 
@@ -927,14 +1067,15 @@ def buildInterferenceGraphInteger(instructions, symbolTable, backendSymbolTable)
 
     return interferenceGraph
 
-def buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable):
+def buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable, aliasedVars):
 
-    print("-----------Building INTEGER interference graph.------------------")
+    print("-----------Building DOUBLE interference graph.------------------")
 
     interferenceGraph = DoubleBaseGraph()
 
-    """
-    addPseudoRegisters(interferenceGraph, instructions, symbolTable)
+    addPseudoRegistersDouble(interferenceGraph, instructions, symbolTable, backendSymbolTable, aliasedVars)
+
+    interferenceGraph.printNode(0)
 
     ########################### es diferente
 
@@ -944,10 +1085,9 @@ def buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable):
 
     addEdges(cfg, interferenceGraph, backendSymbolTable)
 
-    interferenceGraph.printNode(0)
-
     return interferenceGraph
-    """
+    
+
 
 
 def addSpillCosts(interGraph, instructions):
@@ -960,7 +1100,7 @@ def createRegisterMap(interGraph):
     pass
 
 def replacePseudoRegs(instructions, registerMap):
-    pass
+    return instructions
 
 def allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable):
 
@@ -976,9 +1116,9 @@ def allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable):
 
     return replacedIns
 
-def allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable):
+def allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, aliasedVars):
 
-    interGraph = buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable)
+    interGraph = buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable, aliasedVars)
 
     addSpillCosts(interGraph, instructions)
 
@@ -991,10 +1131,10 @@ def allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable):
     return replacedIns
 
 
-def allocateRegisters(instructions, symbolTable, backendSymbolTable):
+def allocateRegisters(instructions, symbolTable, backendSymbolTable, aliasedVars):
 
     instructions = allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable)
 
-    instructions = allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable)
+    instructions = allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, aliasedVars)
 
     return instructions

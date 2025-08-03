@@ -1,70 +1,41 @@
-/* Test that liveness analysis for registers handles loop correctly */
-
-//#include "../util.h"
-
-/* Helper functions defined in tests/chapter_20/helper_libs/util.c */
-
-/* The check_* functions return 0 on success,
- * print and exit with code -1 on failure.
- */
-
-int check_one_int(int actual, int expected);
-
-// Validates a == start, b == start + 1, ...e == start + 5
-int check_5_ints(int a, int b, int c, int d, int e, int start);
-
-// Validates a == start, b == start + 1, ... l == start + 11
-int check_12_ints(int a, int b, int c, int d, int e, int f, int g, int h, int i,
-                  int j, int k, int l, int start);
-
-// return x; used to get constants in a way that can't be optimized away
-int id(int x);
-
-
-int counter = 5;
-int expected_a = 2;
-
-int update_expected_a(void);
-int times_two(int x);
+/* Test that we can avoid spills in a function with a clique of fourteen
+ * floating-point pseudoregisters. This tests our support for floating-point
+ * register allocation in general, AND tests that we recognize that XMM0 is
+ * NOT live at exit from a function with an integer return type. (If the
+ * allocator thinks XMM0 is live at exit, it won't be able to assign a
+ * pseudoregister to it and we'll will have to spill.)
+ * The test script validates that there are no spills in the target function.
+ *
+ * This test program is generated from templates/chapter_20_templates/fourteen_pseudos_interfere.c.jinja.
+ * */
+double glob = 20.0;
+double glob2 = 30.0;
+int glob3 = 40.0;
 
 int target(void) {
-    int z;
-    int a;
+    // Create a clique of 14 tmps that interfere;
+    // we can color all of them w/out spilling anything.
+    double a = glob * glob;
+    double b = glob2 + 2.0;
+    double c = a + 5.0;
+    double d = b - glob3;
+    double e = glob + 7.0;
+    double f = glob2 * 2.0;
+    double g = c * 3.0;
+    double h = d * 112.;
+    double i = e / 3.0;
+    double j = g + f;
+    double k = h - j;
+    double l = i + 1000.;
+    double m = j - d;
+    double n = m * l;
 
-    // define four callee-saved regs
-    int one = counter - 4;
-    int two = counter / 2;
-    int three = -counter + 8;
-    int four = counter - 1;
-
-    // a and z are both callee-saved but their live ranges don't overlap;
-    // we can avoid spills by placing them in the same hard register
-    while (counter > 0) {
-        if (counter == 5)
-            z = 4; // a not yet initialized
-        else
-            z = times_two(a);
-        // z is live, a is dead below here
-        update_expected_a(); // force z to be callee-saved
-        a = 1 - z; // a is live, z is dead from here to start of loop
-        check_one_int(a, expected_a);
-        counter = counter - 1;
+    if (a == 400.0 && b == 32.0 && c == 405.0 && d == -8.0 && e == 27.0 &&
+        f == 60.0 && g == 1215.0 && h == -896. && i == 9.0 && j == 1275. &&
+        k == -2171. && l == 1009. && m == 1283. && n == 1294547.) {
+        return 0; // success
+    } else {
+        return 1; // fail
     }
 
-    // validate other callee-saved regs
-    check_one_int(one, 1);
-    check_one_int(two, 2);
-    check_one_int(three, 3);
-    check_one_int(four, 4);
-    return 0;
-}
-
-// independently calculate a's value on each loop iteration so we can validate it
-int update_expected_a(void) {
-    expected_a = 1 - (2 * expected_a);
-    return 0;
-}
-
-int times_two(int x) {
-    return x * 2;
 }

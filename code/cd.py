@@ -306,21 +306,27 @@ if __name__ == "__main__":
 						i.instructions = optimizeFunction(i.instructions, symbolTable)
 				
 				#breakpoint()
-
-			#optimizationsFile = os.path.dirname(file) + "/" + os.path.basename(file).split('.')[0] + '.txt'
-			#aFile = open(optimizationsFile, 'w')
-			#aFile.write(output)
-			#aFile.close()
 			
+			
+			
+			allAliasedVars = set()
+			for i in tac.topLevelList:
+				#print(type(i))
+				match i:
+					case tacGenerator.TAC_FunctionDef():		
+						aliasedVars = optimizations.addressTakenAnalysis(i.instructions, symbolTable)
+						allAliasedVars.update(aliasedVars)
 			
 			if printDebugInfo:
 				print(tac)
 				print("Type Table:\n", typeTable)
 				print("Symbol Table:\n", symbolTable)
-			
-			
+				print("All Aliased Vars:\n", allAliasedVars)
+
 			if LastStage == 'tac':
 				sys.exit(0)
+
+			
 
 			ass, backSymbolTable = assemblyGenerator.ASM_parseAST(tac, symbolTable, typeTable)
 
@@ -334,7 +340,7 @@ if __name__ == "__main__":
 				match i:
 					case assemblyGenerator.Function():
 						print("REGISTER ALLOCATE FUNCTION {0}".format(i.identifier))
-						i.insList = RegisterAllocation.allocateRegisters(i.insList, symbolTable, backSymbolTable)
+						i.insList = RegisterAllocation.allocateRegisters(i.insList, symbolTable, backSymbolTable, allAliasedVars)
 
 			if LastStage == 'assemblyGeneration':
 				sys.exit(0)
