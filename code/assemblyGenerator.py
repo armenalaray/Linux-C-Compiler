@@ -658,6 +658,9 @@ class RegisterOperand:
     def __str__(self):
         return r"Reg({self.register})".format(self=self)
     
+    def __repr__(self):
+        return self.__str__()
+
     def __hash__(self):
         return hash((self.register))
     
@@ -1869,7 +1872,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                         
                         r = intReturnRegisters[i]
 
-                        funAttrs.returnInt.add(r)
+                        funAttrs.returnInt.add(RegisterOperand(Register(r)))
 
                         match t:
                             case ByteArray(size = size, alignment = alignment):
@@ -1883,7 +1886,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                     for i, op in enumerate(doubleRetVals):
                         r = doubleReturnRegisters[i]
 
-                        funAttrs.returnDouble.add(r)
+                        funAttrs.returnDouble.add(RegisterOperand(Register(r)))
 
                         ASM_Instructions.append(MovInstruction(Double(), op, RegisterOperand(Register(r))))
 
@@ -2020,7 +2023,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                     
                     r = intRegisters[i]
 
-                    funAttrs.paramInt.add(r)
+                    funAttrs.paramInt.add(RegisterOperand(Register(r)))
 
                     match assType:
                         case ByteArray(size = size, alignment = alignment):
@@ -2033,7 +2036,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
                 for i, assArg in enumerate(doubleArgs):
                     r = doubleRegisters[i]
 
-                    funAttrs.paramDouble.add(r)
+                    funAttrs.paramDouble.add(RegisterOperand(Register(r)))
 
                     ASM_Instructions.append(MovInstruction(Double(), assArg, RegisterOperand(Register(r))))
 
@@ -2081,7 +2084,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
                         r = intReturnRegisters[i]
 
-                        funAttrs.returnInt.add(r)
+                        funAttrs.returnInt.add(RegisterOperand(Register(r)))
 
                         match t:
                             case ByteArray(size = size, alignment = alignment):
@@ -2096,7 +2099,7 @@ def ASM_parseInstructions(TAC_Instructions, ASM_Instructions, symbolTable, typeT
 
                         r = doubleReturnRegisters[i]
 
-                        funAttrs.returnDouble.add(r)
+                        funAttrs.returnDouble.add(RegisterOperand(Register(r)))
 
                         ASM_Instructions.append(MovInstruction(Double(), RegisterOperand(Register(r)), op))
 
@@ -2624,7 +2627,7 @@ def ASM_parseTopLevel(topLevel, symbolTable, typeTable, topLevelList):
                 
                 r = intRegisters[i]
 
-                funAttrs.paramInt.add(r)
+                funAttrs.paramInt.add(RegisterOperand(Register(r)))
 
                 match paramType:
                     case ByteArray(size = size, alignment = alignment):
@@ -2636,7 +2639,7 @@ def ASM_parseTopLevel(topLevel, symbolTable, typeTable, topLevelList):
             for i, param in enumerate(doubleParams):
                 r = doubleRegisters[i]
 
-                funAttrs.paramDouble.add(r)
+                funAttrs.paramDouble.add(RegisterOperand(Register(r)))
 
                 ASM_Instructions.append(MovInstruction(Double(), RegisterOperand(Register(r)), param))
                 

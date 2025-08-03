@@ -1,7 +1,7 @@
 
 import copy
 import assemblyGenerator
-from assemblyGenerator import RegisterType, SSERegisterType
+from assemblyGenerator import RegisterType, SSERegisterType, RegisterOperand, Register
 import typeChecker
 
 import optimizations as op
@@ -460,18 +460,27 @@ def findUsedAndUpdated(instruction, backendSymbolTable):
             updated = []
 
         case assemblyGenerator.IDivInstruction(divisor = divisor):
-            used = [divisor, RegisterType.AX, RegisterType.DX]
-            updated = [RegisterType.AX, RegisterType.DX]
+            used = [divisor, RegisterOperand(Register(RegisterType.AX)), RegisterOperand(Register(RegisterType.DX))]
+
+            updated = [RegisterOperand(Register(RegisterType.AX)), RegisterOperand(Register(RegisterType.DX))]
 
         case assemblyGenerator.CDQInstruction():
-            used = [RegisterType.AX]
-            updated = [RegisterType.DX]
-        
+            used = [RegisterOperand(Register(RegisterType.AX))]
+            
+            updated = [RegisterOperand(Register(RegisterType.DX))]
+
         case assemblyGenerator.CallInstruction(identifier = identifier):
             funEntry = backendSymbolTable[identifier]
             
             used = list(funEntry.paramInt)
-            updated = [RegisterType.DI, RegisterType.SI, RegisterType.DX, RegisterType.CX, RegisterType.R8, RegisterType.R9, RegisterType.AX]
+
+            updated = [RegisterOperand(Register(RegisterType.DI)), 
+                       RegisterOperand(Register(RegisterType.SI)), 
+                       RegisterOperand(Register(RegisterType.DX)), 
+                       RegisterOperand(Register(RegisterType.CX)), 
+                       RegisterOperand(Register(RegisterType.R8)), 
+                       RegisterOperand(Register(RegisterType.R9)), 
+                       RegisterOperand(Register(RegisterType.AX))]
 
         case _:
             used = []
@@ -496,8 +505,17 @@ def transferLive(n, endLiveRegisters, backendSymbolTable):
         set0.update(currentLiveRegisters)
 
         print(i, set0)
+        
+        used, updated = findUsedAndUpdated(i, backendSymbolTable)
 
-    findUsedAndUpdated(n.instructions[0], backendSymbolTable)
+        for v in updated:
+            pass
+
+        for v in used:
+            pass
+        
+        
+
 
 
 def analyzeLiveness(cfg, backendSymbolTable):
