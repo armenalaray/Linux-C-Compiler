@@ -713,6 +713,29 @@ def addPseudoRegistersDouble(interferenceGraph, instructions, symbolTable, backe
                     interferenceGraph.nodes[operand] = Node(operand)
 
 
+
+            case assemblyGenerator.MovSXInstruction(srcType = srcType, dstType = dstType,sourceO = sourceO, destO = destO):
+                pass
+            
+            case assemblyGenerator.MovZeroExtendIns(sourceO = sourceO, destO = destO):
+                pass
+
+            case assemblyGenerator.LeaInstruction(sourceO = sourceO, destO = destO):
+                pass
+
+            case assemblyGenerator.Cvttsd2si(assType = assType, sourceO = sourceO, destO = destO):
+                pass
+            
+            case assemblyGenerator.Cvtsi2sd(assType = assType, sourceO = sourceO, destO = destO):
+                pass
+
+            case assemblyGenerator.DivInstruction(divisor = divisor):
+                pass
+
+            case assemblyGenerator.Pop(reg = reg):
+                pass
+
+
 def addPseudoRegistersIntegerScalar(interferenceGraph, instructions, symbolTable, backendSymbolTable, aliasedVars):
 
     for i in instructions:
@@ -808,6 +831,26 @@ def addPseudoRegistersIntegerScalar(interferenceGraph, instructions, symbolTable
 
                     interferenceGraph.nodes[operand] = Node(operand)
 
+            case assemblyGenerator.MovSXInstruction(srcType = srcType, dstType = dstType,sourceO = sourceO, destO = destO):
+                pass
+            
+            case assemblyGenerator.MovZeroExtendIns(sourceO = sourceO, destO = destO):
+                pass
+
+            case assemblyGenerator.LeaInstruction(sourceO = sourceO, destO = destO):
+                pass
+
+            case assemblyGenerator.Cvttsd2si(assType = assType, sourceO = sourceO, destO = destO):
+                pass
+            
+            case assemblyGenerator.Cvtsi2sd(assType = assType, sourceO = sourceO, destO = destO):
+                pass
+
+            case assemblyGenerator.DivInstruction(divisor = divisor):
+                pass
+
+            case assemblyGenerator.Pop(reg = reg):
+                pass
 
 
 def partitionIntoBasicBlocks(instructions):
@@ -1157,6 +1200,160 @@ def findUsedAndUpdated(instruction, backendSymbolTable):
                        RegisterOperand(Register(SSERegisterType.XMM14)),
                        RegisterOperand(Register(SSERegisterType.XMM15))
                        ]
+
+        case assemblyGenerator.MovSXInstruction(srcType = srcType, dstType = dstType,sourceO = sourceO, destO = destO):
+            used = []
+            updated = []
+
+            match sourceO:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    used.append(sourceO)
+
+            match destO:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    updated.append(destO)
+            
+        
+        case assemblyGenerator.MovZeroExtendIns(sourceO = sourceO, destO = destO):
+            used = []
+            updated = []
+
+            match sourceO:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    used.append(sourceO)
+
+            match destO:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    updated.append(destO)
+        
+        case assemblyGenerator.LeaInstruction(sourceO = sourceO, destO = destO):
+            used = []
+            updated = []
+
+            match sourceO:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    print("ERROR: INVALID LEA.")
+                    sys.exit(1)
+                    #used.append(sourceO)
+
+            match destO:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    updated.append(destO)
+
+        case assemblyGenerator.Cvttsd2si(assType = assType, sourceO = sourceO, destO = destO):
+            used = []
+            updated = []
+
+            match sourceO:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    used.append(sourceO)
+
+            match destO:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    updated.append(destO)
+
+        case assemblyGenerator.Cvtsi2sd(assType = assType, sourceO = sourceO, destO = destO):
+            used = []
+            updated = []
+
+            match sourceO:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    used.append(sourceO)
+
+            match destO:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    updated.append(destO)
+
+        case assemblyGenerator.DivInstruction(divisor = divisor):
+            used = []
+            updated = []
+
+            match divisor:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    used.extend([divisor, RegisterOperand(Register(RegisterType.AX)), RegisterOperand(Register(RegisterType.DX))])
+
+                    updated.extend([RegisterOperand(Register(RegisterType.AX)), RegisterOperand(Register(RegisterType.DX))])
+        
+        case assemblyGenerator.Pop(reg = reg):
+            used = []
+            updated = [reg]
 
         case _:
             used = []
