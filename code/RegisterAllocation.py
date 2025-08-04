@@ -15,6 +15,8 @@ class Node():
         self.color = None
         self.pruned = False
 
+    def __str__(self):
+        return "{self.operandID} spillCost: {self.spillCost} color: {self.color} pruned: {self.pruned}".format(self=self)
     def printNode(self, level):
 
         print("    " * level + "{self.operandID} spillCost: {self.spillCost} color: {self.color} pruned: {self.pruned}".format(self=self))
@@ -1727,10 +1729,98 @@ def buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable, 
     return interferenceGraph
     
 
+def addSpillCostsInteger(interGraph, instructions):
+    print("----------------ADD SPILL COSTS.-------------------")
+    interGraph.nodes[RegisterOperand(Register(RegisterType.AX))].spillCost = float('inf')  
+    interGraph.nodes[RegisterOperand(Register(RegisterType.BX))].spillCost = float('inf')  
+    interGraph.nodes[RegisterOperand(Register(RegisterType.CX))].spillCost = float('inf')  
+    interGraph.nodes[RegisterOperand(Register(RegisterType.DX))].spillCost = float('inf')  
+    interGraph.nodes[RegisterOperand(Register(RegisterType.DI))].spillCost = float('inf')  
+    interGraph.nodes[RegisterOperand(Register(RegisterType.SI))].spillCost = float('inf')  
+    interGraph.nodes[RegisterOperand(Register(RegisterType.R8))].spillCost = float('inf')  
+    interGraph.nodes[RegisterOperand(Register(RegisterType.R9))].spillCost = float('inf')  
+    interGraph.nodes[RegisterOperand(Register(RegisterType.R12))].spillCost = float('inf') 
+    interGraph.nodes[RegisterOperand(Register(RegisterType.R13))].spillCost = float('inf')
+    interGraph.nodes[RegisterOperand(Register(RegisterType.R14))].spillCost = float('inf')
+    interGraph.nodes[RegisterOperand(Register(RegisterType.R15))].spillCost = float('inf')
+
+    for k,n in interGraph.nodes.items():
+        print(k,n)
+
+        match k:
+            case assemblyGenerator.PseudoRegisterOperand():
+
+                for i in instructions:
+
+                    match i:
+
+                        case assemblyGenerator.MovInstruction(sourceO = sourceO, destO = destO):
+                            pass
+
+                        case assemblyGenerator.BinaryInstruction(src = src, dest = dest):
+                            
+                            pass
+
+                        case assemblyGenerator.UnaryInstruction(dest = dest):
+
+                            pass
+
+                        case assemblyGenerator.CompInst(operand0 = operand0, operand1 = operand1):
+
+                            pass
+
+                        case assemblyGenerator.SetCCInst(operand = operand):
+
+                            pass
+                        
+                        case assemblyGenerator.PushInstruction(operand = operand):
+
+                            pass
+
+                        case assemblyGenerator.IDivInstruction(divisor = divisor):
+
+                            pass
+
+                        case assemblyGenerator.CDQInstruction():
+                            pass
+
+                        case assemblyGenerator.CallInstruction(identifier = identifier):
+
+                            pass
+
+                        case assemblyGenerator.MovSXInstruction(srcType = srcType, dstType = dstType,sourceO = sourceO, destO = destO):
+                            pass
+                            
+                        
+                        case assemblyGenerator.MovZeroExtendIns(sourceO = sourceO, destO = destO):
+                            pass
+                        
+                        case assemblyGenerator.LeaInstruction(sourceO = sourceO, destO = destO):
+                            pass
+
+                        case assemblyGenerator.Cvttsd2si(assType = assType, sourceO = sourceO, destO = destO):
+                            pass
+
+                        case assemblyGenerator.Cvtsi2sd(assType = assType, sourceO = sourceO, destO = destO):
+                            pass
+
+                        case assemblyGenerator.DivInstruction(divisor = divisor):
+                            pass
+                        
+                        case assemblyGenerator.Pop(reg = reg):
+                            pass
+        
+                        
+                    
+                
+        
 
 
-def addSpillCosts(interGraph, instructions):
-    pass
+
+def addSpillCostsDouble(interGraph, instructions):
+
+    interGraph.nodes[RegisterOperand(Register(SSERegisterType.XMM0))].spillCost
+    
 
 def colorGraph(interGraph):
     pass
@@ -1745,7 +1835,7 @@ def allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable, a
 
     interGraph = buildInterferenceGraphInteger(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
 
-    addSpillCosts(interGraph, instructions)
+    addSpillCostsInteger(interGraph, instructions)
 
     colorGraph(interGraph)
 
@@ -1759,7 +1849,7 @@ def allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, al
 
     interGraph = buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
 
-    addSpillCosts(interGraph, instructions)
+    addSpillCostsDouble(interGraph, instructions)
 
     colorGraph(interGraph)
 
@@ -1774,6 +1864,6 @@ def allocateRegisters(instructions, symbolTable, backendSymbolTable, aliasedVars
 
     instructions = allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
 
-    instructions = allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
+    #instructions = allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
 
     return instructions
