@@ -140,6 +140,9 @@ def optimizeFunction(functionBody, symbolTable):
 
 
 if __name__ == "__main__":	
+
+	print(assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.SSERegisterType.XMM0)) == assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.AX)))
+
 	print(sys.float_info)
 
 	print(len(sys.argv))

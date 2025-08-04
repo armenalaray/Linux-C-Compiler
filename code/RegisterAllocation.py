@@ -715,25 +715,114 @@ def addPseudoRegistersDouble(interferenceGraph, instructions, symbolTable, backe
 
 
             case assemblyGenerator.MovSXInstruction(srcType = srcType, dstType = dstType,sourceO = sourceO, destO = destO):
-                pass
+                if (
+                    isinstance(sourceO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isDouble(sourceO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(sourceO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[sourceO] = Node(sourceO)
+
+                if (
+                    isinstance(destO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isDouble(destO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(destO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[destO] = Node(destO)
+
             
             case assemblyGenerator.MovZeroExtendIns(sourceO = sourceO, destO = destO):
-                pass
+                if (
+                    isinstance(sourceO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isDouble(sourceO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(sourceO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[sourceO] = Node(sourceO)
+
+                if (
+                    isinstance(destO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isDouble(destO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(destO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[destO] = Node(destO)
+
 
             case assemblyGenerator.LeaInstruction(sourceO = sourceO, destO = destO):
-                pass
+                if (
+                    isinstance(sourceO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isDouble(sourceO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(sourceO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[sourceO] = Node(sourceO)
+
+                if (
+                    isinstance(destO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isDouble(destO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(destO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[destO] = Node(destO)
+
 
             case assemblyGenerator.Cvttsd2si(assType = assType, sourceO = sourceO, destO = destO):
-                pass
+                if (
+                    isinstance(sourceO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isDouble(sourceO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(sourceO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[sourceO] = Node(sourceO)
+
+                if (
+                    isinstance(destO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isDouble(destO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(destO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[destO] = Node(destO)
+
             
             case assemblyGenerator.Cvtsi2sd(assType = assType, sourceO = sourceO, destO = destO):
-                pass
+                if (
+                    isinstance(sourceO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isDouble(sourceO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(sourceO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[sourceO] = Node(sourceO)
+
+                if (
+                    isinstance(destO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isDouble(destO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(destO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[destO] = Node(destO)
+
 
             case assemblyGenerator.DivInstruction(divisor = divisor):
-                pass
+                if (
+                    isinstance(divisor, assemblyGenerator.PseudoRegisterOperand) and 
+                    isDouble(divisor.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(divisor.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[divisor] = Node(divisor)
+
 
             case assemblyGenerator.Pop(reg = reg):
-                pass
+                if (
+                    isinstance(reg, assemblyGenerator.PseudoRegisterOperand) and 
+                    isDouble(reg.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(reg.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[reg] = Node(reg)
+
 
 
 def addPseudoRegistersIntegerScalar(interferenceGraph, instructions, symbolTable, backendSymbolTable, aliasedVars):
@@ -831,26 +920,116 @@ def addPseudoRegistersIntegerScalar(interferenceGraph, instructions, symbolTable
 
                     interferenceGraph.nodes[operand] = Node(operand)
 
+
+
             case assemblyGenerator.MovSXInstruction(srcType = srcType, dstType = dstType,sourceO = sourceO, destO = destO):
-                pass
+                if (
+                    isinstance(sourceO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(sourceO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(sourceO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[sourceO] = Node(sourceO)
+
+                if (
+                    isinstance(destO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(destO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(destO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[destO] = Node(destO)
+
             
             case assemblyGenerator.MovZeroExtendIns(sourceO = sourceO, destO = destO):
-                pass
+                if (
+                    isinstance(sourceO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(sourceO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(sourceO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[sourceO] = Node(sourceO)
+
+                if (
+                    isinstance(destO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(destO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(destO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[destO] = Node(destO)
+
 
             case assemblyGenerator.LeaInstruction(sourceO = sourceO, destO = destO):
-                pass
+                if (
+                    isinstance(sourceO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(sourceO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(sourceO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[sourceO] = Node(sourceO)
+
+                if (
+                    isinstance(destO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(destO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(destO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[destO] = Node(destO)
+
 
             case assemblyGenerator.Cvttsd2si(assType = assType, sourceO = sourceO, destO = destO):
-                pass
+                if (
+                    isinstance(sourceO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(sourceO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(sourceO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[sourceO] = Node(sourceO)
+
+                if (
+                    isinstance(destO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(destO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(destO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[destO] = Node(destO)
+
             
             case assemblyGenerator.Cvtsi2sd(assType = assType, sourceO = sourceO, destO = destO):
-                pass
+                if (
+                    isinstance(sourceO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(sourceO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(sourceO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[sourceO] = Node(sourceO)
+
+                if (
+                    isinstance(destO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(destO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(destO.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[destO] = Node(destO)
+
 
             case assemblyGenerator.DivInstruction(divisor = divisor):
-                pass
+                if (
+                    isinstance(divisor, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(divisor.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(divisor.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[divisor] = Node(divisor)
+
 
             case assemblyGenerator.Pop(reg = reg):
-                pass
+                if (
+                    isinstance(reg, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(reg.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(reg.pseudo) in aliasedVars)
+                    ):
+
+                    interferenceGraph.nodes[reg] = Node(reg)
 
 
 def partitionIntoBasicBlocks(instructions):
@@ -1401,10 +1580,10 @@ def transferLive(block, endLiveRegisters, backendSymbolTable):
             if isRegister(v):
                 currentLiveRegisters.add(v)
 
-    print("--------------ACTUALIZED IMAP for block {0}-------------------".format(block.id))
+    #print("--------------ACTUALIZED IMAP for block {0}-------------------".format(block.id))
 
-    for i, set0 in block.iMap:
-        print(i, set0)
+    #for i, set0 in block.iMap:
+    #    print(i, set0)
 
     block.reachingCopies.clear()
     block.reachingCopies.update(currentLiveRegisters)
@@ -1476,10 +1655,7 @@ def addEdges(cfg, interferenceGraph, backendSymbolTable):
                 for u in updated:
                     if l in interferenceGraph.nodes and u in interferenceGraph.nodes and not (l == u):
                         interferenceGraph.addEdge(l, u)
-        
-        
-
-                    
+                 
                 
 def addEdge(nodeID0, nodeID1, graph):
 
@@ -1538,8 +1714,6 @@ def buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable, 
 
     addPseudoRegistersDouble(interferenceGraph, instructions, symbolTable, backendSymbolTable, aliasedVars)
 
-    interferenceGraph.printNode(0)
-
     ########################### es diferente
 
     cfg = makeControlFlowGraph(instructions)
@@ -1547,6 +1721,8 @@ def buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable, 
     analyzeLiveness(cfg, backendSymbolTable, funName)
 
     addEdges(cfg, interferenceGraph, backendSymbolTable)
+
+    interferenceGraph.printNode(0)
 
     return interferenceGraph
     
