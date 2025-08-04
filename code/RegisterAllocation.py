@@ -1,6 +1,7 @@
 
 import copy
 import assemblyGenerator
+import tacGenerator
 from assemblyGenerator import RegisterType, SSERegisterType, RegisterOperand, Register
 import typeChecker
 
@@ -629,82 +630,182 @@ def addPseudoRegistersDouble(interferenceGraph, instructions, symbolTable, backe
     for i in instructions:
         match i:
             case assemblyGenerator.MovInstruction(assType = assType, sourceO = sourceO, destO = destO):
-                if isinstance(sourceO, assemblyGenerator.PseudoRegisterOperand) and isDouble(sourceO.pseudo, backendSymbolTable) and not isStatic(sourceO.pseudo, symbolTable):
+                if (
+                    isinstance(sourceO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isDouble(sourceO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(sourceO.pseudo) in aliasedVars)
+                    ):
+
                     interferenceGraph.nodes[sourceO] = Node(sourceO)
 
-                if isinstance(destO, assemblyGenerator.PseudoRegisterOperand) and isDouble(destO.pseudo, backendSymbolTable) and not isStatic(destO.pseudo, symbolTable):
+                if (
+                    isinstance(destO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isDouble(destO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(destO.pseudo) in aliasedVars)
+                    ):
+
                     interferenceGraph.nodes[destO] = Node(destO)
 
             case assemblyGenerator.BinaryInstruction(operator = operator, assType = assType, src = src, dest = dest):
-                if isinstance(src, assemblyGenerator.PseudoRegisterOperand) and isDouble(src.pseudo, backendSymbolTable) and not isStatic(src.pseudo, symbolTable):
+                if (
+                    isinstance(src, assemblyGenerator.PseudoRegisterOperand) and
+                    isDouble(src.pseudo, backendSymbolTable) and
+                    (not tacGenerator.TAC_VariableValue(src.pseudo) in aliasedVars)
+                    ):
                     interferenceGraph.nodes[src] = Node(src)
 
-                if isinstance(dest, assemblyGenerator.PseudoRegisterOperand) and isDouble(dest.pseudo, backendSymbolTable) and not isStatic(dest.pseudo, symbolTable):
+                if (isinstance(dest, assemblyGenerator.PseudoRegisterOperand) and
+                    isDouble(dest.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(dest.pseudo) in aliasedVars)
+                    ):
                     interferenceGraph.nodes[dest] = Node(dest)
 
             case assemblyGenerator.UnaryInstruction(operator = operator, assType = assType, dest = dest):
-                if isinstance(dest, assemblyGenerator.PseudoRegisterOperand) and isDouble(dest.pseudo, backendSymbolTable) and not isStatic(dest.pseudo, symbolTable):
+                if (
+                    isinstance(dest, assemblyGenerator.PseudoRegisterOperand) and
+                    isDouble(dest.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(dest.pseudo) in aliasedVars)
+
+                    ):
                     interferenceGraph.nodes[dest] = Node(dest)
 
             case assemblyGenerator.CompInst(assType = assType, operand0 = operand0, operand1 = operand1):
-                if isinstance(operand0, assemblyGenerator.PseudoRegisterOperand) and isDouble(operand0.pseudo, backendSymbolTable) and not isStatic(operand0.pseudo, symbolTable):
+                if (
+                    isinstance(operand0, assemblyGenerator.PseudoRegisterOperand) and
+                    isDouble(operand0.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(operand0.pseudo) in aliasedVars)
+                    ):
+
                     interferenceGraph.nodes[operand0] = Node(operand0)
 
-                if isinstance(operand1, assemblyGenerator.PseudoRegisterOperand) and isDouble(operand1.pseudo, backendSymbolTable) and not isStatic(operand1.pseudo, symbolTable):
+                if (
+                    isinstance(operand1, assemblyGenerator.PseudoRegisterOperand) and 
+                    isDouble(operand1.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(operand1.pseudo) in aliasedVars)
+                    ):
+
                     interferenceGraph.nodes[operand1] = Node(operand1)
 
             case assemblyGenerator.IDivInstruction(assType = assType, divisor = divisor):
-                if isinstance(divisor, assemblyGenerator.PseudoRegisterOperand) and isDouble(divisor.pseudo, backendSymbolTable) and not isStatic(divisor.pseudo, symbolTable):
+                if (
+                    isinstance(divisor, assemblyGenerator.PseudoRegisterOperand) and 
+                    isDouble(divisor.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(divisor.pseudo) in aliasedVars)
+                    ):
                     interferenceGraph.nodes[divisor] = Node(divisor)
 
             case assemblyGenerator.SetCCInst(conc_code = conc_code, operand = operand):
-                if isinstance(operand, assemblyGenerator.PseudoRegisterOperand) and isDouble(operand.pseudo, backendSymbolTable) and not isStatic(operand.pseudo, symbolTable):
+                if (
+                    isinstance(operand, assemblyGenerator.PseudoRegisterOperand) and 
+                    isDouble(operand.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(operand.pseudo) in aliasedVars)
+                    ):
+
                     interferenceGraph.nodes[operand] = Node(operand)
 
             case assemblyGenerator.PushInstruction(operand = operand):
-                if isinstance(operand, assemblyGenerator.PseudoRegisterOperand) and isDouble(operand.pseudo, backendSymbolTable) and not isStatic(operand.pseudo, symbolTable):
+                if (
+                    isinstance(operand, assemblyGenerator.PseudoRegisterOperand) and 
+                    isDouble(operand.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(operand.pseudo) in aliasedVars)
+                    ):
+
                     interferenceGraph.nodes[operand] = Node(operand)
 
 
-def addPseudoRegistersIntegerScalar(interferenceGraph, instructions, symbolTable, backendSymbolTable):
+def addPseudoRegistersIntegerScalar(interferenceGraph, instructions, symbolTable, backendSymbolTable, aliasedVars):
 
     for i in instructions:
         match i:
             case assemblyGenerator.MovInstruction(assType = assType, sourceO = sourceO, destO = destO):
-                if isinstance(sourceO, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(sourceO.pseudo, backendSymbolTable) and not isStatic(sourceO.pseudo, symbolTable):
+                
+                if (
+                    isinstance(sourceO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(sourceO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(sourceO.pseudo) in aliasedVars)
+                    ):
+                    
                     interferenceGraph.nodes[sourceO] = Node(sourceO)
 
-                if isinstance(destO, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(destO.pseudo, backendSymbolTable) and not isStatic(destO.pseudo, symbolTable):
+                if (
+                    isinstance(destO, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(destO.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(destO.pseudo) in aliasedVars)
+                    ):
+
                     interferenceGraph.nodes[destO] = Node(destO)
 
             case assemblyGenerator.BinaryInstruction(operator = operator, assType = assType, src = src, dest = dest):
-                if isinstance(src, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(src.pseudo, backendSymbolTable) and not isStatic(src.pseudo, symbolTable):
+                if (
+                    isinstance(src, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(src.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(src.pseudo) in aliasedVars)
+                    ):
+
                     interferenceGraph.nodes[src] = Node(src)
 
-                if isinstance(dest, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(dest.pseudo, backendSymbolTable) and not isStatic(dest.pseudo, symbolTable):
+                if (
+                    isinstance(dest, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(dest.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(dest.pseudo) in aliasedVars)
+                    ):
+
                     interferenceGraph.nodes[dest] = Node(dest)
 
             case assemblyGenerator.UnaryInstruction(operator = operator, assType = assType, dest = dest):
-                if isinstance(dest, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(dest.pseudo, backendSymbolTable) and not isStatic(dest.pseudo, symbolTable):
+
+                if (
+                    isinstance(dest, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(dest.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(dest.pseudo) in aliasedVars)
+                    ):
+
                     interferenceGraph.nodes[dest] = Node(dest)
 
             case assemblyGenerator.CompInst(assType = assType, operand0 = operand0, operand1 = operand1):
-                if isinstance(operand0, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(operand0.pseudo, backendSymbolTable) and not isStatic(operand0.pseudo, symbolTable):
+
+                if (
+                    isinstance(operand0, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(operand0.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(operand0.pseudo) in aliasedVars)
+                    ):
+
                     interferenceGraph.nodes[operand0] = Node(operand0)
 
-                if isinstance(operand1, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(operand1.pseudo, backendSymbolTable) and not isStatic(operand1.pseudo, symbolTable):
+                if (
+                    isinstance(operand1, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(operand1.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(operand1.pseudo) in aliasedVars)
+                    ):
+
                     interferenceGraph.nodes[operand1] = Node(operand1)
 
             case assemblyGenerator.IDivInstruction(assType = assType, divisor = divisor):
-                if isinstance(divisor, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(divisor.pseudo, backendSymbolTable) and not isStatic(divisor.pseudo, symbolTable):
+
+                if (
+                    isinstance(divisor, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(divisor.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(divisor.pseudo) in aliasedVars)
+                    ):
+
                     interferenceGraph.nodes[divisor] = Node(divisor)
 
             case assemblyGenerator.SetCCInst(conc_code = conc_code, operand = operand):
-                if isinstance(operand, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(operand.pseudo, backendSymbolTable) and not isStatic(operand.pseudo, symbolTable):
+                if (
+                    isinstance(operand, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(operand.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(operand.pseudo) in aliasedVars)
+                    ):
+
                     interferenceGraph.nodes[operand] = Node(operand)
 
             case assemblyGenerator.PushInstruction(operand = operand):
-                if isinstance(operand, assemblyGenerator.PseudoRegisterOperand) and isIntegerScalar(operand.pseudo, backendSymbolTable) and not isStatic(operand.pseudo, symbolTable):
+                if (
+                    isinstance(operand, assemblyGenerator.PseudoRegisterOperand) and 
+                    isIntegerScalar(operand.pseudo, backendSymbolTable) and 
+                    (not tacGenerator.TAC_VariableValue(operand.pseudo) in aliasedVars)
+                    ):
+
                     interferenceGraph.nodes[operand] = Node(operand)
 
 
@@ -822,7 +923,7 @@ def makeControlFlowGraph(functionBody):
 
     return g
     
-def meetLive(n, cfg):
+def meetLive(n, cfg, funName, backendSymbolTable):
     liveVars = set()
 
     for sID in n.successors:
@@ -832,7 +933,10 @@ def meetLive(n, cfg):
                 sys.exit(1)
 
             case EXIT():
-                liveVars.add(RegisterOperand(Register(RegisterType.AX)))
+                a = backendSymbolTable[funName]
+                
+                liveVars.update(a.returnInt)
+                liveVars.update(a.returnDouble)
 
             case BlockID(num = num):
                 node = cfg.blocks[sID]
@@ -846,51 +950,213 @@ def findUsedAndUpdated(instruction, backendSymbolTable):
 
     match instruction:
         case assemblyGenerator.MovInstruction(sourceO = sourceO, destO = destO):
-            used = [sourceO]
-            updated = [destO]
+            used = []
+            updated = []
+
+            match sourceO:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    used.append(sourceO)
+
+            match destO:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    updated.append(destO)
+
+            #used = [sourceO]
+            #updated = [destO]
 
         case assemblyGenerator.BinaryInstruction(src = src, dest = dest):
-            used = [src, dest]
-            updated = [dest]
+            
+            used = []
+            updated = []
+
+            match src:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    used.append(src)
+                    used.append(dest)
+
+            match dest:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    updated.append(dest)
+
+            #used = [src, dest]
+            #updated = [dest]
 
         case assemblyGenerator.UnaryInstruction(dest = dest):
-            used = [dest]
-            updated = [dest]
+
+            used = []
+            updated = []
+
+            match dest:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    used.append(dest)
+                    updated.append(dest)
+
+            #used = [dest]
+            #updated = [dest]
 
         case assemblyGenerator.CompInst(operand0 = operand0, operand1 = operand1):
-            used = [operand0, operand1]
+
+            used = []
             updated = []
+
+            match operand0:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    used.append(operand0)
+                    used.append(operand1)
+
+
+            match operand1:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    pass
+
+            #used = [operand0, operand1]
+            #updated = []
 
         case assemblyGenerator.SetCCInst(operand = operand):
+
             used = []
-            updated = [operand]
-        
-        case assemblyGenerator.PushInstruction(operand = operand):
-            used = [operand]
             updated = []
 
-        case assemblyGenerator.IDivInstruction(divisor = divisor):
-            used = [divisor, RegisterOperand(Register(RegisterType.AX)), RegisterOperand(Register(RegisterType.DX))]
+            match operand:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
 
-            updated = [RegisterOperand(Register(RegisterType.AX)), RegisterOperand(Register(RegisterType.DX))]
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    updated.append(operand)
+
+            #used = []
+            #updated = [operand]
+        
+        case assemblyGenerator.PushInstruction(operand = operand):
+
+            used = []
+            updated = []
+
+            match operand:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    used.append(operand)
+
+            #used = [operand]
+            #updated = []
+
+        case assemblyGenerator.IDivInstruction(divisor = divisor):
+
+            used = []
+            updated = []
+
+            match divisor:
+                case assemblyGenerator.MemoryOperand(reg = reg, int = int):
+                    used.append(RegisterOperand(reg))
+
+                case assemblyGenerator.Indexed(base = base, index = index, scale = scale):
+                    used.append(RegisterOperand(base))
+                    used.append(RegisterOperand(index))
+
+                case _:
+                    used.extend([divisor, RegisterOperand(Register(RegisterType.AX)), RegisterOperand(Register(RegisterType.DX))])
+
+                    updated.extend([RegisterOperand(Register(RegisterType.AX)), RegisterOperand(Register(RegisterType.DX))])
+
+            #used = [divisor, RegisterOperand(Register(RegisterType.AX)), RegisterOperand(Register(RegisterType.DX))]
+
+            #updated = [RegisterOperand(Register(RegisterType.AX)), RegisterOperand(Register(RegisterType.DX))]
 
         case assemblyGenerator.CDQInstruction():
             used = [RegisterOperand(Register(RegisterType.AX))]
-
             updated = [RegisterOperand(Register(RegisterType.DX))]
 
         case assemblyGenerator.CallInstruction(identifier = identifier):
+
             funEntry = backendSymbolTable[identifier]
             
             used = list(funEntry.paramInt)
 
-            updated = [RegisterOperand(Register(RegisterType.DI)), 
+            updated = [
+                        RegisterOperand(Register(RegisterType.DI)), 
                        RegisterOperand(Register(RegisterType.SI)), 
                        RegisterOperand(Register(RegisterType.DX)), 
                        RegisterOperand(Register(RegisterType.CX)), 
                        RegisterOperand(Register(RegisterType.R8)), 
                        RegisterOperand(Register(RegisterType.R9)), 
-                       RegisterOperand(Register(RegisterType.AX))]
+                       RegisterOperand(Register(RegisterType.AX)),
+
+                       RegisterOperand(Register(SSERegisterType.XMM0)),
+                       RegisterOperand(Register(SSERegisterType.XMM1)),
+                       RegisterOperand(Register(SSERegisterType.XMM2)),
+                       RegisterOperand(Register(SSERegisterType.XMM3)),
+                       RegisterOperand(Register(SSERegisterType.XMM4)),
+                       RegisterOperand(Register(SSERegisterType.XMM5)),
+                       RegisterOperand(Register(SSERegisterType.XMM6)),
+                       RegisterOperand(Register(SSERegisterType.XMM7)),
+                       RegisterOperand(Register(SSERegisterType.XMM8)),
+                       RegisterOperand(Register(SSERegisterType.XMM9)),
+                       RegisterOperand(Register(SSERegisterType.XMM10)),
+                       RegisterOperand(Register(SSERegisterType.XMM11)),
+                       RegisterOperand(Register(SSERegisterType.XMM12)),
+                       RegisterOperand(Register(SSERegisterType.XMM13)),
+                       RegisterOperand(Register(SSERegisterType.XMM14)),
+                       RegisterOperand(Register(SSERegisterType.XMM15))
+                       ]
 
         case _:
             used = []
@@ -946,7 +1212,7 @@ def transferLive(block, endLiveRegisters, backendSymbolTable):
     block.reachingCopies.clear()
     block.reachingCopies.update(currentLiveRegisters)
 
-def analyzeLiveness(cfg, backendSymbolTable):
+def analyzeLiveness(cfg, backendSymbolTable, funName):
     workList = []
 
     a = list(cfg.blocks.items())
@@ -965,7 +1231,7 @@ def analyzeLiveness(cfg, backendSymbolTable):
         
         oldAnnot = copy.deepcopy(n.reachingCopies)
 
-        liveVars = meetLive(n, cfg)
+        liveVars = meetLive(n, cfg, funName, backendSymbolTable)
         transferLive(n, liveVars, backendSymbolTable)
 
         print("OLD ANNOT:", oldAnnot)
@@ -1047,19 +1313,19 @@ def addEdge(nodeID0, nodeID1, graph):
         
     
 
-def buildInterferenceGraphInteger(instructions, symbolTable, backendSymbolTable):
+def buildInterferenceGraphInteger(instructions, symbolTable, backendSymbolTable, aliasedVars, funName):
 
     print("-----------Building INTEGER interference graph.------------------")
 
     interferenceGraph = IntegerBaseGraph()
 
-    addPseudoRegistersIntegerScalar(interferenceGraph, instructions, symbolTable, backendSymbolTable)
+    addPseudoRegistersIntegerScalar(interferenceGraph, instructions, symbolTable, backendSymbolTable, aliasedVars)
 
     ########################### es diferente
 
     cfg = makeControlFlowGraph(instructions)
 
-    analyzeLiveness(cfg, backendSymbolTable)
+    analyzeLiveness(cfg, backendSymbolTable, funName)
 
     addEdges(cfg, interferenceGraph, backendSymbolTable)
 
@@ -1067,7 +1333,7 @@ def buildInterferenceGraphInteger(instructions, symbolTable, backendSymbolTable)
 
     return interferenceGraph
 
-def buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable, aliasedVars):
+def buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable, aliasedVars, funName):
 
     print("-----------Building DOUBLE interference graph.------------------")
 
@@ -1081,7 +1347,7 @@ def buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable, 
 
     cfg = makeControlFlowGraph(instructions)
 
-    analyzeLiveness(cfg, backendSymbolTable)
+    analyzeLiveness(cfg, backendSymbolTable, funName)
 
     addEdges(cfg, interferenceGraph, backendSymbolTable)
 
@@ -1102,23 +1368,9 @@ def createRegisterMap(interGraph):
 def replacePseudoRegs(instructions, registerMap):
     return instructions
 
-def allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable):
+def allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable, aliasedVars, funName):
 
-    interGraph = buildInterferenceGraphInteger(instructions, symbolTable, backendSymbolTable)
-
-    addSpillCosts(interGraph, instructions)
-
-    colorGraph(interGraph)
-
-    registerMap = createRegisterMap(interGraph)
-
-    replacedIns = replacePseudoRegs(instructions, registerMap)
-
-    return replacedIns
-
-def allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, aliasedVars):
-
-    interGraph = buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable, aliasedVars)
+    interGraph = buildInterferenceGraphInteger(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
 
     addSpillCosts(interGraph, instructions)
 
@@ -1130,11 +1382,25 @@ def allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, al
 
     return replacedIns
 
+def allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, aliasedVars, funName):
 
-def allocateRegisters(instructions, symbolTable, backendSymbolTable, aliasedVars):
+    interGraph = buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
 
-    instructions = allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable)
+    addSpillCosts(interGraph, instructions)
 
-    instructions = allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, aliasedVars)
+    colorGraph(interGraph)
+
+    registerMap = createRegisterMap(interGraph)
+
+    replacedIns = replacePseudoRegs(instructions, registerMap)
+
+    return replacedIns
+
+
+def allocateRegisters(instructions, symbolTable, backendSymbolTable, aliasedVars, funName):
+
+    instructions = allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
+
+    instructions = allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
 
     return instructions

@@ -12,7 +12,7 @@ double glob = 20.0;
 double glob2 = 30.0;
 int glob3 = 40.0;
 
-int target(void) {
+double target(void) {
     // Create a clique of 14 tmps that interfere;
     // we can color all of them w/out spilling anything.
     double a = glob * glob;
