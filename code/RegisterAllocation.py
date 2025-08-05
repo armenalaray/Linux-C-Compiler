@@ -2,7 +2,7 @@
 import copy
 import assemblyGenerator
 import tacGenerator
-from assemblyGenerator import RegisterType, SSERegisterType, RegisterOperand, Register
+from assemblyGenerator import RegisterType, SSERegisterType, RegisterOperand, Register, PseudoRegisterOperand
 import typeChecker
 
 
@@ -2038,13 +2038,139 @@ def colorGraphDouble(interGraph, backendSymbolTable, funName):
     return
 
 
-def createRegisterMap(interGraph):
-    pass
+def createRegisterMap(coloredGraph, backendSymbolTable, funName):
+    print("---------------CREATE REGISTER MAP.-------------------")
+
+    colorMap = {}
+    for k,n in coloredGraph.nodes.items():
+
+        match n.operandID:
+            case RegisterOperand(register = register):
+                colorMap[n.color] = n.operandID
+
+            case assemblyGenerator.PseudoRegisterOperand():
+                continue
+    
+    print(colorMap)
+
+    calleeSavedRegs = set()
+    registerMap = {}
+    for k,n in coloredGraph.nodes.items():
+        
+        match n.operandID:
+            case assemblyGenerator.PseudoRegisterOperand(pseudo = pseudo):
+                if n.color:
+                    hardReg = colorMap[n.color]
+                    registerMap[n.operandID] = hardReg
+
+                    if isCalleeSavedHardRegInt(hardReg):
+                        calleeSavedRegs.add(hardReg)
+
+            case RegisterOperand(register = register):
+                continue
+    
+    a = backendSymbolTable[funName]
+    a.calleeSavedRegs = calleeSavedRegs
+
+    print("Calle Saved Registers:", calleeSavedRegs)
+    return registerMap
+            
+        
+    
 
 def replacePseudoRegs(instructions, registerMap):
+
+    for i in instructions:
+
+        match i:
+
+            case assemblyGenerator.MovInstruction(sourceO = sourceO, destO = destO):
+
+                if isinstance(sourceO, PseudoRegisterOperand) and sourceO in registerMap:
+                    i.sourceO = registerMap[sourceO]
+                
+                if isinstance(destO, PseudoRegisterOperand) and destO in registerMap:
+                    i.destO = registerMap[destO]
+
+            case assemblyGenerator.BinaryInstruction(src = src, dest = dest):
+                if isinstance(src, PseudoRegisterOperand) and src in registerMap:
+                    i.src = registerMap[src]
+                
+                if isinstance(dest, PseudoRegisterOperand) and dest in registerMap:
+                    i.dest = registerMap[dest]
+
+            case assemblyGenerator.UnaryInstruction(dest = dest):
+                if isinstance(dest, PseudoRegisterOperand) and dest in registerMap:
+                    i.dest = registerMap[dest]
+
+            case assemblyGenerator.CompInst(operand0 = operand0, operand1 = operand1):
+                if isinstance(operand0, PseudoRegisterOperand) and operand0 in registerMap:
+                    i.operand0 = registerMap[operand0]
+                
+                if isinstance(operand1, PseudoRegisterOperand) and operand1 in registerMap:
+                    i.operand1 = registerMap[operand1]
+
+            case assemblyGenerator.SetCCInst(operand = operand):
+                if isinstance(operand, PseudoRegisterOperand) and operand in registerMap:
+                    i.operand = registerMap[operand]
+            
+            case assemblyGenerator.PushInstruction(operand = operand):
+                if isinstance(operand, PseudoRegisterOperand) and operand in registerMap:
+                    i.operand = registerMap[operand]
+
+            case assemblyGenerator.IDivInstruction(divisor = divisor):
+                if isinstance(divisor, PseudoRegisterOperand) and divisor in registerMap:
+                    i.divisor = registerMap[divisor]
+
+            case assemblyGenerator.MovSXInstruction(sourceO = sourceO, destO = destO):
+                if isinstance(sourceO, PseudoRegisterOperand) and sourceO in registerMap:
+                    i.sourceO = registerMap[sourceO]
+                
+                if isinstance(destO, PseudoRegisterOperand) and destO in registerMap:
+                    i.destO = registerMap[destO]
+                            
+            case assemblyGenerator.MovZeroExtendIns(sourceO = sourceO, destO = destO):
+                if isinstance(sourceO, PseudoRegisterOperand) and sourceO in registerMap:
+                    i.sourceO = registerMap[sourceO]
+                
+                if isinstance(destO, PseudoRegisterOperand) and destO in registerMap:
+                    i.destO = registerMap[destO]
+            
+            case assemblyGenerator.LeaInstruction(sourceO = sourceO, destO = destO):
+                if isinstance(sourceO, PseudoRegisterOperand) and sourceO in registerMap:
+                    i.sourceO = registerMap[sourceO]
+                
+                if isinstance(destO, PseudoRegisterOperand) and destO in registerMap:
+                    i.destO = registerMap[destO]
+
+            case assemblyGenerator.Cvttsd2si(sourceO = sourceO, destO = destO):
+                if isinstance(sourceO, PseudoRegisterOperand) and sourceO in registerMap:
+                    i.sourceO = registerMap[sourceO]
+                
+                if isinstance(destO, PseudoRegisterOperand) and destO in registerMap:
+                    i.destO = registerMap[destO]
+
+            case assemblyGenerator.Cvtsi2sd(sourceO = sourceO, destO = destO):
+                if isinstance(sourceO, PseudoRegisterOperand) and sourceO in registerMap:
+                    i.sourceO = registerMap[sourceO]
+                
+                if isinstance(destO, PseudoRegisterOperand) and destO in registerMap:
+                    i.destO = registerMap[destO]
+
+            case assemblyGenerator.DivInstruction(divisor = divisor):
+                if isinstance(divisor, PseudoRegisterOperand) and divisor in registerMap:
+                    i.divisor = registerMap[divisor]
+            
+            case assemblyGenerator.Pop(reg = reg):
+                if isinstance(reg, PseudoRegisterOperand) and reg in registerMap:
+                    i.reg = registerMap[reg]
+
+
     return instructions
 
 def allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable, aliasedVars, funName):
+
+    oldInstructions = copy.deepcopy(instructions)
 
     interGraph = buildInterferenceGraphInteger(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
 
@@ -2057,9 +2183,18 @@ def allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable, a
     for k, n in interGraph.nodes.items():
         print(k,n)
 
-    registerMap = createRegisterMap(interGraph)
+    registerMap = createRegisterMap(interGraph, backendSymbolTable, funName)
+
+    print("------------------REGISTER INTEGER MAP.--------------------")
+
+    print(registerMap)
 
     replacedIns = replacePseudoRegs(instructions, registerMap)
+
+    print("------------------REPLACED INTEGER INTRUCTIONS.--------------------")
+
+    for n, o in zip(replacedIns, oldInstructions):
+        print("{:<70} {:<1}".format(str(n), str(o)))
 
     return replacedIns
 
@@ -2076,9 +2211,18 @@ def allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, al
     for k, n in interGraph.nodes.items():
         print(k,n)
 
-    registerMap = createRegisterMap(interGraph)
+    registerMap = createRegisterMap(interGraph, backendSymbolTable, funName)
+
+    print("------------------REGISTER DOUBLE MAP.--------------------")
+
+    print(registerMap)
 
     replacedIns = replacePseudoRegs(instructions, registerMap)
+
+    print("------------------REPLACED DOUBLE INTRUCTIONS.--------------------")
+
+    for i in replacedIns:
+        print(i)
 
     return replacedIns
 

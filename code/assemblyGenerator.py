@@ -2717,6 +2717,8 @@ class FunEntry(asm_symtab_entry):
         self.returnInt = returnInt
         self.returnDouble = returnDouble
 
+        self.calleeSavedRegs = set()
+
         #self.returnStack = []
 
     def __str__(self):
