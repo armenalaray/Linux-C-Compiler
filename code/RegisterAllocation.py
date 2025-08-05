@@ -9,6 +9,7 @@ import typeChecker
 class Node():
     def __init__(self, operandID):
         self.operandID = operandID
+
         self.neighbors = set()
 
         self.spillCost = 0.0
@@ -1883,33 +1884,34 @@ def getUnprunedNeighborsofNode(node, interGraph):
     
     return unPrunedList
 
-def colorGraphDouble(interGraph):
-    print("------------------COLOR GRAPH.---------------------")
-    
 
-    remainingNodes = [n for k,n in interGraph.nodes.items() if n.pruned == False] 
-    print("Reamining Nodes:", remainingNodes)
+def isCalleeSavedHardRegInt(operandID):
 
-    k = 14
-    
-    if remainingNodes == []:
-        return 
-    
+    if isinstance(operandID, RegisterOperand):
 
-    chosenNode = None
+        match operandID.register.register:
+            case RegisterType.BX:
+                return True
 
-    for node in remainingNodes:
+            case RegisterType.R12:
+                return True
 
-        neighbors = getUnprunedNeighborsofNode(node, interGraph)
-        degree = len(neighbors)
+            case RegisterType.R13:
+                return True
+            
+            case RegisterType.R14:
+                return True
 
-        if degree < k:
-            pass
+            case RegisterType.R15:
+                return True
+            
+            case _:
+                return False
 
-        pass
+    return False
 
-def colorGraphInteger(interGraph):
-    print("------------------COLOR GRAPH.---------------------")
+def colorGraphInteger(interGraph, backendSymbolTable, funName):
+    print("------------------COLOR GRAPH INTEGER.---------------------")
     
 
     remainingNodes = [n for k,n in interGraph.nodes.items() if n.pruned == False] 
@@ -1949,18 +1951,92 @@ def colorGraphInteger(interGraph):
     chosenNode.pruned = True
 
 
-    colorGraphInteger(interGraph)
+    colorGraphInteger(interGraph, backendSymbolTable, funName)
     #el ultimo que fue pruneado va a ser el primero que va a ser coloreado!
 
-    colors = list(range(1, k + 1))
+    colors = set(range(1, k + 1))
 
     print(colors)
 
+    for nID in chosenNode.neighbors:
 
+        node = interGraph.nodes[nID]
 
+        if node.color:
+            colors.discard(node.color)
 
+    if colors != set():
+        if isCalleeSavedHardRegInt(chosenNode.operandID):
+            chosenNode.color = max(colors)
+        else:
+            chosenNode.color = min(colors)
 
+        chosenNode.pruned = False
+
+    return
+
+def colorGraphDouble(interGraph, backendSymbolTable, funName):
+
+    print("------------------COLOR GRAPH DOUBLE.---------------------")
     
+
+    remainingNodes = [n for k,n in interGraph.nodes.items() if n.pruned == False] 
+    
+    k = 14
+
+    print("Reamining Nodes:", remainingNodes)
+
+    if remainingNodes == []:
+        return 
+    
+
+    chosenNode = None
+
+    for node in remainingNodes:
+
+        degree = len(getUnprunedNeighborsofNode(node, interGraph))
+
+        if degree < k:
+            chosenNode = node
+            break
+
+    if chosenNode == None:
+
+        bestSpillMetric = float('inf')
+
+        for node in remainingNodes:
+            degree = len(getUnprunedNeighborsofNode(node, interGraph))
+
+            spillMetric = node.spillCost / degree
+
+            if spillMetric < bestSpillMetric:
+                chosenNode = node
+                bestSpillMetric = spillMetric
+        
+
+    chosenNode.pruned = True
+
+    colorGraphDouble(interGraph, backendSymbolTable, funName)
+
+    #el ultimo que fue pruneado va a ser el primero que va a ser coloreado!
+
+    colors = set(range(1, k + 1))
+
+    print(colors)
+
+    for nID in chosenNode.neighbors:
+
+        node = interGraph.nodes[nID]
+
+        if node.color:
+            colors.discard(node.color)
+
+    if colors != set():
+        chosenNode.color = min(colors)
+        chosenNode.pruned = False
+
+    return
+
 
 def createRegisterMap(interGraph):
     pass
@@ -1974,7 +2050,12 @@ def allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable, a
 
     addSpillCostsInteger(interGraph, instructions)
 
-    colorGraphInteger(interGraph)
+    colorGraphInteger(interGraph, backendSymbolTable, funName)
+
+    print("-----------------COLORED INTEGER INTER GRAPH.------------------")
+
+    for k, n in interGraph.nodes.items():
+        print(k,n)
 
     registerMap = createRegisterMap(interGraph)
 
@@ -1988,7 +2069,12 @@ def allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, al
 
     addSpillCostsDouble(interGraph, instructions)
 
-    colorGraphDouble(interGraph)
+    colorGraphDouble(interGraph, backendSymbolTable, funName)
+
+    print("-----------------COLORED DOUBLE INTER GRAPH.------------------")
+
+    for k, n in interGraph.nodes.items():
+        print(k,n)
 
     registerMap = createRegisterMap(interGraph)
 
@@ -2001,6 +2087,6 @@ def allocateRegisters(instructions, symbolTable, backendSymbolTable, aliasedVars
 
     instructions = allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
 
-    #instructions = allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
+    instructions = allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
 
     return instructions
