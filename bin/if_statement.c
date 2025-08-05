@@ -1,166 +1,114 @@
+//#include "../util.h"
 
-int main(void)
-{
-    int n1 = 0;
-    int n2 = 1; 
+/* Helper functions defined in tests/chapter_20/helper_libs/util.c */
 
-    int n=10;
-    
-    int result = 0;
+/* The check_* functions return 0 on success,
+ * print and exit with code -1 on failure.
+ */
 
-    if(n == 0)
-        return n1;
+/* Validating ints */
 
-    if(n == 1)
-        return n2;
+int check_one_int(int actual, int expected);
 
-    for (int i = 0; i < n-1; i = i + 1)
-    {   
-        result = n1 + n2;
-        n1 = n2;
-        n2 = result;
+// Validates a == start, b == start + 1, ...e == start + 5
+int check_5_ints(int a, int b, int c, int d, int e, int start);
+
+// Validates a == start, b == start + 1, ... l == start + 11
+int check_12_ints(int a, int b, int c, int d, int e, int f, int g, int h, int i,
+                  int j, int k, int l, int start);
+
+/* Validating other types */
+
+int check_one_uchar(unsigned char actual, unsigned char expected);
+int check_one_uint(unsigned int actual, unsigned int expected);
+int check_one_long(long actual, long expected);
+int check_one_ulong(unsigned long actual, unsigned long expected);
+
+int check_one_double(double actual, double expected);
+
+int check_12_longs(long a, long b, long c, long d, long e, long f, long g,
+                   long h, long i, long j, long k, long l, long start);
+
+int check_six_chars(char a, char b, char c, char d, char e, char f, int start);
+
+// validates a == start, b == start + 1, ... n == start + 13
+// and exits early if they don't have those values
+// NOTE: assumes a-n are small integral values that can be represented exactly
+// as double so no rounding error
+int check_14_doubles(double a, double b, double c, double d, double e, double f,
+                     double g, double h, double i, double j, double k, double l,
+                     double m, double n, double start);
+
+// Used in force_spill_mixed_ints; validates a == start, b == start + 1, ...,
+// *k == start + 10, *l == start + 11
+int check_12_vals(int a, int b, int c, int d, int e, int f, int g, int h, int i,
+                  int j, long *k, double *l, int start);
+
+/* Identity functions that return their argument;
+ * used to get constants in a way that can't be optimized away
+ */
+int id(int x);
+double dbl_id(double x);
+long long_id(long l);
+unsigned unsigned_id(unsigned u);
+unsigned char uchar_id(unsigned char uc);
+
+
+int glob = 3;
+double glob2 = 4.0;
+
+int target(void) {
+    /* force spill by creating lots of conflicting pseudos
+     * validate that we spill the variable should_spill, which is used least
+     * and has highest degree
+     * Note: this isn't a good test of spill metric calculation;
+     * due to optimistic coloring, we could end up spilling just should_spill
+     * even if we end up choosing other nodes as spill candidates first
+     */
+    double should_spill = (double)glob;
+    // all these registers conflict with should_spill and each other
+    double one = 4.0 - glob;
+    double two = one + one;
+    double three = (double)glob;
+    double four = two * two;
+    double five = glob2 + 1;
+    double six = glob * 2;
+    double seven = one * one + 6.0;
+    double eight = two * 4;
+    double nine = three * three;
+    double ten = four + six;
+    double eleven = 16 - five;
+    double twelve = six + six;
+    double thirteen = five + eight;
+    double fourteen = 21 - seven;
+
+    // validate them
+    check_14_doubles(one, two, three, four, five, six, seven, eight, nine, ten,
+                     eleven, twelve, thirteen, fourteen, 1.0);
+
+    // make another fourteen pseudos that conflict w/ should_spill and each
+    // other
+    double fifteen = glob2 * 4.0 - 1;
+    double sixteen = glob2 * 4.0;
+    double seventeen = fifteen + 2.0;
+    double eighteen = 35.0 - seventeen;
+    double nineteen = sixteen + glob;
+    double twenty = glob2 * 5.0;
+    double twenty_one = glob * 7.0;
+    double twenty_two = 4.0 + eighteen;
+    double twenty_three = nineteen + glob + 1;
+    double twenty_four = glob2 + twenty;
+    double twenty_five = twenty_one + glob2;
+    double twenty_six = twenty_five - nineteen + twenty;
+    double twenty_seven = glob * 9.0;
+    double twenty_eight = twenty_two + 6;
+    check_14_doubles(fifteen, sixteen, seventeen, eighteen, nineteen, twenty,
+                     twenty_one, twenty_two, twenty_three, twenty_four,
+                     twenty_five, twenty_six, twenty_seven, twenty_eight, 15.0);
+
+    if (should_spill != 3.0) {
+        return -1;
     }
 
-    return result;
-}
-
-
-int main(void)
-{
-    int a = 0;
-
-    while (a < 5)
-        if (a > 3)
-        {
-
-            break;
-            do
-            {
-                if (a > 4)
-                {
-                    int a = 2 + 3;
-                    
-                    // int a = 12345;
-                    int i;
-                    
-                    for (i = 5; i >= 0; i = i - 1)
-                    {
-                        continue;
-                        a = a / 3;
-                    }
-                    
-                    return a;
-                }
-                break;
-            } while ((a = 1));
-            return a;
-        }
-        else
-            continue;
-}
-
-
-
-
-int main(void) {
-    int a = 10;
-    do
-    {
-        if(a > 4)
-        {
-            break;
-        }
-    }
-    while ((a = 1));
-    return a;
-}
-
-
-
-
-
-
-
-
-
-
-int main(void) {
-    int a = 0;
-
-    while (a < 5)
-    {
-        if (a > 3)
-        {
-            break;
-        }
-        
-        a = a + 2;
-    }
-
-    return a;
-}
-
-
-
-
-
-
-int main(void) {
-    int a = 0;
-    a = 1 ? 2 : 3;
-    
-    if (a)
-        a = 2;
-    else
-        a = 3;
-
-    return a;
-}
-
-
-int main(void) {
-    int x = 2;
-    int y = 7;
-    int radius = 0;
-
-    int leng_sq = x*x + y*y;
-
-    if (leng_sq > 0)
-        radius = 10;
-    else if(leng_sq < 0)
-        radius = -10;   
-    else if(leng_sq == 0)
-        radius = 0;
-    else 
-        radius = 50;
-
-    int channel = 4;
-    int case = 2;
-    
-    if (channel || case)
-        return radius > 10 ? 4 : 5;
-    else 
-        return case > 2 ? 4 : 5;
-}
-
-int main(void)
-{
-    int FocusDistance;
-    int HalfWidth;
-    int HalfHeight;
-    int LookFrom;
-    int u;
-    int v;
-    int w;
-    int Origin = LookFrom;
-
-    if (Origin > LookFrom)
-    {
-        int LowerLeftCorner = (Origin - (HalfWidth * FocusDistance * u) - (HalfHeight * FocusDistance * v) - w * FocusDistance);
-    }
-    else
-    {
-        int Horizontal = 2 * HalfWidth * FocusDistance * u;
-        int Vertical = 2 * HalfHeight * FocusDistance * v;
-    }
+    return 0;
 }

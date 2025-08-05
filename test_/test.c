@@ -1,15 +1,4 @@
-/* Make sure our analysis recognizes which registers are used by each function
- * call - same idea as chapter_20/int_only/no_coalescing/track_arg_registers.c.
- * The test script validates that we don't spill.
- * Liveness analysis should recognize that only XMM0-XMM2 are live right before
- * we call callee(). If we assume XMM3-XMM7 are also live, we'll conclude
- * they're live from the start of the function until the function call
- * (since they're never updated) and won't be able to allocate them, resulting
- * in spills.
- * */
-
 //#include "../util.h"
-
 
 /* Helper functions defined in tests/chapter_20/helper_libs/util.c */
 
@@ -65,61 +54,61 @@ unsigned unsigned_id(unsigned u);
 unsigned char uchar_id(unsigned char uc);
 
 
-// defined in tests/chapter_20/helper_libs/track_dbl_arg_registers_lib.c,
-// exits early if a, b, c don't have expected values
-int callee(double a, double b, double c);
+int glob = 3;
+double glob2 = 4.0;
 
-double glob1;
-double glob2;
-double glob3;
-double glob4;
-double glob5;
-double glob6;
-double glob7;
-double glob8;
-double glob9;
-double glob10;
-double glob11;
-
-// Note: we deliberately give target the same number of params as callee;
-// if liveness incorrectly thought that some reg was used by callee and
-// therefore live, it still wouldn't interfere with the parameter passed to
-// target in that reg, so the error wouldn't necessarily force a spill. (I think
-// having _fewer_ params in target than in callee would be be fine.)
-int target(double one, double two, double three) {
-    double four = three + one;
-    double five = two + three;
-    double six = three * two;
-    double seven = 13. - six;
-    double eight = four * two;
+int target(void) {
+    /* force spill by creating lots of conflicting pseudos
+     * validate that we spill the variable should_spill, which is used least
+     * and has highest degree
+     * Note: this isn't a good test of spill metric calculation;
+     * due to optimistic coloring, we could end up spilling just should_spill
+     * even if we end up choosing other nodes as spill candidates first
+     */
+    double should_spill = (double)glob;
+    // all these registers conflict with should_spill and each other
+    double one = 4.0 - glob;
+    double two = one + one;
+    double three = (double)glob;
+    double four = two * two;
+    double five = glob2 + 1;
+    double six = glob * 2;
+    double seven = one * one + 6.0;
+    double eight = two * 4;
     double nine = three * three;
-    double ten = five * two;
-    double eleven = seven * two - three;
-    double twelve = eight * four - 20.;
-    double thirteen = (nine + ten) - six;
-    double fourteen = eleven + 3;
+    double ten = four + six;
+    double eleven = 16 - five;
+    double twelve = six + six;
+    double thirteen = five + eight;
+    double fourteen = 21 - seven;
 
-    // copy variables into global variables to make them interfere
-    glob1 = one;
-    glob2 = two;
-    glob3 = three;
-    glob4 = four;
-    glob5 = five;
-    glob6 = six;
-    glob7 = seven;
-    glob8 = eight;
-    glob9 = nine;
-    glob10 = ten;
-    glob11 = eleven;
+    // validate them
+    check_14_doubles(one, two, three, four, five, six, seven, eight, nine, ten,
+                     eleven, twelve, thirteen, fourteen, 1.0);
 
-    // don't need to copy in twelve through fourteen b/c we use them below
+    // make another fourteen pseudos that conflict w/ should_spill and each
+    // other
+    double fifteen = glob2 * 4.0 - 1;
+    double sixteen = glob2 * 4.0;
+    double seventeen = fifteen + 2.0;
+    double eighteen = 35.0 - seventeen;
+    double nineteen = sixteen + glob;
+    double twenty = glob2 * 5.0;
+    double twenty_one = glob * 7.0;
+    double twenty_two = 4.0 + eighteen;
+    double twenty_three = nineteen + glob + 1;
+    double twenty_four = glob2 + twenty;
+    double twenty_five = twenty_one + glob2;
+    double twenty_six = twenty_five - nineteen + twenty;
+    double twenty_seven = glob * 9.0;
+    double twenty_eight = twenty_two + 6;
+    check_14_doubles(fifteen, sixteen, seventeen, eighteen, nineteen, twenty,
+                     twenty_one, twenty_two, twenty_three, twenty_four,
+                     twenty_five, twenty_six, twenty_seven, twenty_eight, 15.0);
 
-    // use ten through twelve
-    callee(twelve, thirteen, fourteen);
-
-    // validate globals
-    check_14_doubles(glob1, glob2, glob3, glob4, glob5, glob6, glob7, glob8,
-                     glob9, glob10, glob11, 12., 13., 14., 1);
+    if (should_spill != 3.0) {
+        return -1;
+    }
 
     return 0;
 }

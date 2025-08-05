@@ -1727,10 +1727,107 @@ def buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable, 
     interferenceGraph.printNode(0)
 
     return interferenceGraph
-    
+
+def addSpillCostsToPseudos(interGraph, instructions):
+    for k,n in interGraph.nodes.items():
+        match k:
+            case assemblyGenerator.PseudoRegisterOperand():
+
+                spillCost = 0.0
+
+                for i in instructions:
+
+                    match i:
+
+                        case assemblyGenerator.MovInstruction(sourceO = sourceO, destO = destO):
+
+                            if sourceO == k:
+                                spillCost += 1.0
+
+                            if destO == k:
+                                spillCost += 1.0
+
+                        case assemblyGenerator.BinaryInstruction(src = src, dest = dest):
+                            if src == k:
+                                spillCost += 1.0
+
+                            if dest == k:
+                                spillCost += 1.0
+                            
+
+                        case assemblyGenerator.UnaryInstruction(dest = dest):
+                            if dest == k:
+                                spillCost += 1.0
+
+                        case assemblyGenerator.CompInst(operand0 = operand0, operand1 = operand1):
+                            if operand0 == k:
+                                spillCost += 1.0
+
+                            if operand1 == k:
+                                spillCost += 1.0
+                            pass
+
+                        case assemblyGenerator.SetCCInst(operand = operand):
+                            if operand == k:
+                                spillCost += 1.0
+
+
+                        case assemblyGenerator.PushInstruction(operand = operand):
+                            if operand == k:
+                                spillCost += 1.0
+
+                        case assemblyGenerator.IDivInstruction(divisor = divisor):
+                            if divisor == k:
+                                spillCost += 1.0
+
+                        case assemblyGenerator.MovSXInstruction(sourceO = sourceO, destO = destO):
+                            if sourceO == k:
+                                spillCost += 1.0
+
+                            if destO == k:
+                                spillCost += 1.0
+                        
+                        case assemblyGenerator.MovZeroExtendIns(sourceO = sourceO, destO = destO):
+                            if sourceO == k:
+                                spillCost += 1.0
+
+                            if destO == k:
+                                spillCost += 1.0
+                        
+                        case assemblyGenerator.LeaInstruction(sourceO = sourceO, destO = destO):
+                            if sourceO == k:
+                                spillCost += 1.0
+
+                            if destO == k:
+                                spillCost += 1.0
+
+                        case assemblyGenerator.Cvttsd2si(sourceO = sourceO, destO = destO):
+                            if sourceO == k:
+                                spillCost += 1.0
+
+                            if destO == k:
+                                spillCost += 1.0
+
+                        case assemblyGenerator.Cvtsi2sd(sourceO = sourceO, destO = destO):
+                            if sourceO == k:
+                                spillCost += 1.0
+
+                            if destO == k:
+                                spillCost += 1.0
+
+                        case assemblyGenerator.DivInstruction(divisor = divisor):
+                            if divisor == k:
+                                spillCost += 1.0
+                        
+                        case assemblyGenerator.Pop(reg = reg):
+                            if reg == k:
+                                spillCost += 1.0
+
+                n.spillCost = spillCost
 
 def addSpillCostsInteger(interGraph, instructions):
-    print("----------------ADD SPILL COSTS.-------------------")
+    print("----------------ADD SPILL COSTS INTEGER.-------------------")
+
     interGraph.nodes[RegisterOperand(Register(RegisterType.AX))].spillCost = float('inf')  
     interGraph.nodes[RegisterOperand(Register(RegisterType.BX))].spillCost = float('inf')  
     interGraph.nodes[RegisterOperand(Register(RegisterType.CX))].spillCost = float('inf')  
@@ -1744,86 +1841,126 @@ def addSpillCostsInteger(interGraph, instructions):
     interGraph.nodes[RegisterOperand(Register(RegisterType.R14))].spillCost = float('inf')
     interGraph.nodes[RegisterOperand(Register(RegisterType.R15))].spillCost = float('inf')
 
+    #pseudoregisters
+
+    addSpillCostsToPseudos(interGraph, instructions)
+
     for k,n in interGraph.nodes.items():
         print(k,n)
 
-        match k:
-            case assemblyGenerator.PseudoRegisterOperand():
-
-                for i in instructions:
-
-                    match i:
-
-                        case assemblyGenerator.MovInstruction(sourceO = sourceO, destO = destO):
-                            pass
-
-                        case assemblyGenerator.BinaryInstruction(src = src, dest = dest):
-                            
-                            pass
-
-                        case assemblyGenerator.UnaryInstruction(dest = dest):
-
-                            pass
-
-                        case assemblyGenerator.CompInst(operand0 = operand0, operand1 = operand1):
-
-                            pass
-
-                        case assemblyGenerator.SetCCInst(operand = operand):
-
-                            pass
-                        
-                        case assemblyGenerator.PushInstruction(operand = operand):
-
-                            pass
-
-                        case assemblyGenerator.IDivInstruction(divisor = divisor):
-
-                            pass
-
-                        case assemblyGenerator.CDQInstruction():
-                            pass
-
-                        case assemblyGenerator.CallInstruction(identifier = identifier):
-
-                            pass
-
-                        case assemblyGenerator.MovSXInstruction(srcType = srcType, dstType = dstType,sourceO = sourceO, destO = destO):
-                            pass
-                            
-                        
-                        case assemblyGenerator.MovZeroExtendIns(sourceO = sourceO, destO = destO):
-                            pass
-                        
-                        case assemblyGenerator.LeaInstruction(sourceO = sourceO, destO = destO):
-                            pass
-
-                        case assemblyGenerator.Cvttsd2si(assType = assType, sourceO = sourceO, destO = destO):
-                            pass
-
-                        case assemblyGenerator.Cvtsi2sd(assType = assType, sourceO = sourceO, destO = destO):
-                            pass
-
-                        case assemblyGenerator.DivInstruction(divisor = divisor):
-                            pass
-                        
-                        case assemblyGenerator.Pop(reg = reg):
-                            pass
-        
-                        
-                    
-                
-        
-
-
 
 def addSpillCostsDouble(interGraph, instructions):
+    print("----------------ADD SPILL COSTS DOUBLE.-------------------")
 
-    interGraph.nodes[RegisterOperand(Register(SSERegisterType.XMM0))].spillCost
+    interGraph.nodes[RegisterOperand(Register(SSERegisterType.XMM0))].spillCost = float('inf') 
+    interGraph.nodes[RegisterOperand(Register(SSERegisterType.XMM1))].spillCost = float('inf') 
+    interGraph.nodes[RegisterOperand(Register(SSERegisterType.XMM2))].spillCost = float('inf') 
+    interGraph.nodes[RegisterOperand(Register(SSERegisterType.XMM3))].spillCost = float('inf') 
+    interGraph.nodes[RegisterOperand(Register(SSERegisterType.XMM4))].spillCost = float('inf') 
+    interGraph.nodes[RegisterOperand(Register(SSERegisterType.XMM5))].spillCost = float('inf') 
+    interGraph.nodes[RegisterOperand(Register(SSERegisterType.XMM6))].spillCost = float('inf') 
+    interGraph.nodes[RegisterOperand(Register(SSERegisterType.XMM7))].spillCost = float('inf') 
+    interGraph.nodes[RegisterOperand(Register(SSERegisterType.XMM8))].spillCost = float('inf') 
+    interGraph.nodes[RegisterOperand(Register(SSERegisterType.XMM9))].spillCost = float('inf') 
+    interGraph.nodes[RegisterOperand(Register(SSERegisterType.XMM10))].spillCost = float('inf') 
+    interGraph.nodes[RegisterOperand(Register(SSERegisterType.XMM11))].spillCost = float('inf') 
+    interGraph.nodes[RegisterOperand(Register(SSERegisterType.XMM12))].spillCost = float('inf') 
+    interGraph.nodes[RegisterOperand(Register(SSERegisterType.XMM13))].spillCost = float('inf') 
+    
+    
+    addSpillCostsToPseudos(interGraph, instructions)
+
+    for k,n in interGraph.nodes.items():
+        print(k,n)
+    
+def getUnprunedNeighborsofNode(node, interGraph):
+    unPrunedList = []
+    
+    for k in node.neighbors:
+        node = interGraph.nodes[k]
+        if node.pruned == False:
+            unPrunedList.append(node)
+    
+    return unPrunedList
+
+def colorGraphDouble(interGraph):
+    print("------------------COLOR GRAPH.---------------------")
     
 
-def colorGraph(interGraph):
-    pass
+    remainingNodes = [n for k,n in interGraph.nodes.items() if n.pruned == False] 
+    print("Reamining Nodes:", remainingNodes)
+
+    k = 14
+    
+    if remainingNodes == []:
+        return 
+    
+
+    chosenNode = None
+
+    for node in remainingNodes:
+
+        neighbors = getUnprunedNeighborsofNode(node, interGraph)
+        degree = len(neighbors)
+
+        if degree < k:
+            pass
+
+        pass
+
+def colorGraphInteger(interGraph):
+    print("------------------COLOR GRAPH.---------------------")
+    
+
+    remainingNodes = [n for k,n in interGraph.nodes.items() if n.pruned == False] 
+    
+    k = 12
+
+    print("Reamining Nodes:", remainingNodes)
+
+    if remainingNodes == []:
+        return 
+    
+
+    chosenNode = None
+
+    for node in remainingNodes:
+
+        degree = len(getUnprunedNeighborsofNode(node, interGraph))
+
+        if degree < k:
+            chosenNode = node
+            break
+
+    if chosenNode == None:
+
+        bestSpillMetric = float('inf')
+
+        for node in remainingNodes:
+            degree = len(getUnprunedNeighborsofNode(node, interGraph))
+
+            spillMetric = node.spillCost / degree
+
+            if spillMetric < bestSpillMetric:
+                chosenNode = node
+                bestSpillMetric = spillMetric
+        
+
+    chosenNode.pruned = True
+
+
+    colorGraphInteger(interGraph)
+    #el ultimo que fue pruneado va a ser el primero que va a ser coloreado!
+
+    colors = list(range(1, k + 1))
+
+    print(colors)
+
+
+
+
+
+    
 
 def createRegisterMap(interGraph):
     pass
@@ -1837,7 +1974,7 @@ def allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable, a
 
     addSpillCostsInteger(interGraph, instructions)
 
-    colorGraph(interGraph)
+    colorGraphInteger(interGraph)
 
     registerMap = createRegisterMap(interGraph)
 
@@ -1851,7 +1988,7 @@ def allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, al
 
     addSpillCostsDouble(interGraph, instructions)
 
-    colorGraph(interGraph)
+    colorGraphDouble(interGraph)
 
     registerMap = createRegisterMap(interGraph)
 
