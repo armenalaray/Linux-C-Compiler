@@ -7,7 +7,7 @@
 #noLink="-c"
 
 
-#notAssembly="-S"
+notAssembly="-S"
 
 fC="--fold-constants"
 pC="--propagate-copies"
@@ -22,17 +22,23 @@ python3 "$(pwd)"/code/cd.py $lastStage $noLink $notAssembly $library $fC $pC $eU
 
 echo $?
 
-if test -f test_/test; then
-    ./test_/test
-    echo "from test: "$?
-fi
+#ASSEMBLER
+gcc "$(pwd)"/test_/test.s "$(pwd)"/test_/util.s -o test_/test
+
+./test_/test
+echo "from test: "$?
+
+#if test -f test_/test; then
+#    ./test_/test
+#    echo "from test: "$?
+#fi
 
 ################################
 #BUILD SYSTEM
 #cd ./../
 #echo "$(pwd)"
 #pyinstaller --onefile "$(pwd)"/CComp/code/cd.py
-#./writing-a-c-compiler-tests/test_compiler "$(pwd)"/dist/cd --chapter 18
+#./writing-a-c-compiler-tests/test_compiler "$(pwd)"/dist/cd --chapter 20 --no-coalescing
 
 
 
@@ -43,7 +49,8 @@ fi
 # Real compiler
 
 #gcc -S -fno-asynchronous-unwind-tables -fcf-protection=none test_/test.c -o test_/test.s
-#gcc -S -O -fno-asynchronous-unwind-tables -fcf-protection=none test_/test.c -o test_/optimizedtest.s
+
+#gcc -S -O -fno-asynchronous-unwind-tables -fcf-protection=none bin/util.c -o bin/util.s
 #echo $?
 
 
@@ -52,9 +59,7 @@ fi
 # assembler
 
 
-#gcc "$(pwd)"/bin/main.s "$(pwd)"/bin/other.s -o bin/main
-#./bin/main
-#echo $?
+
 
 
 

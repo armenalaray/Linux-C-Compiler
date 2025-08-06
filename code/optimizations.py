@@ -1,9 +1,9 @@
-import networkx as nx
+#import networkx as nx
 import tacGenerator
 import parser
 import typeChecker
-import matplotlib.pyplot as plt
-import numpy as np
+#import matplotlib.pyplot as plt
+#import numpy as np
 
 import traceback
 import sys

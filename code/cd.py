@@ -352,7 +352,7 @@ if __name__ == "__main__":
 				print(ass)
 
 			
-			
+
 			FixingUpInstructions.FixingUpInstructions(ass, backSymbolTable)
 
 			if printDebugInfo:
@@ -363,6 +363,7 @@ if __name__ == "__main__":
 				sys.exit(0)
 			
 
+			
 			output = codeEmission.outputAsmFile(ass, backSymbolTable)
 
 			if printDebugInfo:

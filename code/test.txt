@@ -1,3 +1,53 @@
+int main(void)
+{
+    return target();
+}
+
+======================================================================
+FAIL: test_int_only/no_coalescing/use_all_hardregs (test_framework.regalloc.TestRegAlloc.test_int_only/no_coalescing/use_all_hardregs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/regalloc.py", line 116, in run_and_parse
+    self.invoke_compiler(program_path, cc_opt="-s").check_returncode()
+  File "/usr/lib/python3.12/subprocess.py", line 502, in check_returncode
+    raise CalledProcessError(self.returncode, self.args, self.stdout,
+subprocess.CalledProcessError: Command '[PosixPath('/home/alejandro/dist/cd'), '--fold-constants', '--eliminate-unreachable-code', '--propagate-copies', '--eliminate-dead-stores', '-s', PosixPath('/home/alejandro/writing-a-c-compiler-tests/tests/chapter_20/int_only/no_coalescing/use_all_hardregs.c')]' returned non-zero exit status 1.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/regalloc.py", line 431, in test
+    self.no_spills_test(
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/regalloc.py", line 145, in no_spills_test
+    parsed_asm = self.run_and_parse(
+                 ^^^^^^^^^^^^^^^^^^^
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/regalloc.py", line 118, in run_and_parse
+    self.fail(f"Compilation failed:\n{e.stderr}")
+AssertionError: Compilation failed:
+
+
+----------------------------------------------------------------------
+
+
+
+
+
+
+
+
+======================================================================
+FAIL: test_valid/params_and_returns/stack_clobber (test_framework.basic.TestChapter18.test_valid/params_and_returns/stack_clobber)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 603, in test_run
+    self.compile_and_run(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 402, in compile_and_run
+    self.validate_runs(source_file, result)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 308, in validate_runs
+    self.assertEqual(
+AssertionError: Incorrect behavior in /home/alejandro/writing-a-c-compiler-tests/tests/chapter_18/valid/params_and_returns/stack_clobber
+* Bad return code: expected 0 and got -11
+
 flag.13
 
 
