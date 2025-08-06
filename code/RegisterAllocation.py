@@ -2165,8 +2165,23 @@ def replacePseudoRegs(instructions, registerMap):
                 if isinstance(reg, PseudoRegisterOperand) and reg in registerMap:
                     i.reg = registerMap[reg]
 
+    #REMOVE ANY MOV INSTRU
 
-    return instructions
+    newList = []
+    for i in instructions:
+
+        match i:
+
+            case assemblyGenerator.MovInstruction(sourceO = sourceO, destO = destO):
+                if sourceO == destO:
+                    pass
+                else:
+                    newList.append(i)
+
+            case _:
+                newList.append(i)
+
+    return newList
 
 def allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable, aliasedVars, funName):
 
@@ -2200,6 +2215,8 @@ def allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable, a
 
 def allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, aliasedVars, funName):
 
+    oldInstructions = copy.deepcopy(instructions)
+
     interGraph = buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
 
     addSpillCostsDouble(interGraph, instructions)
@@ -2221,8 +2238,8 @@ def allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, al
 
     print("------------------REPLACED DOUBLE INTRUCTIONS.--------------------")
 
-    for i in replacedIns:
-        print(i)
+    for n, o in zip(replacedIns, oldInstructions):
+        print("{:<70} {:<1}".format(str(n), str(o)))
 
     return replacedIns
 
