@@ -352,6 +352,7 @@ if __name__ == "__main__":
 				print(ass)
 
 			
+			
 			FixingUpInstructions.FixingUpInstructions(ass, backSymbolTable)
 
 			if printDebugInfo:

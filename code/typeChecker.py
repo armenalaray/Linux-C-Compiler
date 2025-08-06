@@ -897,27 +897,16 @@ def GetStaticInitializer(varType, int):
 
 def CreateZeroInitializer(type_, initList, typeTable):
 
-    initList.append(ZeroInit(type_.getBaseTypeSize(0, typeTable)))
-
-    """
     match type_:
         case parser.ArrayType(elementType = elementType, size = size):
             initList.append(ZeroInit(type_.getBaseTypeSize(0, typeTable)))
-
-            #for i in range(size):    
-            #    CreateZeroInitializer(elementType, initList, typeTable)
         
         case parser.StuctureType(tag = tag):
-            structDef = typeTable[tag]
-            initList.append(ZeroInit(structDef.size))
-
-            #members = list(structDef.members.values())
-            #for member in members:
-            #    CreateZeroInitializer(member.memberType, initList, typeTable)
+            initList.append(ZeroInit(type_.getBaseTypeSize(0, typeTable)))
 
         case _:
             initList.append(GetStaticInitializer(type_, 0))
-    """
+    
             
 def AnnotateInitializer(varDecl, type_, init, initList, symbolTable, typeTable):
 

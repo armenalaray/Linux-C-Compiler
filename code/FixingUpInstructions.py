@@ -29,7 +29,7 @@ def calculateStackAdjustment(bytesForLocals, calleSavedCount):
 
     adjustment = totalStackBytes - calleSavedBytes
     print("adjustment:",adjustment)
-    
+
     return adjustment
 
 def FixingUpTopLevel(topLevel, backendSymbolTable):
@@ -463,6 +463,7 @@ def FixingUpTopLevel(topLevel, backendSymbolTable):
                     case assemblyGenerator.ReturnInstruction():
 
                         for operand in callee:
+                            print(type(operand))
                             newList.append(assemblyGenerator.Pop(operand))
 
                         newList.append(i)

@@ -38,11 +38,30 @@ def matchRegister(reg, output, operandSize):
                 case assemblyGenerator.SSERegisterType.XMM7:
                     output += '%xmm7'
 
+                case assemblyGenerator.SSERegisterType.XMM8:
+                    output += '%xmm8'
+                
+                case assemblyGenerator.SSERegisterType.XMM9:
+                    output += '%xmm9'
+
+                case assemblyGenerator.SSERegisterType.XMM10:
+                    output += '%xmm10'
+
+                case assemblyGenerator.SSERegisterType.XMM11:
+                    output += '%xmm11'
+
+                case assemblyGenerator.SSERegisterType.XMM12:
+                    output += '%xmm12'
+
+                case assemblyGenerator.SSERegisterType.XMM13:
+                    output += '%xmm13'
+
                 case assemblyGenerator.SSERegisterType.XMM14:
                     output += '%xmm14'
 
                 case assemblyGenerator.SSERegisterType.XMM15:
                     output += '%xmm15'
+
 
                 case assemblyGenerator.RegisterType.SP:
                     output += '%rsp'
@@ -60,6 +79,17 @@ def matchRegister(reg, output, operandSize):
 
                         case OperandSize.BYTE_1:
                             output += '%al'
+
+                case assemblyGenerator.RegisterType.BX:
+                    match operandSize:
+                        case OperandSize.BYTE_8:
+                            output += '%rbx'
+                        
+                        case OperandSize.BYTE_4:
+                            output += '%ebx'
+
+                        case OperandSize.BYTE_1:
+                            output += '%bl'
 
 
                 case assemblyGenerator.RegisterType.CX:
@@ -149,6 +179,50 @@ def matchRegister(reg, output, operandSize):
 
                         case OperandSize.BYTE_1:
                             output += '%r11b'
+                
+                case assemblyGenerator.RegisterType.R12:
+                    match operandSize:
+                        case OperandSize.BYTE_8:
+                            output += '%r12'
+                        
+                        case OperandSize.BYTE_4:
+                            output += '%r12d'
+
+                        case OperandSize.BYTE_1:
+                            output += '%r12b'
+                
+                case assemblyGenerator.RegisterType.R13:
+                    match operandSize:
+                        case OperandSize.BYTE_8:
+                            output += '%r13'
+                        
+                        case OperandSize.BYTE_4:
+                            output += '%r13d'
+
+                        case OperandSize.BYTE_1:
+                            output += '%r13b'
+
+                case assemblyGenerator.RegisterType.R14:
+                    match operandSize:
+                        case OperandSize.BYTE_8:
+                            output += '%r14'
+                        
+                        case OperandSize.BYTE_4:
+                            output += '%r14d'
+
+                        case OperandSize.BYTE_1:
+                            output += '%r14b'
+
+                case assemblyGenerator.RegisterType.R15:
+                    match operandSize:
+                        case OperandSize.BYTE_8:
+                            output += '%r15'
+                        
+                        case OperandSize.BYTE_4:
+                            output += '%r15d'
+
+                        case OperandSize.BYTE_1:
+                            output += '%r15b'
 
     return output
 
@@ -370,7 +444,11 @@ def printTopLevel(topLevel, output, symbolTable):
                             output = printStaticInit(value, output)
                             
                         case _:
-                            print(value.int.value)
+                            #print(value.int.value)
+
+                            if isinstance(value, typeChecker.ZeroInit):
+                                pass
+                                #breakpoint()
 
                             if value.int.value == 0:
                                 if global_ == True:
@@ -493,11 +571,11 @@ def printTopLevel(topLevel, output, symbolTable):
                                                 output = printInstructionSuffix(assType, output)
                                             
                                             case assemblyGenerator.BinopType.And:
-                                                output += '\n\and'
+                                                output += '\n\tand'
                                                 output = printInstructionSuffix(assType, output)
 
                                             case assemblyGenerator.BinopType.Or:
-                                                output += '\n\or'
+                                                output += '\n\tor'
                                                 output = printInstructionSuffix(assType, output)
 
                                             case assemblyGenerator.BinopType.DivDouble:
@@ -687,6 +765,10 @@ def printTopLevel(topLevel, output, symbolTable):
                         output += "\n\tpushq "
                         output = matchOperand(operand, output, OperandSize.BYTE_8)
                     
+                    case assemblyGenerator.Pop(reg=reg):
+                        output += "\n\tpopq "
+                        output = matchOperand(reg, output, OperandSize.BYTE_8)
+
                     case assemblyGenerator.CallInstruction(identifier = identifier):
                         if identifier in symbolTable:
                             #print(symbolTable)

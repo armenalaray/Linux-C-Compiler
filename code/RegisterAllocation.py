@@ -1,4 +1,4 @@
-
+import sys
 import copy
 import assemblyGenerator
 import tacGenerator
@@ -1449,8 +1449,10 @@ def findUsedAndUpdated(instruction, backendSymbolTable):
                     used.append(RegisterOperand(index))
 
                 case _:
-                    print("ERROR: INVALID LEA.")
-                    sys.exit(1)
+                    used.append(sourceO)
+                    
+                    #print("ERROR: Invalid source operand for lea instruction. {0}".format(type(sourceO)))
+                    #sys.exit(1)
                     #used.append(sourceO)
 
             match destO:
