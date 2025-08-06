@@ -2722,7 +2722,7 @@ class FunEntry(asm_symtab_entry):
         #self.returnStack = []
 
     def __str__(self):
-        return "Defined: {self.defined} ReturnOnStack: {self.returnOnStack} IntParams: {self.paramInt} DoubleParams: {self.paramDouble} ReturnInt: {self.returnInt} ReturnDouble: {self.returnDouble}".format(self=self)
+        return "Defined: {self.defined} ReturnOnStack: {self.returnOnStack} IntParams: {self.paramInt} DoubleParams: {self.paramDouble} ReturnInt: {self.returnInt} ReturnDouble: {self.returnDouble} CalleeSavedRegs: {self.calleeSavedRegs}".format(self=self)
 
     def __repr__(self):
         return self.__str__()

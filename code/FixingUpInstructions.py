@@ -17,18 +17,44 @@ def areMemoryOperands(src, dst):
     
     return False
 
-def FixingUpTopLevel(topLevel):
+def calculateStackAdjustment(bytesForLocals, calleSavedCount):
+    calleSavedBytes = 8*calleSavedCount
+
+    totalStackBytes = calleSavedBytes + bytesForLocals
+
+    print("original:",totalStackBytes)
+
+    totalStackBytes = totalStackBytes + (16 - totalStackBytes % 16)
+    print("rounded:",totalStackBytes)
+
+    adjustment = totalStackBytes - calleSavedBytes
+    print("adjustment:",adjustment)
+    
+    return adjustment
+
+def FixingUpTopLevel(topLevel, backendSymbolTable):
     match topLevel:
         case assemblyGenerator.StaticVariable():
             pass
         case assemblyGenerator.Function(identifier = identifier, global_ = global_, insList = insList, stackOffset = stackOffset):
             offset = stackOffset
+            
+            funEntry = backendSymbolTable[identifier]
+            callee = list(funEntry.calleeSavedRegs)
 
-            offset = offset - offset % 16
-            print(offset)
+            adjustment = calculateStackAdjustment(-offset, len(callee))
 
             newList = []
-            newList.insert(0,assemblyGenerator.BinaryInstruction(assemblyGenerator.BinaryOperator(assemblyGenerator.BinopType.Sub), assemblyGenerator.Quadword(), assemblyGenerator.ImmediateOperand(-offset), assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.SP))))
+            newList.insert(0,
+                           assemblyGenerator.BinaryInstruction(assemblyGenerator.BinaryOperator(assemblyGenerator.BinopType.Sub), 
+                                                               assemblyGenerator.Quadword(), 
+                                                               assemblyGenerator.ImmediateOperand(adjustment), 
+                                                               assemblyGenerator.RegisterOperand(assemblyGenerator.Register(assemblyGenerator.RegisterType.SP))))
+            
+            for operand in callee:
+                newList.append(assemblyGenerator.PushInstruction(operand))
+            
+            callee.reverse()
 
             oldSize = len(newList)
 
@@ -435,7 +461,11 @@ def FixingUpTopLevel(topLevel):
 
                         
                     case assemblyGenerator.ReturnInstruction():
-                        pass
+
+                        for operand in callee:
+                            newList.append(assemblyGenerator.Pop(operand))
+
+                        newList.append(i)
 
                     case assemblyGenerator.CallInstruction():
                         pass
@@ -458,8 +488,8 @@ def FixingUpTopLevel(topLevel):
             topLevel.insList = newList
     
 
-def FixingUpInstructions(ass):
+def FixingUpInstructions(ass, backendSymbolTable):
     for topLevel in ass.topLevelList:
-        FixingUpTopLevel(topLevel)
+        FixingUpTopLevel(topLevel, backendSymbolTable)
 
     

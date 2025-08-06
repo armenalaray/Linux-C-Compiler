@@ -345,8 +345,6 @@ if __name__ == "__main__":
 						print("REGISTER ALLOCATE FUNCTION {0}".format(i.identifier))
 						i.insList = RegisterAllocation.allocateRegisters(i.insList, symbolTable, backSymbolTable, allAliasedVars, i.identifier)
 
-			if LastStage == 'assemblyGeneration':
-				sys.exit(0)
 			
 			ReplacePseudoRegisters.ReplacePseudoRegisters(ass, backSymbolTable)
 
@@ -354,15 +352,15 @@ if __name__ == "__main__":
 				print(ass)
 
 			
-			FixingUpInstructions.FixingUpInstructions(ass)
+			FixingUpInstructions.FixingUpInstructions(ass, backSymbolTable)
 
 			if printDebugInfo:
 				print(ass)
 						
 		
-
+			if LastStage == 'assemblyGeneration':
+				sys.exit(0)
 			
-
 
 			output = codeEmission.outputAsmFile(ass, backSymbolTable)
 

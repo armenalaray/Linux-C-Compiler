@@ -2070,9 +2070,9 @@ def createRegisterMap(coloredGraph, backendSymbolTable, funName):
                 continue
     
     a = backendSymbolTable[funName]
-    a.calleeSavedRegs = calleeSavedRegs
+    a.calleeSavedRegs.update(calleeSavedRegs)
 
-    print("Calle Saved Registers:", calleeSavedRegs)
+    print("Calle Saved Registers for {0}: {1}".format(funName, a.calleeSavedRegs))
     return registerMap
             
         
