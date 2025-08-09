@@ -2389,55 +2389,81 @@ def rewriteCoalesced(instructions, coalescedRegs):
 
     for i in instructions:
         match i:
-            case assemblyGenerator.MovInstruction(sourceO = sourceO, destO = destO):
+            case assemblyGenerator.MovInstruction(assType = assType, sourceO = sourceO, destO = destO):
+                src = find(sourceO, coalescedRegs)
+                dst = find(destO, coalescedRegs)
+
+                if not (src == dst):
+                    newList.append(assemblyGenerator.MovInstruction(assType, src, dst))
                 
-                pass
+            case assemblyGenerator.BinaryInstruction(operator = operator, assType = assType, src = src, dest = dest):      
+                src = find(src, coalescedRegs)
+                dst = find(dest, coalescedRegs)
 
-            case assemblyGenerator.BinaryInstruction(src = src, dest = dest):                
-                pass
+                newList.append(assemblyGenerator.BinaryInstruction(operator, assType, src, dst))
 
-            case assemblyGenerator.UnaryInstruction(dest = dest):
+            case assemblyGenerator.UnaryInstruction(operator = operator, assType = assType, dest = dest):
+                dst = find(dest, coalescedRegs)
 
-                pass
+                newList.append(assemblyGenerator.UnaryInstruction(operator, assType, dst))
 
-            case assemblyGenerator.CompInst(operand0 = operand0, operand1 = operand1):
+            case assemblyGenerator.CompInst(assType = assType, operand0 = operand0, operand1 = operand1):
+                src = find(operand0, coalescedRegs)
+                dst = find(operand1, coalescedRegs)
 
-                pass
+                newList.append(assemblyGenerator.CompInst(assType, src, dst))
 
-            case assemblyGenerator.SetCCInst(operand = operand):
-
-                pass
+            case assemblyGenerator.SetCCInst(conc_code = conc_code, operand = operand):
+                dst = find(operand, coalescedRegs)
+                newList.append(assemblyGenerator.SetCCInst(conc_code, dst))
             
             case assemblyGenerator.PushInstruction(operand = operand):
+                dst = find(operand, coalescedRegs)
+                newList.append(assemblyGenerator.PushInstruction(dst))
 
-                pass
-
-            case assemblyGenerator.IDivInstruction(divisor = divisor):
-                pass
+            case assemblyGenerator.IDivInstruction(assType = assType, divisor = divisor):
+                dst = find(divisor, coalescedRegs)
+                newList.append(assemblyGenerator.IDivInstruction(assType, dst))
 
             case assemblyGenerator.MovSXInstruction(srcType = srcType, dstType = dstType,sourceO = sourceO, destO = destO):
-                pass
+                src = find(sourceO, coalescedRegs)
+                dst = find(destO, coalescedRegs)
+
+                newList.append(assemblyGenerator.MovSXInstruction(srcType, dstType, src, dst))
                 
             
-            case assemblyGenerator.MovZeroExtendIns(sourceO = sourceO, destO = destO):
-                pass
+            case assemblyGenerator.MovZeroExtendIns(srcType = srcType, dstType = dstType, sourceO = sourceO, destO = destO):
+                src = find(sourceO, coalescedRegs)
+                dst = find(destO, coalescedRegs)
+
+                newList.append(assemblyGenerator.MovZeroExtendIns(srcType, dstType, src, dst))
             
             case assemblyGenerator.LeaInstruction(sourceO = sourceO, destO = destO):
-                
-                pass
+                src = find(sourceO, coalescedRegs)
+                dst = find(destO, coalescedRegs)
 
-            case assemblyGenerator.Cvttsd2si(sourceO = sourceO, destO = destO):
-                
-                pass
+                newList.append(assemblyGenerator.LeaInstruction(src, dst))
 
-            case assemblyGenerator.Cvtsi2sd(sourceO = sourceO, destO = destO):
-                pass
+            case assemblyGenerator.Cvttsd2si(assType = assType, sourceO = sourceO, destO = destO):
 
-            case assemblyGenerator.DivInstruction(divisor = divisor):
-                pass
+                src = find(sourceO, coalescedRegs)
+                dst = find(destO, coalescedRegs)
+
+                newList.append(assemblyGenerator.Cvttsd2si(assType, src, dst))
+
+            case assemblyGenerator.Cvtsi2sd(assType = assType, sourceO = sourceO, destO = destO):
+                src = find(sourceO, coalescedRegs)
+                dst = find(destO, coalescedRegs)
+
+                newList.append(assemblyGenerator.Cvtsi2sd(assType, src, dst))
+
+            case assemblyGenerator.DivInstruction(assType = assType, divisor = divisor):
+                dst = find(divisor, coalescedRegs)
+                newList.append(assemblyGenerator.DivInstruction(assType, dst))
             
             case assemblyGenerator.Pop(reg = reg):
-                pass
+                dst = find(reg, coalescedRegs)
+                newList.append(assemblyGenerator.Pop(dst))
 
             case _:
                 newList.append(i)
@@ -2447,10 +2473,13 @@ def rewriteCoalesced(instructions, coalescedRegs):
 def allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable, aliasedVars, funName):
 
     oldInstructions = copy.deepcopy(instructions)
-
+    
+    print("-------------------START COALESCING INTEGER.----------------------")
+    
     while True:
 
         interGraph = buildInterferenceGraphInteger(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
+
         coalescedRegs = coalesce(interGraph, instructions)
         
         if nothingWasCoalesced(coalescedRegs):
@@ -2487,7 +2516,20 @@ def allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, al
 
     oldInstructions = copy.deepcopy(instructions)
 
-    interGraph = buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
+    print("-------------------START COALESCING DOUBLE.----------------------")
+    
+    while True:
+
+        interGraph = buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
+        
+        coalescedRegs = coalesce(interGraph, instructions)
+        
+        if nothingWasCoalesced(coalescedRegs):
+            break
+
+        instructions = rewriteCoalesced(instructions, coalescedRegs)
+
+    #interGraph = buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
 
     addSpillCostsDouble(interGraph, instructions)
 

@@ -18,9 +18,7 @@ o="--optimize"
 #lastStage="--codegen"
 library="-lmath.h"
 
-python3 "$(pwd)"/code/cd.py $lastStage $noLink $notAssembly $library $fC $pC $eUC $eDS $o "$(pwd)"/test_/test.c 
-
-#> "$(pwd)"/test_/testOptimizations.txt
+python3 "$(pwd)"/code/cd.py $lastStage $noLink $notAssembly $library $fC $pC $eUC $eDS $o "$(pwd)"/test_/test.c > "$(pwd)"/test_/testOptimizations.txt
 
 echo $?
 
