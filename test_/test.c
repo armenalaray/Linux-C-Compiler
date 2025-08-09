@@ -1,121 +1,66 @@
-/* Make sure that when we apply the Briggs test to floating-point
- * registers, we consider a node significant only if it has 14 or more
- * neighbors (not 12 or more as for integer registers).
- * The test script validates that there are no spills and no movsd instructions
- * where both operands are XMM registers.
+/* Test that the Briggs test also applies to hard registers.
+ * In other words, we'll coalesce a pseudoregister and hard register that pass
+ * the Briggs test even if they don't pass the George test. We inspect the
+ * assembly for the target function to validate that it contains no spills and
+ * no mov instructions whose source and destination are both general-purpose
+ * registers (except mov %rsp, %rbp and mov %rbp, %rsp in the prologue and
+ * epilogue).
+ * NOTE: it's theoretically possible but very unlikely that every variable
+ * could end up in the right register by accident and the test could pass
+ * even if we don't perform register coalescing.
  * */
 
 #include "../util.h"
 
-// store some initial values in global variables
-// to prevent constant folding
-double glob0 = 0;
-double glob1 = 1.;
-double glob2 = 2.;
-double glob10 = 10.;
-
-// we'll copy pseudos to these, then validate these with check_one_double
-double glob_zero;
-double glob_one;
-double glob_two;
-double glob_three;
-double glob_four;
-double glob_five;
-double glob_six;
-double glob_seven;
-double glob_eight;
-double glob_nine;
-double glob_ten;
-double glob_eleven;
-double glob_twelve;
-double glob_thirteen;
-double glob_fourteen;
-
-// use this to prevent copy prop into check_one_double calls
-void incr_glob1(void) {
-    glob1 = glob1 + 1;
-}
+int flag = 1;
 
 int target(void) {
-    // Create thirteen pseudos that interfere with each other (one-thirteen)
-    // plus two pseudos (zero and fourteen) that interfere with those
-    // thirteen pseudos but not with each other.
+    int coalesce_into_eax = 0;
+    // put initializer in condition to prevent copy prop
+    if (flag) {  // always taken
+        // We move the function's return value from EAX into this variable;
+        // we can coalesce these because they pass the Briggs test.
+        coalesce_into_eax = id(10);
+    }
 
-    // For each of one-thirteen, calculating the initial value requires
-    // an intermediate result, which we can coalesce with the corresponding
-    // pseudoregister if we've implemented the Briggs test correctly.
+    // Define a variable with significant degree that interferes with
+    // coalesce_into_eax, and with the arguments passed in param-passing
+    // registers below, but does not interfere with any hard registers.
+    int high_degree = 2 * coalesce_into_eax;  // 20
 
-    // Only fourteen nodes, zero-thirteen, have significant degree, so nobody
-    // can have more than 13 neighbors with significant degree, so all our
-    // coalescing candidates will fail the Briggs test. (zero interferes with
-    // one through thirteen plus all the intermediate values; one-twelve
-    // interfere with zero, each other, and varying numbers of intermediate
-    // values; thirteen interferes with zero through twelve plus fourteen.
-    // fourteen does _not_ have significant degree).
+    // Validate coalesce_into_eax. NOTE: don't use check_one_int here to avoid
+    // coalescing this into EDI or create a mov instruction between registers
+    if (coalesce_into_eax != 10) {
+        return -1;
+    }
 
-    // If our definition of 'significant degree' is 12 or more neighbors,
-    // we'll think fourteen has significant degree and all our coalescing
-    // candidates will fail the Briggs test.
+    // Make high_degree interfere with twelve other variables so it has
+    // significant degree. Five of these variables will be passed as arguments;
+    // we'll use the Briggs test to coalesce them into the parameter-passing
+    // registers. They won't pass the George test because they interfere with
+    // high_degree. NOTE: We use constants as first operand of each intializing
+    // expression so we don't move pseudos from one register to another, and we
+    // use each of these variables at least once so it isn't removed by DSE.
+    int twelve = 32 - high_degree;
+    int eleven = 23 - twelve;
+    int ten = 21 - eleven;
+    int nine = 19 - ten;
+    int eight = 17 - nine;
+    int seven = 15 - eight;
+    int six = 13 - seven;
+    // Define the variables passed as arguments below; use high_degree
+    // so that it interferes with all of them
+    int five = 11 - six;
+    int four = 24 - high_degree;
+    int three = 23 - high_degree;
+    int two = 22 - high_degree;
+    int one = 21 - high_degree;
+    // Validate one-five
+    // NOTE: we can't check all 12 with check_12_ints, or with multiple check_*
+    // calls, because that would make more pseudos interfere with EAX
+    check_5_ints(one, two, three, four, five, 1);
 
-    double zero = glob0 * 10.;
-    double one = glob10 / 2. - 4.;
-    double two = glob10 / 2. - 3.;
-    double three = glob2 * 2. - 1;
-    double four = (6. - glob2) * glob1;
-    double five = (glob10 / 2.) * glob1;
-    double six = (glob10 + 2.) / 2;
-    double seven = 3. * glob2 + 1.;
-    double eight = glob2 * glob2 * 2.;
-    double nine = (glob1 + glob2) * 3.;
-    double ten = (glob2 + 3.) * 2.;
-    double eleven = (glob10 + 1.) * glob1;
-    double twelve = (glob1 + glob2) * 4.;
-    double thirteen = (glob2 * 3.) + 7.;
-    glob_zero = zero;  // save zero here so it doesn't interfere with fourteen
-    double fourteen = glob2 * 7.;
-
-    // Save one-fourteen to global variables (so we can then
-    // validate those global variables without causing any new interference
-    // with pseudos)
-    glob_one = one;
-    glob_two = two;
-    glob_three = three;
-    glob_four = four;
-    glob_five = five;
-    glob_six = six;
-    glob_seven = seven;
-    glob_eight = eight;
-    glob_nine = nine;
-    glob_ten = ten;
-    glob_eleven = eleven;
-    glob_twelve = twelve;
-    glob_thirteen = thirteen;
-    glob_fourteen = fourteen;
-
-    //  call a function to prevent copy prop
-    incr_glob1();
-
-    // validate the global variables
-    check_one_double(glob_zero, 0.);
-    check_one_double(glob_one, 1.0);
-    check_one_double(glob_two, 2.0);
-    check_one_double(glob_three, 3.0);
-    check_one_double(glob_four, 4.0);
-    check_one_double(glob_five, 5.0);
-    check_one_double(glob_six, 6.0);
-    check_one_double(glob_seven, 7.0);
-    check_one_double(glob_eight, 8.0);
-    check_one_double(glob_nine, 9.0);
-    check_one_double(glob_ten, 10.0);
-    check_one_double(glob_eleven, 11.0);
-    check_one_double(glob_twelve, 12.0);
-    check_one_double(glob_thirteen, 13.0);
-    check_one_double(glob_fourteen, 14.0);
-
-    // make sure we actually called incr_glob1
-    check_one_double(glob1, 2.);
-
-    return 0;
+    return 0;  // success
 }
 
 int main(void)

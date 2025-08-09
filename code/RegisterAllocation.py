@@ -2487,6 +2487,7 @@ def allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable, a
 
         instructions = rewriteCoalesced(instructions, coalescedRegs)
 
+    coalescedIns = copy.deepcopy(instructions)
 
     addSpillCostsInteger(interGraph, instructions)
 
@@ -2507,8 +2508,11 @@ def allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable, a
 
     print("------------------REPLACED INTEGER INTRUCTIONS.--------------------")
 
-    for n, o in zip(replacedIns, oldInstructions):
-        print("{:<70} {:<1}".format(str(n), str(o)))
+    for n, m, o in zip(replacedIns, coalescedIns, oldInstructions):
+        print("{:<50} {:<70} {:<1}".format(str(n), str(m), str(o)))
+
+    #for n, o in zip(replacedIns, oldInstructions):
+    #    print("{:<70} {:<1}".format(str(n), str(o)))
 
     return replacedIns
 

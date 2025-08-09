@@ -1,3 +1,88 @@
+======================================================================
+FAIL: test_valid/void/void_function (test_framework.basic.TestChapter17.test_valid/void/void_function)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 603, in test_run
+    self.compile_and_run(program)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/basic.py", line 385, in compile_and_run
+    self.assertEqual(
+AssertionError: compilation of /home/alejandro/writing-a-c-compiler-tests/tests/chapter_17/valid/void/void_function.c failed with error:
+Traceback (most recent call last):
+  File "cd.py", line 343, in <module>
+  File "RegisterAllocation.py", line 2564, in allocateRegisters
+  File "RegisterAllocation.py", line 2481, in allocateRegistersForInteger
+  File "RegisterAllocation.py", line 1756, in buildInterferenceGraphInteger
+  File "RegisterAllocation.py", line 1199, in makeControlFlowGraph
+  File "RegisterAllocation.py", line 1159, in addAllEdgesToCFG
+KeyError: 'tmp.3'
+[PYI-127762:ERROR] Failed to execute script 'cd' due to unhandled exception!
+
+
+
+======================================================================
+FAIL: test_int_only/remainder_test (test_framework.tacky.pipeline.TestWholePipeline.test_int_only/remainder_test)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/tacky/pipeline.py", line 229, in test
+    self.return_const_test(source_file=program, returned_const=expected_retval)
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/tacky/common.py", line 146, in return_const_test
+    self.assertFalse(
+AssertionError: Found instruction that should have been optimized out
+Bad instructions:
+        mov $5, %R9
+        neg %R9
+        mov $6, %AX
+        cdq 
+        idiv %R9
+        mov %DX, %AX
+Complete assembly function:
+target:
+        push %BP
+        mov %SP, %BP
+        sub $16, %SP
+        mov $5, %R9
+        neg %R9
+        mov $6, %AX
+        cdq 
+        idiv %R9
+        mov %DX, %AX
+        mov %BP, %SP
+        pop %BP
+        ret 
+Program: /home/alejandro/writing-a-c-compiler-tests/tests/chapter_19/whole_pipeline/int_only/remainder_test.c
+
+----------------------------------------------------------------------
+
+
+
+======================================================================
+FAIL: test_all_types/with_coalescing/coalesce_char (test_framework.regalloc.TestRegAlloc.test_all_types/with_coalescing/coalesce_char)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/regalloc.py", line 116, in run_and_parse
+    self.invoke_compiler(program_path, cc_opt="-s").check_returncode()
+  File "/usr/lib/python3.12/subprocess.py", line 502, in check_returncode
+    raise CalledProcessError(self.returncode, self.args, self.stdout,
+subprocess.CalledProcessError: Command '[PosixPath('/home/alejandro/dist/cd'), '--fold-constants', '--eliminate-unreachable-code', '--propagate-copies', '--eliminate-dead-stores', '-s', PosixPath('/home/alejandro/writing-a-c-compiler-tests/tests/chapter_20/all_types/with_coalescing/coalesce_char.c')]' returned non-zero exit status 1.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/regalloc.py", line 451, in test
+    self.coalescing_test(
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/regalloc.py", line 250, in coalescing_test
+    parsed_asm = self.run_and_parse(
+                 ^^^^^^^^^^^^^^^^^^^
+  File "/home/alejandro/writing-a-c-compiler-tests/test_framework/regalloc.py", line 118, in run_and_parse
+    self.fail(f"Compilation failed:\n{e.stderr}")
+AssertionError: Compilation failed:
+
+
+----------------------------------------------------------------------
+Ran 1132 tests in 320.581s
+
+
+
 int main(void)
 {
     return target();

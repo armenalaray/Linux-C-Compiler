@@ -7,7 +7,7 @@
 #noLink="-c"
 
 
-notAssembly="-S"
+notAssembly="-s"
 
 fC="--fold-constants"
 pC="--propagate-copies"
@@ -38,7 +38,7 @@ echo "from test: "$?
 #cd ./../
 #echo "$(pwd)"
 #pyinstaller --onefile "$(pwd)"/CComp/code/cd.py
-#./writing-a-c-compiler-tests/test_compiler "$(pwd)"/dist/cd --chapter 20 --no-coalescing
+#./writing-a-c-compiler-tests/test_compiler "$(pwd)"/dist/cd --chapter 19
 
 
 

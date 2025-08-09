@@ -73,7 +73,7 @@ def matchCommands(argument):
 				LastStage = "assemblyGeneration"
 			case "-c":
 				NoLink = True
-			case "-S":
+			case "-s":
 				NotAssembly = True
 
 			case "--fold-constants":
@@ -104,7 +104,6 @@ def listsAreEqual(optimizedFunctionBody,functionBody):
 		
 	return True
 """
-	
 			
 def optimizeFunction(functionBody, symbolTable):
 	if functionBody == []:
@@ -135,8 +134,6 @@ def optimizeFunction(functionBody, symbolTable):
 			return optimizedFunctionBody
 
 		functionBody = optimizedFunctionBody
-
-
 
 
 if __name__ == "__main__":	
