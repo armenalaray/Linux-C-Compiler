@@ -2531,6 +2531,9 @@ def allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, al
 
     #interGraph = buildInterferenceGraphDouble(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
 
+
+    coalescedIns = copy.deepcopy(instructions)
+
     addSpillCostsDouble(interGraph, instructions)
 
     colorGraphDouble(interGraph, backendSymbolTable, funName)
@@ -2550,8 +2553,8 @@ def allocateRegistersForDouble(instructions, symbolTable, backendSymbolTable, al
 
     print("------------------REPLACED DOUBLE INTRUCTIONS.--------------------")
 
-    for n, o in zip(replacedIns, oldInstructions):
-        print("{:<70} {:<1}".format(str(n), str(o)))
+    for n, m, o in zip(replacedIns, coalescedIns, oldInstructions):
+        print("{:<70} {:<70} {:<1}".format(str(n), str(m), str(o)))
 
     return replacedIns
 

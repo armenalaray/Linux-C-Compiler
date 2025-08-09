@@ -1,88 +1,122 @@
-/* Test that we can handle spilling correctly.
- * We have to spill one pseudo. The test script will validate that
- * we spill only one and it's the cheapest one.
- * Note that this isn't a foolproof test of spill cost calculation;
- * because of optimistic coloring, we might end up spilling should_spill
- * even if it's not the first spill candidate we select.
- * This test program is generated from templates/chapter_20_templates/force_spill.c.jinja
+/* Make sure that when we apply the Briggs test to floating-point
+ * registers, we consider a node significant only if it has 14 or more
+ * neighbors (not 12 or more as for integer registers).
+ * The test script validates that there are no spills and no movsd instructions
+ * where both operands are XMM registers.
  * */
 
-//#include "../util.h"
+#include "../util.h"
 
-/* Helper functions defined in tests/chapter_20/helper_libs/util.c */
+// store some initial values in global variables
+// to prevent constant folding
+double glob0 = 0;
+double glob1 = 1.;
+double glob2 = 2.;
+double glob10 = 10.;
 
-/* The check_* functions return 0 on success,
- * print and exit with code -1 on failure.
- */
+// we'll copy pseudos to these, then validate these with check_one_double
+double glob_zero;
+double glob_one;
+double glob_two;
+double glob_three;
+double glob_four;
+double glob_five;
+double glob_six;
+double glob_seven;
+double glob_eight;
+double glob_nine;
+double glob_ten;
+double glob_eleven;
+double glob_twelve;
+double glob_thirteen;
+double glob_fourteen;
 
-int check_one_int(int actual, int expected);
-
-// Validates a == start, b == start + 1, ...e == start + 5
-int check_5_ints(int a, int b, int c, int d, int e, int start);
-
-// Validates a == start, b == start + 1, ... l == start + 11
-int check_12_ints(int a, int b, int c, int d, int e, int f, int g, int h, int i,
-                  int j, int k, int l, int start);
-
-// return x; used to get constants in a way that can't be optimized away
-int id(int x);
-
-
-int glob_three = 3;
-
-int target(void) {
-    // This is our spill candidate: it has the highest degree and is
-    // used only once.
-    int should_spill = glob_three + 3;
-
-    // create 12 pseudos that all interfere w/ should_spill and each other;
-    // this forces a spill, since only 12 hard registers are available
-    int one = glob_three - 2;
-    int two = one + one;
-    int three = 2 + one;
-    int four = two * two;
-    int five = 6 - one;
-    int six = two * three;
-    int seven = one + 6;
-    int eight = two * 4;
-    int nine = three * three;
-    int ten = four + six;
-    int eleven = 16 - five;
-    int twelve = six + six;
-
-    // validate one through twelve
-    // (this makes them all live at this point)
-    check_12_ints(one, two, three, four, five, six, seven, eight, nine, ten,
-                  eleven, twelve, 1);
-    // create another clique of twelve pseudos that interfere with each other
-    // and should_spill, so should_spill will have more conflicts than other
-    // pseudoregisters
-    int thirteen = 10 + glob_three;
-    int fourteen = thirteen + 1;
-    int fifteen = 28 - thirteen;
-    int sixteen = fourteen + 2;
-    int seventeen = 4 + thirteen;
-    int eighteen = 32 - fourteen;
-    int nineteen = 35 - sixteen;
-    int twenty = fifteen + 5;
-    int twenty_one = thirteen * 2 - 5;
-    int twenty_two = fifteen + 7;
-    int twenty_three = 6 + seventeen;
-    int twenty_four = thirteen + 11;
-
-    // validate thirteen through twenty-four
-    // (this makes them all live at this point)
-    check_12_ints(thirteen, fourteen, fifteen, sixteen, seventeen, eighteen,
-                  nineteen, twenty, twenty_one, twenty_two, twenty_three,
-                  twenty_four, 13);
-
-    if (should_spill != 6) {
-        return -1;  // fail
-    }
-
-    return 0;  // success
+// use this to prevent copy prop into check_one_double calls
+void incr_glob1(void) {
+    glob1 = glob1 + 1;
 }
 
+int target(void) {
+    // Create thirteen pseudos that interfere with each other (one-thirteen)
+    // plus two pseudos (zero and fourteen) that interfere with those
+    // thirteen pseudos but not with each other.
+
+    // For each of one-thirteen, calculating the initial value requires
+    // an intermediate result, which we can coalesce with the corresponding
+    // pseudoregister if we've implemented the Briggs test correctly.
+
+    // Only fourteen nodes, zero-thirteen, have significant degree, so nobody
+    // can have more than 13 neighbors with significant degree, so all our
+    // coalescing candidates will fail the Briggs test. (zero interferes with
+    // one through thirteen plus all the intermediate values; one-twelve
+    // interfere with zero, each other, and varying numbers of intermediate
+    // values; thirteen interferes with zero through twelve plus fourteen.
+    // fourteen does _not_ have significant degree).
+
+    // If our definition of 'significant degree' is 12 or more neighbors,
+    // we'll think fourteen has significant degree and all our coalescing
+    // candidates will fail the Briggs test.
+
+    double zero = glob0 * 10.;
+    double one = glob10 / 2. - 4.;
+    double two = glob10 / 2. - 3.;
+    double three = glob2 * 2. - 1;
+    double four = (6. - glob2) * glob1;
+    double five = (glob10 / 2.) * glob1;
+    double six = (glob10 + 2.) / 2;
+    double seven = 3. * glob2 + 1.;
+    double eight = glob2 * glob2 * 2.;
+    double nine = (glob1 + glob2) * 3.;
+    double ten = (glob2 + 3.) * 2.;
+    double eleven = (glob10 + 1.) * glob1;
+    double twelve = (glob1 + glob2) * 4.;
+    double thirteen = (glob2 * 3.) + 7.;
+    glob_zero = zero;  // save zero here so it doesn't interfere with fourteen
+    double fourteen = glob2 * 7.;
+
+    // Save one-fourteen to global variables (so we can then
+    // validate those global variables without causing any new interference
+    // with pseudos)
+    glob_one = one;
+    glob_two = two;
+    glob_three = three;
+    glob_four = four;
+    glob_five = five;
+    glob_six = six;
+    glob_seven = seven;
+    glob_eight = eight;
+    glob_nine = nine;
+    glob_ten = ten;
+    glob_eleven = eleven;
+    glob_twelve = twelve;
+    glob_thirteen = thirteen;
+    glob_fourteen = fourteen;
+
+    //  call a function to prevent copy prop
+    incr_glob1();
+
+    // validate the global variables
+    check_one_double(glob_zero, 0.);
+    check_one_double(glob_one, 1.0);
+    check_one_double(glob_two, 2.0);
+    check_one_double(glob_three, 3.0);
+    check_one_double(glob_four, 4.0);
+    check_one_double(glob_five, 5.0);
+    check_one_double(glob_six, 6.0);
+    check_one_double(glob_seven, 7.0);
+    check_one_double(glob_eight, 8.0);
+    check_one_double(glob_nine, 9.0);
+    check_one_double(glob_ten, 10.0);
+    check_one_double(glob_eleven, 11.0);
+    check_one_double(glob_twelve, 12.0);
+    check_one_double(glob_thirteen, 13.0);
+    check_one_double(glob_fourteen, 14.0);
+
+    // make sure we actually called incr_glob1
+    check_one_double(glob1, 2.);
+
+    return 0;
+}
 
 int main(void)
 {
