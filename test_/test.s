@@ -4,11 +4,11 @@ target:
 	pushq %rbp
 	movq %rsp, %rbp
 	subq $8, %rsp
-	pushq %r14
-	pushq %r12
-	pushq %r15
 	pushq %r13
 	pushq %rbx
+	pushq %r15
+	pushq %r12
+	pushq %r14
 	movl glob_three+0(%rip), %r10d
 	movl %r10d, -4(%rbp)
 	addl $3, -4(%rbp)
@@ -99,21 +99,21 @@ target:
 	jE .Ltmp.103
 	movl $1, %eax
 	negl %eax
+	popq %r14
+	popq %r12
+	popq %r15
 	popq %rbx
 	popq %r13
-	popq %r15
-	popq %r12
-	popq %r14
 	movq %rbp, %rsp
 	popq %rbp
 	ret
 .Ltmp.103:
 	movl $0, %eax
+	popq %r14
+	popq %r12
+	popq %r15
 	popq %rbx
 	popq %r13
-	popq %r15
-	popq %r12
-	popq %r14
 	movq %rbp, %rsp
 	popq %rbp
 	ret

@@ -30,6 +30,34 @@ class Node():
 class Graph():
     def __init__(self):
         self.nodes = {}
+        self.k = None
+
+    def areNeighbors(self, x, y):
+        if y in self.nodes[x].neighbors or x in self.nodes[y].neighbors:
+            return True
+    
+        return False    
+
+    def briggsTest(self, x, y):
+        significantNeighbors = 0
+
+        xNode = self.nodes[x]
+        yNode = self.nodes[y]
+
+        allNeighbors = xNode.neighbors | yNode.neighbors
+
+
+        for nID in allNeighbors:
+            node = self.nodes[nID]
+
+            degree = len(node.neighbors)
+            if self.areNeighbors(nID, x) and self.areNeighbors(nID, y):
+                degree -= 1
+                
+            if degree >= self.k:
+                significantNeighbors += 1
+
+        return significantNeighbors < self.k
 
     def addEdge(self, v0, v1):
         if v0 in self.nodes and v1 in self.nodes:
@@ -53,6 +81,7 @@ class Graph():
 class DoubleBaseGraph(Graph):
     def __init__(self):
         super().__init__()
+        self.k = 14
     
         self.nodes[RegisterOperand(Register(SSERegisterType.XMM0))] = Node(RegisterOperand(Register(SSERegisterType.XMM0)))
         self.nodes[RegisterOperand(Register(SSERegisterType.XMM1))] = Node(RegisterOperand(Register(SSERegisterType.XMM1)))
@@ -270,6 +299,7 @@ class DoubleBaseGraph(Graph):
 class IntegerBaseGraph(Graph):
     def __init__(self):
         super().__init__()
+        self.k = 12
 
         self.nodes[RegisterOperand(Register(RegisterType.AX))] = Node(RegisterOperand(Register(RegisterType.AX)))
         self.nodes[RegisterOperand(Register(RegisterType.BX))] = Node(RegisterOperand(Register(RegisterType.BX)))
@@ -2209,13 +2239,23 @@ def nothingWasCoalesced(regMap):
     
     return False
 
+"""
+def areNeighbors(interGraph, src, dst):
+    if dst in interGraph.nodes[src].neighbors or src in interGraph.nodes[dst].neighbors:
+        return True
+    
+    return False
+
 def notAreNeighbors(interGraph, src, dst):
     if dst in interGraph.nodes[src].neighbors or src in interGraph.nodes[dst].neighbors:
         return False
     
     return True
+"""
 
-def briggsTestInteger(interGraph, x, y):
+"""
+def briggsTestDouble(interGraph, x, y):
+    k = 12
     significantNeighbors = 0
 
     xNode = interGraph.nodes[x]
@@ -2223,20 +2263,48 @@ def briggsTestInteger(interGraph, x, y):
 
     allNeighbors = xNode.neighbors | yNode.neighbors
 
-    #breakpoint()
+
+    for nID in allNeighbors:
+        node = interGraph.nodes[nID]
+        
+        degree = len(node.neighbors)
+        if areNeighbors(interGraph, nID, x) and areNeighbors(interGraph, nID, y):
+            degree -= 1
+            
+        if degree >= k:
+            significantNeighbors += 1
+
+    return significantNeighbors < k
+
+
+def briggsTestInteger(interGraph, x, y):
+    k = 12
+    significantNeighbors = 0
+
+    xNode = interGraph.nodes[x]
+    yNode = interGraph.nodes[y]
+
+    allNeighbors = xNode.neighbors | yNode.neighbors
+
 
     for nID in allNeighbors:
         node = interGraph.nodes[nID]
 
-        pass
+        degree = len(node.neighbors)
+        if areNeighbors(interGraph, nID, x) and areNeighbors(interGraph, nID, y):
+            degree -= 1
+            
+        if degree >= k:
+            significantNeighbors += 1
 
-    return significantNeighbors < 12
+    return significantNeighbors < k
+"""
 
 def georgeTest(interGraph, src, dst):
     pass
 
 def conservativeCoalesceable(interGraph, src, dst):
-    if briggsTestInteger(interGraph, src, dst):
+    if interGraph.briggsTest(src, dst):
         return True
     
     if isinstance(src, RegisterOperand):
@@ -2274,7 +2342,7 @@ def coalesce(interGraph, instructions):
                 if (src in interGraph.nodes and 
                     dst in interGraph.nodes and 
                     not (src == dst) and 
-                    notAreNeighbors(interGraph, src, dst) and 
+                    not interGraph.areNeighbors(src, dst) and 
                     conservativeCoalesceable(interGraph, src, dst)
                     ):
 
