@@ -59,6 +59,24 @@ class Graph():
 
         return significantNeighbors < self.k
 
+    def georgeTest(self, hardReg, pseudoReg):
+        pseudoNode = self.nodes[pseudoReg]
+
+        for nID in pseudoNode.neighbors:
+            if self.areNeighbors(nID, hardReg):
+                continue
+            
+            node = self.nodes[nID]
+
+            if len(node.neighbors) < self.k:
+                continue
+
+            return False
+        
+        return True
+
+
+
     def addEdge(self, v0, v1):
         if v0 in self.nodes and v1 in self.nodes:
             self.nodes[v0].neighbors.add(v1)
@@ -2298,20 +2316,20 @@ def briggsTestInteger(interGraph, x, y):
             significantNeighbors += 1
 
     return significantNeighbors < k
-"""
 
 def georgeTest(interGraph, src, dst):
     pass
+"""
 
 def conservativeCoalesceable(interGraph, src, dst):
     if interGraph.briggsTest(src, dst):
         return True
     
     if isinstance(src, RegisterOperand):
-        return georgeTest(interGraph, src, dst)
+        return interGraph.georgeTest(src, dst)
     
     if isinstance(dst, RegisterOperand):
-        return georgeTest(interGraph, dst, src)
+        return interGraph.georgeTest(dst, src)
     
     return False
 
@@ -2366,7 +2384,65 @@ def coalesce(interGraph, instructions):
     return coalescedRegs
 
 def rewriteCoalesced(instructions, coalescedRegs):
-    return instructions
+
+    newList = []
+
+    for i in instructions:
+        match i:
+            case assemblyGenerator.MovInstruction(sourceO = sourceO, destO = destO):
+                
+                pass
+
+            case assemblyGenerator.BinaryInstruction(src = src, dest = dest):                
+                pass
+
+            case assemblyGenerator.UnaryInstruction(dest = dest):
+
+                pass
+
+            case assemblyGenerator.CompInst(operand0 = operand0, operand1 = operand1):
+
+                pass
+
+            case assemblyGenerator.SetCCInst(operand = operand):
+
+                pass
+            
+            case assemblyGenerator.PushInstruction(operand = operand):
+
+                pass
+
+            case assemblyGenerator.IDivInstruction(divisor = divisor):
+                pass
+
+            case assemblyGenerator.MovSXInstruction(srcType = srcType, dstType = dstType,sourceO = sourceO, destO = destO):
+                pass
+                
+            
+            case assemblyGenerator.MovZeroExtendIns(sourceO = sourceO, destO = destO):
+                pass
+            
+            case assemblyGenerator.LeaInstruction(sourceO = sourceO, destO = destO):
+                
+                pass
+
+            case assemblyGenerator.Cvttsd2si(sourceO = sourceO, destO = destO):
+                
+                pass
+
+            case assemblyGenerator.Cvtsi2sd(sourceO = sourceO, destO = destO):
+                pass
+
+            case assemblyGenerator.DivInstruction(divisor = divisor):
+                pass
+            
+            case assemblyGenerator.Pop(reg = reg):
+                pass
+
+            case _:
+                newList.append(i)
+
+    return newList
 
 def allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable, aliasedVars, funName):
 
