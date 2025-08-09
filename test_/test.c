@@ -1,28 +1,84 @@
-/* Make sure we recognize that XMM0 is live at exit.
- * Don't inspect assembly; just validate the program's behavior.
- * Note: only works as intended once we've implemented register coalescing.
- *
- * This test program is generated from templates/chapter_20_templates/reg_live_at_exit.c.jinja
+/* Test that we can handle spilling correctly.
+ * We have to spill one pseudo. The test script will validate that
+ * we spill only one and it's the cheapest one.
+ * Note that this isn't a foolproof test of spill cost calculation;
+ * because of optimistic coloring, we might end up spilling should_spill
+ * even if it's not the first spill candidate we select.
+ * This test program is generated from templates/chapter_20_templates/force_spill.c.jinja
  * */
 
-#include "../util.h"
+//#include "../util.h"
 
-double glob = 10.0;
-double glob2 = 0.0;
+/* Helper functions defined in tests/chapter_20/helper_libs/util.c */
 
-// The first round of coalescing will coalesce x into XMM0.
-// Then, if we don't realize that XMM0 is live at exit, we'll
-// coalesce the temporary that holds x + glob into XMM0, clobbering x.
+/* The check_* functions return 0 on success,
+ * print and exit with code -1 on failure.
+ */
 
-double target(void) {
-    double x = glob + 1.0;  // 11.0
-    glob2 = x + glob;
-    return x;
-}
+int check_one_int(int actual, int expected);
 
-int main(void) {
-    double retval = target();
-    check_one_double(retval, 11.0);
-    check_one_double(glob2, 21.0);
-    return 0;
+// Validates a == start, b == start + 1, ...e == start + 5
+int check_5_ints(int a, int b, int c, int d, int e, int start);
+
+// Validates a == start, b == start + 1, ... l == start + 11
+int check_12_ints(int a, int b, int c, int d, int e, int f, int g, int h, int i,
+                  int j, int k, int l, int start);
+
+// return x; used to get constants in a way that can't be optimized away
+int id(int x);
+
+
+int glob_three = 3;
+
+int target(void) {
+    // This is our spill candidate: it has the highest degree and is
+    // used only once.
+    int should_spill = glob_three + 3;
+
+    // create 12 pseudos that all interfere w/ should_spill and each other;
+    // this forces a spill, since only 12 hard registers are available
+    int one = glob_three - 2;
+    int two = one + one;
+    int three = 2 + one;
+    int four = two * two;
+    int five = 6 - one;
+    int six = two * three;
+    int seven = one + 6;
+    int eight = two * 4;
+    int nine = three * three;
+    int ten = four + six;
+    int eleven = 16 - five;
+    int twelve = six + six;
+
+    // validate one through twelve
+    // (this makes them all live at this point)
+    check_12_ints(one, two, three, four, five, six, seven, eight, nine, ten,
+                  eleven, twelve, 1);
+    // create another clique of twelve pseudos that interfere with each other
+    // and should_spill, so should_spill will have more conflicts than other
+    // pseudoregisters
+    int thirteen = 10 + glob_three;
+    int fourteen = thirteen + 1;
+    int fifteen = 28 - thirteen;
+    int sixteen = fourteen + 2;
+    int seventeen = 4 + thirteen;
+    int eighteen = 32 - fourteen;
+    int nineteen = 35 - sixteen;
+    int twenty = fifteen + 5;
+    int twenty_one = thirteen * 2 - 5;
+    int twenty_two = fifteen + 7;
+    int twenty_three = 6 + seventeen;
+    int twenty_four = thirteen + 11;
+
+    // validate thirteen through twenty-four
+    // (this makes them all live at this point)
+    check_12_ints(thirteen, fourteen, fifteen, sixteen, seventeen, eighteen,
+                  nineteen, twenty, twenty_one, twenty_two, twenty_three,
+                  twenty_four, 13);
+
+    if (should_spill != 6) {
+        return -1;  // fail
+    }
+
+    return 0;  // success
 }

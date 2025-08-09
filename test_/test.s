@@ -1,58 +1,125 @@
-	.section .rodata
-	.align 8
-tmp.95:
-	.double 1.0
 	.globl target
 	.text
 target:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $16, %rsp
-	movsd glob+0(%rip), %xmm12
-	addsd tmp.95+0(%rip), %xmm12
-	movsd %xmm12, %xmm13
-	addsd glob+0(%rip), %xmm13
-	movsd %xmm13, glob2+0(%rip)
-	movsd %xmm12, %xmm0
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	.section .rodata
-	.align 8
-tmp.96:
-	.double 11.0
-	.section .rodata
-	.align 8
-tmp.97:
-	.double 21.0
-	.globl main
-	.text
-main:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	call target
-	movsd %xmm0, %xmm13
-	movsd %xmm13, %xmm0
-	movsd tmp.96+0(%rip), %xmm1
-	call check_one_double
-	movl %eax, %r9d
-	movsd glob2+0(%rip), %xmm0
-	movsd tmp.97+0(%rip), %xmm1
-	call check_one_double
-	movl %eax, %r9d
+	subq $8, %rsp
+	pushq %r14
+	pushq %r12
+	pushq %r15
+	pushq %r13
+	pushq %rbx
+	movl glob_three+0(%rip), %r10d
+	movl %r10d, -4(%rbp)
+	addl $3, -4(%rbp)
+	movl glob_three+0(%rip), %edi
+	subl $2, %edi
+	movl %edi, %esi
+	addl %edi, %esi
+	movl $2, %edx
+	addl %edi, %edx
+	movl %esi, %ecx
+	imul %esi, %ecx
+	movl $6, %r8d
+	subl %edi, %r8d
+	movl %esi, %r9d
+	imul %edx, %r9d
+	movl %edi, %r15d
+	addl $6, %r15d
+	movl %esi, %r14d
+	imul $4, %r14d
+	movl %edx, %r13d
+	imul %edx, %r13d
+	movl %ecx, %r12d
+	addl %r9d, %r12d
+	movl $16, %ebx
+	subl %r8d, %ebx
+	movl %r9d, %eax
+	addl %r9d, %eax
+	subq $8, %rsp
+	pushq $1
+	pushq %rax
+	movl %ebx, %eax
+	pushq %rax
+	movl %r12d, %eax
+	pushq %rax
+	movl %r13d, %eax
+	pushq %rax
+	movl %r14d, %eax
+	pushq %rax
+	movl %r15d, %eax
+	pushq %rax
+	call check_12_ints
+	addq $64, %rsp
+	movl $10, %edi
+	addl glob_three+0(%rip), %edi
+	movl %edi, %esi
+	addl $1, %esi
+	movl $28, %edx
+	subl %edi, %edx
+	movl %esi, %ecx
+	addl $2, %ecx
+	movl $4, %r8d
+	addl %edi, %r8d
+	movl $32, %r9d
+	subl %esi, %r9d
+	movl $35, %r15d
+	subl %ecx, %r15d
+	movl %edx, %r14d
+	addl $5, %r14d
+	movl %edi, %eax
+	imul $2, %eax
+	movl %eax, %r13d
+	subl $5, %r13d
+	movl %edx, %r12d
+	addl $7, %r12d
+	movl $6, %ebx
+	addl %r8d, %ebx
+	movl %edi, %eax
+	addl $11, %eax
+	subq $8, %rsp
+	pushq $13
+	pushq %rax
+	movl %ebx, %eax
+	pushq %rax
+	movl %r12d, %eax
+	pushq %rax
+	movl %r13d, %eax
+	pushq %rax
+	movl %r14d, %eax
+	pushq %rax
+	movl %r15d, %eax
+	pushq %rax
+	call check_12_ints
+	addq $64, %rsp
+	cmpl $6, -4(%rbp)
 	movl $0, %eax
+	setNE %al
+	cmpl $0, %eax
+	jE .Ltmp.103
+	movl $1, %eax
+	negl %eax
+	popq %rbx
+	popq %r13
+	popq %r15
+	popq %r12
+	popq %r14
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-	.globl glob
+.Ltmp.103:
+	movl $0, %eax
+	popq %rbx
+	popq %r13
+	popq %r15
+	popq %r12
+	popq %r14
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+	.globl glob_three
 	.data
-	.align 8
-glob:
-	.double 10.0
-	.globl glob2
-	.data
-	.align 8
-glob2:
-	.double 0.0
+	.align 4
+glob_three:
+	.long 3
 	.section	.note.GNU-stack,"",@progbits

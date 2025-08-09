@@ -35,6 +35,10 @@ class Graph():
         if v0 in self.nodes and v1 in self.nodes:
             self.nodes[v0].neighbors.add(v1)
             self.nodes[v1].neighbors.add(v0)
+
+    def removeEdge(self, v0, v1):
+        if v0 in self.nodes and v1 in self.nodes:
+            self.nodes[v1].neighbors.discard(v0)
         
     def __str__(self):
         return "{self.nodes}".format(self=self)
@@ -2185,11 +2189,131 @@ def replacePseudoRegs(instructions, registerMap):
 
     return newList
 
+def initDisjointSets():
+    return {}
+
+def find(r, regMap):
+    if r in regMap:
+        mapping = regMap[r]
+        result = find(mapping, regMap)
+        return result
+
+    return r
+
+def union(x, y, regMap):
+    regMap[x] = y
+
+def nothingWasCoalesced(regMap):
+    if regMap == {}:
+        return True
+    
+    return False
+
+def notAreNeighbors(interGraph, src, dst):
+    if dst in interGraph.nodes[src].neighbors or src in interGraph.nodes[dst].neighbors:
+        return False
+    
+    return True
+
+def briggsTestInteger(interGraph, x, y):
+    significantNeighbors = 0
+
+    xNode = interGraph.nodes[x]
+    yNode = interGraph.nodes[y]
+
+    allNeighbors = xNode.neighbors | yNode.neighbors
+
+    #breakpoint()
+
+    for nID in allNeighbors:
+        node = interGraph.nodes[nID]
+
+        pass
+
+    return significantNeighbors < 12
+
+def georgeTest(interGraph, src, dst):
+    pass
+
+def conservativeCoalesceable(interGraph, src, dst):
+    if briggsTestInteger(interGraph, src, dst):
+        return True
+    
+    if isinstance(src, RegisterOperand):
+        return georgeTest(interGraph, src, dst)
+    
+    if isinstance(dst, RegisterOperand):
+        return georgeTest(interGraph, dst, src)
+    
+    return False
+
+
+def updateGraph(interGraph, x, y):
+    node = interGraph.nodes[x]
+    
+    nodesToRemove = set()
+    for nodeID in node.neighbors:
+        interGraph.addEdge(y, nodeID)
+        interGraph.removeEdge(x, nodeID)
+
+    del interGraph.nodes[x]
+    
+
+        
+
+def coalesce(interGraph, instructions):
+
+    coalescedRegs = initDisjointSets()
+
+    for i in instructions:
+        match i:
+            case assemblyGenerator.MovInstruction(sourceO = sourceO, destO = destO):
+                src = find(sourceO, coalescedRegs)
+                dst = find(destO, coalescedRegs)
+
+                if (src in interGraph.nodes and 
+                    dst in interGraph.nodes and 
+                    not (src == dst) and 
+                    notAreNeighbors(interGraph, src, dst) and 
+                    conservativeCoalesceable(interGraph, src, dst)
+                    ):
+
+                    #AQui ya sabes que son pseudos
+
+                    if isinstance(src, RegisterOperand):
+                        toKeep = src
+                        toMerge = dst
+                    else:
+                        toKeep = dst
+                        toMerge = src
+
+                    print("COALESCING {0} INTO {1}".format(toMerge, toKeep))
+
+                    union(toMerge, toKeep, coalescedRegs)
+                    updateGraph(interGraph, toMerge, toKeep)
+
+            case _:
+                continue
+
+    return coalescedRegs
+
+def rewriteCoalesced(instructions, coalescedRegs):
+    return instructions
+
 def allocateRegistersForInteger(instructions, symbolTable, backendSymbolTable, aliasedVars, funName):
 
     oldInstructions = copy.deepcopy(instructions)
 
-    interGraph = buildInterferenceGraphInteger(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
+    while True:
+
+        interGraph = buildInterferenceGraphInteger(instructions, symbolTable, backendSymbolTable, aliasedVars, funName)
+        coalescedRegs = coalesce(interGraph, instructions)
+        
+        if nothingWasCoalesced(coalescedRegs):
+            break
+
+        instructions = rewriteCoalesced(instructions, coalescedRegs)
+
 
     addSpillCostsInteger(interGraph, instructions)
 
